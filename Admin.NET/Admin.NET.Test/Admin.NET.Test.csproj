@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+		<NoWarn>1701;1702;1591;8632</NoWarn>
+		<DocumentationFile></DocumentationFile>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<PreserveCompilationContext>true</PreserveCompilationContext>
+		<Nullable>disable</Nullable>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<Copyright>Admin.NET</Copyright>
+		<Description>Admin.NET 通用权限开发平台</Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
+		<PackageReference Include="Furion.Xunit" Version="4.9.8.22" />
+		<PackageReference Include="Furion.Pure" Version="4.9.8.22">
+			<ExcludeAssets>compile</ExcludeAssets>
+		</PackageReference>
+		<PackageReference Include="xunit.v3.assert" Version="3.2.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Admin.NET.Web.Core\Admin.NET.Web.Core.csproj" />
+	</ItemGroup>
+
+</Project>

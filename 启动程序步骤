@@ -1,0 +1,19 @@
+启动后端
+cd Admin.NET
+dotnet run --project Admin.NET.Web.Entry/Admin.NET.Web.Entry.csproj --framework net10.0
+打开前端
+cd Web
+npm run dev
+
+
+
+
+--pm install
+
+
+spec-miner
+~\.agents\skills\spec-miner
+legacy-migration-planner
+~\.agents\skills\legacy-migration-planner
+sql-to-business-logic
+~\.agents\skills\sql-to-business-logic

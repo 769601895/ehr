@@ -1,0 +1,920 @@
+       日期时间 : 2022年3月22日     5:38:24 pm
+       错误代码 : 2
+       错误信息 : Null object reference at line 7 in open event of object w_pattern_hr.
+SQL语句错误代码 : 100
+ 数据库错误代码 : 3
+ 数据库错误信息 : 
+      窗口/菜单 : w_pattern_hr
+           对象 : w_pattern_hr
+      事件/函数 : open
+           行号 : 7
+     应用程序名 : HRMS
+       数据库名 : teiwei
+       服务器名 : JACK\JACK
+         用户名 : JACK
+
+        **********************************************
+
+
+       日期时间 : 2022年4月16日     3:39:25 pm
+       错误代码 : 35
+       错误信息 : Error calling external object function pastespecial at line 129 in function of_export of object n_cst_dwtoxls.
+SQL语句错误代码 : 100
+ 数据库错误代码 : 1
+ 数据库错误信息 : 
+      窗口/菜单 : n_cst_dwtoxls
+           对象 : n_cst_dwtoxls
+      事件/函数 : of_export
+           行号 : 129
+     应用程序名 : HRMS
+       数据库名 : teiwei
+       服务器名 : JACK\JACK
+         用户名 : JACK
+
+        **********************************************
+
+
+       日期时间 : 2022年4月16日     3:48:54 pm
+       错误代码 : 36
+       错误信息 : Name not found accessing external object property h_wage_import_wageim_impruser at line 23 in clicked event of object cb_import of w_xz_import_handwork.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : w_xz_import_handwork
+           对象 : cb_import
+      事件/函数 : clicked
+           行号 : 23
+     应用程序名 : HRMS
+       数据库名 : teiwei
+       服务器名 : JACK\JACK
+         用户名 : JACK
+
+        **********************************************
+
+
+       日期时间 : 2022年4月20日     4:07:58 pm
+       错误代码 : 36
+       错误信息 : Name not found accessing external object property li_insert at line 108 in function f_split_leave of object f_split_leave.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : f_split_leave
+           对象 : f_split_leave
+      事件/函数 : f_split_leave
+           行号 : 108
+     应用程序名 : HRMS
+       数据库名 : teiwei20220420
+       服务器名 : JACK\JACK
+         用户名 : JACK
+
+        **********************************************
+
+
+       日期时间 : 2022年4月20日     4:23:10 pm
+       错误代码 : 36
+       错误信息 : Name not found accessing external object property li_insert at line 108 in function f_split_leave of object f_split_leave.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : f_split_leave
+           对象 : f_split_leave
+      事件/函数 : f_split_leave
+           行号 : 108
+     应用程序名 : HRMS
+       数据库名 : teiwei20220420
+       服务器名 : JACK\JACK
+         用户名 : JACK
+
+        **********************************************
+
+
+       日期时间 : 2022年4月20日     4:24:14 pm
+       错误代码 : 36
+       错误信息 : Name not found accessing external object property li_insert at line 108 in function f_split_leave of object f_split_leave.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : f_split_leave
+           对象 : f_split_leave
+      事件/函数 : f_split_leave
+           行号 : 108
+     应用程序名 : HRMS
+       数据库名 : teiwei20220420
+       服务器名 : JACK\JACK
+         用户名 : JACK
+
+        **********************************************
+
+
+       日期时间 : 2022年5月12日     4:24:17 pm
+       错误代码 : 2
+       错误信息 : Null object reference at line 24 in open event of object w_report_autodesign.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : w_report_autodesign
+           对象 : w_report_autodesign
+      事件/函数 : open
+           行号 : 24
+     应用程序名 : HRMS
+       数据库名 : teiwei20220420
+       服务器名 : JACK\JACK
+         用户名 : JACK
+
+        **********************************************
+
+
+       日期时间 : 2022年5月26日     3:23:29 pm
+       错误代码 : 35
+       错误信息 : Error calling external object function pastespecial at line 129 in function of_export of object n_cst_dwtoxls.
+SQL语句错误代码 : 100
+ 数据库错误代码 : 1
+ 数据库错误信息 : 
+      窗口/菜单 : n_cst_dwtoxls
+           对象 : n_cst_dwtoxls
+      事件/函数 : of_export
+           行号 : 129
+     应用程序名 : HRMS
+       数据库名 : teiwei20220420
+       服务器名 : JACK\JACK
+         用户名 : JACK
+
+        **********************************************
+
+
+       日期时间 : 2022年10月5日     10:45:59 am
+       错误代码 : 60
+       错误信息 : Invalid row range at line 12 in clicked event of object dw_1 of w_kq_diary_detail.
+SQL语句错误代码 : -1
+ 数据库错误代码 : -1
+ 数据库错误信息 : SQLSTATE = 08S02
+Microsoft SQL Server Native Client 10.0
+SMux 提供程序: 物理连接不可用 [xFFFFFFFF]. 
+      窗口/菜单 : w_kq_diary_detail
+           对象 : dw_1
+      事件/函数 : clicked
+           行号 : 12
+     应用程序名 : HRMS
+       数据库名 : teiwei20220420
+       服务器名 : JACK\JACK
+         用户名 : JACK
+
+        **********************************************
+
+
+       日期时间 : 2022年10月21日     3:25:52 pm
+       错误代码 : 2
+       错误信息 : Null object reference at line 7 in constructor event of object u_dw.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : u_dw
+           对象 : u_dw
+      事件/函数 : constructor
+           行号 : 7
+     应用程序名 : HRMS
+       数据库名 : teiwei20220420
+       服务器名 : JACK\JACK
+         用户名 : JACK????
+
+        **********************************************
+
+
+       日期时间 : 2024年1月17日     2:54:10 pm
+       错误代码 : 36
+       错误信息 : Name not found accessing external object property leaverecordindex at line 102 in function f_split_leave of object f_split_leave.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : f_split_leave
+           对象 : f_split_leave
+      事件/函数 : f_split_leave
+           行号 : 102
+     应用程序名 : HRMS
+       数据库名 : teiwei20220420
+       服务器名 : JACK\JACK
+         用户名 : JACK
+
+        **********************************************
+
+
+       日期时间 : 2024年4月26日     9:49:13 am
+       错误代码 : 36
+       错误信息 : Name not found accessing external object property leaverecordindex at line 102 in function f_split_leave of object f_split_leave.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : f_split_leave
+           对象 : f_split_leave
+      事件/函数 : f_split_leave
+           行号 : 102
+     应用程序名 : HRMS
+       数据库名 : teiwei20220420
+       服务器名 : JACK\JACK
+         用户名 : JACK
+
+        **********************************************
+
+
+       日期时间 : 2025年6月12日     11:04:08 pm
+       错误代码 : 7
+       错误信息 : Unresolvable external uf_set_gds_lanage when linking reference at line 43 in open event of object w_main_login.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : w_main_login
+           对象 : w_main_login
+      事件/函数 : open
+           行号 : 43
+     应用程序名 : HRMS
+       数据库名 : 
+       服务器名 : 
+         用户名 : JACK
+
+        **********************************************
+
+
+       日期时间 : 2025年6月13日     2:38:45 pm
+       错误代码 : 22
+       错误信息 : Unknown object type: w_tips at line 61 in function of_dw2excel of object n_cst_dw2excel.
+SQL语句错误代码 : 100
+ 数据库错误代码 : 1
+ 数据库错误信息 : 
+      窗口/菜单 : n_cst_dw2excel
+           对象 : n_cst_dw2excel
+      事件/函数 : of_dw2excel
+           行号 : 61
+     应用程序名 : HRMS
+       数据库名 : teiwei
+       服务器名 : JACK\JACK
+         用户名 : JACK
+
+        **********************************************
+
+
+       日期时间 : 2025年6月25日     9:28:49 pm
+       错误代码 : 36
+       错误信息 : Name not found accessing external object property leaverecordindex at line 102 in function f_split_leave of object f_split_leave.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : f_split_leave
+           对象 : f_split_leave
+      事件/函数 : f_split_leave
+           行号 : 102
+     应用程序名 : HRMS
+       数据库名 : teiwei
+       服务器名 : JACK\JACK
+         用户名 : JACK
+
+        **********************************************
+
+
+       日期时间 : 2025年6月25日     9:29:55 pm
+       错误代码 : 36
+       错误信息 : Name not found accessing external object property leaverecordindex at line 102 in function f_split_leave of object f_split_leave.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : f_split_leave
+           对象 : f_split_leave
+      事件/函数 : f_split_leave
+           行号 : 102
+     应用程序名 : HRMS
+       数据库名 : teiwei
+       服务器名 : JACK\JACK
+         用户名 : JACK
+
+        **********************************************
+
+
+       日期时间 : 2025年6月25日     9:33:22 pm
+       错误代码 : 36
+       错误信息 : Name not found accessing external object property leaverecordindex at line 102 in function f_split_leave of object f_split_leave.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : f_split_leave
+           对象 : f_split_leave
+      事件/函数 : f_split_leave
+           行号 : 102
+     应用程序名 : HRMS
+       数据库名 : teiwei
+       服务器名 : JACK\JACK
+         用户名 : JACK
+
+        **********************************************
+
+
+       日期时间 : 2025年9月6日     4:08:49 pm
+       错误代码 : 2
+       错误信息 : Null object reference at line 7 in open event of object w_pattern_hr.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : w_pattern_hr
+           对象 : w_pattern_hr
+      事件/函数 : open
+           行号 : 7
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年9月15日     11:06:16 am
+       错误代码 : 2
+       错误信息 : Null object reference at line 4 in function update of object u_dw.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : u_dw
+           对象 : u_dw
+      事件/函数 : update
+           行号 : 4
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年9月15日     11:10:31 am
+       错误代码 : 2
+       错误信息 : Null object reference at line 4 in function update of object u_dw.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : u_dw
+           对象 : u_dw
+      事件/函数 : update
+           行号 : 4
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年9月15日     11:20:04 am
+       错误代码 : 2
+       错误信息 : Null object reference at line 4 in function update of object u_dw.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : u_dw
+           对象 : u_dw
+      事件/函数 : update
+           行号 : 4
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年9月15日     8:35:43 pm
+       错误代码 : 2
+       错误信息 : Null object reference at line 7 in open event of object w_pattern_hr.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : w_pattern_hr
+           对象 : w_pattern_hr
+      事件/函数 : open
+           行号 : 7
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年9月17日     9:09:56 am
+       错误代码 : 2
+       错误信息 : Null object reference at line 4 in function update of object u_dw.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : u_dw
+           对象 : u_dw
+      事件/函数 : update
+           行号 : 4
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年9月18日     5:32:18 pm
+       错误代码 : 6
+       错误信息 : Invalid DataWindow row/column specified at line 50 in clicked event of object cb_1 of w_xz_wagem_pop_newin.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : w_xz_wagem_pop_newin
+           对象 : cb_1
+      事件/函数 : clicked
+           行号 : 50
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年9月18日     5:33:36 pm
+       错误代码 : 6
+       错误信息 : Invalid DataWindow row/column specified at line 50 in clicked event of object cb_1 of w_xz_wagem_pop_newin.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : w_xz_wagem_pop_newin
+           对象 : cb_1
+      事件/函数 : clicked
+           行号 : 50
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年9月19日     4:26:21 pm
+       错误代码 : 2
+       错误信息 : Null object reference at line 7 in itemchanged event of object dw_1 of w_rs_bear_mstr_pop.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : w_rs_bear_mstr_pop
+           对象 : dw_1
+      事件/函数 : itemchanged
+           行号 : 7
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年9月19日     4:28:13 pm
+       错误代码 : 2
+       错误信息 : Null object reference at line 7 in itemchanged event of object dw_1 of w_rs_bear_mstr_pop.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : w_rs_bear_mstr_pop
+           对象 : dw_1
+      事件/函数 : itemchanged
+           行号 : 7
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATO
+
+        **********************************************
+
+
+       日期时间 : 2025年9月26日     2:26:07 pm
+       错误代码 : 6
+       错误信息 : Invalid DataWindow row/column specified at line 67 in itemchanged event of object dw_1 of w_xz_wagem_pop.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : w_xz_wagem_pop
+           对象 : dw_1
+      事件/函数 : itemchanged
+           行号 : 67
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年9月26日     5:22:52 pm
+       错误代码 : 2
+       错误信息 : Null object reference at line 4 in function update of object u_dw.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : u_dw
+           对象 : u_dw
+      事件/函数 : update
+           行号 : 4
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年9月29日     8:48:03 am
+       错误代码 : 35
+       错误信息 : Error calling external object function pastespecial at line 129 in function of_export of object n_cst_dwtoxls.
+SQL语句错误代码 : 100
+ 数据库错误代码 : 1
+ 数据库错误信息 : 
+      窗口/菜单 : n_cst_dwtoxls
+           对象 : n_cst_dwtoxls
+      事件/函数 : of_export
+           行号 : 129
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年9月29日     9:19:01 am
+       错误代码 : 35
+       错误信息 : Error calling external object function pastespecial at line 129 in function of_export of object n_cst_dwtoxls.
+SQL语句错误代码 : 100
+ 数据库错误代码 : 1
+ 数据库错误信息 : 
+      窗口/菜单 : n_cst_dwtoxls
+           对象 : n_cst_dwtoxls
+      事件/函数 : of_export
+           行号 : 129
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年9月29日     9:46:33 am
+       错误代码 : 35
+       错误信息 : Error calling external object function pastespecial at line 129 in function of_export of object n_cst_dwtoxls.
+SQL语句错误代码 : 100
+ 数据库错误代码 : 1
+ 数据库错误信息 : 
+      窗口/菜单 : n_cst_dwtoxls
+           对象 : n_cst_dwtoxls
+      事件/函数 : of_export
+           行号 : 129
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年9月29日     10:13:20 am
+       错误代码 : 35
+       错误信息 : Error calling external object function pastespecial at line 129 in function of_export of object n_cst_dwtoxls.
+SQL语句错误代码 : 100
+ 数据库错误代码 : 1
+ 数据库错误信息 : 
+      窗口/菜单 : n_cst_dwtoxls
+           对象 : n_cst_dwtoxls
+      事件/函数 : of_export
+           行号 : 129
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年10月13日     3:55:34 pm
+       错误代码 : 36
+       错误信息 : Name not found accessing external object property text at line 11 in pfc_retrieve event of object dw_2 of w_xz_report_pirnt.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : w_xz_report_pirnt
+           对象 : dw_2
+      事件/函数 : pfc_retrieve
+           行号 : 11
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年10月16日     2:15:37 pm
+       错误代码 : 36
+       错误信息 : Name not found accessing external object property periodcardenable at line 14 in function f_reduce_cardperiod of object f_reduce_cardperiod.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : f_reduce_cardperiod
+           对象 : f_reduce_cardperiod
+      事件/函数 : f_reduce_cardperiod
+           行号 : 14
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年10月21日     1:17:02 pm
+       错误代码 : 2
+       错误信息 : Null object reference at line 55 in erasebkgnd event of object uo_toolbar.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : uo_toolbar
+           对象 : uo_toolbar
+      事件/函数 : erasebkgnd
+           行号 : 55
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年10月31日     2:32:37 pm
+       错误代码 : 19
+       错误信息 : Cannot convert datetime in Any variable to decimal at line 87 in function kq_getcardnum of object uo_diary.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : uo_diary
+           对象 : uo_diary
+      事件/函数 : kq_getcardnum
+           行号 : 87
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年10月31日     2:33:52 pm
+       错误代码 : 19
+       错误信息 : Cannot convert datetime in Any variable to decimal at line 87 in function kq_getcardnum of object uo_diary.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : uo_diary
+           对象 : uo_diary
+      事件/函数 : kq_getcardnum
+           行号 : 87
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年10月31日     5:05:03 pm
+       错误代码 : 3
+       错误信息 : Array boundary exceeded at line 8 in function f_getinfo_from_text_yenan of object f_getinfo_from_text_yenan.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : f_getinfo_from_text_yenan
+           对象 : f_getinfo_from_text_yenan
+      事件/函数 : f_getinfo_from_text_yenan
+           行号 : 8
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年11月14日     4:08:39 pm
+       错误代码 : 36
+       错误信息 : Name not found accessing external object property classbelong at line 94 in function f_cal of object f_cal.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : f_cal
+           对象 : f_cal
+      事件/函数 : f_cal
+           行号 : 94
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年11月14日     4:26:47 pm
+       错误代码 : 6
+       错误信息 : Invalid DataWindow row/column specified at line 277 in function f_cal of object f_cal.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : f_cal
+           对象 : f_cal
+      事件/函数 : f_cal
+           行号 : 277
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年11月14日     4:46:24 pm
+       错误代码 : 6
+       错误信息 : Invalid DataWindow row/column specified at line 277 in function f_cal of object f_cal.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : f_cal
+           对象 : f_cal
+      事件/函数 : f_cal
+           行号 : 277
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年11月14日     4:49:20 pm
+       错误代码 : 13
+       错误信息 : Unresolved property reference at line 25 in function f_insert_workminutecalto of object f_insert_workminutecalto.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : f_insert_workminutecalto
+           对象 : f_insert_workminutecalto
+      事件/函数 : f_insert_workminutecalto
+           行号 : 25
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年11月14日     4:50:58 pm
+       错误代码 : 36
+       错误信息 : Name not found accessing external object property classperiod at line 90 in function f_cal_over of object f_cal_over.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : f_cal_over
+           对象 : f_cal_over
+      事件/函数 : f_cal_over
+           行号 : 90
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年11月17日     8:52:33 am
+       错误代码 : 6
+       错误信息 : Invalid DataWindow row/column specified at line 270 in function f_cal_over of object f_cal_over.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : f_cal_over
+           对象 : f_cal_over
+      事件/函数 : f_cal_over
+           行号 : 270
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年12月23日     10:59:16 am
+       错误代码 : 2
+       错误信息 : Null object reference at line 17 in function of_get_lanage_range of object nvo_language.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : nvo_language
+           对象 : nvo_language
+      事件/函数 : of_get_lanage_range
+           行号 : 17
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATO
+
+        **********************************************
+
+
+       日期时间 : 2025年12月23日     11:55:49 am
+       错误代码 : 2
+       错误信息 : Null object reference at line 17 in function of_get_lanage_range of object nvo_language.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : nvo_language
+           对象 : nvo_language
+      事件/函数 : of_get_lanage_range
+           行号 : 17
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年12月23日     12:00:27 pm
+       错误代码 : 2
+       错误信息 : Null object reference at line 17 in function of_get_lanage_range of object nvo_language.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : nvo_language
+           对象 : nvo_language
+      事件/函数 : of_get_lanage_range
+           行号 : 17
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年12月23日     1:18:20 pm
+       错误代码 : 2
+       错误信息 : Null object reference at line 17 in function of_get_lanage_range of object nvo_language.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : nvo_language
+           对象 : nvo_language
+      事件/函数 : of_get_lanage_range
+           行号 : 17
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年12月23日     1:38:49 pm
+       错误代码 : 2
+       错误信息 : Null object reference at line 17 in function of_get_lanage_range of object nvo_language.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : nvo_language
+           对象 : nvo_language
+      事件/函数 : of_get_lanage_range
+           行号 : 17
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+
+       日期时间 : 2025年12月23日     1:46:33 pm
+       错误代码 : 2
+       错误信息 : Null object reference at line 8 in function of_set of object uo_statusbar.
+SQL语句错误代码 : 0
+ 数据库错误代码 : 0
+ 数据库错误信息 : 
+      窗口/菜单 : uo_statusbar
+           对象 : uo_statusbar
+      事件/函数 : of_set
+           行号 : 8
+     应用程序名 : HRMS
+       数据库名 : hr_2025
+       服务器名 : 10.0.11.111
+         用户名 : ADMINISTRATOR
+
+        **********************************************
+
+

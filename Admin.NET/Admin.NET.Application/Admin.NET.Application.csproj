@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <NoWarn>1701;1702;1591;8632</NoWarn>
+    <DocumentationFile></DocumentationFile>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Nullable>disable</Nullable>
+    <Copyright>Admin.NET</Copyright>
+    <Description>Admin.NET 通用权限开发平台</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Configuration\**\*">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Remove="Configuration\App.*.json" />
+    <Content Include="Configuration\App.*.json">
+      <DependentUpon>App.json</DependentUpon>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+    <Content Remove="Configuration\Database.*.json" />
+    <Content Include="Configuration\Database.*.json">
+      <DependentUpon>Database.json</DependentUpon>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+    <Content Remove="Configuration\HttpRemote.*.json" />
+    <Content Include="Configuration\HttpRemote.*.json">
+      <DependentUpon>HttpRemote.json</DependentUpon>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\**\*">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Admin.NET.Core\Admin.NET.Core.csproj" />
+    <ProjectReference Include="..\Plugins\Admin.NET.Plugin.Ai\Admin.NET.Plugin.Ai.csproj" />
+    <ProjectReference Include="..\Plugins\Admin.NET.Plugin.DataApproval\Admin.NET.Plugin.DataApproval.csproj" />
+    <ProjectReference Include="..\Plugins\Admin.NET.Plugin.DingTalk\Admin.NET.Plugin.DingTalk.csproj" />
+    <ProjectReference Include="..\Plugins\Admin.NET.Plugin.GoView\Admin.NET.Plugin.GoView.csproj" />
+    <ProjectReference Include="..\Plugins\Admin.NET.Plugin.K3Cloud\Admin.NET.Plugin.K3Cloud.csproj" />
+    <ProjectReference Include="..\Plugins\Admin.NET.Plugin.PaddleOCR\Admin.NET.Plugin.PaddleOCR.csproj" />
+    <ProjectReference Include="..\Plugins\Admin.NET.Plugin.ReZero\Admin.NET.Plugin.ReZero.csproj" />
+    <ProjectReference Include="..\Plugins\Admin.NET.Plugin.WorkWeixin\Admin.NET.Plugin.WorkWeixin.csproj" />
+  </ItemGroup>
+
+</Project>

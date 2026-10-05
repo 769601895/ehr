@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <NoWarn>1701;1702;1591;8632</NoWarn>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Copyright>Admin.NET</Copyright>
+    <Description>Admin.NET 通用权限开发平台</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="Configuration\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="microsoft.semantickernel" Version="1.73.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.73.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Amazon" Version="1.56.0-alpha" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Google" Version="1.54.0-alpha" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.HuggingFace" Version="1.56.0-preview" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Ollama" Version="1.54.0-alpha" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Qdrant" Version="1.54.0-preview" />
+    <PackageReference Include="Microsoft.SemanticKernel.PromptTemplates.Handlebars" Version="1.73.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Yaml" Version="1.73.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Admin.NET.Core\Admin.NET.Core.csproj" />
+  </ItemGroup>
+
+</Project>

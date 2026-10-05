@@ -1,0 +1,5038 @@
+{
+	"6osrlg7": {
+		"zh-cn": "编辑/保存布局",
+		"en": "Edit/Save Layout"
+	},
+	"c5aljk5": {
+		"zh-cn": "没有部件啦",
+		"en": "No Widgets Available"
+	},
+	"euunjh5": {
+		"zh-cn": "添加部件 ",
+		"en": "Add Widget"
+	},
+	"cjgauv4": {
+		"zh-cn": "恢复默认",
+		"en": "Restore Default"
+	},
+	"hn562": {
+		"zh-cn": "提示",
+		"en": "Prompt"
+	},
+	"bzf9534": {
+		"zh-cn": "实时收入",
+		"en": "Real-time Revenue"
+	},
+	"flcggeb": {
+		"zh-cn": "Echarts组件演示",
+		"en": "Echarts Component Demo"
+	},
+	"e04l2": {
+		"zh-cn": "价格",
+		"en": "Price"
+	},
+	"hnu72": {
+		"zh-cn": "收入",
+		"en": "Revenue"
+	},
+	"lja3o3": {
+		"zh-cn": "进度环",
+		"en": "Progress Ring"
+	},
+	"ph29839": {
+		"zh-cn": "进度环原子组件演示",
+		"en": "Progress Ring Atomic Component Demo"
+	},
+	"df1fj54": {
+		"zh-cn": "更新记录",
+		"en": "Update Records"
+	},
+	"cypf748": {
+		"zh-cn": "当前项目更新记录",
+		"en": "Current Project Update Records"
+	},
+	"unwsxa8": {
+		"zh-cn": "时钟原子组件演示",
+		"en": "Clock Atomic Component Demo"
+	},
+	"y437xq8": {
+		"zh-cn": "点个星星支持一下",
+		"en": "Give a Star to Support"
+	},
+	"rz9lbd9": {
+		"zh-cn": "可以配置的快捷入口",
+		"en": "Configurable Quick Access"
+	},
+	"oxhc0h6": {
+		"zh-cn": "设置常用成功",
+		"en": "Common Settings Successful"
+	},
+	"cihr0q4": {
+		"zh-cn": "快捷入口",
+		"en": "Quick Access"
+	},
+	"jfldyia": {
+		"zh-cn": "项目特色以及文档链接",
+		"en": "Project Features and Documentation Links"
+	},
+	"v6sh6ja": {
+		"zh-cn": "版本信息原子组件演示",
+		"en": "Version Information Atomic Component Demo"
+	},
+	"dd30184": {
+		"zh-cn": "日程演示",
+		"en": "Schedule Demo"
+	},
+	"6eaj5s4": {
+		"zh-cn": "】上线了",
+		"en": "】Went Online"
+	},
+	"6kjikw4": {
+		"zh-cn": "】离开了",
+		"en": "】Left"
+	},
+	"jw8no28": {
+		"zh-cn": " 系统更新日志 ",
+		"en": "System Update Log"
+	},
+	"a6esth4": {
+		"zh-cn": "上传成功",
+		"en": "Upload Successful"
+	},
+	"yrk0lm5": {
+		"zh-cn": "人员明细 ",
+		"en": "Personnel Details"
+	},
+	"gjm02": {
+		"zh-cn": "序号",
+		"en": "Serial Number"
+	},
+	"ogwh2": {
+		"zh-cn": "账号",
+		"en": "Account"
+	},
+	"fqmy2": {
+		"zh-cn": "姓名",
+		"en": "Name"
+	},
+	"a9wnkx4": {
+		"zh-cn": "三方账号",
+		"en": "Third-party Account"
+	},
+	"c9r4zx4": {
+		"zh-cn": "平台类型",
+		"en": "Platform Type"
+	},
+	"i1y32": {
+		"zh-cn": "昵称",
+		"en": "Nickname"
+	},
+	"fm6z2": {
+		"zh-cn": "头像",
+		"en": "Avatar"
+	},
+	"gt0k2": {
+		"zh-cn": "性别",
+		"en": "Gender"
+	},
+	"ctufzt4": {
+		"zh-cn": "手机号码",
+		"en": "Mobile Number"
+	},
+	"fb4g2": {
+		"zh-cn": "地址",
+		"en": "Address"
+	},
+	"hkxb2": {
+		"zh-cn": "操作",
+		"en": "Operation"
+	},
+	"6c91446": {
+		"zh-cn": "编辑三方账号",
+		"en": "Edit Third-party Account"
+	},
+	"s3qfspa": {
+		"zh-cn": "确定删除三方账号：【",
+		"en": "Confirm Delete Third-party Account:【"
+	},
+	"kzjg2": {
+		"zh-cn": "确定",
+		"en": "Confirm"
+	},
+	"ev022": {
+		"zh-cn": "取消",
+		"en": "Cancel"
+	},
+	"azeh8z4": {
+		"zh-cn": "删除成功",
+		"en": "Delete Successful"
+	},
+	"cen9u64": {
+		"zh-cn": "微信昵称",
+		"en": "WeChat Nickname"
+	},
+	"gg26b4": {
+		"zh-cn": " 查询 ",
+		"en": "Search"
+	},
+	"miwv34": {
+		"zh-cn": " 重置 ",
+		"en": "Reset"
+	},
+	"ui3x1j7": {
+		"zh-cn": " 微信公众号 ",
+		"en": "WeChat Official Account"
+	},
+	"w0qwv47": {
+		"zh-cn": " 微信小程序 ",
+		"en": "WeChat Mini Program"
+	},
+	"g8t454": {
+		"zh-cn": " 未知 ",
+		"en": "Unknown"
+	},
+	"n5j1": {
+		"zh-cn": "男",
+		"en": "Male"
+	},
+	"ho31": {
+		"zh-cn": "女",
+		"en": "Female"
+	},
+	"mekb2": {
+		"zh-cn": "编辑",
+		"en": "Edit"
+	},
+	"eslg2": {
+		"zh-cn": "删除",
+		"en": "Delete"
+	},
+	"caoqm3": {
+		"zh-cn": "取 消",
+		"en": "Cancel"
+	},
+	"hnjoo3": {
+		"zh-cn": "确 定",
+		"en": "Confirm"
+	},
+	"j01h4b6": {
+		"zh-cn": "昵称不能为空",
+		"en": "Nickname cannot be empty"
+	},
+	"ixz9q49": {
+		"zh-cn": "系统域登录信息配置",
+		"en": "System Domain Login Information Configuration"
+	},
+	"dvfj2": {
+		"zh-cn": "主机",
+		"en": "Host"
+	},
+	"ldck2": {
+		"zh-cn": "端口",
+		"en": "Port"
+	},
+	"yrvy3j6": {
+		"zh-cn": "用户搜索基准",
+		"en": "User Search Base"
+	},
+	"gd8rar4": {
+		"zh-cn": "绑定DN",
+		"en": "Bind DN"
+	},
+	"tbgicf6": {
+		"zh-cn": "用户过滤规则",
+		"en": "User Filter Rules"
+	},
+	"xgd3px6": {
+		"zh-cn": "Ldap版本",
+		"en": "LDAP Version"
+	},
+	"k1e32": {
+		"zh-cn": "状态",
+		"en": "Status"
+	},
+	"aifils4": {
+		"zh-cn": "修改记录",
+		"en": "Modification Records"
+	},
+	"l55q5bb": {
+		"zh-cn": "添加系统域登录信息配置",
+		"en": "Add System Domain Login Information Configuration"
+	},
+	"qlcz6xb": {
+		"zh-cn": "编辑系统域登录信息配置",
+		"en": "Edit System Domain Login Information Configuration"
+	},
+	"m9kx7j7": {
+		"zh-cn": "确定要删除吗?",
+		"en": "Are you sure you want to delete?"
+	},
+	"7rk7bke": {
+		"zh-cn": "确定要同步域登录信息配置：【",
+		"en": "Are you sure you want to synchronize domain login information configuration:【"
+	},
+	"b1twyw4": {
+		"zh-cn": "同步成功",
+		"en": "Synchronization successful"
+	},
+	"y0phwfc": {
+		"zh-cn": "打印系统域登录信息配置表",
+		"en": "Print system domain login information configuration table"
+	},
+	"cnct83": {
+		"zh-cn": "关键字",
+		"en": "Keyword"
+	},
+	"gr1pnxa": {
+		"zh-cn": "请输入模糊查询关键字",
+		"en": "Please enter fuzzy query keyword"
+	},
+	"kjqswc5": {
+		"zh-cn": " 高级查询",
+		"en": "Advanced query"
+	},
+	"k25dws4": {
+		"zh-cn": "高级查询",
+		"en": "Advanced query"
+	},
+	"eod62": {
+		"zh-cn": "关闭",
+		"en": "Close"
+	},
+	"iftp2": {
+		"zh-cn": "查询",
+		"en": "Query"
+	},
+	"phz52": {
+		"zh-cn": "重置",
+		"en": "Reset"
+	},
+	"2jc9rs5": {
+		"zh-cn": "请输入主机",
+		"en": "Please enter host"
+	},
+	"fvpaq4": {
+		"zh-cn": " 新增 ",
+		"en": "Add"
+	},
+	"eymx2": {
+		"zh-cn": "启用",
+		"en": "Enable"
+	},
+	"lb5z2": {
+		"zh-cn": "禁用",
+		"en": "Disable"
+	},
+	"cm04nd5": {
+		"zh-cn": "同步域账户",
+		"en": "Synchronize Domain Accounts"
+	},
+	"uy5wps6": {
+		"zh-cn": "打印机不存在",
+		"en": "Printer does not exist"
+	},
+	"uu0etz5": {
+		"zh-cn": "打印失败：",
+		"en": "Print failed:"
+	},
+	"19q3s15": {
+		"zh-cn": "PDF文件",
+		"en": "PDF File"
+	},
+	"ff6ycu4": {
+		"zh-cn": "直接打印",
+		"en": "Direct Print"
+	},
+	"eucqdw5": {
+		"zh-cn": "导出PDF",
+		"en": "Export PDF"
+	},
+	"d7exy4": {
+		"zh-cn": " 关闭 ",
+		"en": "Close"
+	},
+	"7meykn6": {
+		"zh-cn": "请输入主机！",
+		"en": "Please enter the host!"
+	},
+	"7fyj4s6": {
+		"zh-cn": "请输入端口！",
+		"en": "Please enter the port!"
+	},
+	"7f7r6u8": {
+		"zh-cn": "请输入搜索基准！",
+		"en": "Please enter the search base!"
+	},
+	"yt8g4b8": {
+		"zh-cn": "请输入绑定DN！",
+		"en": "Please enter the bind DN!"
+	},
+	"yf9kh88": {
+		"zh-cn": "请输入绑定密码！",
+		"en": "Please enter the bind password!"
+	},
+	"yia7l28": {
+		"zh-cn": "请输入过滤规则！",
+		"en": "Please enter the filter rule!"
+	},
+	"ujysyba": {
+		"zh-cn": "请输入Ldap版本！",
+		"en": "Please enter the LDAP version!"
+	},
+	"t1l7vz8": {
+		"zh-cn": "请输入字段属性！",
+		"en": "Please enter the field attribute!"
+	},
+	"d9duaak": {
+		"zh-cn": "请输入绑定用户EmployeeId属性！",
+		"en": "Please enter the bind user EmployeeId attribute!"
+	},
+	"7h3ttf6": {
+		"zh-cn": "请输入状态！",
+		"en": "Please enter the status!"
+	},
+	"ke08s3": {
+		"zh-cn": "表单有",
+		"en": "Form has"
+	},
+	"xsaxyid": {
+		"zh-cn": "处验证失败，请修改后再提交",
+		"en": "validation failures, please modify and resubmit"
+	},
+	"2j4rur5": {
+		"zh-cn": "请输入端口",
+		"en": "Please enter port"
+	},
+	"d5bcb64": {
+		"zh-cn": "搜索基准",
+		"en": "Search Base"
+	},
+	"kdrojp7": {
+		"zh-cn": "请输入搜索基准",
+		"en": "Please enter search base"
+	},
+	"ilqs2a4": {
+		"zh-cn": "过滤规则",
+		"en": "Filter Rules"
+	},
+	"exc8sl7": {
+		"zh-cn": "请输入过滤规则",
+		"en": "Please enter filter rules"
+	},
+	"h5u9k47": {
+		"zh-cn": "请输入绑定DN",
+		"en": "Please enter bind DN"
+	},
+	"gdozac4": {
+		"zh-cn": "绑定密码",
+		"en": "Bind Password"
+	},
+	"h5e1kj7": {
+		"zh-cn": "请输入绑定密码",
+		"en": "Please enter bind password"
+	},
+	"byyslj4": {
+		"zh-cn": "字段属性",
+		"en": "Field Attributes"
+	},
+	"lk489c7": {
+		"zh-cn": "请输入字段属性",
+		"en": "Please enter field attributes"
+	},
+	"f6sr144": {
+		"zh-cn": "用户属性",
+		"en": "User Attributes"
+	},
+	"u7qkulj": {
+		"zh-cn": "请输入绑定用户EmployeeId属性",
+		"en": "Please enter the bound user EmployeeId attribute"
+	},
+	"7uy2r09": {
+		"zh-cn": "请输入Ldap版本",
+		"en": "Please enter Ldap version"
+	},
+	"fs5bs64": {
+		"zh-cn": "租户信息",
+		"en": "Tenant Information"
+	},
+	"fs66d74": {
+		"zh-cn": "租户名称",
+		"en": "Tenant Name"
+	},
+	"fw5os34": {
+		"zh-cn": "租管账号",
+		"en": "Management Account"
+	},
+	"kpc82": {
+		"zh-cn": "电话",
+		"en": "Phone"
+	},
+	"padf2": {
+		"zh-cn": "邮箱",
+		"en": "Email"
+	},
+	"ikg3cm4": {
+		"zh-cn": "过期时间",
+		"en": "Expiration Time"
+	},
+	"fscv544": {
+		"zh-cn": "租户类型",
+		"en": "Tenant Type"
+	},
+	"gmhmyj5": {
+		"zh-cn": "数据库类型",
+		"en": "Database Type"
+	},
+	"gme9us5": {
+		"zh-cn": "数据库连接",
+		"en": "Database Connection"
+	},
+	"acdarw4": {
+		"zh-cn": "从库连接",
+		"en": "Slave Connection"
+	},
+	"hge52": {
+		"zh-cn": "排序",
+		"en": "Sort"
+	},
+	"e82ltp4": {
+		"zh-cn": "添加租户",
+		"en": "Add Tenant"
+	},
+	"gmo1pv4": {
+		"zh-cn": "编辑租户",
+		"en": "Edit Tenant"
+	},
+	"yudnz28": {
+		"zh-cn": "确定删除租户：【",
+		"en": "Confirm deletion of tenant: 【"
+	},
+	"877ek3e": {
+		"zh-cn": "确定创建/更新租户数据库：【",
+		"en": "Confirm creation/update of tenant database: 【"
+	},
+	"379crkc": {
+		"zh-cn": "创建/更新租户数据库成功",
+		"en": "Tenant database created/updated successfully"
+	},
+	"8vp7xwd": {
+		"zh-cn": "确定创建/更新租户数据：【",
+		"en": "Confirm creation/update of tenant data: 【"
+	},
+	"dunn81b": {
+		"zh-cn": "创建/更新租户数据成功",
+		"en": "Tenant data created/updated successfully"
+	},
+	"kuohmm8": {
+		"zh-cn": "租户状态设置成功",
+		"en": "Tenant status set successfully"
+	},
+	"bvqllu8": {
+		"zh-cn": "确定重置密码：【",
+		"en": "Confirm password reset: 【"
+	},
+	"z05ndh8": {
+		"zh-cn": "密码重置成功为：",
+		"en": "Password reset successfully to:"
+	},
+	"lw01owc": {
+		"zh-cn": "确定同步所有租户数据库?",
+		"en": "Confirm synchronization of all tenant databases?"
+	},
+	"gpkj3j4": {
+		"zh-cn": "联系电话",
+		"en": "Contact phone number"
+	},
+	"xzpe3pb": {
+		"zh-cn": " 同步所有租户数据库 ",
+		"en": "Synchronize all tenant databases"
+	},
+	"22aki4": {
+		"zh-cn": "ID隔离",
+		"en": "ID isolation"
+	},
+	"ekyuy3": {
+		"zh-cn": "库隔离",
+		"en": "Database isolation"
+	},
+	"ix54os4": {
+		"zh-cn": "重置密码",
+		"en": "Reset password"
+	},
+	"j6fvl78": {
+		"zh-cn": " 创建租户数据 ",
+		"en": "Create tenant data"
+	},
+	"j5lz6c8": {
+		"zh-cn": " 创建租户库表 ",
+		"en": "Create tenant database tables"
+	},
+	"8apt9w6": {
+		"zh-cn": " 授权菜单 ",
+		"en": "Authorize menus"
+	},
+	"vps2t77": {
+		"zh-cn": " 接口黑名单 ",
+		"en": "Interface blacklist"
+	},
+	"frze388": {
+		"zh-cn": " 授权租户菜单 ",
+		"en": "Authorize tenant menus"
+	},
+	"e1q3wo8": {
+		"zh-cn": "租户类型不能为空",
+		"en": "Tenant type cannot be empty"
+	},
+	"cs5cfc4": {
+		"zh-cn": "所属机构",
+		"en": "Affiliated Organization"
+	},
+	"ky6bw58": {
+		"zh-cn": "租户名称不能为空",
+		"en": "Tenant name cannot be empty"
+	},
+	"uwrxoj8": {
+		"zh-cn": "租管账号不能为空",
+		"en": "Management account cannot be empty"
+	},
+	"fvwyik4": {
+		"zh-cn": "租管姓名",
+		"en": "Management Name"
+	},
+	"a1c3zo8": {
+		"zh-cn": "租管姓名不能为空",
+		"en": "Management name cannot be empty"
+	},
+	"8y7ewy8": {
+		"zh-cn": "电话号码不能为空",
+		"en": "Phone number cannot be empty"
+	},
+	"gdo4af4": {
+		"zh-cn": "绑定域名",
+		"en": "Bound Domain"
+	},
+	"cb8ajm4": {
+		"zh-cn": "库定位器",
+		"en": "Database Locator"
+	},
+	"8oyoyz9": {
+		"zh-cn": "数据库类型不能为空",
+		"en": "Database type cannot be empty"
+	},
+	"785aik5": {
+		"zh-cn": "连接字符串",
+		"en": "Connection String"
+	},
+	"hl6ft89": {
+		"zh-cn": "连接字符串不能为空",
+		"en": "Connection string cannot be empty"
+	},
+	"yi3key5": {
+		"zh-cn": "从库连接串",
+		"en": "Slave Connection String"
+	},
+	"vnh1wm7": {
+		"zh-cn": " 从库连接串 ",
+		"en": "Slave Connection String"
+	},
+	"ebemat2e": {
+		"zh-cn": "格式：[{\"HitRate\":10, \"ConnectionString\":\"xxx\"},{\"HitRate\":10, \"ConnectionString\":\"xxx\"}]",
+		"en": "Format: [{\"HitRate\":10, \"ConnectionString\":\"xxx\"},{\"HitRate\":10, \"ConnectionString\":\"xxx\"}]"
+	},
+	"fqo12": {
+		"zh-cn": "备注",
+		"en": "Remarks"
+	},
+	"luhs5e7": {
+		"zh-cn": "请输入备注内容",
+		"en": "Please enter remarks"
+	},
+	"gzcenw4": {
+		"zh-cn": "菜单名称",
+		"en": "Menu Name"
+	},
+	"gzj3ft4": {
+		"zh-cn": "菜单类型",
+		"en": "Menu Type"
+	},
+	"iebehj4": {
+		"zh-cn": "路由路径",
+		"en": "Route Path"
+	},
+	"gbuf8n4": {
+		"zh-cn": "组件路径",
+		"en": "Component Path"
+	},
+	"dneg984": {
+		"zh-cn": "权限标识",
+		"en": "Permission Identifier"
+	},
+	"lnjk2": {
+		"zh-cn": "类型",
+		"en": "Type"
+	},
+	"kr3b2": {
+		"zh-cn": "目录",
+		"en": "Directory"
+	},
+	"mvw92": {
+		"zh-cn": "菜单",
+		"en": "Menu"
+	},
+	"hnt12": {
+		"zh-cn": "按钮",
+		"en": "Button"
+	},
+	"31i99n6": {
+		"zh-cn": " 全部展开 ",
+		"en": "Expand All"
+	},
+	"30n4qw6": {
+		"zh-cn": " 全部折叠 ",
+		"en": "Collapse All"
+	},
+	"adj5w64": {
+		"zh-cn": "上级菜单",
+		"en": "Parent Menu"
+	},
+	"u64y8d7": {
+		"zh-cn": "请选择上级菜单",
+		"en": "Please select parent menu"
+	},
+	"6do1ix8": {
+		"zh-cn": "菜单类型不能为空",
+		"en": "Menu type cannot be empty"
+	},
+	"is6gk8": {
+		"zh-cn": "菜单名称不能为空",
+		"en": "Menu name cannot be empty"
+	},
+	"ie1p9h4": {
+		"zh-cn": "路由名称",
+		"en": "Route Name"
+	},
+	"gzct4y4": {
+		"zh-cn": "菜单图标",
+		"en": "Menu Icon"
+	},
+	"lsuh03": {
+		"zh-cn": "重定向",
+		"en": "Redirect"
+	},
+	"dqkb4k5": {
+		"zh-cn": "重定向地址",
+		"en": "Redirect Address"
+	},
+	"j7jc1j4": {
+		"zh-cn": "链接地址",
+		"en": "Link Address"
+	},
+	"m8o4w1a": {
+		"zh-cn": "外链/内嵌时链接地址",
+		"en": "Link address for external/embedded"
+	},
+	"gzewae4": {
+		"zh-cn": "菜单排序",
+		"en": "Menu Sort"
+	},
+	"d917x24": {
+		"zh-cn": "是否隐藏",
+		"en": "Whether to Hide"
+	},
+	"qce72": {
+		"zh-cn": "隐藏",
+		"en": "Hide"
+	},
+	"c5wjw3": {
+		"zh-cn": "不隐藏",
+		"en": "Do not hide"
+	},
+	"d8wzp84": {
+		"zh-cn": "是否缓存",
+		"en": "Whether to cache"
+	},
+	"m46d2": {
+		"zh-cn": "缓存",
+		"en": "Cache"
+	},
+	"c1oc23": {
+		"zh-cn": "不缓存",
+		"en": "Do not cache"
+	},
+	"d8q67r4": {
+		"zh-cn": "是否固定",
+		"en": "Whether to fix"
+	},
+	"faow2": {
+		"zh-cn": "固定",
+		"en": "Fix"
+	},
+	"buuul3": {
+		"zh-cn": "不固定",
+		"en": "Do not fix"
+	},
+	"d8p94u4": {
+		"zh-cn": "是否内嵌",
+		"en": "Whether to embed"
+	},
+	"edlz2": {
+		"zh-cn": "内嵌",
+		"en": "Embed"
+	},
+	"btxro3": {
+		"zh-cn": "不内嵌",
+		"en": "Do not embed"
+	},
+	"d8pu5s4": {
+		"zh-cn": "是否启用",
+		"en": "Whether to enable"
+	},
+	"buism3": {
+		"zh-cn": "不启用",
+		"en": "Do not enable"
+	},
+	"azvj8v4": {
+		"zh-cn": "参数配置",
+		"en": "Parameter configuration"
+	},
+	"iuu3gk4": {
+		"zh-cn": "配置名称",
+		"en": "Configuration name"
+	},
+	"iv1elo4": {
+		"zh-cn": "配置编码",
+		"en": "Configuration code"
+	},
+	"dzufn3": {
+		"zh-cn": "属性值",
+		"en": "Attribute value"
+	},
+	"at83sn4": {
+		"zh-cn": "内置参数",
+		"en": "Built-in parameters"
+	},
+	"avmg154": {
+		"zh-cn": "分组编码",
+		"en": "Group code"
+	},
+	"e86r2e4": {
+		"zh-cn": "添加配置",
+		"en": "Add configuration"
+	},
+	"gms6yk4": {
+		"zh-cn": "编辑配置",
+		"en": "Edit configuration"
+	},
+	"x42gwp8": {
+		"zh-cn": "确定删除配置：【",
+		"en": "Confirm deletion of configuration:【"
+	},
+	"k6n1": {
+		"zh-cn": "是",
+		"en": "Yes"
+	},
+	"gme1": {
+		"zh-cn": "否",
+		"en": "No"
+	},
+	"18jpqs8": {
+		"zh-cn": "配置名称不能为空",
+		"en": "Configuration name cannot be empty"
+	},
+	"oojtq48": {
+		"zh-cn": "配置编码不能为空",
+		"en": "Configuration code cannot be empty"
+	},
+	"fuk1": {
+		"zh-cn": "值",
+		"en": "Value"
+	},
+	"v25ol05": {
+		"zh-cn": "值不能为空",
+		"en": "Value cannot be empty"
+	},
+	"eb2c3": {
+		"zh-cn": " 值 ",
+		"en": "Value"
+	},
+	"yxejxap": {
+		"zh-cn": "国密SM2的公匙和私匙之间用英文符号分号';'分隔",
+		"en": "Separate SM2 public and private keys with English semicolon ';'"
+	},
+	"cv4oqh8": {
+		"zh-cn": "内置参数不能为空",
+		"en": "Built-in parameters cannot be empty"
+	},
+	"bv2bfz4": {
+		"zh-cn": "字典信息",
+		"en": "Dictionary Information"
+	},
+	"bv36104": {
+		"zh-cn": "字典名称",
+		"en": "Dictionary Name"
+	},
+	"bvah644": {
+		"zh-cn": "字典编码",
+		"en": "Dictionary Code"
+	},
+	"d8pfvk4": {
+		"zh-cn": "是否内置",
+		"en": "Built-in"
+	},
+	"d8sxdn4": {
+		"zh-cn": "是否枚举",
+		"en": "Enumeration"
+	},
+	"e7xbk64": {
+		"zh-cn": "添加字典",
+		"en": "Add Dictionary"
+	},
+	"gmirgc4": {
+		"zh-cn": "编辑字典",
+		"en": "Edit Dictionary"
+	},
+	"uxanmv8": {
+		"zh-cn": "确定删除字典：【",
+		"en": "Confirm deletion of dictionary:【"
+	},
+	"clf6155": {
+		"zh-cn": "字典值信息",
+		"en": "Dictionary Value Information"
+	},
+	"dehsu94": {
+		"zh-cn": "显示文本",
+		"en": "Display Text"
+	},
+	"drxi33": {
+		"zh-cn": "字典值",
+		"en": "Dictionary Value"
+	},
+	"m9wr2": {
+		"zh-cn": "编码",
+		"en": "Code"
+	},
+	"cuqp284": {
+		"zh-cn": "拓展数据",
+		"en": "Extended Data"
+	},
+	"2emgeg5": {
+		"zh-cn": "请选择字典",
+		"en": "Please Select Dictionary"
+	},
+	"en12d25": {
+		"zh-cn": "添加字典值",
+		"en": "Add Dictionary Value"
+	},
+	"i6dp345": {
+		"zh-cn": "编辑字典值",
+		"en": "Edit Dictionary Value"
+	},
+	"3s7she5": {
+		"zh-cn": "复制字典值",
+		"en": "Copy Dictionary Value"
+	},
+	"yl31r59": {
+		"zh-cn": "确定删除字典值：【",
+		"en": "Confirm Delete Dictionary Value:【"
+	},
+	"drhof3": {
+		"zh-cn": "字典 ",
+		"en": "Dictionary"
+	},
+	"hu2t2": {
+		"zh-cn": "文本",
+		"en": "Text"
+	},
+	"bv1ulh4": {
+		"zh-cn": "字典值 ",
+		"en": "Dictionary Value"
+	},
+	"o6y1": {
+		"zh-cn": "空",
+		"en": "Empty"
+	},
+	"hys32": {
+		"zh-cn": "有值",
+		"en": "Has Value"
+	},
+	"fljd2": {
+		"zh-cn": "复制",
+		"en": "Copy"
+	},
+	"jgkthw8": {
+		"zh-cn": "字典名称不能为空",
+		"en": "Dictionary name cannot be empty"
+	},
+	"s4j4hw8": {
+		"zh-cn": "字典编码不能为空",
+		"en": "Dictionary code cannot be empty"
+	},
+	"h316gob": {
+		"zh-cn": "请先输入JSON字符串",
+		"en": "Please enter JSON string first"
+	},
+	"kvt2iy9": {
+		"zh-cn": "JSON格式化成功",
+		"en": "JSON formatted successfully"
+	},
+	"2retupf": {
+		"zh-cn": "JSON格式不正确，请检查输入",
+		"en": "JSON format incorrect, please check input"
+	},
+	"ha9vlb8": {
+		"zh-cn": "显示文本不能为空",
+		"en": "Display text cannot be empty"
+	},
+	"shlhpn7": {
+		"zh-cn": "字典值不能为空",
+		"en": "Dictionary value cannot be empty"
+	},
+	"dn1ddz4": {
+		"zh-cn": "标签类型",
+		"en": "Tag Type"
+	},
+	"c76fp3": {
+		"zh-cn": "主题色",
+		"en": "Theme Color"
+	},
+	"ai56i09": {
+		"zh-cn": "样式(Style)",
+		"en": "Style"
+	},
+	"2slpa99": {
+		"zh-cn": "样式(Class)",
+		"en": "Class"
+	},
+	"kocbsn7": {
+		"zh-cn": "请输入拓展数据",
+		"en": "Please enter extended data"
+	},
+	"k9ccxh7": {
+		"zh-cn": "格式化JSON",
+		"en": "Format JSON"
+	},
+	"ac67ho4": {
+		"zh-cn": "作业信息",
+		"en": "Job Information"
+	},
+	"ace63j4": {
+		"zh-cn": "作业编号",
+		"en": "Job Number"
+	},
+	"izebr3": {
+		"zh-cn": "组名称",
+		"en": "Group Name"
+	},
+	"hrlt2": {
+		"zh-cn": "描述",
+		"en": "Description"
+	},
+	"cz9l2z4": {
+		"zh-cn": "执行方式",
+		"en": "Execution Method"
+	},
+	"93jsgj6": {
+		"zh-cn": "作业创建类型",
+		"en": "Job Creation Type"
+	},
+	"300ll77": {
+		"zh-cn": "扫描特性触发器",
+		"en": "Scan Characteristic Trigger"
+	},
+	"devbay4": {
+		"zh-cn": "更新时间",
+		"en": "Update Time"
+	},
+	"jmi28n4": {
+		"zh-cn": "额外数据",
+		"en": "Additional Data"
+	},
+	"e7v9j74": {
+		"zh-cn": "添加作业",
+		"en": "Add Job"
+	},
+	"gmgpfd4": {
+		"zh-cn": "编辑作业",
+		"en": "Edit Job"
+	},
+	"teejok8": {
+		"zh-cn": "确定删除作业：【",
+		"en": "Confirm deletion of job:【"
+	},
+	"etv01k5": {
+		"zh-cn": "添加触发器",
+		"en": "Add Trigger"
+	},
+	"id7mrm5": {
+		"zh-cn": "编辑触发器",
+		"en": "Edit Trigger"
+	},
+	"3uuyub9": {
+		"zh-cn": "确定删除触发器：【",
+		"en": "Confirm deletion of trigger:【"
+	},
+	"r9kwww6": {
+		"zh-cn": "启动所有作业",
+		"en": "Start All Jobs"
+	},
+	"xmyrkv6": {
+		"zh-cn": "暂停所有作业",
+		"en": "Pause All Jobs"
+	},
+	"cz5osj4": {
+		"zh-cn": "执行作业",
+		"en": "Execute Job"
+	},
+	"ayqm3b4": {
+		"zh-cn": "启动作业",
+		"en": "Start Job"
+	},
+	"d9ltjs4": {
+		"zh-cn": "暂停作业",
+		"en": "Pause Job"
+	},
+	"b13hv44": {
+		"zh-cn": "取消作业",
+		"en": "Cancel Job"
+	},
+	"f014nw5": {
+		"zh-cn": "启动触发器",
+		"en": "Start Trigger"
+	},
+	"eo9rgd5": {
+		"zh-cn": "暂停触发器",
+		"en": "Pause Trigger"
+	},
+	"c3s7qb9": {
+		"zh-cn": "强制唤醒作业调度器",
+		"en": "Force Wake Job Scheduler"
+	},
+	"7vxdob": {
+		"zh-cn": "强制触发所有作业持久化",
+		"en": "Force Trigger All Job Persistence"
+	},
+	"czg1m24": {
+		"zh-cn": "执行记录",
+		"en": "Execution Records"
+	},
+	"i4ky9u5": {
+		"zh-cn": "触发器编号",
+		"en": "Trigger Number"
+	},
+	"wispj96": {
+		"zh-cn": "当前运行次数",
+		"en": "Current Run Count"
+	},
+	"43ph116": {
+		"zh-cn": "最近运行时间",
+		"en": "Last Run Time"
+	},
+	"mgyzbu7": {
+		"zh-cn": "下一次运行时间",
+		"en": "Next Run Time"
+	},
+	"i4mzo85": {
+		"zh-cn": "触发器状态",
+		"en": "Trigger Status"
+	},
+	"czdwha4": {
+		"zh-cn": "执行结果",
+		"en": "Execution Result"
+	},
+	"dfyfru6": {
+		"zh-cn": "耗时(ms)",
+		"en": "Duration (ms)"
+	},
+	"ar84e54": {
+		"zh-cn": "创建时间",
+		"en": "Creation Time"
+	},
+	"gde3i58": {
+		"zh-cn": "确定要清空日志?",
+		"en": "Confirm to clear logs?"
+	},
+	"edyzqc4": {
+		"zh-cn": "清空成功",
+		"en": "Cleared successfully"
+	},
+	"d6o19r4": {
+		"zh-cn": "描述信息",
+		"en": "Description Information"
+	},
+	"biv69s4": {
+		"zh-cn": "增加作业",
+		"en": "Add Job"
+	},
+	"i39uy56": {
+		"zh-cn": " 集群控制 ",
+		"en": "Cluster Control"
+	},
+	"k9s74q6": {
+		"zh-cn": " 任务看板 ",
+		"en": "Task Board"
+	},
+	"esxa2": {
+		"zh-cn": "参数",
+		"en": "Parameter"
+	},
+	"itlhg4": {
+		"zh-cn": " 积压 ",
+		"en": "Backlog"
+	},
+	"eo56v4": {
+		"zh-cn": " 就绪 ",
+		"en": "Ready"
+	},
+	"kfvuf36": {
+		"zh-cn": " 正在运行 ",
+		"en": "Running"
+	},
+	"fymg64": {
+		"zh-cn": " 暂停 ",
+		"en": "Paused"
+	},
+	"mzmjh4": {
+		"zh-cn": " 阻塞 ",
+		"en": "Blocked"
+	},
+	"tnjb089": {
+		"zh-cn": " 由失败进入就绪 ",
+		"en": "Ready from Failure"
+	},
+	"f0t734": {
+		"zh-cn": " 归档 ",
+		"en": "Archived"
+	},
+	"eqgna4": {
+		"zh-cn": " 崩溃 ",
+		"en": "Crashed"
+	},
+	"m08ad4": {
+		"zh-cn": " 超限 ",
+		"en": "Overlimit"
+	},
+	"e9b4k77": {
+		"zh-cn": " 无触发时间 ",
+		"en": "No trigger time"
+	},
+	"duqt255": {
+		"zh-cn": " 未启动 ",
+		"en": "Not started"
+	},
+	"yiwk3g9": {
+		"zh-cn": " 未知作业触发器 ",
+		"en": "Unknown job trigger"
+	},
+	"uzvvupa": {
+		"zh-cn": " 未知作业处理程序 ",
+		"en": "Unknown job handler"
+	},
+	"i7zt2q4": {
+		"zh-cn": "起始时间",
+		"en": "Start time"
+	},
+	"gfi7qi4": {
+		"zh-cn": "结束时间",
+		"en": "End time"
+	},
+	"5pd0xr6": {
+		"zh-cn": "最大触发次数",
+		"en": "Maximum trigger count"
+	},
+	"chpwzv6": {
+		"zh-cn": "最大出错次数",
+		"en": "Maximum error count"
+	},
+	"iz11cn4": {
+		"zh-cn": "重试次数",
+		"en": "Retry Count"
+	},
+	"g9lp5e6": {
+		"zh-cn": "重试间隔ms",
+		"en": "Retry Interval ms"
+	},
+	"i1gx3": {
+		"zh-cn": " 是 ",
+		"en": "Yes"
+	},
+	"ez163": {
+		"zh-cn": " 否 ",
+		"en": "No"
+	},
+	"ei8otj5": {
+		"zh-cn": "删除触发器",
+		"en": "Delete Trigger"
+	},
+	"f1pgq4": {
+		"zh-cn": " 并行 ",
+		"en": "Parallel"
+	},
+	"cnxt24": {
+		"zh-cn": " 串行 ",
+		"en": "Serial"
+	},
+	"d3yjb4": {
+		"zh-cn": " 内置 ",
+		"en": "Built-in"
+	},
+	"jyqcu4": {
+		"zh-cn": " 脚本 ",
+		"en": "Script"
+	},
+	"vxskod8": {
+		"zh-cn": " HTTP请求 ",
+		"en": "HTTP Request"
+	},
+	"866ksn6": {
+		"zh-cn": " 请求参数 ",
+		"en": "Request Parameters"
+	},
+	"htw9in9": {
+		"zh-cn": "Http 请求参数",
+		"en": "HTTP Request Parameters"
+	},
+	"i3t4e34": {
+		"zh-cn": "请求地址",
+		"en": "Request URL"
+	},
+	"i3vpnr4": {
+		"zh-cn": "请求方法",
+		"en": "Request Method"
+	},
+	"6x2dq25": {
+		"zh-cn": "请求报文体",
+		"en": "Request Body"
+	},
+	"ia0wpb4": {
+		"zh-cn": "超时时间",
+		"en": "Timeout"
+	},
+	"2bw8wr5": {
+		"zh-cn": "增加触发器",
+		"en": "Add Trigger"
+	},
+	"azb9tu4": {
+		"zh-cn": "删除作业",
+		"en": "Delete Job"
+	},
+	"8kzyaoa": {
+		"zh-cn": " 作业触发器运行记录",
+		"en": "Job Trigger Run Records"
+	},
+	"h9ea34": {
+		"zh-cn": " 清空 ",
+		"en": "Clear"
+	},
+	"acifrw4": {
+		"zh-cn": "作业集群",
+		"en": "Job Cluster"
+	},
+	"jjww5b4": {
+		"zh-cn": "集群编号",
+		"en": "Cluster ID"
+	},
+	"egwgr4": {
+		"zh-cn": " 宕机 ",
+		"en": "Down"
+	},
+	"cnxdze5": {
+		"zh-cn": " 工作中 ",
+		"en": "Working"
+	},
+	"z7pntv7": {
+		"zh-cn": " 等待被唤醒 ",
+		"en": "Waiting to be Woken"
+	},
+	"1zj28h8": {
+		"zh-cn": "作业编号不能为空",
+		"en": "Job ID cannot be empty"
+	},
+	"7bzbvb7": {
+		"zh-cn": "组名称不能为空",
+		"en": "Group name cannot be empty"
+	},
+	"arblyn4": {
+		"zh-cn": "创建类型",
+		"en": "Creation Type"
+	},
+	"ekcp2": {
+		"zh-cn": "内置",
+		"en": "Built-in"
+	},
+	"mixe2": {
+		"zh-cn": "脚本",
+		"en": "Script"
+	},
+	"z3acrx6": {
+		"zh-cn": "Http请求",
+		"en": "HTTP Request"
+	},
+	"gtcm2": {
+		"zh-cn": "并行",
+		"en": "Parallel"
+	},
+	"e1qy2": {
+		"zh-cn": "串行",
+		"en": "Serial"
+	},
+	"lag3gn7": {
+		"zh-cn": " 扫描触发器 ",
+		"en": "Scan Trigger"
+	},
+	"mi9shkt": {
+		"zh-cn": "此参数只在新增作业时生效<br/>扫描定义在作业上的触发器",
+		"en": "This parameter only takes effect when adding new jobs<br/>Scan triggers defined on jobs"
+	},
+	"xyu51ya": {
+		"zh-cn": " 超时时间(ms) ",
+		"en": "Timeout (ms)"
+	},
+	"d4hcb211": {
+		"zh-cn": "设为 -1 表示无限等待，留空默认值是 100,000 毫秒（100 秒）",
+		"en": "Set to -1 for infinite wait, default is 100,000 ms (100 seconds) if left blank"
+	},
+	"707ufq8": {
+		"zh-cn": "超时时间(ms)",
+		"en": "Timeout (ms)"
+	},
+	"gppc284": {
+		"zh-cn": "脚本代码",
+		"en": "Script Code"
+	},
+	"hzcj0o6": {
+		"zh-cn": "每分钟 00",
+		"en": "Every Minute 00"
+	},
+	"rqwe0g9": {
+		"zh-cn": "每小时 00:00",
+		"en": "Every Hour 00:00"
+	},
+	"2e5y56b": {
+		"zh-cn": "每天 00:00:00",
+		"en": "Every Day 00:00:00"
+	},
+	"s1656nf": {
+		"zh-cn": "每月 1 号 00:00:00",
+		"en": "Monthly Day 1 00:00:00"
+	},
+	"ceigbwc": {
+		"zh-cn": "每周日 00:00:00",
+		"en": "Weekly Sunday 00:00:00"
+	},
+	"nfmd3aj": {
+		"zh-cn": "每年 1 月 1 号 00:00:00",
+		"en": "Yearly January 1 00:00:00"
+	},
+	"79al54f": {
+		"zh-cn": "每周一至周五 00:00:00",
+		"en": "Weekly Monday to Friday 00:00:00"
+	},
+	"42kwsy8": {
+		"zh-cn": "间隔时间不能为空",
+		"en": "Interval time cannot be empty"
+	},
+	"a1e17fb": {
+		"zh-cn": "Cron表达式不能为空",
+		"en": "Cron expression cannot be empty"
+	},
+	"7v305q9": {
+		"zh-cn": "触发器编号不能为空",
+		"en": "Trigger number cannot be empty"
+	},
+	"i4ldir5": {
+		"zh-cn": "触发器类型",
+		"en": "Trigger type"
+	},
+	"qbz42": {
+		"zh-cn": "间隔",
+		"en": "Interval"
+	},
+	"prb8qd7": {
+		"zh-cn": "Cron表达式",
+		"en": "Cron expression"
+	},
+	"efhjbb8": {
+		"zh-cn": "间隔时间(ms)",
+		"en": "Interval time (ms)"
+	},
+	"5koe1p8": {
+		"zh-cn": "重试间隔(ms)",
+		"en": "Retry interval (ms)"
+	},
+	"fu6tep4": {
+		"zh-cn": "立即启动",
+		"en": "Start immediately"
+	},
+	"71bqoz7": {
+		"zh-cn": "启动时执行一次",
+		"en": "Execute once on startup"
+	},
+	"3tsybf8": {
+		"zh-cn": " 重置触发次数 ",
+		"en": "Reset trigger count"
+	},
+	"rky0sj1g": {
+		"zh-cn": "是否在启动时重置最大触发次数等于一次的作业<br/>解决因持久化数据已完成一次触发但启动时不再执行的问题",
+		"en": "Whether to reset jobs with maximum trigger count equal to one on startup<br/>Solve the problem where persisted data has completed one trigger but no longer executes on startup"
+	},
+	"c4g910c": {
+		"zh-cn": " Cron表达式生成器 ",
+		"en": "Cron Expression Generator"
+	},
+	"gysf2r4": {
+		"zh-cn": "获取失败",
+		"en": "Get failed"
+	},
+	"gala6i4": {
+		"zh-cn": "系统概览",
+		"en": "System Overview"
+	},
+	"iphe414": {
+		"zh-cn": "运行正常",
+		"en": "Running normally"
+	},
+	"dll463": {
+		"zh-cn": "处理器",
+		"en": "Processor"
+	},
+	"hq7c2": {
+		"zh-cn": "核 ",
+		"en": "Cores"
+	},
+	"m88c2": {
+		"zh-cn": "线程",
+		"en": "Threads"
+	},
+	"ed832": {
+		"zh-cn": "内存",
+		"en": "Memory"
+	},
+	"aio0xu4": {
+		"zh-cn": "使用率 ",
+		"en": "Usage Rate"
+	},
+	"d1xjg34": {
+		"zh-cn": "操作系统",
+		"en": "Operating System"
+	},
+	"iv8u3": {
+		"zh-cn": " 架构",
+		"en": "Architecture"
+	},
+	"ipgwx84": {
+		"zh-cn": "运行框架",
+		"en": "Runtime Framework"
+	},
+	"ipgrwa4": {
+		"zh-cn": "运行时间",
+		"en": "Running Time"
+	},
+	"xv2taf6": {
+		"zh-cn": "系统稳定运行",
+		"en": "System running stably"
+	},
+	"x007ri6": {
+		"zh-cn": "CPU 性能",
+		"en": "CPU Performance"
+	},
+	"xbq8ie6": {
+		"zh-cn": "CPU使用率",
+		"en": "CPU Usage"
+	},
+	"vme2cm6": {
+		"zh-cn": "处理器架构：",
+		"en": "Processor Architecture:"
+	},
+	"4mvx4u5": {
+		"zh-cn": "基础频率：",
+		"en": "Base Frequency:"
+	},
+	"bjd3t95": {
+		"zh-cn": "缓存大小：",
+		"en": "Cache size:"
+	},
+	"anx6po4": {
+		"zh-cn": "内存使用",
+		"en": "Memory usage"
+	},
+	"chcu7g4": {
+		"zh-cn": "总内存：",
+		"en": "Total memory:"
+	},
+	"c6t0u74": {
+		"zh-cn": "已使用：",
+		"en": "Used:"
+	},
+	"cvwo13": {
+		"zh-cn": "可用：",
+		"en": "Available:"
+	},
+	"hw6zcg6": {
+		"zh-cn": "磁盘使用情况",
+		"en": "Disk usage"
+	},
+	"e5jaz3": {
+		"zh-cn": "已使用",
+		"en": "Used"
+	},
+	"cj3wjt4": {
+		"zh-cn": "总容量：",
+		"en": "Total capacity:"
+	},
+	"bohno95": {
+		"zh-cn": "可用空间：",
+		"en": "Free space:"
+	},
+	"d8uifl4": {
+		"zh-cn": "显卡信息",
+		"en": "Graphics card information"
+	},
+	"fg22o3": {
+		"zh-cn": "显存：",
+		"en": "VRAM:"
+	},
+	"oie3nl5": {
+		"zh-cn": "驱动版本：",
+		"en": "Driver Version:"
+	},
+	"ay2a8l4": {
+		"zh-cn": "分辨率：",
+		"en": "Resolution:"
+	},
+	"h6z73m5": {
+		"zh-cn": "网络适配器",
+		"en": "Network Adapter"
+	},
+	"cjy424": {
+		"zh-cn": " 个活跃",
+		"en": "Active"
+	},
+	"fc6613": {
+		"zh-cn": "描述：",
+		"en": "Description:"
+	},
+	"yvgv6b5": {
+		"zh-cn": "物理地址：",
+		"en": "Physical Address:"
+	},
+	"llg2b3": {
+		"zh-cn": "速度：",
+		"en": "Speed:"
+	},
+	"oy7h8b7": {
+		"zh-cn": "IPv4地址：",
+		"en": "IPv4 Address:"
+	},
+	"glapal4": {
+		"zh-cn": "网络统计",
+		"en": "Network Statistics"
+	},
+	"czq22k4": {
+		"zh-cn": "接收字节",
+		"en": "Bytes Received"
+	},
+	"b64ehn4": {
+		"zh-cn": "发送字节",
+		"en": "Bytes Sent"
+	},
+	"czohdo4": {
+		"zh-cn": "接收包数",
+		"en": "Packets Received"
+	},
+	"b62tsr4": {
+		"zh-cn": "发送包数",
+		"en": "Packets Sent"
+	},
+	"aarkuq4": {
+		"zh-cn": "主板信息",
+		"en": "Motherboard Information"
+	},
+	"ayu9by4": {
+		"zh-cn": "制造商：",
+		"en": "Manufacturer:"
+	},
+	"ygokgk5": {
+		"zh-cn": "产品型号：",
+		"en": "Product Model:"
+	},
+	"h9jue3": {
+		"zh-cn": "版本：",
+		"en": "Version:"
+	},
+	"c9tawb4": {
+		"zh-cn": "序列号：",
+		"en": "Serial Number:"
+	},
+	"gagp2q4": {
+		"zh-cn": "系统信息",
+		"en": "System Information"
+	},
+	"lir6m15": {
+		"zh-cn": "操作系统：",
+		"en": "Operating System:"
+	},
+	"7xp5o25": {
+		"zh-cn": "系统版本：",
+		"en": "System Version:"
+	},
+	"7w5h8o5": {
+		"zh-cn": "系统架构：",
+		"en": "System Architecture:"
+	},
+	"bopb725": {
+		"zh-cn": "运行框架：",
+		"en": "Runtime Framework:"
+	},
+	"i5czij6": {
+		"zh-cn": "数据库类型：",
+		"en": "Database Type:"
+	},
+	"bbbpkn5": {
+		"zh-cn": "机器名称：",
+		"en": "Machine Name:"
+	},
+	"sfjzv55": {
+		"zh-cn": "当前用户：",
+		"en": "Current User:"
+	},
+	"nkqeu97": {
+		"zh-cn": "系统启动时间：",
+		"en": "System Boot Time:"
+	},
+	"6spg8d7": {
+		"zh-cn": "进程启动时间：",
+		"en": "Process Start Time:"
+	},
+	"1ukiwy9": {
+		"zh-cn": "NuGet 包信息",
+		"en": "NuGet Package Information"
+	},
+	"eerf3": {
+		"zh-cn": " 个包",
+		"en": "packages"
+	},
+	"3g7dxm8": {
+		"zh-cn": "禁止删除顶层缓存",
+		"en": "Deletion of top-level cache is prohibited"
+	},
+	"zgzy6j8": {
+		"zh-cn": "确定删除缓存：【",
+		"en": "Confirm deletion of cache:【"
+	},
+	"b0hu7a9": {
+		"zh-cn": "确认清空所有缓存?",
+		"en": "Confirm clearing all cache?"
+	},
+	"lworich": {
+		"zh-cn": "系统缓存数据管理，请慎重操作！！！",
+		"en": "System cache data management, please operate with caution!!!"
+	},
+	"ges7fa4": {
+		"zh-cn": "缓存列表",
+		"en": "Cache list"
+	},
+	"gevalf4": {
+		"zh-cn": "缓存数据",
+		"en": "Cache data"
+	},
+	"lmy476": {
+		"zh-cn": " 删除缓存 ",
+		"en": "Delete cache"
+	},
+	"goerhk5": {
+		"zh-cn": "数据关系图",
+		"en": "Data relationship diagram"
+	},
+	"av5v0z4": {
+		"zh-cn": "区域信息",
+		"en": "Area information"
+	},
+	"hm48c64": {
+		"zh-cn": "行政名称",
+		"en": "Administrative Name"
+	},
+	"hm3cc14": {
+		"zh-cn": "行政代码",
+		"en": "Administrative Code"
+	},
+	"em7x2": {
+		"zh-cn": "区号",
+		"en": "Area Code"
+	},
+	"xeardp6": {
+		"zh-cn": "添加行政区域",
+		"en": "Add Administrative Region"
+	},
+	"zy7v76": {
+		"zh-cn": "编辑行政区域",
+		"en": "Edit Administrative Region"
+	},
+	"7gd4w2a": {
+		"zh-cn": "确定删除行政区域：【",
+		"en": "Confirm deletion of administrative region:【"
+	},
+	"rj570a6": {
+		"zh-cn": "同步高德地图",
+		"en": "Synchronize Gaode Map"
+	},
+	"brosmv9": {
+		"zh-cn": "同步天地图行政区划",
+		"en": "Synchronize Tianditu Administrative Divisions"
+	},
+	"tvvdai9": {
+		"zh-cn": "同步国家地名信息库",
+		"en": "Synchronize National Geographic Names Database"
+	},
+	"a474ox6": {
+		"zh-cn": "菜单选择有误",
+		"en": "Menu selection error"
+	},
+	"p6kpuz8": {
+		"zh-cn": "努力同步中...",
+		"en": "Synchronizing..."
+	},
+	"f6n3fk4": {
+		"zh-cn": "生成成功",
+		"en": "Generated successfully"
+	},
+	"uci7jlb": {
+		"zh-cn": "生成/更新系统组织架构",
+		"en": "Generate/Update System Organization Structure"
+	},
+	"cm2kle5": {
+		"zh-cn": "同步天地图",
+		"en": "Synchronize Tianditu"
+	},
+	"9z4sa49": {
+		"zh-cn": "同步民政部行政区划",
+		"en": "Synchronize Ministry of Civil Affairs Administrative Divisions"
+	},
+	"pwt0at7": {
+		"zh-cn": " 从云端同步 ",
+		"en": "Sync from Cloud"
+	},
+	"bcgo0u8": {
+		"zh-cn": " 生成组织架构 ",
+		"en": "Generate Organization Structure"
+	},
+	"ltu4gr6": {
+		"zh-cn": "行政区域名称",
+		"en": "Administrative Region Name"
+	},
+	"avb5xn4": {
+		"zh-cn": "全部展开",
+		"en": "Expand All"
+	},
+	"avc62w4": {
+		"zh-cn": "全部折叠",
+		"en": "Collapse All"
+	},
+	"fwdps3": {
+		"zh-cn": "根节点",
+		"en": "Root Node"
+	},
+	"ejix2": {
+		"zh-cn": "刷新",
+		"en": "Refresh"
+	},
+	"8jv7ud9": {
+		"zh-cn": "行政区域数据错误！",
+		"en": "Administrative region data error!"
+	},
+	"jv765f8": {
+		"zh-cn": "努力生成中...",
+		"en": "Generating in progress..."
+	},
+	"9ntzurs": {
+		"zh-cn": " 只会更新和新增组织架构，不会删除已有的组织架构数据！ ",
+		"en": "Only updates and adds organizational structure, will not delete existing organizational structure data!"
+	},
+	"iky9454": {
+		"zh-cn": "选择层级",
+		"en": "Select Level"
+	},
+	"2em1us5": {
+		"zh-cn": "请选择层级",
+		"en": "Please select level"
+	},
+	"dhg3b3": {
+		"zh-cn": "天地图",
+		"en": "Tianditu"
+	},
+	"xmaxbu7": {
+		"zh-cn": "区划名称或编码",
+		"en": "Division name or code"
+	},
+	"mnqp0qb": {
+		"zh-cn": "区划名称或编码不能为空",
+		"en": "Division name or code cannot be empty"
+	},
+	"gih1n87": {
+		"zh-cn": "下级行政区级数",
+		"en": "Number of Subordinate Administrative Levels"
+	},
+	"44cng48": {
+		"zh-cn": "不返回下级行政区",
+		"en": "Do Not Return Subordinate Administrative Regions"
+	},
+	"jioq2p8": {
+		"zh-cn": "返回下一级行政区",
+		"en": "Return Next-Level Administrative Regions"
+	},
+	"iyw4pp8": {
+		"zh-cn": "返回下两级行政区",
+		"en": "Return Two-Levels-Below Administrative Regions"
+	},
+	"jdqkqg8": {
+		"zh-cn": "返回下三级行政区",
+		"en": "Return Three-Levels-Below Administrative Regions"
+	},
+	"gfbz2": {
+		"zh-cn": "密钥",
+		"en": "Secret Key"
+	},
+	"4q8tld6": {
+		"zh-cn": "密钥不能为空",
+		"en": "Secret Key Cannot Be Empty"
+	},
+	"igal3l4": {
+		"zh-cn": "输入密钥",
+		"en": "Enter Secret Key"
+	},
+	"u4enyr9": {
+		"zh-cn": "国家地名信息库数据",
+		"en": "National Geographic Names Database Data"
+	},
+	"cxetiw4": {
+		"zh-cn": "接口说明",
+		"en": "Interface Description"
+	},
+	"ru014yl": {
+		"zh-cn": "指定区划代码 (0或不输入，导入全部数据)",
+		"en": "Specify division code (0 or leave blank to import all data)"
+	},
+	"cnq0sp6": {
+		"zh-cn": "指定区划代码",
+		"en": "Specify division code"
+	},
+	"hymp3ls": {
+		"zh-cn": "行政区级数（最大查询深度，最多支持2级深度，不支持村级）",
+		"en": "Administrative level count (maximum query depth, supports up to 2 levels, village level not supported)"
+	},
+	"m7c8vk5": {
+		"zh-cn": "行政区级数",
+		"en": "Administrative level count"
+	},
+	"dl7xi3": {
+		"zh-cn": "天津市",
+		"en": "Tianjin City"
+	},
+	"u60lzmi": {
+		"zh-cn": "请正确输入高德地图开发者 Key 值",
+		"en": "Please enter the correct AMap Developer Key value"
+	},
+	"n9i1wz6": {
+		"zh-cn": "高德开发平台",
+		"en": "AMap Developer Platform"
+	},
+	"nxw7afq": {
+		"zh-cn": " 此操作会更新行政区划表所有数据，请慎重操作！！！ ",
+		"en": "This operation will update all data in the administrative division table, please proceed with caution!!!"
+	},
+	"wx4o7sa": {
+		"zh-cn": "高德地图开发者Key",
+		"en": "AMap Developer Key"
+	},
+	"4kppw8e": {
+		"zh-cn": "高德地图开发者Key不能为空",
+		"en": "AMap Developer Key cannot be empty"
+	},
+	"qnj5tcs": {
+		"zh-cn": "查询关键字（行政区名称、citycode、adcode）",
+		"en": "Search keyword (administrative region name, citycode, adcode)"
+	},
+	"1yrh295": {
+		"zh-cn": "查询关键字",
+		"en": "Search keyword"
+	},
+	"ldnpt8c": {
+		"zh-cn": "行政区级数（不支持村级）",
+		"en": "Administrative level count (village level not supported)"
+	},
+	"rjkimj6": {
+		"zh-cn": "上级行政Id",
+		"en": "Parent Administrative ID"
+	},
+	"krcl3va": {
+		"zh-cn": "上级行政Id不能为空",
+		"en": "Parent administrative ID cannot be empty"
+	},
+	"tpezndh": {
+		"zh-cn": "上级行政Id或上级行政代码或默认0",
+		"en": "Parent administrative ID or parent administrative code or default 0"
+	},
+	"sdotru8": {
+		"zh-cn": "行政名称不能为空",
+		"en": "Administrative name cannot be empty"
+	},
+	"mleuyn8": {
+		"zh-cn": "行政代码不能为空",
+		"en": "Administrative code cannot be empty"
+	},
+	"fcm32i4": {
+		"zh-cn": "相关文件",
+		"en": "Related Files"
+	},
+	"d4yd6l4": {
+		"zh-cn": "文件信息",
+		"en": "File Information"
+	},
+	"eyrn2": {
+		"zh-cn": "名称",
+		"en": "Name"
+	},
+	"qp502": {
+		"zh-cn": "预览",
+		"en": "Preview"
+	},
+	"e7i79u6": {
+		"zh-cn": "大小(KB)",
+		"en": "Size (KB)"
+	},
+	"ezsi2": {
+		"zh-cn": "后缀",
+		"en": "Extension"
+	},
+	"xehxlo6": {
+		"zh-cn": "MIME类型",
+		"en": "MIME Type"
+	},
+	"bv30mn4": {
+		"zh-cn": "存储标识",
+		"en": "Storage Identifier"
+	},
+	"buyqs14": {
+		"zh-cn": "存储位置",
+		"en": "Storage Location"
+	},
+	"lmhc2": {
+		"zh-cn": "类别",
+		"en": "Category"
+	},
+	"efr62": {
+		"zh-cn": "别名",
+		"en": "Alias"
+	},
+	"n9hwg6": {
+		"zh-cn": "业务数据ID",
+		"en": "Business Data ID"
+	},
+	"w76pdh8": {
+		"zh-cn": "确定删除文件：【",
+		"en": "Confirm deletion of file:【"
+	},
+	"pm4lx9a": {
+		"zh-cn": "此文件格式不支持预览",
+		"en": "This file format does not support preview"
+	},
+	"jt50ig4": {
+		"zh-cn": "预览失败",
+		"en": "Preview failed"
+	},
+	"d4z7rm4": {
+		"zh-cn": "文件名称",
+		"en": "File Name"
+	},
+	"cd0k3t4": {
+		"zh-cn": "开始时间",
+		"en": "Start Time"
+	},
+	"cde224": {
+		"zh-cn": " 上传 ",
+		"en": "Upload"
+	},
+	"db9abd4": {
+		"zh-cn": "无法预览",
+		"en": "Cannot preview"
+	},
+	"e28i2": {
+		"zh-cn": "下载",
+		"en": "Download"
+	},
+	"ogvwjp6": {
+		"zh-cn": " 上传文件 ",
+		"en": "Upload File"
+	},
+	"wxrovq7": {
+		"zh-cn": "请选择文件类型",
+		"en": "Please select file type"
+	},
+	"cglen44": {
+		"zh-cn": "归档文件",
+		"en": "Archive file"
+	},
+	"wlobrhh": {
+		"zh-cn": "请上传大小不超过 10MB 的文件",
+		"en": "Please upload files no larger than 10MB"
+	},
+	"39e3899": {
+		"zh-cn": "将文件拖到此处，或",
+		"en": "Drag file here, or"
+	},
+	"ek7w3c4": {
+		"zh-cn": "点击上传",
+		"en": "Click to upload"
+	},
+	"gmkhca4": {
+		"zh-cn": "编辑文件",
+		"en": "Edit file"
+	},
+	"d58wzo4": {
+		"zh-cn": "文件路径",
+		"en": "File path"
+	},
+	"ma502": {
+		"zh-cn": "联动",
+		"en": "Linkage"
+	},
+	"1vh5yu9": {
+		"zh-cn": "修改文件信息成功！",
+		"en": "File information modified successfully!"
+	},
+	"1whzk29": {
+		"zh-cn": "修改文件信息失败：",
+		"en": "Failed to modify file information:"
+	},
+	"84cbtq8": {
+		"zh-cn": "文件名称不能为空",
+		"en": "File name cannot be empty"
+	},
+	"d55wjj4": {
+		"zh-cn": "文件类型",
+		"en": "File type"
+	},
+	"n9hxc6": {
+		"zh-cn": "业务数据Id",
+		"en": "Business data ID"
+	},
+	"cr2dpn4": {
+		"zh-cn": "打印信息",
+		"en": "Print information"
+	},
+	"ai9edl4": {
+		"zh-cn": "修改时间",
+		"en": "Modification time"
+	},
+	"sjdqo06": {
+		"zh-cn": "添加打印模板",
+		"en": "Add print template"
+	},
+	"3uysui6": {
+		"zh-cn": "编辑打印模板",
+		"en": "Edit print template"
+	},
+	"bkv2mw4": {
+		"zh-cn": "复制成功",
+		"en": "Copy successful"
+	},
+	"b9mfkxa": {
+		"zh-cn": "确定删除打印模板：【",
+		"en": "Confirm deletion of print template:【"
+	},
+	"dtgrr54": {
+		"zh-cn": "模板名称",
+		"en": "Template name"
+	},
+	"agiwnt4": {
+		"zh-cn": "保存模板",
+		"en": "Save Template"
+	},
+	"f2tvjj8": {
+		"zh-cn": "模板名称不能为空",
+		"en": "Template name cannot be empty"
+	},
+	"cr9x2l4": {
+		"zh-cn": "打印类型",
+		"en": "Print Type"
+	},
+	"iy9aek5": {
+		"zh-cn": "浏览器打印",
+		"en": "Browser Print"
+	},
+	"g11b5j5": {
+		"zh-cn": "客户端打印",
+		"en": "Client Print"
+	},
+	"9fpibm7": {
+		"zh-cn": "客户端服务地址",
+		"en": "Client Service Address"
+	},
+	"cr32gb4": {
+		"zh-cn": "打印参数",
+		"en": "Print Parameters"
+	},
+	"krzyek7": {
+		"zh-cn": "请输入打印参数",
+		"en": "Please enter print parameters"
+	},
+	"co6uwd4": {
+		"zh-cn": "微软雅黑",
+		"en": "Microsoft YaHei"
+	},
+	"rg6a2": {
+		"zh-cn": "黑体",
+		"en": "SimHei"
+	},
+	"g0882": {
+		"zh-cn": "宋体",
+		"en": "SimSun"
+	},
+	"au819k4": {
+		"zh-cn": "华为楷体",
+		"en": "Huawei Kaiti"
+	},
+	"wd0g7r6": {
+		"zh-cn": "操作失败: ",
+		"en": "Operation failed:"
+	},
+	"spjq0hb": {
+		"zh-cn": "是否确认清空模板信息?",
+		"en": "Are you sure to clear the template information?"
+	},
+	"o6902": {
+		"zh-cn": "警告",
+		"en": "Warning"
+	},
+	"cr0rf3": {
+		"zh-cn": "出错：",
+		"en": "Error："
+	},
+	"kmbcxg4": {
+		"zh-cn": "默认纸张",
+		"en": "Default paper"
+	},
+	"w3xhtga": {
+		"zh-cn": "设置纸张宽高(mm)",
+		"en": "Set paper width and height (mm)"
+	},
+	"mmnro45": {
+		"zh-cn": "自定义宽高",
+		"en": "Custom width and height"
+	},
+	"zbkfaa5": {
+		"zh-cn": "宽（mm）",
+		"en": "Width (mm)"
+	},
+	"1o8bev5": {
+		"zh-cn": "高（mm）",
+		"en": "Height (mm)"
+	},
+	"e7n4t3": {
+		"zh-cn": "左对齐",
+		"en": "Left Align"
+	},
+	"g4g82": {
+		"zh-cn": "居中",
+		"en": "Center"
+	},
+	"cr6i23": {
+		"zh-cn": "右对齐",
+		"en": "Right Align"
+	},
+	"msfvx3": {
+		"zh-cn": "顶对齐",
+		"en": "Top Align"
+	},
+	"bj7l4q4": {
+		"zh-cn": "垂直居中",
+		"en": "Vertical Center"
+	},
+	"eb8wc3": {
+		"zh-cn": "底对齐",
+		"en": "Bottom Align"
+	},
+	"dqrlvo4": {
+		"zh-cn": "横向分散",
+		"en": "Horizontal Distribute"
+	},
+	"gc1lw94": {
+		"zh-cn": "纵向分散",
+		"en": "Vertical Distribute"
+	},
+	"i3nl2": {
+		"zh-cn": "旋转",
+		"en": "Rotate"
+	},
+	"ee0h8z4": {
+		"zh-cn": "清空模板",
+		"en": "Clear Template"
+	},
+	"e9ih7e6": {
+		"zh-cn": "模板JSON",
+		"en": "Template JSON"
+	},
+	"g8ll2": {
+		"zh-cn": "属性",
+		"en": "Properties"
+	},
+	"ed8ep44": {
+		"zh-cn": "测试数据",
+		"en": "Test Data"
+	},
+	"i2aulc6": {
+		"zh-cn": "格式化字符串",
+		"en": "Format String"
+	},
+	"1lxo21c": {
+		"zh-cn": "对整个文档的完整测试数据",
+		"en": "Complete test data for the entire document"
+	},
+	"cr6vuj4": {
+		"zh-cn": "打印模板",
+		"en": "Print Template"
+	},
+	"c4ffd3": {
+		"zh-cn": "二维码",
+		"en": "QR Code"
+	},
+	"me4hw3": {
+		"zh-cn": "长文本",
+		"en": "Long Text"
+	},
+	"p624py6": {
+		"zh-cn": "测试商品01",
+		"en": "Test Product 01"
+	},
+	"p624pz6": {
+		"zh-cn": "测试商品02",
+		"en": "Test Product 02"
+	},
+	"p624q06": {
+		"zh-cn": "测试商品03",
+		"en": "Test Product 03"
+	},
+	"p624q16": {
+		"zh-cn": "测试商品04",
+		"en": "Test Product 04"
+	},
+	"p624q26": {
+		"zh-cn": "测试商品05",
+		"en": "Test Product 05"
+	},
+	"p624q36": {
+		"zh-cn": "测试商品06",
+		"en": "Test Product 06"
+	},
+	"p624q46": {
+		"zh-cn": "测试商品07",
+		"en": "Test Product 07"
+	},
+	"p624q56": {
+		"zh-cn": "测试商品08",
+		"en": "Test Product 08"
+	},
+	"p624q66": {
+		"zh-cn": "测试商品09",
+		"en": "Test Product 09"
+	},
+	"p624qs6": {
+		"zh-cn": "测试商品10",
+		"en": "Test Product 10"
+	},
+	"p624qt6": {
+		"zh-cn": "测试商品11",
+		"en": "Test Product 11"
+	},
+	"p624qu6": {
+		"zh-cn": "测试商品12",
+		"en": "Test Product 12"
+	},
+	"p624qv6": {
+		"zh-cn": "测试商品13",
+		"en": "Test Product 13"
+	},
+	"p624qw6": {
+		"zh-cn": "测试商品14",
+		"en": "Test Product 14"
+	},
+	"p624qx6": {
+		"zh-cn": "测试商品15",
+		"en": "Test Product 15"
+	},
+	"p624qy6": {
+		"zh-cn": "测试商品16",
+		"en": "Test Product 16"
+	},
+	"p624qz6": {
+		"zh-cn": "测试商品17",
+		"en": "Test Product 17"
+	},
+	"p624r06": {
+		"zh-cn": "测试商品18",
+		"en": "Test Product 18"
+	},
+	"p624r16": {
+		"zh-cn": "测试商品19",
+		"en": "Test Product 19"
+	},
+	"p624rn6": {
+		"zh-cn": "测试商品20",
+		"en": "Test Product 20"
+	},
+	"p624ro6": {
+		"zh-cn": "测试商品21",
+		"en": "Test Product 21"
+	},
+	"p624rp6": {
+		"zh-cn": "测试商品22",
+		"en": "Test Product 22"
+	},
+	"p624rq6": {
+		"zh-cn": "测试商品23",
+		"en": "Test Product 23"
+	},
+	"p624rr6": {
+		"zh-cn": "测试商品24",
+		"en": "Test Product 24"
+	},
+	"p624rs6": {
+		"zh-cn": "测试商品25",
+		"en": "Test Product 25"
+	},
+	"p624rt6": {
+		"zh-cn": "测试商品26",
+		"en": "Test Product 26"
+	},
+	"p624ru6": {
+		"zh-cn": "测试商品27",
+		"en": "Test Product 27"
+	},
+	"p624rv6": {
+		"zh-cn": "测试商品28",
+		"en": "Test Product 28"
+	},
+	"p624rw6": {
+		"zh-cn": "测试商品29",
+		"en": "Test Product 29"
+	},
+	"p624si6": {
+		"zh-cn": "测试商品30",
+		"en": "Test Product 30"
+	},
+	"owsmc66": {
+		"zh-cn": "【公共组件】",
+		"en": "【Common Components】"
+	},
+	"flzwg3": {
+		"zh-cn": "条形码",
+		"en": "Barcode"
+	},
+	"nrv82": {
+		"zh-cn": "表格",
+		"en": "Table"
+	},
+	"i1y72": {
+		"zh-cn": "数量",
+		"en": "Quantity"
+	},
+	"o06w2": {
+		"zh-cn": "规格",
+		"en": "Specifications"
+	},
+	"i8qo2": {
+		"zh-cn": "条码",
+		"en": "Barcode"
+	},
+	"elvm2": {
+		"zh-cn": "单价",
+		"en": "Unit Price"
+	},
+	"pn1o2": {
+		"zh-cn": "金额",
+		"en": "Amount"
+	},
+	"mmp5em5": {
+		"zh-cn": "自定义文本",
+		"en": "Custom Text"
+	},
+	"k3c1ib": {
+		"zh-cn": "长文本分页/不分页测试",
+		"en": "Long Text Pagination/Non-Pagination Test"
+	},
+	"ir4l2": {
+		"zh-cn": "横线",
+		"en": "Horizontal Line"
+	},
+	"ll7t2": {
+		"zh-cn": "竖线",
+		"en": "Vertical Line"
+	},
+	"kx3t2": {
+		"zh-cn": "矩形",
+		"en": "Rectangle"
+	},
+	"id892": {
+		"zh-cn": "椭圆",
+		"en": "Ellipse"
+	},
+	"h3zcs56": {
+		"zh-cn": "【视图字段】",
+		"en": "【View Field】"
+	},
+	"cp4p43": {
+		"zh-cn": "制表人",
+		"en": "Prepared by"
+	},
+	"cr6fi34": {
+		"zh-cn": "打印时间",
+		"en": "Print Time"
+	},
+	"cg4ps74": {
+		"zh-cn": "库管签字",
+		"en": "Warehouse Keeper Signature"
+	},
+	"ghdptc4": {
+		"zh-cn": "经理签字",
+		"en": "Manager Signature"
+	},
+	"6gowz94": {
+		"zh-cn": "【常规】",
+		"en": "【General】"
+	},
+	"axlmit4": {
+		"zh-cn": "单据表头",
+		"en": "Document Header"
+	},
+	"axjl614": {
+		"zh-cn": "单据类型",
+		"en": "Document Type"
+	},
+	"hyu6l04": {
+		"zh-cn": "订单编号",
+		"en": "Order Number"
+	},
+	"a7899d4": {
+		"zh-cn": "业务日期",
+		"en": "Business Date"
+	},
+	"c9kg804": {
+		"zh-cn": "平台名称",
+		"en": "Platform Name"
+	},
+	"6g4jws4": {
+		"zh-cn": "【客户】",
+		"en": "【Customer】"
+	},
+	"byvcwo4": {
+		"zh-cn": "客户名称",
+		"en": "Customer Name"
+	},
+	"k232lg4": {
+		"zh-cn": "高级客户",
+		"en": "Premium Customer"
+	},
+	"bz13h94": {
+		"zh-cn": "客户电话",
+		"en": "Customer Phone"
+	},
+	"11svju7": {
+		"zh-cn": "【表格/其他】",
+		"en": "【Table/Other】"
+	},
+	"hypwkx4": {
+		"zh-cn": "订单数据",
+		"en": "Order Data"
+	},
+	"6nni654": {
+		"zh-cn": "【辅助】",
+		"en": "【Auxiliary】"
+	},
+	"pvhg3": {
+		"zh-cn": "A设计",
+		"en": "A Design"
+	},
+	"pw853": {
+		"zh-cn": "B设计",
+		"en": "B Design"
+	},
+	"cx7bwy4": {
+		"zh-cn": "插件信息",
+		"en": "Plugin Information"
+	},
+	"aygjsx4": {
+		"zh-cn": "功能名称",
+		"en": "Function Name"
+	},
+	"crzuss7": {
+		"zh-cn": "动态程序集名称",
+		"en": "Dynamic Assembly Name"
+	},
+	"qm1o8y6": {
+		"zh-cn": "添加动态插件",
+		"en": "Add Dynamic Plugin"
+	},
+	"5sav9k6": {
+		"zh-cn": "编辑动态插件",
+		"en": "Edit Dynamic Plugin"
+	},
+	"77fb1fa": {
+		"zh-cn": "确定删除动态插件：【",
+		"en": "Confirm deletion of dynamic plugin：【"
+	},
+	"83ldczb": {
+		"zh-cn": "请正确编写 C# 代码",
+		"en": "Please write C# code correctly"
+	},
+	"n4vbv58": {
+		"zh-cn": "功能名称不能为空",
+		"en": "Function name cannot be empty"
+	},
+	"11vase5": {
+		"zh-cn": "C# 代码",
+		"en": "C# code"
+	},
+	"6mnzbz6": {
+		"zh-cn": "开发接口身份",
+		"en": "Development interface identity"
+	},
+	"ibvsnl4": {
+		"zh-cn": "身份标识",
+		"en": "Identity identifier"
+	},
+	"o6fi5z6": {
+		"zh-cn": "绑定用户账号",
+		"en": "Bind user account"
+	},
+	"nlab4s6": {
+		"zh-cn": "绑定租户名称",
+		"en": "Bind tenant name"
+	},
+	"sf35oz8": {
+		"zh-cn": "添加开放接口身份",
+		"en": "Add open interface identity"
+	},
+	"4xma158": {
+		"zh-cn": "编辑开放接口身份",
+		"en": "Edit open interface identity"
+	},
+	"pxp7f0c": {
+		"zh-cn": "确定删除开放接口身份：【",
+		"en": "Confirm deletion of open interface identity: 【"
+	},
+	"ljrfq4": {
+		"zh-cn": " 说明 ",
+		"en": "Description"
+	},
+	"f6rffk4": {
+		"zh-cn": "生成签名",
+		"en": "Generate signature"
+	},
+	"58u9up8": {
+		"zh-cn": "身份标识不能为空",
+		"en": "Identity cannot be empty"
+	},
+	"f6mdyo4": {
+		"zh-cn": "生成密钥",
+		"en": "Generate key"
+	},
+	"gdtza94": {
+		"zh-cn": "绑定租户",
+		"en": "Bind tenant"
+	},
+	"d33amn8": {
+		"zh-cn": "绑定租户不能为空",
+		"en": "Binding tenant cannot be empty"
+	},
+	"gdt6ew4": {
+		"zh-cn": "绑定用户",
+		"en": "Bind user"
+	},
+	"gbkoqg8": {
+		"zh-cn": "绑定用户不能为空",
+		"en": "Binding user cannot be empty"
+	},
+	"tnezx5a": {
+		"zh-cn": "OpenAPI 使用",
+		"en": "OpenAPI usage"
+	},
+	"lqsqo4v": {
+		"zh-cn": " 在需要使用 Signature 身份验证的 Api 中贴上 ",
+		"en": "In APIs requiring Signature authentication, attach"
+	},
+	"kmxauat": {
+		"zh-cn": " 如果 Api 需要保留 Jwt 方式的身份验证，可贴上 ",
+		"en": "If Api needs to retain Jwt authentication, you can attach"
+	},
+	"4po0cmk": {
+		"zh-cn": " 通过对请求的签名，可以达到以下目的： ",
+		"en": "By signing the request, the following purposes can be achieved:"
+	},
+	"eldt9ue": {
+		"zh-cn": "免登录识别访问接口用户的身份",
+		"en": "Identify accessing interface user identity without login"
+	},
+	"koy5h59": {
+		"zh-cn": "防止潜在的重放攻击",
+		"en": "Prevent potential replay attacks"
+	},
+	"g4n9l5c": {
+		"zh-cn": "OpenAPI 签名流程",
+		"en": "OpenAPI Signature Process"
+	},
+	"2fqmfe15": {
+		"zh-cn": " 客户端在请求时，需要按照如下步骤生成签名 Signature，并添加公共参数： ",
+		"en": "When making requests, the client needs to generate signature Signature according to the following steps and add public parameters:"
+	},
+	"mtmgma6": {
+		"zh-cn": "公共请求参数",
+		"en": "Public Request Parameters"
+	},
+	"dbik7kn": {
+		"zh-cn": "在原始请求的基础上添加 Header 请求参数",
+		"en": "Add Header request parameters based on the original request"
+	},
+	"lc6z8r5": {
+		"zh-cn": "：身份标识",
+		"en": ": Identity identifier"
+	},
+	"aa94ir9": {
+		"zh-cn": "：时间戳，精确到秒",
+		"en": ": Timestamp, accurate to seconds"
+	},
+	"umsk8ai": {
+		"zh-cn": "：唯一随机数，建议为一个6位的随机数",
+		"en": ": Unique random number, recommended to be a 6-digit random number"
+	},
+	"mcinqpg": {
+		"zh-cn": "：签名数据（见\"计算签名\"部分）",
+		"en": ": Signature data (see \"Calculate Signature\" section)"
+	},
+	"i4p7mt4": {
+		"zh-cn": "计算签名",
+		"en": "Calculate Signature"
+	},
+	"br3rqq14": {
+		"zh-cn": " 按照如下顺序对请求中的参数进行排序，各个参数通过&进行拼接（中间不含空格）： ",
+		"en": "Sort the parameters in the request in the following order, concatenate each parameter with & (without spaces in between):"
+	},
+	"v2piklb": {
+		"zh-cn": " 需要大写，如：GET",
+		"en": "Must be uppercase, such as: GET"
+	},
+	"3457uc14": {
+		"zh-cn": " 去除协议、域名、参数，以 / 开头，如：/api/demo/helloWord",
+		"en": "Remove protocol, domain name, parameters, starting with /, such as: /api/demo/helloWord"
+	},
+	"pdr3wd16": {
+		"zh-cn": "使用 HMAC-SHA256 协议创建基于哈希的消息身份验证代码 (HMAC)，以 ",
+		"en": "Use HMAC-SHA256 protocol to create a hash-based message authentication code (HMAC), using"
+	},
+	"twsa1h12": {
+		"zh-cn": " 作为密钥，对上面拼接的参数进行计算签名，所得签名进行 Base-64 编码",
+		"en": "As the key, calculate the signature for the concatenated parameters above, and perform Base-64 encoding on the resulting signature"
+	},
+	"4aiyxmj": {
+		"zh-cn": " HMAC-SHA256 在线计算： ",
+		"en": "HMAC-SHA256 online calculation:"
+	},
+	"b8q6sg6": {
+		"zh-cn": " 生成签名 ",
+		"en": "Generate signature"
+	},
+	"6gpiuf6": {
+		"zh-cn": "接口请求地址",
+		"en": "Interface request URL"
+	},
+	"fnol13": {
+		"zh-cn": "时间戳",
+		"en": "Timestamp"
+	},
+	"4xvxse8": {
+		"zh-cn": "输入或获取时间戳",
+		"en": "Input or get timestamp"
+	},
+	"mv3z2": {
+		"zh-cn": "获取",
+		"en": "Get"
+	},
+	"mk0913": {
+		"zh-cn": "随机数",
+		"en": "Random number"
+	},
+	"4qzm4e8": {
+		"zh-cn": "输入或获取随机数",
+		"en": "Input or get random number"
+	},
+	"lgsv2": {
+		"zh-cn": "签名",
+		"en": "Signature"
+	},
+	"f347hb9": {
+		"zh-cn": "填写信息后自动生成",
+		"en": "Automatically generated after filling in information"
+	},
+	"jrfb8r4": {
+		"zh-cn": "飞燕草蓝",
+		"en": "Larkspur blue"
+	},
+	"aghf564": {
+		"zh-cn": "保存成功",
+		"en": "Save successful"
+	},
+	"sjmq0j6": {
+		"zh-cn": "系统信息配置",
+		"en": "System Information Configuration"
+	},
+	"vgq71p8": {
+		"zh-cn": " 系统信息配置 ",
+		"en": "System Information Configuration"
+	},
+	"agpp984": {
+		"zh-cn": "保存配置",
+		"en": "Save Configuration"
+	},
+	"gahy4t4": {
+		"zh-cn": "系统图标",
+		"en": "System Icon"
+	},
+	"mz3wyb6": {
+		"zh-cn": " 系统图标 ",
+		"en": "System Icon"
+	},
+	"fs9o7r4": {
+		"zh-cn": "租户标识",
+		"en": "Tenant Identifier"
+	},
+	"79zdhl6": {
+		"zh-cn": " 租户标识 ",
+		"en": "Tenant Identifier"
+	},
+	"2kcyg55": {
+		"zh-cn": "访问地址：",
+		"en": "Access Address:"
+	},
+	"7sen8o5": {
+		"zh-cn": "系统主标题",
+		"en": "System Main Title"
+	},
+	"u6jvc7": {
+		"zh-cn": " 系统主标题 ",
+		"en": "System Main Title"
+	},
+	"7t0t3w5": {
+		"zh-cn": "系统副标题",
+		"en": "System Subtitle"
+	},
+	"1d9lr87": {
+		"zh-cn": " 系统副标题 ",
+		"en": "System Subtitle"
+	},
+	"gakchx4": {
+		"zh-cn": "系统描述",
+		"en": "System Description"
+	},
+	"n16a8r6": {
+		"zh-cn": " 系统描述 ",
+		"en": "System Description"
+	},
+	"dzxgnk4": {
+		"zh-cn": "水印内容",
+		"en": "Watermark Content"
+	},
+	"mwkx2o6": {
+		"zh-cn": " 水印内容 ",
+		"en": "Watermark Content"
+	},
+	"fq3ndec": {
+		"zh-cn": "若此处留空，则不显示水印",
+		"en": "If left blank, watermark will not be displayed"
+	},
+	"eupj9x4": {
+		"zh-cn": "版权说明",
+		"en": "Copyright Statement"
+	},
+	"lmcvn96": {
+		"zh-cn": " 版权说明 ",
+		"en": "Copyright Statement"
+	},
+	"h8m1f3": {
+		"zh-cn": "版本号",
+		"en": "Version Number"
+	},
+	"fc0e8d5": {
+		"zh-cn": " 版本号 ",
+		"en": "Version Number"
+	},
+	"aib1034": {
+		"zh-cn": "主题颜色",
+		"en": "Theme Color"
+	},
+	"e8mi5v6": {
+		"zh-cn": " 主题颜色 ",
+		"en": "Theme Color"
+	},
+	"c8wdij4": {
+		"zh-cn": "布局模式",
+		"en": "Layout Mode"
+	},
+	"vdcs976": {
+		"zh-cn": " 布局模式 ",
+		"en": "Layout Mode"
+	},
+	"km5s2x4": {
+		"zh-cn": "默认布局",
+		"en": "Default Layout"
+	},
+	"gc6i1y4": {
+		"zh-cn": "经典布局",
+		"en": "Classic Layout"
+	},
+	"dqtlhg4": {
+		"zh-cn": "横向布局",
+		"en": "Horizontal Layout"
+	},
+	"as4xly4": {
+		"zh-cn": "分栏布局",
+		"en": "Column Layout"
+	},
+	"jutwww4": {
+		"zh-cn": "页面动画",
+		"en": "Page Animation"
+	},
+	"8kt8tc6": {
+		"zh-cn": " 页面动画 ",
+		"en": "Page Animation"
+	},
+	"z10pj46": {
+		"zh-cn": "ICP备案号",
+		"en": "ICP Filing Number"
+	},
+	"lhepj48": {
+		"zh-cn": " ICP备案号 ",
+		"en": "ICP Filing Number"
+	},
+	"15spvq5": {
+		"zh-cn": "ICP地址",
+		"en": "ICP Address"
+	},
+	"8gmzne7": {
+		"zh-cn": " ICP地址 ",
+		"en": "ICP Address"
+	},
+	"2c79a05": {
+		"zh-cn": "图形验证码",
+		"en": "Graphic Verification Code"
+	},
+	"t088aw7": {
+		"zh-cn": " 图形验证码 ",
+		"en": "Graphic Verification Code"
+	},
+	"uduaf06": {
+		"zh-cn": "登录二次验证",
+		"en": "Login Two-Factor Authentication"
+	},
+	"jl3sxw8": {
+		"zh-cn": " 登录二次验证 ",
+		"en": "Login Two-Factor Authentication"
+	},
+	"ixmwbk5": {
+		"zh-cn": "首页轮播图",
+		"en": "Homepage Carousel"
+	},
+	"os7d5s7": {
+		"zh-cn": " 首页轮播图 ",
+		"en": "Homepage Carousel"
+	},
+	"ws83q38": {
+		"zh-cn": " 中国传统颜色 ",
+		"en": "Traditional Chinese Colors"
+	},
+	"gz4q2": {
+		"zh-cn": "弹跳",
+		"en": "Bounce"
+	},
+	"q49j2": {
+		"zh-cn": "闪烁",
+		"en": "Blink"
+	},
+	"euvsn3": {
+		"zh-cn": "拉伸带",
+		"en": "Stretch Band"
+	},
+	"gvm62": {
+		"zh-cn": "弹簧",
+		"en": "Spring"
+	},
+	"c75d1u4": {
+		"zh-cn": "左右晃动",
+		"en": "Left-Right Shake"
+	},
+	"a69t524": {
+		"zh-cn": "上下晃动",
+		"en": "Up-Down Shake"
+	},
+	"hici2": {
+		"zh-cn": "摆动",
+		"en": "Swing"
+	},
+	"2atr3b6": {
+		"zh-cn": "左右扇形摇摆",
+		"en": "Left-Right Fan Swing"
+	},
+	"csp72y4": {
+		"zh-cn": "扇形摇摆",
+		"en": "Fan Swing"
+	},
+	"p6nxh06": {
+		"zh-cn": "上下拉扯晃动",
+		"en": "Up-Down Pull and Shake"
+	},
+	"axlujq4": {
+		"zh-cn": "向下弹入",
+		"en": "Bounce In Down"
+	},
+	"azxgch4": {
+		"zh-cn": "向左弹入",
+		"en": "Bounce In Left"
+	},
+	"aygzpq4": {
+		"zh-cn": "向右弹入",
+		"en": "Bounce In Right"
+	},
+	"axltt14": {
+		"zh-cn": "向上弹入",
+		"en": "Bounce In Up"
+	},
+	"ja5q2": {
+		"zh-cn": "渐显",
+		"en": "Fade In"
+	},
+	"axu3lv4": {
+		"zh-cn": "向上进入",
+		"en": "Enter Up"
+	},
+	"axu4ck4": {
+		"zh-cn": "向下进入",
+		"en": "Enter Down"
+	},
+	"ayp9ik4": {
+		"zh-cn": "向右进入",
+		"en": "Enter Right"
+	},
+	"m9fw1r5": {
+		"zh-cn": "左上方进入",
+		"en": "Enter Top Left"
+	},
+	"gn03905": {
+		"zh-cn": "右上方进入",
+		"en": "Enter Top Right"
+	},
+	"m9gj1a5": {
+		"zh-cn": "左下方进入",
+		"en": "Enter Bottom Left"
+	},
+	"gmzg9h5": {
+		"zh-cn": "右下方进入",
+		"en": "Enter Bottom Right"
+	},
+	"kb2mj67": {
+		"zh-cn": "向上长距离进入",
+		"en": "Enter Up Long Distance"
+	},
+	"ju104z7": {
+		"zh-cn": "向下长距离进入",
+		"en": "Enter Down Long Distance"
+	},
+	"fu6j1q7": {
+		"zh-cn": "向左长距离进入",
+		"en": "Enter Left Long Distance"
+	},
+	"e90zq37": {
+		"zh-cn": "向右长距离进入",
+		"en": "Enter Right Long Distance"
+	},
+	"p9geqe7": {
+		"zh-cn": "光速从右侧进入",
+		"en": "Enter Right at Light Speed"
+	},
+	"qimqbn7": {
+		"zh-cn": "光速从左侧进入",
+		"en": "Enter Left at Light Speed"
+	},
+	"e97wxj6": {
+		"zh-cn": "由小变大进入",
+		"en": "Enter with Scale Up"
+	},
+	"mxygdb5": {
+		"zh-cn": "左变大进入",
+		"en": "Enter Left with Scale Up"
+	},
+	"fyhixg5": {
+		"zh-cn": "右变大进入",
+		"en": "Enter Right with Scale Up"
+	},
+	"6u9v1p6": {
+		"zh-cn": "向下变大进入",
+		"en": "Enter Down with Scale Up"
+	},
+	"6utnn26": {
+		"zh-cn": "向上变大进入",
+		"en": "Enter Up with Scale Up"
+	},
+	"dfwhij4": {
+		"zh-cn": "旋转进入",
+		"en": "Enter with Rotation"
+	},
+	"mlhmj26": {
+		"zh-cn": "中心Y轴旋转",
+		"en": "Rotate Around Y Axis"
+	},
+	"d78vyx6": {
+		"zh-cn": "左顺时针旋转",
+		"en": "Rotate Left Clockwise"
+	},
+	"os0dyr6": {
+		"zh-cn": "左逆时针旋转",
+		"en": "Rotate Left Counterclockwise"
+	},
+	"qd5xae6": {
+		"zh-cn": "右逆时针旋转",
+		"en": "Rotate Right Counterclockwise"
+	},
+	"bm3cna6": {
+		"zh-cn": "右顺时针旋转",
+		"en": "Rotate right clockwise"
+	},
+	"3kax848": {
+		"zh-cn": " 页面动画效果 ",
+		"en": "Page animation effect"
+	},
+	"9dn8ov7": {
+		"zh-cn": "确定进行退款：",
+		"en": "Confirm to proceed with refund:"
+	},
+	"8o1e529": {
+		"zh-cn": "元？请输入退款理由",
+		"en": "yuan? Please enter the refund reason"
+	},
+	"xm0wce7": {
+		"zh-cn": "】退款申请成功",
+		"en": "】Refund application successful"
+	},
+	"b175ep4": {
+		"zh-cn": "取消操作",
+		"en": "Cancel operation"
+	},
+	"kuwys3": {
+		"zh-cn": "订单号",
+		"en": "Order number"
+	},
+	"7djicl6": {
+		"zh-cn": "请输入订单号",
+		"en": "Please enter the order number"
+	},
+	"ujtwqc7": {
+		"zh-cn": "请选择创建时间",
+		"en": "Please select creation time"
+	},
+	"tl22n56": {
+		"zh-cn": "添加模拟数据",
+		"en": "Add simulation data"
+	},
+	"8rq8kt5": {
+		"zh-cn": "商户订单号",
+		"en": "Merchant Order Number"
+	},
+	"k1apqd5": {
+		"zh-cn": "支付订单号",
+		"en": "Payment Order Number"
+	},
+	"efu644": {
+		"zh-cn": " 完成 ",
+		"en": "Completed"
+	},
+	"m5zeq4": {
+		"zh-cn": " 退款 ",
+		"en": "Refunded"
+	},
+	"dx7srx5": {
+		"zh-cn": " 未支付 ",
+		"en": "Unpaid"
+	},
+	"dvw95e5": {
+		"zh-cn": " 未完成 ",
+		"en": "Incomplete"
+	},
+	"jask224": {
+		"zh-cn": "附加信息",
+		"en": "Additional Information"
+	},
+	"a7c0hj4": {
+		"zh-cn": "业务类型",
+		"en": "Business Type"
+	},
+	"byjphe4": {
+		"zh-cn": "完成时间",
+		"en": "Completion Time"
+	},
+	"a6qeqq4": {
+		"zh-cn": "业务ID",
+		"en": "Business ID"
+	},
+	"ehpnl97": {
+		"zh-cn": " 付款二维码 ",
+		"en": "Payment QR Code"
+	},
+	"dlvmo44": {
+		"zh-cn": "查看退款",
+		"en": "View Refund"
+	},
+	"awonqr4": {
+		"zh-cn": "全额退款",
+		"en": "Full Refund"
+	},
+	"7c5zgh8": {
+		"zh-cn": " 添加模拟数据 ",
+		"en": "Add Mock Data"
+	},
+	"b40v0e4": {
+		"zh-cn": "商品名称",
+		"en": "Product Name"
+	},
+	"8gvbw28": {
+		"zh-cn": "商品名称不能为空",
+		"en": "Product name cannot be empty"
+	},
+	"l5gsdb5": {
+		"zh-cn": "金额(分)",
+		"en": "Amount (cents)"
+	},
+	"sddntd9": {
+		"zh-cn": "金额(分)不能为空",
+		"en": "Amount (cents) cannot be empty"
+	},
+	"cbaf2v8": {
+		"zh-cn": "填数字,单位是分",
+		"en": "Fill in numbers, unit is cents"
+	},
+	"nsyq6s6": {
+		"zh-cn": " 退款信息 ",
+		"en": "Refund Information"
+	},
+	"8qz55k5": {
+		"zh-cn": "商户退款号",
+		"en": "Merchant Refund Number"
+	},
+	"ilyr4v4": {
+		"zh-cn": "退款原因",
+		"en": "Refund Reason"
+	},
+	"dev07i4": {
+		"zh-cn": "更新日志",
+		"en": "Update Log"
+	},
+	"vgymtu6": {
+		"zh-cn": "系统更新日志",
+		"en": "System Update Log"
+	},
+	"1m4f558": {
+		"zh-cn": "添加系统更新日志",
+		"en": "Add System Update Log"
+	},
+	"p3lasz8": {
+		"zh-cn": "编辑系统更新日志",
+		"en": "Edit System Update Log"
+	},
+	"lbtwqgc": {
+		"zh-cn": "确定删除系统更新日志：【",
+		"en": "Confirm deletion of system update log: 【"
+	},
+	"axo00ya": {
+		"zh-cn": "系统更新日志不能为空",
+		"en": "System update log cannot be empty"
+	},
+	"giyis3": {
+		"zh-cn": "流水号",
+		"en": "Serial Number"
+	},
+	"emut2": {
+		"zh-cn": "分类",
+		"en": "Category"
+	},
+	"ixf6zl4": {
+		"zh-cn": "重置间隔",
+		"en": "Reset Interval"
+	},
+	"ko8l53": {
+		"zh-cn": "表达式",
+		"en": "Expression"
+	},
+	"sc55o55": {
+		"zh-cn": "当前序列号",
+		"en": "Current Serial Number"
+	},
+	"fj7rh3": {
+		"zh-cn": "最小值",
+		"en": "Minimum Value"
+	},
+	"fipyt3": {
+		"zh-cn": "最大值",
+		"en": "Maximum Value"
+	},
+	"fl3fk3": {
+		"zh-cn": "有效期",
+		"en": "Validity Period"
+	},
+	"eps3dr5": {
+		"zh-cn": "添加流水号",
+		"en": "Add Serial Number"
+	},
+	"i94q3t5": {
+		"zh-cn": "编辑流水号",
+		"en": "Edit Serial Number"
+	},
+	"g6pdv08": {
+		"zh-cn": "请选择使用分类！",
+		"en": "Please select a usage category!"
+	},
+	"xc8y5x7": {
+		"zh-cn": "请选择格式化！",
+		"en": "Please select a format!"
+	},
+	"7bcvhp8": {
+		"zh-cn": "请选择重置方式！",
+		"en": "Please select a reset method!"
+	},
+	"k5hxtv7": {
+		"zh-cn": "请输入最小值！",
+		"en": "Please enter the minimum value!"
+	},
+	"k5x9ij7": {
+		"zh-cn": "请输入最大值！",
+		"en": "Please enter the maximum value!"
+	},
+	"gytlu64": {
+		"zh-cn": "获取成功",
+		"en": "Retrieved successfully"
+	},
+	"e911r3": {
+		"zh-cn": "序列号",
+		"en": "Serial Number"
+	},
+	"7k5e9m6": {
+		"zh-cn": "请输入序列号",
+		"en": "Please enter the serial number"
+	},
+	"aij0ce4": {
+		"zh-cn": "使用分类",
+		"en": "Usage Category"
+	},
+	"ch3lew12": {
+		"zh-cn": "表达式样例：R{yyyy}{MM}{dd}{HH}{mm}{ss}{SEQ}",
+		"en": "Expression example: R{yyyy}{MM}{dd}{HH}{mm}{ss}{SEQ}"
+	},
+	"fot854": {
+		"zh-cn": " 插槽 ",
+		"en": "Slot"
+	},
+	"7iv7jw6": {
+		"zh-cn": "请输入最小值",
+		"en": "Please enter the minimum value"
+	},
+	"7ivpck6": {
+		"zh-cn": "请输入最大值",
+		"en": "Please enter the maximum value"
+	},
+	"2j8ot65": {
+		"zh-cn": "请输入排序",
+		"en": "Please enter the sorting order"
+	},
+	"2jaeja5": {
+		"zh-cn": "请输入备注",
+		"en": "Please enter remarks"
+	},
+	"en5n385": {
+		"zh-cn": "添加审批流",
+		"en": "Add approval flow"
+	},
+	"i6i9ta5": {
+		"zh-cn": "编辑审批流",
+		"en": "Edit approval flow"
+	},
+	"4k4unx5": {
+		"zh-cn": "查看审批流",
+		"en": "View approval flow"
+	},
+	"gmqfs84": {
+		"zh-cn": "编辑表单",
+		"en": "Edit form"
+	},
+	"gmm15x4": {
+		"zh-cn": "编辑流程",
+		"en": "Edit process"
+	},
+	"m2sh2": {
+		"zh-cn": "编号",
+		"en": "Number"
+	},
+	"2j42eu5": {
+		"zh-cn": "请输入编号",
+		"en": "Please enter the number"
+	},
+	"2jb6fo5": {
+		"zh-cn": "请输入名称",
+		"en": "Please enter name"
+	},
+	"nnql2": {
+		"zh-cn": "表单",
+		"en": "Form"
+	},
+	"kxvhv4": {
+		"zh-cn": " 表单 ",
+		"en": "Form"
+	},
+	"j94a2": {
+		"zh-cn": "流程",
+		"en": "Process"
+	},
+	"h5aae4": {
+		"zh-cn": " 流程 ",
+		"en": "Process"
+	},
+	"gcika4": {
+		"zh-cn": " 查看 ",
+		"en": "View"
+	},
+	"juz394": {
+		"zh-cn": " 编辑 ",
+		"en": "Edit"
+	},
+	"db22k4": {
+		"zh-cn": " 删除 ",
+		"en": "Delete"
+	},
+	"hs6m2": {
+		"zh-cn": "新增",
+		"en": "Add"
+	},
+	"i2ik2": {
+		"zh-cn": "更新",
+		"en": "Update"
+	},
+	"g3ge2": {
+		"zh-cn": "导出",
+		"en": "Export"
+	},
+	"ffhj028": {
+		"zh-cn": "库定位器不能为空",
+		"en": "Database locator cannot be empty"
+	},
+	"gjq22": {
+		"zh-cn": "库名",
+		"en": "Database Name"
+	},
+	"hl692l4": {
+		"zh-cn": "表定位器",
+		"en": "Table Locator"
+	},
+	"khnrwj8": {
+		"zh-cn": "表定位器不能为空",
+		"en": "Table locator cannot be empty"
+	},
+	"xszold6": {
+		"zh-cn": "操作不能为空",
+		"en": "Operation cannot be empty"
+	},
+	"mhwx0cc": {
+		"zh-cn": "确认要关闭当前属性编辑?",
+		"en": "Confirm to close current property editing?"
+	},
+	"csvrdc4": {
+		"zh-cn": "打开框选",
+		"en": "Open Box Selection"
+	},
+	"awayfx4": {
+		"zh-cn": "关闭框选",
+		"en": "Close Box Selection"
+	},
+	"hsse2": {
+		"zh-cn": "数据",
+		"en": "Data"
+	},
+	"xl3ink7": {
+		"zh-cn": "不能以数字开头",
+		"en": "Cannot start with a number"
+	},
+	"biyzkw4": {
+		"zh-cn": "基本信息",
+		"en": "Basic Information"
+	},
+	"k93toz6": {
+		"zh-cn": "名称不能为空",
+		"en": "Name cannot be empty"
+	},
+	"ckmie36": {
+		"zh-cn": "状态不能为空",
+		"en": "Status cannot be empty"
+	},
+	"2eief25": {
+		"zh-cn": "请选择状态",
+		"en": "Please select status"
+	},
+	"csrbui4": {
+		"zh-cn": "扩展信息",
+		"en": "Extended Information"
+	},
+	"2j2hgq5": {
+		"zh-cn": "请输入表单",
+		"en": "Please enter form"
+	},
+	"2j6w315": {
+		"zh-cn": "请输入流程",
+		"en": "Please enter process"
+	},
+	"gngr2": {
+		"zh-cn": "开始",
+		"en": "Start"
+	},
+	"kgsv2": {
+		"zh-cn": "用户",
+		"en": "User"
+	},
+	"m3pe2": {
+		"zh-cn": "网关",
+		"en": "Gateway"
+	},
+	"dvye2": {
+		"zh-cn": "任务",
+		"en": "Task"
+	},
+	"m50s2": {
+		"zh-cn": "结束",
+		"en": "End"
+	},
+	"hpk92": {
+		"zh-cn": "放大",
+		"en": "Zoom In"
+	},
+	"m4ue2": {
+		"zh-cn": "缩小",
+		"en": "Zoom Out"
+	},
+	"bmzhcq4": {
+		"zh-cn": "大小适应",
+		"en": "Fit to Size"
+	},
+	"bw8h6i4": {
+		"zh-cn": "定位还原",
+		"en": "Reset Position"
+	},
+	"my43y19": {
+		"zh-cn": "还原(大小&定位)",
+		"en": "Reset (Size & Position)"
+	},
+	"wplujab": {
+		"zh-cn": "上一步(ctrl+z)",
+		"en": "Undo (ctrl+z)"
+	},
+	"2zqxywb": {
+		"zh-cn": "下一步(ctrl+y)",
+		"en": "Redo (ctrl+y)"
+	},
+	"aft4634": {
+		"zh-cn": "下载图片",
+		"en": "Download Image"
+	},
+	"dlochw4": {
+		"zh-cn": "查看数据",
+		"en": "View Data"
+	},
+	"4eueec5": {
+		"zh-cn": "查看缩略图",
+		"en": "View Thumbnail"
+	},
+	"ppetz9d": {
+		"zh-cn": "起始节点不能作为连线的终点",
+		"en": "Start node cannot be the end point of a connection"
+	},
+	"gvafcqd": {
+		"zh-cn": "终止节点不能作为连线的起点",
+		"en": "End node cannot be the start point of a connection"
+	},
+	"o341hob": {
+		"zh-cn": "只允许从右边的锚点连出",
+		"en": "Only allowed to connect from right anchor points"
+	},
+	"jolkfca": {
+		"zh-cn": "只允许连接左边的锚点",
+		"en": "Only allowed to connect to left anchor points"
+	},
+	"d9bmb84": {
+		"zh-cn": "日志统计",
+		"en": "Log Statistics"
+	},
+	"dph4215": {
+		"zh-cn": " 数据量：",
+		"en": "Data Volume:"
+	},
+	"dtzc2": {
+		"zh-cn": "一月",
+		"en": "January"
+	},
+	"dxbw2": {
+		"zh-cn": "二月",
+		"en": "February"
+	},
+	"du732": {
+		"zh-cn": "三月",
+		"en": "March"
+	},
+	"fc7h2": {
+		"zh-cn": "四月",
+		"en": "April"
+	},
+	"dxis2": {
+		"zh-cn": "五月",
+		"en": "May"
+	},
+	"eeyj2": {
+		"zh-cn": "六月",
+		"en": "June"
+	},
+	"du1x2": {
+		"zh-cn": "七月",
+		"en": "July"
+	},
+	"eewt2": {
+		"zh-cn": "八月",
+		"en": "August"
+	},
+	"dw7f2": {
+		"zh-cn": "九月",
+		"en": "September"
+	},
+	"eq5j2": {
+		"zh-cn": "十月",
+		"en": "October"
+	},
+	"cktu13": {
+		"zh-cn": "十一月",
+		"en": "November"
+	},
+	"ckx6l3": {
+		"zh-cn": "十二月",
+		"en": "December"
+	},
+	"i8znc14": {
+		"zh-cn": "访问日志",
+		"en": "Access Log"
+	},
+	"d97ftc4": {
+		"zh-cn": "日志时间",
+		"en": "Log Time"
+	},
+	"deexj34": {
+		"zh-cn": "显示名称",
+		"en": "Display Name"
+	},
+	"da8ngf4": {
+		"zh-cn": "方法名称",
+		"en": "Method Name"
+	},
+	"i5m5lg4": {
+		"zh-cn": "账号名称",
+		"en": "Account Name"
+	},
+	"1rkhj4": {
+		"zh-cn": "IP地址",
+		"en": "IP Address"
+	},
+	"fcd7wj4": {
+		"zh-cn": "登录地点",
+		"en": "Login Location"
+	},
+	"m37b2": {
+		"zh-cn": "经度",
+		"en": "Longitude"
+	},
+	"m2d62": {
+		"zh-cn": "纬度",
+		"en": "Latitude"
+	},
+	"goai73": {
+		"zh-cn": "浏览器",
+		"en": "Browser"
+	},
+	"g1trbs6": {
+		"zh-cn": "没有日志数据",
+		"en": "No log data"
+	},
+	"39ol5y6": {
+		"zh-cn": "访问者热力图",
+		"en": "Visitor Heatmap"
+	},
+	"h4sv2": {
+		"zh-cn": "成功",
+		"en": "Success"
+	},
+	"fy1g2": {
+		"zh-cn": "失败",
+		"en": "Failure"
+	},
+	"mchr2": {
+		"zh-cn": "耗时",
+		"en": "Time Consumed"
+	},
+	"dgbihy6": {
+		"zh-cn": "耗时>?MS",
+		"en": "Time Consumed >?MS"
+	},
+	"f2uw9c5": {
+		"zh-cn": " 热力图 ",
+		"en": "Heatmap"
+	},
+	"d1tfy94": {
+		"zh-cn": "操作日志",
+		"en": "Operation Log"
+	},
+	"dr3kux4": {
+		"zh-cn": "模块名称",
+		"en": "Module Name"
+	},
+	"i3vmxt4": {
+		"zh-cn": "请求方式",
+		"en": "Request Method"
+	},
+	"lzs42": {
+		"zh-cn": "级别",
+		"en": "Level"
+	},
+	"a878064": {
+		"zh-cn": "事件Id",
+		"en": "Event ID"
+	},
+	"ghds9z4": {
+		"zh-cn": "线程Id",
+		"en": "Thread ID"
+	},
+	"4853dd6": {
+		"zh-cn": "请求跟踪Id",
+		"en": "Request Trace ID"
+	},
+	"feqn214": {
+		"zh-cn": "真实姓名",
+		"en": "Real Name"
+	},
+	"efepu4": {
+		"zh-cn": " 导出 ",
+		"en": "Export"
+	},
+	"okz62": {
+		"zh-cn": "调试",
+		"en": "Debug"
+	},
+	"j5rb2": {
+		"zh-cn": "消息",
+		"en": "Message"
+	},
+	"q4mu2": {
+		"zh-cn": "错误",
+		"en": "Error"
+	},
+	"eae82": {
+		"zh-cn": "其他",
+		"en": "Other"
+	},
+	"obrz2": {
+		"zh-cn": "详情",
+		"en": "Details"
+	},
+	"1h6y76": {
+		"zh-cn": " 日志详情 ",
+		"en": "Log Details"
+	},
+	"d98fll4": {
+		"zh-cn": "日志消息",
+		"en": "Log Message"
+	},
+	"i3sm6x4": {
+		"zh-cn": "请求参数",
+		"en": "Request Parameters"
+	},
+	"ii6w2m4": {
+		"zh-cn": "返回内容",
+		"en": "Response Content"
+	},
+	"cdov484": {
+		"zh-cn": "异常日志",
+		"en": "Exception Log"
+	},
+	"c8wsiu4": {
+		"zh-cn": "差异日志",
+		"en": "Difference Log"
+	},
+	"d1tr1p4": {
+		"zh-cn": "操作时间",
+		"en": "Operation Time"
+	},
+	"a76rv34": {
+		"zh-cn": "业务对象",
+		"en": "Business Object"
+	},
+	"d1x8m74": {
+		"zh-cn": "操作类型",
+		"en": "Operation Type"
+	},
+	"1cdk925": {
+		"zh-cn": "Sql语句",
+		"en": "SQL Statement"
+	},
+	"g3c92": {
+		"zh-cn": "导入",
+		"en": "Import"
+	},
+	"loyxgd5": {
+		"zh-cn": "操作前记录",
+		"en": "Pre-operation Record"
+	},
+	"lopoik5": {
+		"zh-cn": "操作后记录",
+		"en": "Post-operation Record"
+	},
+	"e7yks94": {
+		"zh-cn": "消息日志",
+		"en": "Message Log"
+	},
+	"e7yvvp4": {
+		"zh-cn": "消息时间",
+		"en": "Message Time"
+	},
+	"e7z9204": {
+		"zh-cn": "消息标题",
+		"en": "Message Title"
+	},
+	"f3cac3": {
+		"zh-cn": "接收者",
+		"en": "Recipient"
+	},
+	"c8exs3": {
+		"zh-cn": "作系统",
+		"en": "Operating System"
+	},
+	"o9ah2": {
+		"zh-cn": "设备",
+		"en": "Device"
+	},
+	"cz5px3": {
+		"zh-cn": "发送者",
+		"en": "Sender"
+	},
+	"na2d8p5": {
+		"zh-cn": "接收者名称",
+		"en": "Recipient Name"
+	},
+	"8qlma05": {
+		"zh-cn": "发送者名称",
+		"en": "Sender Name"
+	},
+	"i3vo594": {
+		"zh-cn": "请求日志",
+		"en": "Request Log"
+	},
+	"cx87z34": {
+		"zh-cn": "接口描述",
+		"en": "Interface Description"
+	},
+	"dwk3e3": {
+		"zh-cn": "客户端",
+		"en": "Client"
+	},
+	"fyxkn3": {
+		"zh-cn": "模块名",
+		"en": "Module Name"
+	},
+	"d8s0bq4": {
+		"zh-cn": "是否成功",
+		"en": "Success Status"
+	},
+	"b6cvap5": {
+		"zh-cn": "响应状态码",
+		"en": "Response Status Code"
+	},
+	"ozibl36": {
+		"zh-cn": "耗时（毫秒）",
+		"en": "Time Consumed (ms)"
+	},
+	"araf7y4": {
+		"zh-cn": "创建用户",
+		"en": "Created User"
+	},
+	"3k300t6": {
+		"zh-cn": "请选择客户端",
+		"en": "Please select client"
+	},
+	"7ifhqq6": {
+		"zh-cn": "请输入模块名",
+		"en": "Please enter module name"
+	},
+	"klusvs7": {
+		"zh-cn": "请输入接口描述",
+		"en": "Please enter interface description"
+	},
+	"ff7dx27": {
+		"zh-cn": "请输入请求方式",
+		"en": "Please enter request method"
+	},
+	"ff9wgs7": {
+		"zh-cn": "请输入请求地址",
+		"en": "Please enter request address"
+	},
+	"l0vpk3": {
+		"zh-cn": "请求体",
+		"en": "Request Body"
+	},
+	"7ddjlt6": {
+		"zh-cn": "请输入请求体",
+		"en": "Please enter request body"
+	},
+	"euq7ra8": {
+		"zh-cn": "请输入响应状态码",
+		"en": "Please enter response status code"
+	},
+	"cvob03": {
+		"zh-cn": "响应体",
+		"en": "Response Body"
+	},
+	"7lir0d6": {
+		"zh-cn": "请输入响应体",
+		"en": "Please enter the response body"
+	},
+	"cdl4f84": {
+		"zh-cn": "异常信息",
+		"en": "Exception Information"
+	},
+	"l5hwfn7": {
+		"zh-cn": "请输入异常信息",
+		"en": "Please enter the exception information"
+	},
+	"cd0ag54": {
+		"zh-cn": "开始日期",
+		"en": "Start Date"
+	},
+	"gfhy2u4": {
+		"zh-cn": "结束日期",
+		"en": "End Date"
+	},
+	"h9uty3": {
+		"zh-cn": "状态码",
+		"en": "Status Code"
+	},
+	"chizf3": {
+		"zh-cn": "创建人",
+		"en": "Created By"
+	},
+	"l0xnt3": {
+		"zh-cn": "请求头",
+		"en": "Request Headers"
+	},
+	"i3vq904": {
+		"zh-cn": "请求明文",
+		"en": "Request Plaintext"
+	},
+	"cvq993": {
+		"zh-cn": "响应头",
+		"en": "Response Headers"
+	},
+	"b3ecps4": {
+		"zh-cn": "响应明文",
+		"en": "Response Plaintext"
+	},
+	"chsp7n4": {
+		"zh-cn": "库表信息",
+		"en": "Database Table Information"
+	},
+	"dwexb3": {
+		"zh-cn": "字段名",
+		"en": "Field Name"
+	},
+	"d7r5da4": {
+		"zh-cn": "数据类型",
+		"en": "Data Type"
+	},
+	"e4ib2": {
+		"zh-cn": "主键",
+		"en": "Primary Key"
+	},
+	"ml102": {
+		"zh-cn": "自增",
+		"en": "Auto Increment"
+	},
+	"ey5n2": {
+		"zh-cn": "可空",
+		"en": "Nullable"
+	},
+	"py4n2": {
+		"zh-cn": "长度",
+		"en": "Length"
+	},
+	"lqjs2": {
+		"zh-cn": "精度",
+		"en": "Precision"
+	},
+	"nxrsg3": {
+		"zh-cn": "默认值",
+		"en": "Default Value"
+	},
+	"1o7nrz9": {
+		"zh-cn": "请选择库名和表名!",
+		"en": "Please select database name and table name!"
+	},
+	"3jqknk6": {
+		"zh-cn": "请选择库名!",
+		"en": "Please select database name!"
+	},
+	"3dlzsr6": {
+		"zh-cn": "请选择表名!",
+		"en": "Please select table name!"
+	},
+	"h4limq7": {
+		"zh-cn": "确定删除表：【",
+		"en": "Confirm deletion of table:【"
+	},
+	"nx2e9x5": {
+		"zh-cn": "表删除成功",
+		"en": "Table deleted successfully"
+	},
+	"hcjxcz7": {
+		"zh-cn": "确定删除列：【",
+		"en": "Confirm deletion of column:【"
+	},
+	"n79f2u5": {
+		"zh-cn": "列删除成功",
+		"en": "Column deleted successfully"
+	},
+	"671g4fa": {
+		"zh-cn": "已处于首位，无法上移",
+		"en": "Already at first position, cannot move up"
+	},
+	"p8k43a": {
+		"zh-cn": "已处于末位，无法下移",
+		"en": "Already at last position, cannot move down"
+	},
+	"eeehal5": {
+		"zh-cn": "确定将列【",
+		"en": "Confirm moving column【"
+	},
+	"dxyp2": {
+		"zh-cn": "上移",
+		"en": "Move Up"
+	},
+	"dxzk2": {
+		"zh-cn": "下移",
+		"en": "Move Down"
+	},
+	"d1wu3p4": {
+		"zh-cn": "操作确认",
+		"en": "Operation Confirmation"
+	},
+	"mw9mju6": {
+		"zh-cn": "列位置已更新",
+		"en": "Column position updated"
+	},
+	"diprg14": {
+		"zh-cn": "未知错误",
+		"en": "Unknown Error"
+	},
+	"nnvp2": {
+		"zh-cn": "表名",
+		"en": "Table Name"
+	},
+	"c0pv6i5": {
+		"zh-cn": " 增加表 ",
+		"en": "Add Table"
+	},
+	"h4bec35": {
+		"zh-cn": " 编辑表 ",
+		"en": "Edit Table"
+	},
+	"bh5yqk5": {
+		"zh-cn": " 删除表 ",
+		"en": "Delete Table"
+	},
+	"c0gmkr5": {
+		"zh-cn": " 增加列 ",
+		"en": "Add Column"
+	},
+	"bdf2h26": {
+		"zh-cn": " 生成实体 ",
+		"en": "Generate Entity"
+	},
+	"s6q6n54": {
+		"zh-cn": "🔔提示",
+		"en": "🔔Prompt"
+	},
+	"4pdwk9p": {
+		"zh-cn": "如果是刚刚生成的实体，请重启后台服务后再生成种子。",
+		"en": "If the entity was just generated, please restart the backend service before generating the seed."
+	},
+	"b8xvec6": {
+		"zh-cn": " 生成种子 ",
+		"en": "Generate Seed"
+	},
+	"4msy0ze": {
+		"zh-cn": " 初始化库表结构及种子数据 ",
+		"en": "Initialize Database Table Structure and Seed Data"
+	},
+	"m1r4ci9": {
+		"zh-cn": " 库表关系可视化 ",
+		"en": "Visualize Database Table Relationships"
+	},
+	"ef9y2": {
+		"zh-cn": "列名",
+		"en": "Column Name"
+	},
+	"cftne3": {
+		"zh-cn": "列名称",
+		"en": "Column Name"
+	},
+	"reeys16": {
+		"zh-cn": "描述不能为空",
+		"en": "Description cannot be empty"
+	},
+	"dz4183": {
+		"zh-cn": "小数位",
+		"en": "Decimal Places"
+	},
+	"i898fx5": {
+		"zh-cn": " 表编辑 ",
+		"en": "Table Edit"
+	},
+	"ke8dn3": {
+		"zh-cn": "表名称",
+		"en": "Table Name"
+	},
+	"j8tuusg": {
+		"zh-cn": "生成成功，请重启服务加载最新代码",
+		"en": "Generated successfully, please restart service to load latest code"
+	},
+	"wmt0i36": {
+		"zh-cn": "表名不能为空",
+		"en": "Table name cannot be empty"
+	},
+	"bw17084": {
+		"zh-cn": "实体名称",
+		"en": "Entity Name"
+	},
+	"pkgto88": {
+		"zh-cn": "实体名称不能为空",
+		"en": "Entity name cannot be empty"
+	},
+	"fnb52": {
+		"zh-cn": "基类",
+		"en": "Base Class"
+	},
+	"bxzajr4": {
+		"zh-cn": "存放位置",
+		"en": "Storage Location"
+	},
+	"vql2vy7": {
+		"zh-cn": "请选择存放位置",
+		"en": "Please select storage location"
+	},
+	"ds2louh": {
+		"zh-cn": "生成成功，请重启项目以加载最新代码",
+		"en": "Generated successfully, please restart project to load latest code"
+	},
+	"n8xxldn": {
+		"zh-cn": " 生成种子数据【生成实体后必须重启服务才生效】",
+		"en": "Generate Seed Data【Must restart service after generating entity to take effect】"
+	},
+	"kais9x6": {
+		"zh-cn": "过滤重复数据",
+		"en": "Filter Duplicate Data"
+	},
+	"bdmju65": {
+		"zh-cn": " 列编辑 ",
+		"en": "Column Edit"
+	},
+	"pl84gzc": {
+		"zh-cn": "初始化库表结构及种子数据",
+		"en": "Initialize Database Table Structure and Seed Data"
+	},
+	"bz8df37": {
+		"zh-cn": " 初始化表结构",
+		"en": "Initialize Table Structure"
+	},
+	"i65s8n8": {
+		"zh-cn": " 初始化种子数据",
+		"en": "Initialize Seed Data"
+	},
+	"de2ue3": {
+		"zh-cn": "增加表",
+		"en": "Add Table"
+	},
+	"ggklgo5": {
+		"zh-cn": "数据表信息",
+		"en": "Data Table Information"
+	},
+	"goj06x5": {
+		"zh-cn": "数据列信息",
+		"en": "Data Column Information"
+	},
+	"w317416": {
+		"zh-cn": "新增主键字段",
+		"en": "Add primary key field"
+	},
+	"t1wbc86": {
+		"zh-cn": "新增普通字段",
+		"en": "Add regular field"
+	},
+	"qscc646": {
+		"zh-cn": "新增租户字段",
+		"en": "Add tenant field"
+	},
+	"uz0mha6": {
+		"zh-cn": "新增基础字段",
+		"en": "Add base field"
+	},
+	"azm9vs4": {
+		"zh-cn": "删除选中",
+		"en": "Delete selected"
+	},
+	"bw410z4": {
+		"zh-cn": "实体数据",
+		"en": "Entity data"
+	},
+	"chtjso4": {
+		"zh-cn": "库表名称",
+		"en": "Database table name"
+	},
+	"byweo44": {
+		"zh-cn": "字段个数",
+		"en": "Number of fields"
+	},
+	"tvc3uk5": {
+		"zh-cn": "所属程序集",
+		"en": "Belonging assembly"
+	},
+	"u3zuk56": {
+		"zh-cn": "请先选择库名",
+		"en": "Please select database name first"
+	},
+	"6em9kc9": {
+		"zh-cn": "请至少选择一个实体",
+		"en": "Please select at least one entity"
+	},
+	"sxbj4ha": {
+		"zh-cn": "初始化表结构操作成功",
+		"en": "Initialize table structure operation succeeded"
+	},
+	"sxcpvwa": {
+		"zh-cn": "初始化表结构操作失败",
+		"en": "Initialize table structure operation failed"
+	},
+	"fqx4dd4": {
+		"zh-cn": "种子数据",
+		"en": "Seed data"
+	},
+	"fquacm4": {
+		"zh-cn": "种子名称",
+		"en": "Seed name"
+	},
+	"czi7ru4": {
+		"zh-cn": "执行顺序",
+		"en": "Execution order"
+	},
+	"fqt6954": {
+		"zh-cn": "种子个数",
+		"en": "Number of seeds"
+	},
+	"ovlar4a": {
+		"zh-cn": "生成种子数据操作成功",
+		"en": "Generate seed data operation succeeded"
+	},
+	"ovk3zpa": {
+		"zh-cn": "生成种子数据操作失败",
+		"en": "Generate seed data operation failed"
+	},
+	"7ki0e26": {
+		"zh-cn": "请输入字段名",
+		"en": "Please enter the field name"
+	},
+	"2j8dli5": {
+		"zh-cn": "请输入描述",
+		"en": "Please enter description"
+	},
+	"2egs9l5": {
+		"zh-cn": "请选择类型",
+		"en": "Please select type"
+	},
+	"2j072o5": {
+		"zh-cn": "请输入长度",
+		"en": "Please enter length"
+	},
+	"7kfba56": {
+		"zh-cn": "请输入小数位",
+		"en": "Please enter decimal places"
+	},
+	"7agnix6": {
+		"zh-cn": "请输入默认值",
+		"en": "Please enter default value"
+	},
+	"fx6x3p5": {
+		"zh-cn": "字段名必填",
+		"en": "Field name is required"
+	},
+	"g2i8xi4": {
+		"zh-cn": "类型必填",
+		"en": "Type is required"
+	},
+	"kxl5ae8": {
+		"zh-cn": "数据列信息导出_",
+		"en": "Data column information export_"
+	},
+	"6rp04a5": {
+		"zh-cn": "请添加列!",
+		"en": "Please add columns!"
+	},
+	"sapfz5": {
+		"zh-cn": "校验不通过",
+		"en": "Validation failed"
+	},
+	"ah2ege4": {
+		"zh-cn": "主键ID",
+		"en": "Primary Key ID"
+	},
+	"frr9f74": {
+		"zh-cn": "租户Id",
+		"en": "Tenant ID"
+	},
+	"ltogmi5": {
+		"zh-cn": "创建人Id",
+		"en": "Creator ID"
+	},
+	"tjkv3q5": {
+		"zh-cn": "修改人Id",
+		"en": "Modifier ID"
+	},
+	"c747j3": {
+		"zh-cn": "修改人",
+		"en": "Modifier"
+	},
+	"q4553p7": {
+		"zh-cn": "创建者机构Id",
+		"en": "Creator Organization ID"
+	},
+	"q3q85p7": {
+		"zh-cn": "创建者机构名称",
+		"en": "Creator Organization Name"
+	},
+	"lf46r3": {
+		"zh-cn": "软删除",
+		"en": "Soft Delete"
+	},
+	"3k4icx5": {
+		"zh-cn": "软删除时间",
+		"en": "Soft Delete Time"
+	},
+	"agc8nj4": {
+		"zh-cn": "代码生成",
+		"en": "Code Generation"
+	},
+	"bucdi3": {
+		"zh-cn": "业务名",
+		"en": "Business Name"
+	},
+	"dth7cj4": {
+		"zh-cn": "模板场景",
+		"en": "Template Scenario"
+	},
+	"afn0le4": {
+		"zh-cn": "主表实体",
+		"en": "Main Table Entity"
+	},
+	"b0ji0a4": {
+		"zh-cn": "命名空间",
+		"en": "Namespace"
+	},
+	"f6nsav4": {
+		"zh-cn": "生成方式",
+		"en": "Generation Method"
+	},
+	"ajj1qb4": {
+		"zh-cn": "作者姓名",
+		"en": "Author Name"
+	},
+	"l6kb0o6": {
+		"zh-cn": "确定删除吗?",
+		"en": "Confirm deletion?"
+	},
+	"d1spvi4": {
+		"zh-cn": "操作成功",
+		"en": "Operation successful"
+	},
+	"ebwqfq6": {
+		"zh-cn": "确定要生成【",
+		"en": "Confirm to generate【"
+	},
+	"7fra13": {
+		"zh-cn": "】吗?",
+		"en": "】?"
+	},
+	"jt358i4": {
+		"zh-cn": "预览代码",
+		"en": "Preview Code"
+	},
+	"gmfmme5": {
+		"zh-cn": "数据库表名",
+		"en": "Database Table Name"
+	},
+	"kgk12": {
+		"zh-cn": "生成",
+		"en": "Generate"
+	},
+	"2j98rh5": {
+		"zh-cn": "树联表字段",
+		"en": "Tree Join Table Field"
+	},
+	"h013hb6": {
+		"zh-cn": "主表联表字段",
+		"en": "Main Table Join Field"
+	},
+	"fkjhgs6": {
+		"zh-cn": "从表联表字段",
+		"en": "Child Table Join Field"
+	},
+	"65tg1i6": {
+		"zh-cn": "编辑代码生成",
+		"en": "Edit Code Generation"
+	},
+	"kx45km7": {
+		"zh-cn": "业务名不能为空",
+		"en": "Business name cannot be empty"
+	},
+	"l6wdl3": {
+		"zh-cn": "请输入",
+		"en": "Please enter"
+	},
+	"bfo1b94": {
+		"zh-cn": "场景类型",
+		"en": "Scenario Type"
+	},
+	"7xcnxx8": {
+		"zh-cn": "场景类型不能为空",
+		"en": "Scenario type cannot be empty"
+	},
+	"2jaekd5": {
+		"zh-cn": "请输入姓名",
+		"en": "Please enter name"
+	},
+	"ajslgs4": {
+		"zh-cn": "作者邮箱",
+		"en": "Author Email"
+	},
+	"2j0utw5": {
+		"zh-cn": "请输入邮箱",
+		"en": "Please enter email"
+	},
+	"ut5ach7": {
+		"zh-cn": "请选择命名空间",
+		"en": "Please select namespace"
+	},
+	"awa1ux4": {
+		"zh-cn": "前端目录",
+		"en": "Frontend Directory"
+	},
+	"d0qsuf8": {
+		"zh-cn": "前端目录不能为空",
+		"en": "Frontend directory cannot be empty"
+	},
+	"27grm16": {
+		"zh-cn": " 前端目录 ",
+		"en": "Frontend Directory"
+	},
+	"ne8fybo": {
+		"zh-cn": "指的是前端相对目录：src/views/main",
+		"en": "Refers to frontend relative directory: src/views/main"
+	},
+	"7i3tk98": {
+		"zh-cn": "生成方式不能为空",
+		"en": "Generation method cannot be empty"
+	},
+	"d6exf34": {
+		"zh-cn": "支持打印",
+		"en": "Support Print"
+	},
+	"n4xmm98": {
+		"zh-cn": "支持打印不能为空",
+		"en": "Support print cannot be empty"
+	},
+	"cr6xz84": {
+		"zh-cn": "打印模版",
+		"en": "Print Template"
+	},
+	"ep2vtg8": {
+		"zh-cn": "打印模版不能为空",
+		"en": "Print template cannot be empty"
+	},
+	"cx910s4": {
+		"zh-cn": "接口模式",
+		"en": "Interface Mode"
+	},
+	"4nxe2k8": {
+		"zh-cn": "接口模式不能为空",
+		"en": "Interface mode cannot be empty"
+	},
+	"aegjjg6": {
+		"zh-cn": " 接口模式 ",
+		"en": "Interface Mode"
+	},
+	"5rom1i2v": {
+		"zh-cn": "接口服务模式是指根据swagger自动生成前端接口请求文件(需要手动双击批处理生成，目录api_build/build.bat)，推荐此模式。传统模式则是指手动根据swagger编写接口请求并进行模型定义。",
+		"en": "Interface service mode refers to automatically generating frontend interface request files based on swagger (requires manually double-clicking batch processing to generate, directory api_build/build.bat), this mode is recommended. Traditional mode refers to manually writing interface requests and model definitions based on swagger."
+	},
+	"cx8fpu4": {
+		"zh-cn": "接口服务",
+		"en": "Interface Service"
+	},
+	"aidij14": {
+		"zh-cn": "传统模式",
+		"en": "Traditional Mode"
+	},
+	"f6suiy4": {
+		"zh-cn": "生成菜单",
+		"en": "Generate Menu"
+	},
+	"n2urmu8": {
+		"zh-cn": "生成菜单不能为空",
+		"en": "Generate menu cannot be empty"
+	},
+	"exrwfe4": {
+		"zh-cn": "父级菜单",
+		"en": "Parent Menu"
+	},
+	"1uobyq8": {
+		"zh-cn": "菜单图标不能为空",
+		"en": "Menu icon cannot be empty"
+	},
+	"c8vkd14": {
+		"zh-cn": "布局方向",
+		"en": "Layout Direction"
+	},
+	"3arl4c8": {
+		"zh-cn": "水平布局不能为空",
+		"en": "Horizontal layout cannot be empty"
+	},
+	"ix8f2": {
+		"zh-cn": "水平",
+		"en": "Horizontal"
+	},
+	"fjci2": {
+		"zh-cn": "垂直",
+		"en": "Vertical"
+	},
+	"2yi9vg5": {
+		"zh-cn": "树组件配置",
+		"en": "Tree Component Configuration"
+	},
+	"d7mbw34": {
+		"zh-cn": "数据库表",
+		"en": "Database Table"
+	},
+	"6een9f8": {
+		"zh-cn": "数据库表不能为空",
+		"en": "Database table cannot be empty"
+	},
+	"deg3cq4": {
+		"zh-cn": "显示字段",
+		"en": "Display field"
+	},
+	"qui5fa8": {
+		"zh-cn": "显示字段不能为空",
+		"en": "Display field cannot be empty"
+	},
+	"c77963": {
+		"zh-cn": "值字段",
+		"en": "Value field"
+	},
+	"kajd6y7": {
+		"zh-cn": "值字段不能为空",
+		"en": "Value field cannot be empty"
+	},
+	"exl54f4": {
+		"zh-cn": "父级字段",
+		"en": "Parent field"
+	},
+	"3gxl4x8": {
+		"zh-cn": "父级字段不能为空",
+		"en": "Parent field cannot be empty"
+	},
+	"dook9n4": {
+		"zh-cn": "查询字段",
+		"en": "Query field"
+	},
+	"c350yz8": {
+		"zh-cn": "查询字段不能为空",
+		"en": "Query field cannot be empty"
+	},
+	"fr9s23": {
+		"zh-cn": "树标题",
+		"en": "Tree title"
+	},
+	"7i3oeq7": {
+		"zh-cn": "树标题不能为空",
+		"en": "Tree title cannot be empty"
+	},
+	"d8qtl24": {
+		"zh-cn": "是否多选",
+		"en": "Whether Multiple Selection"
+	},
+	"afwetq4": {
+		"zh-cn": "主表配置",
+		"en": "Main Table Configuration"
+	},
+	"aii9wb4": {
+		"zh-cn": "从表配置",
+		"en": "Child Table Configuration"
+	},
+	"d219f3": {
+		"zh-cn": "复 制",
+		"en": "Copy"
+	},
+	"dr0qbcx": {
+		"zh-cn": "接口压测会占用服务器大量的系统资源（内存、带宽），请慎重操作！！！",
+		"en": "Interface stress testing will occupy a large amount of server system resources (memory, bandwidth), please operate with caution!!!"
+	},
+	"cx53oc4": {
+		"zh-cn": "接口分组",
+		"en": "Interface Group"
+	},
+	"cx5f4x4": {
+		"zh-cn": "接口名称",
+		"en": "Interface Name"
+	},
+	"cx59j24": {
+		"zh-cn": "接口压测",
+		"en": "Interface Stress Testing"
+	},
+	"jywjzj5": {
+		"zh-cn": "⚡压测参数",
+		"en": "⚡Stress Test Parameters"
+	},
+	"b01dk24": {
+		"zh-cn": "压测轮数",
+		"en": "Stress Test Rounds"
+	},
+	"e0nsue5": {
+		"zh-cn": "每轮请求数",
+		"en": "Requests Per Round"
+	},
+	"btf33n5": {
+		"zh-cn": "最大并发量",
+		"en": "Maximum Concurrency"
+	},
+	"jz3w4q5": {
+		"zh-cn": "⚡压测结果",
+		"en": "⚡Stress Test Results"
+	},
+	"a9iqga6": {
+		"zh-cn": "总用时（秒）",
+		"en": "Total Time (seconds)"
+	},
+	"9xbu216": {
+		"zh-cn": "成功请求次数",
+		"en": "Successful Request Count"
+	},
+	"fv2e3y6": {
+		"zh-cn": "失败请求次数",
+		"en": "Failed Request Count"
+	},
+	"s2ahgqa": {
+		"zh-cn": "每秒查询率（QPS）",
+		"en": "Queries Per Second (QPS)"
+	},
+	"jmql4ia": {
+		"zh-cn": "最小响应时间（毫秒）",
+		"en": "Minimum Response Time (ms)"
+	},
+	"cnvg4aa": {
+		"zh-cn": "最大响应时间（毫秒）",
+		"en": "Maximum Response Time (ms)"
+	},
+	"1nb0i5a": {
+		"zh-cn": "平均响应时间（毫秒）",
+		"en": "Average Response Time (ms)"
+	},
+	"9k1wy8c": {
+		"zh-cn": "P10 响应时间（毫秒）",
+		"en": "P10 Response Time (ms)"
+	},
+	"ymb8fgc": {
+		"zh-cn": "P25 响应时间（毫秒）",
+		"en": "P25 Response Time (ms)"
+	},
+	"wqueqcc": {
+		"zh-cn": "P50 响应时间（毫秒）",
+		"en": "P50 Response Time (ms)"
+	},
+	"s38to1c": {
+		"zh-cn": "P75 响应时间（毫秒）",
+		"en": "P75 Response Time (ms)"
+	},
+	"f3h5goc": {
+		"zh-cn": "P90 响应时间（毫秒）",
+		"en": "P90 Response Time (ms)"
+	},
+	"qon7e7c": {
+		"zh-cn": "P99 响应时间（毫秒）",
+		"en": "P99 Response Time (ms)"
+	},
+	"fky2nqd": {
+		"zh-cn": "P999 响应时间（毫秒）",
+		"en": "P999 Response Time (ms)"
+	},
+	"48ksr88": {
+		"zh-cn": " 接口压测参数 ",
+		"en": "Interface Stress Test Parameters"
+	},
+	"zq12t8": {
+		"zh-cn": "请求地址不能为空",
+		"en": "Request address cannot be empty"
+	},
+	"fk90tt8": {
+		"zh-cn": "请求方式不能为空",
+		"en": "Request method cannot be empty"
+	},
+	"tpainm8": {
+		"zh-cn": "压测轮数不能为空",
+		"en": "Stress test rounds cannot be empty"
+	},
+	"tvzv129": {
+		"zh-cn": "每轮请求数不能为空",
+		"en": "Requests per round cannot be empty"
+	},
+	"ciodcuc": {
+		"zh-cn": "请求头(Headers)",
+		"en": "Request Headers"
+	},
+	"crd9b3": {
+		"zh-cn": "参数名",
+		"en": "Parameter name"
+	},
+	"crci63": {
+		"zh-cn": "参数值",
+		"en": "Parameter value"
+	},
+	"xdpgxz9": {
+		"zh-cn": "请求体(Body)",
+		"en": "Request Body"
+	},
+	"otsx1ba": {
+		"zh-cn": "路径参数(Path)",
+		"en": "Path Parameters"
+	},
+	"sr988ub": {
+		"zh-cn": "查询参数(Query)",
+		"en": "Query Parameters"
+	},
+	"muu7e95": {
+		"zh-cn": "报表数据源",
+		"en": "Report data source"
+	},
+	"usq1ue7": {
+		"zh-cn": "添加报表数据源",
+		"en": "Add Report Data Source"
+	},
+	"ub5yus7": {
+		"zh-cn": "编辑报表数据源",
+		"en": "Edit Report Data Source"
+	},
+	"efhx5d5": {
+		"zh-cn": "确定删除？",
+		"en": "Confirm Deletion?"
+	},
+	"gk5by65": {
+		"zh-cn": "数据源类型",
+		"en": "Data Source Type"
+	},
+	"fceaa3": {
+		"zh-cn": "数据源",
+		"en": "Data Source"
+	},
+	"avf4w14": {
+		"zh-cn": "分组名称",
+		"en": "Group Name"
+	},
+	"eeszxy5": {
+		"zh-cn": "确定复制？",
+		"en": "Confirm Copy?"
+	},
+	"f837ft5": {
+		"zh-cn": "发布到菜单",
+		"en": "Publish to Menu"
+	},
+	"en402": {
+		"zh-cn": "全部",
+		"en": "All"
+	},
+	"d73zsc4": {
+		"zh-cn": "新增分组",
+		"en": "Add Group"
+	},
+	"radl108": {
+		"zh-cn": "请选择分组后编辑",
+		"en": "Please select a group to edit"
+	},
+	"1w3oira": {
+		"zh-cn": "请选择有效的分组节点",
+		"en": "Please select a valid group node"
+	},
+	"gmhfcp4": {
+		"zh-cn": "编辑分组",
+		"en": "Edit Group"
+	},
+	"8ddcgr5": {
+		"zh-cn": "确认删除？",
+		"en": "Confirm deletion?"
+	},
+	"tl2kzx6": {
+		"zh-cn": "当前租户Id",
+		"en": "Current Tenant Id"
+	},
+	"sznvtw6": {
+		"zh-cn": "当前用户Id",
+		"en": "Current User Id"
+	},
+	"bz135b4": {
+		"zh-cn": "字段标题",
+		"en": "Field Title"
+	},
+	"d8pxo04": {
+		"zh-cn": "是否合计",
+		"en": "Whether to Total"
+	},
+	"d8sxjn4": {
+		"zh-cn": "是否显示",
+		"en": "Whether to Display"
+	},
+	"avip9r4": {
+		"zh-cn": "分组标题",
+		"en": "Group Title"
+	},
+	"egsm2": {
+		"zh-cn": "列宽",
+		"en": "Column Width"
+	},
+	"rcdezj7": {
+		"zh-cn": "字段名不能为空",
+		"en": "Field name cannot be empty"
+	},
+	"azonhb4": {
+		"zh-cn": "参数标题",
+		"en": "Parameter Title"
+	},
+	"o1ecxb6": {
+		"zh-cn": "输入控件类型",
+		"en": "Input Control Type"
+	},
+	"lfhas3": {
+		"zh-cn": "输入框",
+		"en": "Input Box"
+	},
+	"e69upe5": {
+		"zh-cn": "日期选择器",
+		"en": "Date Picker"
+	},
+	"lksiw3": {
+		"zh-cn": "选择器",
+		"en": "Selector"
+	},
+	"s9smtt7": {
+		"zh-cn": "参数名不能为空",
+		"en": "Parameter name cannot be empty"
+	},
+	"gnlj818": {
+		"zh-cn": "参数标题不能为空",
+		"en": "Parameter title cannot be empty"
+	},
+	"og5x0fa": {
+		"zh-cn": "输入控件类型不能为空",
+		"en": "Input control type cannot be empty"
+	},
+	"p28tda9": {
+		"zh-cn": "数据源类型不能为空",
+		"en": "Data source type cannot be empty"
+	},
+	"8lgo0u7": {
+		"zh-cn": "数据源不能为空",
+		"en": "Data source cannot be empty"
+	},
+	"ma137i8": {
+		"zh-cn": "接口地址不能为空",
+		"en": "Interface address cannot be empty"
+	},
+	"j6t7e9a": {
+		"zh-cn": "接口请求方式不能为空",
+		"en": "Interface request method cannot be empty"
+	},
+	"htqhr04": {
+		"zh-cn": "解析成功",
+		"en": "Parsing successful"
+	},
+	"mmpr5i5": {
+		"zh-cn": "自定义查询",
+		"en": "Custom query"
+	},
+	"gyks5tb": {
+		"zh-cn": "自定义查询方案加载成功",
+		"en": "Custom query scheme loaded successfully"
+	},
+	"cqhyf1d": {
+		"zh-cn": "自定义查询方案文件格式错误",
+		"en": "Custom query scheme file format error"
+	},
+	"tz37r16": {
+		"zh-cn": "请先进行配置",
+		"en": "Please configure first"
+	},
+	"pbe0va8": {
+		"zh-cn": "自定义查询方案_",
+		"en": "Custom query scheme_"
+	},
+	"bm7dxu8": {
+		"zh-cn": " 显示列表配置 ",
+		"en": "Display list configuration"
+	},
+	"f9er808": {
+		"zh-cn": " 连接关系配置 ",
+		"en": "Connection relationship configuration"
+	},
+	"eg54d3": {
+		"zh-cn": "左连接",
+		"en": "Left join"
+	},
+	"czohm3": {
+		"zh-cn": "右连接",
+		"en": "Right join"
+	},
+	"cmv9o3": {
+		"zh-cn": "内连接",
+		"en": "Inner join"
+	},
+	"xvih3h8": {
+		"zh-cn": " 查询条件配置 ",
+		"en": "Query condition configuration"
+	},
+	"ff81": {
+		"zh-cn": "且",
+		"en": "And"
+	},
+	"jdi1": {
+		"zh-cn": "或",
+		"en": "Or"
+	},
+	"leg52": {
+		"zh-cn": "等于",
+		"en": "Equals"
+	},
+	"c0ylu3": {
+		"zh-cn": "不等于",
+		"en": "Not equals"
+	},
+	"flfr2": {
+		"zh-cn": "大于",
+		"en": "Greater than"
+	},
+	"g38f2": {
+		"zh-cn": "小于",
+		"en": "Less than"
+	},
+	"bkwnvw4": {
+		"zh-cn": "大于等于",
+		"en": "Greater than or equal to"
+	},
+	"by3q4k4": {
+		"zh-cn": "小于等于",
+		"en": "Less than or equal to"
+	},
+	"ekzq2": {
+		"zh-cn": "包含",
+		"en": "Contains"
+	},
+	"kjgwqs8": {
+		"zh-cn": " 数据排序配置 ",
+		"en": "Data sorting configuration"
+	},
+	"pkdlli5": {
+		"zh-cn": "预览SQL",
+		"en": "Preview SQL"
+	},
+	"cza78i4": {
+		"zh-cn": "执行查询",
+		"en": "Execute Query"
+	},
+	"csv3wc4": {
+		"zh-cn": "打开方案",
+		"en": "Open Scheme"
+	},
+	"agi5u24": {
+		"zh-cn": "保存方案",
+		"en": "Save Scheme"
+	},
+	"dd3fwa6": {
+		"zh-cn": " 查询结果 ",
+		"en": "Query Results"
+	},
+	"dozqefa": {
+		"zh-cn": "简介(About) ",
+		"en": "Introduction (About)"
+	},
+	"n5je004p": {
+		"zh-cn": " 🔥基于 .NET 6/8 (Furion/SqlSugar) 实现的通用权限开发框架，前端采用 Vue3/Element-plus，代码简洁、易扩展。整合最新技术，模块插件式开发，前后端分离，开箱即用。集成多租户、缓存、数据校验、鉴权、事件总线、动态API、通讯、远程请求、任务调度、打印等众多黑科技。让开发更简单、更通用、更流行！ ",
+		"en": "🔥A general permission development framework based on .NET 6/8 (Furion/SqlSugar), with frontend using Vue3/Element-plus. The code is concise and easily extensible. Integrating the latest technologies, modular plugin-based development, frontend-backend separation, ready to use out of the box. Incorporates numerous advanced features such as multi-tenancy, caching, data validation, authentication, event bus, dynamic API, communication, remote requests, task scheduling, printing, and more. Making development simpler, more universal, and more popular!"
+	},
+	"jyogjii": {
+		"zh-cn": "项目信息(Information) ",
+		"en": "Project Information (Information)"
+	},
+	"asaz8w5": {
+		"zh-cn": "名称及作者",
+		"en": "Name and Author"
+	},
+	"dl5elt4": {
+		"zh-cn": "框架描述",
+		"en": "Framework Description"
+	},
+	"ayuphs4": {
+		"zh-cn": "发布时间",
+		"en": "Release Date"
+	},
+	"d8pmmk4": {
+		"zh-cn": "文档地址",
+		"en": "Documentation Address"
+	},
+	"j5xsc6": {
+		"zh-cn": " 文档地址 ",
+		"en": "Documentation Address"
+	},
+	"jt4dlg4": {
+		"zh-cn": "预览地址",
+		"en": "Preview Address"
+	},
+	"a1svo46": {
+		"zh-cn": " 预览地址 ",
+		"en": "Preview URL"
+	},
+	"hhy7ubl": {
+		"zh-cn": "生产环境依赖(Dependencies) ",
+		"en": "Production Environment Dependencies"
+	},
+	"oefzmzo": {
+		"zh-cn": "开发环境依赖(devDependencies) ",
+		"en": "Development Environment Dependencies"
+	},
+	"b7b1o7e": {
+		"zh-cn": "关键词(Keywords) ",
+		"en": "Keywords"
+	}
+}

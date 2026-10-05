@@ -1,0 +1,2 @@
+后台调用接口中：/api/sysCommon/generateAllApi 接口参数 generateToWeb 传 false，就是把文件生成到
+/App/app_all 

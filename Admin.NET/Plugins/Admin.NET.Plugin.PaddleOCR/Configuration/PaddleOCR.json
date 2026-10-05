@@ -1,0 +1,9 @@
+{
+  "[openapi:PaddleOCR]": {
+    "Group": "PaddleOCR",
+    "Title": "PaddleOCR",
+    "Description": "文字识别与文档解析",
+    "Version": "1.0.0",
+    "Order": 100
+  }
+}

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <NoWarn>1701;1702;1591</NoWarn>
+    <DocumentationFile></DocumentationFile>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Copyright>Admin.NET</Copyright>
+    <Description>Admin.NET 通用权限开发平台</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MQTTnet.AspNetCore" Version="5.1.0.1559" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.13.3" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Admin.NET.Application\Admin.NET.Application.csproj" />
+  </ItemGroup>
+
+</Project>
