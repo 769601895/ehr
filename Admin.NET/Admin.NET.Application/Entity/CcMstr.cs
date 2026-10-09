@@ -65,6 +65,21 @@ public class CcMstr
     [SugarColumn(ColumnName = "cc_kqgroup", ColumnDescription = "考勤组", IsNullable = true)]
     public int? CcKqgroup { get; set; }
 
+    [SugarColumn(ColumnName = "cc_kq_wocachange", ColumnDescription = "工时变更控制", Length = 10, IsNullable = true)]
+    public string? CcKqWocachange { get; set; }
+
+    [SugarColumn(ColumnName = "cc_kq_code", ColumnDescription = "考勤代码", Length = 50, IsNullable = true)]
+    public string? CcKqCode { get; set; }
+
+    [SugarColumn(ColumnName = "cc_kq_control", ColumnDescription = "考勤控制", Length = 10, IsNullable = true)]
+    public string? CcKqControl { get; set; }
+
+    [SugarColumn(ColumnName = "cc_kq_edituser", ColumnDescription = "考勤代码维护人", Length = 50, IsNullable = true)]
+    public string? CcKqEdituser { get; set; }
+
+    [SugarColumn(ColumnName = "cc_kq_editdate", ColumnDescription = "考勤代码维护时间", IsNullable = true)]
+    public DateTime? CcKqEditdate { get; set; }
+
     [SugarColumn(ColumnName = "cc_woca", ColumnDescription = "工时类别", Length = 50, IsNullable = true)]
     public string? CcWoca { get; set; }
 

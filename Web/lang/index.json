@@ -3551,22 +3551,6 @@
 		"zh-cn": "查看缩略图",
 		"en": "View Thumbnail"
 	},
-	"ppetz9d": {
-		"zh-cn": "起始节点不能作为连线的终点",
-		"en": "Start node cannot be the end point of a connection"
-	},
-	"gvafcqd": {
-		"zh-cn": "终止节点不能作为连线的起点",
-		"en": "End node cannot be the start point of a connection"
-	},
-	"o341hob": {
-		"zh-cn": "只允许从右边的锚点连出",
-		"en": "Only allowed to connect from right anchor points"
-	},
-	"jolkfca": {
-		"zh-cn": "只允许连接左边的锚点",
-		"en": "Only allowed to connect to left anchor points"
-	},
 	"d9bmb84": {
 		"zh-cn": "日志统计",
 		"en": "Log Statistics"

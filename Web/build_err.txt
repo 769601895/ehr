@@ -1,0 +1,47 @@
+(node:25536) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+~@/assets/logo.png referenced in ~@/assets/logo.png didn't resolve at build time, it will remain unchanged to be resolved at runtime
+[33m[plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "D:/project/ehr/ehr/Web/node_modules/sm-crypto-v2/dist/index.mjs". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+[33mnode_modules/@microsoft/signalr/dist/esm/Utils.js (190:0): A comment
+
+"/*#__PURE__*/"
+
+in "node_modules/@microsoft/signalr/dist/esm/Utils.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.[39m
+[33mnode_modules/@microsoft/signalr/dist/esm/Utils.js (208:0): A comment
+
+"/*#__PURE__*/"
+
+in "node_modules/@microsoft/signalr/dist/esm/Utils.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.[39m
+[33msrc/views/mqttx/index.vue?vue&type=script&setup=true&name=mqttx&lang.ts (186:19): "connect" is not exported by "node_modules/mqtt/dist/mqtt.esm.js", imported by "src/views/mqttx/index.vue?vue&type=script&setup=true&name=mqttx&lang.ts".[39m
+[33mGenerated an empty chunk: "perfect-debounce".[39m
+[33mGenerated an empty chunk: "hookable".[39m
+[33mGenerated an empty chunk: "birpc".[39m
+[33mGenerated an empty chunk: "nostics".[39m
+[33mGenerated an empty chunk: "lodash-unified".[39m
+[33mnode_modules/vform3-builds/dist/designer.umd.js (7:65230): Use of eval in "node_modules/vform3-builds/dist/designer.umd.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vform3-builds/dist/designer.umd.js (7:66522): Use of eval in "node_modules/vform3-builds/dist/designer.umd.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vform3-builds/dist/designer.umd.js (179:21): Use of eval in "node_modules/vform3-builds/dist/designer.umd.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vform3-builds/dist/designer.umd.js (183:22): Use of eval in "node_modules/vform3-builds/dist/designer.umd.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js (1:65097): Use of eval in "node_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js (1:65336): Use of eval in "node_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js (1:83123): Use of eval in "node_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js (1:88841): Use of eval in "node_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js (1:89158): Use of eval in "node_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js (1:89517): Use of eval in "node_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js (1:89842): Use of eval in "node_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js (1:90114): Use of eval in "node_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js (1:90427): Use of eval in "node_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js (1:90634): Use of eval in "node_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js (1:90866): Use of eval in "node_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js (1:91134): Use of eval in "node_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js (1:91359): Use of eval in "node_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js (1:274856): Use of eval in "node_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js (1:275256): Use of eval in "node_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mnode_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js (1:347175): Use of eval in "node_modules/vue-plugin-hiprint/dist/vue-plugin-hiprint.js" is strongly discouraged as it poses security risks and may cause issues with minification.[39m
+[33mGenerated an empty chunk: "earcut".[39m
+[33m
+(!) Some chunks are larger than 1500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m

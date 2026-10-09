@@ -100,7 +100,7 @@ const vxe = {
 
 export const languageList = {
 	'zh-CN': '简体中文',
-	// 'zh-TW': '繁體中文(台灣)',
+	'zh-TW': '繁體中文(台灣)',
 	// 'zh-HK': '繁體中文(香港)',
 	en: 'English',
 	// de: 'Deutsch',
@@ -114,10 +114,10 @@ export const languageList = {
 	// pl: 'Polski',
 	// pt: 'Português',
 	// ru: 'Русский',
-	// th: 'ไทย',
+	th: 'ไทย',
 	// id: 'Indonesia',
 	// ms: 'Malaysia',
-	// vi: 'Việt Nam',
+	vi: 'Việt Nam',
 };
 
 const itemize = { en: [], 'zh-CN': [], 'zh-TW': [], 'zh-HK': [], de: [], es: [], fi: [], fr: [], it: [], ja: [], ko: [], no: [], pl: [], pt: [], ru: [], th: [], id: [], ms: [], vi: [] };

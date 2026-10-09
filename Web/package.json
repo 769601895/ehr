@@ -88,6 +88,9 @@
 		"xlsx-js-style": "^1.2.0"
 	},
 	"devDependencies": {
+		"@babel/core": "^7.29.7",
+		"@babel/plugin-syntax-typescript": "^7.29.7",
+		"@babel/plugin-transform-typescript": "^7.29.9",
 		"@iconify/vue": "^5.0.0",
 		"@plugin-web-update-notification/vite": "^2.0.2",
 		"@types/lodash-es": "^4.17.12",

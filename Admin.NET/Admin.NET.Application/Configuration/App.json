@@ -33,7 +33,7 @@
     ".img": "application/octet-stream"
   },
   "LocalizationSettings": {
-    "SupportedCultures": [ "zh-CN", "en" ], // 语言列表 "zh-HK", "de", "es", "fi", "fr", "it", "ja", "ko", "no", "pl", "pt", "ru", "zh-TW", "id", "ms", "th", "vi"
+    "SupportedCultures": [ "zh-CN", "zh-TW", "en", "th", "vi" ], // 必配五语：简体中文、繁体中文、英语、泰语、越南语
     "DefaultCulture": "zh-CN", // 默认语言
     "DateTimeFormatCulture": "zh-CN" // 固定时间区域为特定时区（多语言）
   },
