@@ -1,0 +1,4791 @@
+﻿global type w_rs_cc_mstr from w_pattern_hr
+integer width = 36
+琀x
+43
+integer height = 2092
+integer ii_model = 1
+end type
+global w_rs_cc_mstr w_rs_cc_mstr
+
+type variables
+integer ii_retrieve
+end variables
+
+forward prototypes
+public subroutine of_settab ()
+public function string of_cchist_insert (string as
+瘀x
+_level, string as_ccdesc)
+end prototypes
+
+public subroutine of_settab ();tab_1.tabpage_1.dw_1.width = tab_1.tabpage_1.width - 20
+tab_1.tabpage_2.dw_2.width = tab_1.tabpage_2.width - 20
+tab_1.tabpage_4.dw_6.width = tab_1.tabpage_4.width - 20
+end 
+砀x
+subroutine
+
+public function string of_cchist_insert (string as_level, string as_ccdesc);return ''
+end function
+
+on w_rs_cc_mstr.create
+int iCurrent
+call super::create
+end on
+
+on w_rs_cc_mstr.destroy
+call super::destroy
+if IsValid(MenuID) t
+稀x
+hen destroy(MenuID)
+end on
+
+event ue_postopen;call super::ue_postopen;this.inv_resize.of_register(tab_1.tabpage_2.dw_2,"scaletoright&bottom")//FixedToRight&ScaleToBottom
+this.inv_resize.of_register(tab_1.tabpage_4.dw_6,"scaletoright&bottom")
+this
+簀x
+.inv_resize.of_register(tab_1.tabpage_5.dw_7,"scaletoright&bottom")
+tab_1.tabpage_1.dw_1.object.datawindow.readonly = true
+end event
+
+event ue_resizetool;call super::ue_resizetool;if isvalid(iu_toolbar) then	
+	tab_1.tabpage_2.dw_2.height = tab_1.
+縀x
+tabpage_2.dw_2.height - (uo_2.y - il_y)
+	tab_1.tabpage_4.dw_6.height = tab_1.tabpage_4.dw_6.height - (uo_2.y - il_y)
+end if
+end event
+
+event open;call super::open;closeuserobject(iu_toolbar)
+//uf_menu_visible(this,"新增",false,false)
+//uf_menu_vi
+耀x
+sible(this,"删除",false,false)
+uf_menu_visible(this,"存增",false,false)
+uf_menu_visible(this,"查询",true,true)
+openuserobject (iu_toolbar, 0, 0)
+end event
+
+event ue_refurbish;call super::ue_refurbish;//tab_1.tabpage_1.dw_1.object.datawindow.readonly =
+舀x
+ true
+end event
+
+type uo_2 from w_pattern_hr`uo_2 within w_rs_cc_mstr
+integer y = 164
+integer ii_empload = 0
+end type
+
+event uo_2::uf_tv_selechange;call super::uf_tv_selechange;
+tab_1.tabpage_1.dw_1.triggerevent("pfc_retrieve")
+end event
+
+萀x
+type st_2 from w_pattern_hr`st_2 within w_rs_cc_mstr
+integer x = 850
+integer y = 164
+integer textsize = -9
+fontcharset fontcharset = gb2312charset!
+fontfamily fontfamily = anyfont!
+string facename = "宋  "
+end type
+
+type uo_1 from w_pattern_hr
+蘀x
+`uo_1 within w_rs_cc_mstr
+end type
+
+type tab_1 from w_pattern_hr`tab_1 within w_rs_cc_mstr
+integer x = 869
+integer y = 164
+integer height = 1748
+fontcharset fontcharset = gb2312charset!
+fontfamily fontfamily = anyfont!
+string facename = "宋  "
+蠀x
+
+long backcolor = 67108864
+tabpage_2 tabpage_2
+tabpage_3 tabpage_3
+tabpage_4 tabpage_4
+tabpage_5 tabpage_5
+tabpage_6 tabpage_6
+end type
+
+on tab_1.create
+this.tabpage_2=create tabpage_2
+this.tabpage_3=create tabpage_3
+this.tabpage_4=create 
+言x
+tabpage_4
+this.tabpage_5=create tabpage_5
+this.tabpage_6=create tabpage_6
+call super::create
+this.Control[]={this.tabpage_1,&
+this.tabpage_2,&
+this.tabpage_3,&
+this.tabpage_4,&
+this.tabpage_5,&
+this.tabpage_6}
+end on
+
+on tab_1.destroy
+cal
+谀x
+l super::destroy
+destroy(this.tabpage_2)
+destroy(this.tabpage_3)
+destroy(this.tabpage_4)
+destroy(this.tabpage_5)
+destroy(this.tabpage_6)
+end on
+
+event tab_1::clicked;call super::clicked;//if index = 2 or index = 3 or index = 4 then
+//   iu_to
+踀x
+olbar.of_setenabled("新增",false)
+//	iu_toolbar.of_setenabled("删除",false)
+//   iu_toolbar.of_setenabled("修改",false)
+//end if
+//
+//if index = 1  then
+//	if m_pattern_main.m_operate.m_save.enabled = true  then return 0
+//   iu_toolbar.of_setenabled
+退x
+("新增",true)
+//	iu_toolbar.of_setenabled("删除",true)
+//   iu_toolbar.of_setenabled("修改",true)
+//end if
+//
+end event
+
+event tab_1::selectionchanged;call super::selectionchanged;//if oldindex = 1 then
+//	if m_pattern_main.m_operate.m_save.enabled 
+鈀x
+= true  then
+//		messagebox('提示','请先保存部门维护窗口
+')
+//		tab_1.SelectTab(1)
+//	end if
+//end if
+//	
+window lw_1
+//mumu 2005-04-06 修改 原因
+新增部门后
+立刻做异动时
+数据窗口没有做及时更新
+
+if newindex = 3 then
+	lw_1=tab_1.getparent()
+	lw_1.setredraw(false)
+//	 tab_1.tabpag
+鐀x
+e_3.dw_3.dataobject= ''
+//	 tab_1.tabpage_3.dw_3.dataobject= 'd_rs_cc_changdw2'
+//    tab_1.tabpage_3.dw_3.settransobject(sqlca)
+	 tab_1.tabpage_3.dw_3.reset( )
+	 tab_1.tabpage_3.dw_3.insertrow(0)
+	 
+//	 tab_1.tabpage_3.dw_4.dataobject= ''
+//	 
+阀x
+tab_1.tabpage_3.dw_4.dataobject= 'd_rs_cc_changdw1'
+//    tab_1.tabpage_3.dw_4.settransobject(sqlca)
+	 tab_1.tabpage_3.dw_4.reset( )
+	 tab_1.tabpage_3.dw_4.insertrow(0)
+//	 if tab_1.tabpage_3.dw_3.dataobject<>'' then
+//		gnv_language.of_get_lanag
+頀x
+e_dw(tab_1.tabpage_3.dw_3.dataobject,tab_1.tabpage_3.dw_3)
+//		tab_1.tabpage_3.dw_3.tag='language'
+//	 end if
+//	 if tab_1.tabpage_3.dw_4.dataobject<>'' then
+//		gnv_language.of_get_lanage_dw(tab_1.tabpage_3.dw_4.dataobject,tab_1.tabpage_3.dw_4)
+
+騀x
+//		tab_1.tabpage_3.dw_4.tag='language'
+//	 end if
+	lw_1.setredraw(true)
+
+end if
+end event
+
+type tabpage_1 from w_pattern_hr`tabpage_1 within tab_1
+integer height = 1620
+long backcolor = 134217747
+string text = "部门维护"
+end type
+
+type dw_1 
+鰀x
+from w_pattern_hr`dw_1 within tabpage_1
+integer y = 8
+integer width = 2661
+integer height = 1612
+string dataobject = "d_rs_cc_mstr"
+end type
+
+event dw_1::pfc_retrieve;return this.retrieve(is_level,is_level+'zz',len(is_level)+2)
+end event
+
+ev
+鸀x
+ent dw_1::pfc_addrow;long	ll_rc,i_tmp,i,ll_count
+string l_level,ls_site,ls_tolevel,ls_woca,ls_bzunit,ls_ccstat_basi
+ib_add=true
+this.object.datawindow.readonly=false
+//生成CC_LEVEL   CY 
+//if this.rowcount() > 0 then
+//	for i = 1 to this.rowcount(
+x
+)
+//			l_level = trim(this.object.cc_level[i])
+//			i_tmp = max(i_tmp,integer(mid(l_level,len(l_level) - 1,len(l_level))))
+//		next
+//		i_tmp = i_tmp + 1
+//		l_level = mid(l_level,1,len(l_level)-2 ) + string(i_tmp,'00')
+//		select count(cc_code)
+x
+ into :ll_count from cc_mstr where cc_level=:l_level ;
+//		if ll_count>=1 then
+//			l_level = mid(l_level,1,len(l_level)-2 ) + string(i_tmp + 1,'00')
+//	   end if
+//else
+//	l_level =trim(is_level) + '01' 
+//end if 
+
+//生成CC_LEVEL MUMU 修改 2005-0
+x
+4-02 
+
+select max(cast((substring(cc_level,len(:is_level) + 1 ,2)) as int))+1
+into :i_tmp
+from cc_mstr 
+where cc_level like :is_level + '%'  using SQLCA_oleconnect ;
+if isnull(i_tmp) or i_tmp = 0 then  i_tmp = 1
+l_level = is_level + string(i_tm
+x
+p ,'00')
+
+//先判断是否已维护厂别
+select count(site_id) into :ll_count from h_site_set  ;
+if ll_count=1 then
+	select site_id into :ls_site from h_site_set ;
+elseif ll_count=0 or isnull(ll_count) then
+	messagebox('提示','请先维护好系统厂别定义')
+	return 0
+end if
+
+/
+x
+/注册人数的判断
+超过不允许再新部门
+if uf_site_regiser('empadd')=-1 then
+	return 0
+end if
+
+//新增部门时系统自动设为与上一级部门的厂别与工作类型一致
+if len(l_level)=2 then 
+	SELECT h_woca_set.woca_id INTO :ls_woca FROM h_woca_set  WHERE h_woca_set.woca_ok = 1   ; //
+else
+	ls_tolevel
+x
+=left(l_level,len(l_level) - 2)
+	//取得默认的工作日历
+	select cc_site,cc_woca,cc_bz_unit,cc_stat_basic  into :ls_site,:ls_woca,:ls_bzunit,:ls_ccstat_basi from cc_mstr where cc_level=:ls_tolevel  ;
+end if
+
+ll_rc = this.insertrow(this.getrow())
+this.object
+x
+.cc_date[ll_rc] = uf_get_datetime()
+this.object.cc_user[ll_rc] = gstr_userinfo.username
+this.object.cc_level[ll_rc] = l_level
+this.object.cc_site[ll_rc]=ls_site
+this.object.cc_woca[ll_rc]=ls_woca
+this.object.cc_bz_unit[ll_rc]=ls_bzunit
+this.obje
+x
+ct.cc_stat_basic[ll_rc]=ls_ccstat_basi
+//this.object.cc_code[ll_rc] = uf_getcode('部门内码')  
+//取部门内码并赋值  现在在保存事件pfc_save和tv_1的事件selectionchanged中操作
+this.setrow(ll_rc)
+this.setcolumn('cc_dept')
+this.of_setmenu ("pfc_addrow")	
+ii_retrieve=1
+this.se
+x
+tfocus()
+return 0
+end event
+
+event dw_1::pfc_deleterow;
+this.accepttext()
+integer	li_rc
+string cc_level,cc_code,cc_desc
+long ll_count
+datetime ldt_today
+ldt_today=uf_get_datetime()
+if this.rowcount() <= 0 then return 0
+cc_desc = this.objec
+x
+t.cc_desc[this.getrow()]
+cc_code=this.object.cc_code[this.getrow()]
+if isnull(cc_code) then
+	this.deleterow(0)
+	iu_toolbar.of_setenabled("保存",true)
+	return 0
+end if
+
+if messagebox('警告', ' 是否确认要删除此部门'+cc_desc,stopsign!,yesno!,1) = 1 then
+else
+x
+
+	return 0
+end if 
+cc_level = this.object.cc_level[this.getrow()]
+
+datastore ds_1
+ds_1 = create datastore
+ds_1.dataobject = 'd_rs_cc_mstr_delds'
+ds_1.settransobject(sqlca)
+ds_1.retrieve(cc_level,cc_level+'zz',1)
+if ds_1.rowcount() > 0 then
+	
+x
+messagebox('警告','无法删除
+此部门底下还有在职员工
+请先调离该部的在职员工后再删除
+',stopsign!)
+	return 0
+end if
+ds_1.retrieve(cc_level,cc_level+'zz',2)
+if ds_1.rowcount()>0 then
+	messagebox('警告','无法删除
+此部门底下还有在停职员工
+请先调离该部的停职员工后再删除
+',stopsign!)
+	return 0	
+end if
+ds_1.retrieve(
+x
+cc_level,cc_level+'zz',3) 
+//如有离职人员
+更改其部门为无效状态
+如没有离职人员
+则直接删除该部门
+
+//取得人事月报中看是否有该员工所在部门的历史记录存在
+SELECT count(h_wagemp_mstr.wagemp_id)  INTO :ll_count FROM h_wagemp_mstr  WHERE h_wagemp_mstr.wagemp_cccode = :cc_code   ;
+
+//if ds_1.rowcount()>0 or 
+x
+ll_count>0 then
+//考虑到各表有可能有栏位存当时的cc_code值
+因该cc_code被删除则不能关联出来
+为保证数据完整性
+统一为假删除
+	this.object.cc_enable[this.getrow()]=1
+	this.object.cc_dele_date[this.getrow()]=date(uf_get_datetime())
+	this.object.cc_dele_remark[this.getrow()]='删除撤消'
+	update cc_ms
+x
+tr set cc_enable=1,cc_dele_date=:ldt_today,cc_dele_remark='删除撤消' where cc_level like :cc_level+'%' and  cc_enable=0;
+//else
+//	this.deleterow(this.getrow())
+//end if
+
+if this.update()<>1 then
+   rollback using sqlca;
+	messagebox('提示','数据保存失败,请重
+x
+试')
+else	
+   commit using sqlca;
+	this.triggerevent("pfc_retrieve")
+	if messagebox('提示','是否重新刷新组织架  ',information!,yesno!,2)=1 then
+	   uo_2.tv.triggerevent("constructor")
+	end if
+	
+end if
+return 0
+end event
+
+event dw_1::pfc_update;if this
+x
+.update()=1 then
+	commit using sqlca;
+	if ii_retrieve=1 then
+		if messagebox('提示','是否重新刷新组织架  ',information!,yesno!,2)=1 then
+			uo_2.tv.triggerevent("constructor")
+		end if
+	end if
+	ii_retrieve=0
+else
+	rollback using sqlca;
+	return 0
+end i
+x
+f
+
+return 0
+
+end event
+
+event dw_1::itemerror;//
+end event
+
+event dw_1::dberror;//
+end event
+
+event dw_1::pfc_updateprep;call super::pfc_updateprep;string ls_code,ls_desc,ls_dept,ls_getcode,ls_level,ls_maxcode
+long ll_row , ll_rows,ll_gro
+x
+up
+boolean lb_dept=false,lb_desc=false,lb_level
+this.accepttext()
+ll_rows = this.rowcount()
+if ll_rows<1 then return -1
+for ll_row = 1 to ll_rows
+	ls_dept= this.object.cc_dept[ll_row]
+	ls_desc = this.object.cc_desc[ll_row]
+	ls_code =this.objec
+x
+t.cc_code[ll_row]
+	ls_level = this.object.cc_level[ll_row]
+	ll_group = this.object.cc_group[ll_row]
+	if isnull(ls_code) then
+		   string ls_num
+			SELECT h_bill_mstr.bill_num INTO :ls_num FROM h_bill_mstr WHERE h_bill_mstr.bill_type = '部门内码'  ;
+
+x
+			if ls_num<>'' and not isnull(ls_num) then
+				ls_num =string(long(ls_num) + 1 , '000000')
+				select max(cc_code) into :ls_maxcode from cc_mstr ;
+				if long(ls_maxcode)>=long(ls_num ) then 
+					if long(ls_maxcode)<=999999 then
+					   ls_num
+x
+=string(long(ls_maxcode)+1,'000000')
+					else
+						ls_num=string(long(ls_maxcode)+1)
+					end if
+				end if
+				update h_bill_mstr set h_bill_mstr.bill_num=:ls_num where bill_type='部门内码';
+				commit;
+			else
+				ls_num = '000001'
+				INSERT
+x
+ INTO h_bill_mstr ( bill_type,bill_fist, bill_ym,bill_num )   	    
+			   VALUES ('部门内码', null,null,:ls_num )  ; 
+			   commit;
+		end if
+		this.object.cc_code[ll_row] = ls_num
+		ii_retrieve=1
+	end if
+	if isnull(ls_dept) or trim(ls_dept)='' then
+x
+
+		lb_dept = true
+		exit;
+	end if
+	if isnull(ls_desc)  or trim(ls_desc)='' then
+		lb_desc = true
+		exit;
+	end if
+//	if len(ls_level)=2 and ll_group<>2 then
+//	   lb_level=true
+//		exit ;
+//   end if
+next
+if lb_dept= true then
+	messagebox
+x
+('提示','有个别部门代码没输入
+请输入')
+	return -1
+end if
+if lb_desc = true then
+	messagebox('提示','有个别部门名称没输入
+请输入')
+	return -1
+end if
+//if lb_level=true then
+//	messagebox('提示','一级单位必须是"(股份)公司"等级')
+//	return -1
+//end if
+
+	
+return 1
+end event
+
+event dw
+x
+_1::itemchanged;call super::itemchanged;if row > 0 then
+datetime ldt_create	
+this.object.cc_date[row] = uf_get_datetime()
+this.object.cc_user[row] = gstr_userinfo.username
+
+ldt_create=this.object.cc_create_date[row]
+if isnull(ldt_create) then
+	
+x
+ldt_create=uf_get_datetime()
+	this.object.cc_create_date[row]=ldt_create
+end if
+
+end if
+end event
+
+event dw_1::ue_graphmode;//
+string ls_rtn
+nvo_output_visio lvn_visio
+lvn_visio=create nvo_output_visio
+ls_rtn=uf_get_inputtext('请输入要展开的级次:')
+x
+
+if not isnumber(ls_rtn) then
+	uf_messagebox('错误','输入的不是有效的数字.')
+	return
+end if
+lvn_visio.ii_level=long(ls_rtn)//展开的级次
+lvn_visio.of_output_visio(is_level)
+end event
+
+event dw_1::doubleclicked;call super::doubleclicked;if row <= 0 then return 1
+x
+
+string ls_code
+
+if dwo.name='p_1' then
+	open(w_rs_ccsele_pop)
+	ls_code=message.stringparm
+	if ls_code<>'' and not isnull(ls_code) then
+		this.object.cc_code2[row]=ls_code
+	end if
+	this.object.cc_date[row] = uf_get_datetime()
+	this.object.
+x
+cc_user[row] = gstr_userinfo.username
+	this.of_setmenu ("itemchanged")	
+end if
+end event
+
+type tabpage_2 from userobject within tab_1
+boolean visible = false
+integer x = 18
+integer y = 112
+integer width = 2688
+integer height = 1620
+long bac
+x
+kcolor = 80269524
+string text = "人员部门归属"
+long tabtextcolor = 33554432
+long tabbackcolor = 80269524
+string picturename = "ArrangeTables5!"
+long picturemaskcolor = 12632256
+uo_3 uo_3
+cb_1 cb_1
+st_4 st_4
+ddlb_1 ddlb_1
+dw_5 dw_5
+st_3 st_3
+dw_2
+x
+ dw_2
+end type
+
+on tabpage_2.create
+this.uo_3=create uo_3
+this.cb_1=create cb_1
+this.st_4=create st_4
+this.ddlb_1=create ddlb_1
+this.dw_5=create dw_5
+this.st_3=create st_3
+this.dw_2=create dw_2
+this.Control[]={this.uo_3,&
+this.cb_1,&
+this
+x
+.st_4,&
+this.ddlb_1,&
+this.dw_5,&
+this.st_3,&
+this.dw_2}
+end on
+
+on tabpage_2.destroy
+destroy(this.uo_3)
+destroy(this.cb_1)
+destroy(this.st_4)
+destroy(this.ddlb_1)
+destroy(this.dw_5)
+destroy(this.st_3)
+destroy(this.dw_2)
+end on
+
+type 
+x
+uo_3 from uo_emp_find within tabpage_2
+integer x = 1801
+integer y = 16
+integer taborder = 30
+end type
+
+event ue_retrieve;call super::ue_retrieve; is_empid=emp_id
+ if uo_2.tv.ii_usercc=0 then  //按单部门权限管控
+	is_level=gstr_userinfo.mdept
+else  //支
+x
+持多部门权限管控时将管辖权限设为全公司
+	is_level=''
+end if
+tab_1.tabpage_2.dw_2.triggerevent("pfc_retrieve")
+if tab_1.tabpage_2.dw_2.rowcount()<=0 then messagebox('提示','没有要检索的数  ')
+
+end event
+
+on uo_3.destroy
+call uo_emp_find::destroy
+end on
+
+type cb_1 fro
+x
+m uo_button_flat within tabpage_2
+integer x = 1010
+integer y = 16
+integer width = 206
+integer taborder = 30
+string text = "批 量"
+end type
+
+event clicked;call super::clicked;string ls_cccode,ls_ccdesc
+long i
+if dw_2.rowcount()<1 then return
+l
+x
+s_cccode=dw_5.object.data[1,1]
+if ls_cccode='' or isnull(ls_cccode) then
+	messagebox('提示','请先选择要变动后的部门')
+	return
+end if
+ls_ccdesc=dw_5.describe("evaluate('lookupdisplay(cc_1)',1)")
+if messagebox('提示','确认要将以下人员改成'+ls_ccdesc+'吗?',Information! ,yes
+x
+no!)=2 then
+	return
+end if
+
+for i=1 to dw_2.rowcount()
+	if dw_2.object.h_emp_mstr_emp_free[i]=0 then
+	   dw_2.object.h_emp_mstr_cc_code[i]=ls_cccode
+	end if
+next
+iw_parent.triggerevent( "pfc_save")
+dw_2.setfocus()
+end event
+
+type st_4 fro
+x
+m statictext within tabpage_2
+integer x = 1216
+integer y = 36
+integer width = 169
+integer height = 64
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = gb2312charset!
+fontpitch fontpitch = variable!
+string facename = "宋  "
+x
+
+long textcolor = 33554432
+long backcolor = 67108864
+string text = "选择:"
+alignment alignment = right!
+boolean focusrectangle = false
+end type
+
+type ddlb_1 from dropdownlistbox within tabpage_2
+integer x = 1390
+integer y = 24
+integer width = 
+x
+389
+integer height = 300
+integer taborder = 20
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = gb2312charset!
+fontpitch fontpitch = variable!
+string facename = "宋  "
+long textcolor = 33554432
+long backcolor = 16777215
+st
+x
+ring item[] = {"全部选择","撤消选择"}
+borderstyle borderstyle = stylelowered!
+end type
+
+event selectionchanged;integer li_value
+long i
+if this.text='全部选择' then
+	li_value=0
+else
+	li_value=1
+end if
+
+ if dw_2.rowcount()>0 then
+	 for i=1 to dw_2.rowc
+x
+ount()
+		  dw_2.object.h_emp_mstr_emp_free[i]=li_value
+	 next
+ end if
+end event
+
+event constructor;this.text='全选择'
+end event
+
+type dw_5 from datawindow within tabpage_2
+integer x = 251
+integer y = 12
+integer width = 741
+integer height = 1
+x
+04
+integer taborder = 40
+string title = "none"
+string dataobject = "d_rs_empcc_batcedit_sele"
+boolean livescroll = true
+borderstyle borderstyle = stylelowered!
+end type
+
+event constructor;this.settransobject(sqlca)
+this.insertrow(0)
+end even
+x
+t
+
+event clicked;string ls_code
+if dwo.name='p_1' then
+	open(w_rs_ccsele_pop)
+	ls_code=message.stringparm
+	if ls_code<>'' and not isnull(ls_code) then
+		this.object.cc_1[this.getrow()]=ls_code
+	end if
+end if
+end event
+
+type st_3 from stati
+x
+ctext within tabpage_2
+integer x = 9
+integer y = 40
+integer width = 279
+integer height = 64
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = gb2312charset!
+fontpitch fontpitch = variable!
+string facename = "宋  "
+long back
+x
+color = 67108864
+string text = "变更部门:"
+boolean focusrectangle = false
+end type
+
+type dw_2 from u_dw within tabpage_2
+integer y = 124
+integer width = 2670
+integer height = 1496
+integer taborder = 11
+string dataobject = "d_rs_empcc_batcedit"
+
+x
+boolean ib_rowselect = true
+end type
+
+event pfc_retrieve; this.retrieve(is_level,is_level+'zz',is_empid,is_empid+'zz',ii_state)
+ long i
+ if this.rowcount()>0 then
+	 for i=1 to this.rowcount()
+	     this.object.h_emp_mstr_emp_free[i]=0
+    next
+y
+
+ end if
+ return 1
+end event
+
+event pfc_update;integer	li_rc
+
+// Verify passed arguments.
+IF IsNull(ab_accepttext) Or IsNull(ab_resetflag) Then Return -1 
+
+// Call for PreUpdate functionality.
+If this.Event pfc_PreUpdate() < 0 Then Re
+y
+turn -1
+
+// Call the multi-table update if applicable.
+IF IsValid (inv_multitable) THEN 
+	li_rc = inv_multitable.of_update (ab_accepttext, ab_resetflag)
+ELSE
+	li_rc = this.Update(ab_accepttext, ab_resetflag)
+END IF
+
+if li_rc=1 then 
+	uo_2.tv
+y
+.triggerevent("constructor")
+end if
+ 
+return li_rc
+end event
+
+event itemchanged;call super::itemchanged;iu_toolbar.of_setenabled("保存",true)
+iu_toolbar.of_setenabled("存增",true)
+end event
+
+event pfc_updateprep;if messagebox('提示','确认要保存人员部门的修改吗
+y
+?',Question!,yesno!)=2 then
+	return -1
+end if
+return 1
+
+end event
+
+event pfc_addrow;return 1
+end event
+
+event pfc_modifiedrow;return 1
+end event
+
+event pfc_deleterow;return 1
+end event
+
+type tabpage_3 from userobject within tab_1
+inte
+y
+ger x = 18
+integer y = 112
+integer width = 2688
+integer height = 1620
+long backcolor = 67108864
+string text = "部门异动"
+long tabtextcolor = 33554432
+long tabbackcolor = 80269524
+string picturename = "BrowseClasses!"
+long picturemaskcolor = 12632
+y
+256
+cb_4 cb_4
+cb_2 cb_2
+dw_4 dw_4
+dw_3 dw_3
+end type
+
+on tabpage_3.create
+this.cb_4=create cb_4
+this.cb_2=create cb_2
+this.dw_4=create dw_4
+this.dw_3=create dw_3
+this.Control[]={this.cb_4,&
+this.cb_2,&
+this.dw_4,&
+this.dw_3}
+end on
+
+y
+on tabpage_3.destroy
+destroy(this.cb_4)
+destroy(this.cb_2)
+destroy(this.dw_4)
+destroy(this.dw_3)
+end on
+
+type cb_4 from uo_button_flat within tabpage_3
+integer x = 2313
+integer y = 164
+integer width = 311
+integer height = 96
+integer tabord
+y
+er = 41
+string text = "合 并"
+end type
+
+event clicked;call super::clicked;string ls_oldcc1,ls_oldcc2,ls_newcc,ls_level,ls_desc1,ls_desc2,ls_descnew
+datetime ldt_today
+ldt_today=uf_get_datetime()
+ long row,ll_count
+row=dw_3.getrow()
+ls_oldcc1=dw
+y
+_3.object.old1[row]
+ls_oldcc2=dw_3.object.old2[row]
+ls_newcc=dw_3.object.new3[row]
+if ls_oldcc1='' or isnull(ls_oldcc1) then
+	messagebox('提示','请先选择合并部门一中要合并的部门')
+	dw_3.setcolumn("old1")
+	return
+end if
+if ls_oldcc2='' or isnull(ls_oldcc2) then
+y
+
+	messagebox('提示','请先选择合并部门二中要合并的部门')
+	dw_3.setcolumn("old2")
+	return
+end if
+if ls_newcc='' or isnull(ls_newcc) then
+	messagebox('提示','请选择要合并后的新部门')
+	dw_3.setcolumn("new3")
+	return 
+end if
+//判断合并当前部门下是否还有子部门
+select cc_level,cc_desc into :ls_
+y
+level,:ls_desc1 from cc_mstr where cc_code=:ls_oldcc1 ;
+ SELECT count(cc_mstr.cc_code)
+ INTO :ll_count
+ FROM cc_mstr  
+WHERE ( cc_mstr.cc_enable = 0 ) AND  
+		( cc_mstr.cc_level like :ls_level+'%' ) AND  
+		( cc_mstr.cc_level <> :ls_level )   ;
+y
+
+if ll_count>0 then
+	messagebox('提示',ls_desc1+'下还有子部门
+请将其子部门撤消后再进行部门合并')
+	return
+end if
+
+select cc_level,cc_desc into :ls_level,:ls_desc2 from cc_mstr where cc_code=:ls_oldcc2 ;
+ SELECT count(cc_mstr.cc_code)
+ INTO :ll_count
+ FROM cc_mstr  
+W
+y
+HERE ( cc_mstr.cc_enable = 0 ) AND  
+		( cc_mstr.cc_level like :ls_level+'%' ) AND  
+		( cc_mstr.cc_level <> :ls_level )   ;
+ if ll_count>0 then
+	messagebox('提示',ls_desc2+'下还有子部门
+请将其子部门撤消后再进行部门合并')
+	return
+end if
+select cc_level,cc_desc into :l
+y
+s_level,:ls_descnew from cc_mstr where cc_code=:ls_newcc ;
+
+if ls_oldcc1 = ls_oldcc2 then 
+	messagebox('提示','合并前部门一与合并前部门二不能相同')
+	dw_3.setcolumn("old2")
+	return
+end if	
+
+if messagebox('提示信息', ' 是否要将'+ls_desc1+'与'+ls_desc2+'合并为'+ls_descnew+'?',
+y
+Question!,yesno!,1) = 2 then return
+
+//先更新在职人员到新部门
+update h_emp_mstr set h_emp_mstr.cc_code=:ls_newcc  where h_emp_mstr.cc_code=:ls_oldcc1 and emp_state<>3;
+update h_emp_mstr set h_emp_mstr.cc_code=:ls_newcc  where h_emp_mstr.cc_code=:ls_oldcc
+y
+2 and emp_state<>3;
+if ls_oldcc1<>ls_newcc then
+   update cc_mstr set cc_enable=1,cc_dele_date=:ldt_today,cc_dele_remark='与'+:ls_desc2+'合并为'+:ls_descnew where cc_code=:ls_oldcc1;
+end if
+if ls_oldcc2<>ls_newcc then
+	update cc_mstr set cc_enable=1,
+y
+cc_dele_date=:ldt_today,cc_dele_remark='与'+:ls_desc1+'合并为'+:ls_descnew where cc_code=:ls_oldcc2;
+end if
+if sqlca.sqlcode<0 then
+	rollback using sqlca;
+	messagebox('提示','数据保存失败
+请重试')
+else
+	commit using sqlca;
+	messagebox('提示','部门合并成功')
+	dw_3.ob
+y
+ject.old1[dw_3.getrow()]=''
+	dw_3.object.old2[dw_3.getrow()]=''
+	dw_3.object.new3[dw_3.getrow()]=''
+	uo_2.tv.triggerevent("constructor")
+end if
+
+end event
+
+type cb_2 from uo_button_flat within tabpage_3
+integer x = 2313
+integer y = 980
+in
+y
+teger width = 311
+integer height = 96
+integer taborder = 31
+string text = "调 动"
+end type
+
+event clicked;call super::clicked;long row
+string ls_cc1,ls_cc2,ls_level1,ls_level2,ls_level3,ls_desc1,ls_desc2
+row=dw_4.getrow()
+
+ls_cc1=dw_4.object.c
+y
+c_1[dw_4.getrow()]
+ls_cc2=dw_4.object.cc_2[dw_4.getrow()]
+if ls_cc1='' or isnull(ls_cc1) then
+	messagebox('提示信息','请先选择调动部门')
+	dw_4.setcolumn('cc_1')
+	return
+end if
+if isnull(ls_cc2) or ls_cc2='' then
+	messagebox('提示信息','请选择调至归属部门')
+	dw_4.setc
+y
+olumn("cc_2")
+	return
+end if
+
+select cc_level,cc_desc into :ls_level1,:ls_desc1 from cc_mstr where cc_code=:ls_cc1 ;
+select cc_level,cc_desc into :ls_level2,:ls_desc2 from cc_mstr where cc_code=:ls_cc2 ;
+
+if ls_level2 = ls_level1 then 
+	mess
+y
+agebox('提示信息','调动的部门前后一致
+不能调往')
+	return
+end if
+
+if pos(ls_level2,ls_level1)>0 then 
+	return
+end if
+
+select max(cc_level) into :ls_level3 from cc_mstr where cc_level like :ls_level2+'%' and len(cc_level)=len(:ls_level2)+2 ;
+if ls_level3='' o
+y
+r isnull(ls_level3) then
+	ls_level3=ls_level2+'01'
+else
+	ls_level3=ls_level2+string(integer(right(ls_level3,2))+1,'00')
+end if
+
+if messagebox('提示信息', ' 是否要将'+ls_desc1+'调往到'+ls_desc2+'?',Question!,yesno!,1) = 2 then return
+
+long ll_row,i
+dat
+y
+etime ldt_today
+string ls_num
+ldt_today=uf_get_datetime()
+datastore ds_1
+ds_1=create datastore
+ds_1.dataobject='d_rs_cc_detail'
+ds_1.settransobject(sqlca)
+ds_1.retrieve(ls_level1,ls_level1+'zz')
+ll_row=ds_1.rowcount()
+update cc_mstr set cc_le
+y
+vel=:ls_level3+right(rtrim(cc_level),len(rtrim(cc_level))-len(:ls_level1)) where cc_level like :ls_level1+'%' ;
+if sqlca.sqlcode<0 then
+	rollback using sqlca;
+	messagebox('提示信息','数据保存失败
+请重试')
+else
+	commit using sqlca;
+	if ll_row<=0 then return 
+y
+
+	SELECT h_bill_mstr.bill_num INTO :ls_num FROM h_bill_mstr WHERE h_bill_mstr.bill_type = '部门内码'  ;
+	for i=1 to ll_row
+		 if ls_num<>'' and not isnull(ls_num) then
+			 ls_num =string(long(ls_num) + 1 , '000000')
+		 end if
+		 ds_1.SetItemStatus(i,
+y
+ 0,Primary!, newModified!)
+		 ds_1.object.cc_enable[i]=1
+		 ds_1.object.cc_dele_date[i]=ldt_today
+		 ds_1.object.cc_code[i]=ls_num
+		 ds_1.object.cc_dele_remark[i]='被调至'+ls_desc2
+	next
+	if ls_num<>'' then
+	update h_bill_mstr set h_bill_mstr.bil
+y
+l_num=:ls_num where bill_type='部门内码';
+   end if
+   ds_1.accepttext()
+   ds_1.update()
+   commit using sqlca;
+	
+	messagebox('提示','部门调动成功')
+	dw_4.object.cc_1[dw_4.getrow()]=''
+	dw_4.object.cc_2[dw_4.getrow()]=''
+	uo_2.tv.triggerevent("construct
+y
+or")
+end if
+
+end event
+
+type dw_4 from datawindow within tabpage_3
+integer x = 41
+integer y = 732
+integer width = 2235
+integer height = 888
+integer taborder = 40
+string title = "none"
+string dataobject = "d_rs_cc_changdw1"
+boolean border 
+y
+= false
+boolean livescroll = true
+end type
+
+event constructor;this.settransobject(sqlca)
+//this.insertrow(0)
+end event
+
+event clicked;string ls_code,ls_cc1,ls_cc2,ls_level1,ls_level2,ls_level3
+if dwo.name='p_1' then
+	open(w_rs_ccsele_pop)
+	
+y
+ls_code=message.stringparm
+	if ls_code<>'' and not isnull(ls_code) then
+		this.object.cc_1[this.getrow()]=ls_code
+	end if
+end if
+if dwo.name='p_2' then
+   open(w_rs_ccsele_pop)
+	ls_code=message.stringparm
+	if not isnull(ls_code) then
+		this.o
+y
+bject.cc_2[this.getrow()]=ls_code
+	end if
+	if ls_code='' then
+		this.object.cc_2[this.getrow()]= gstr_sysinfo.cnname
+	end if
+end if
+
+end event
+
+type dw_3 from datawindow within tabpage_3
+integer x = 37
+integer width = 2263
+integer height =
+y
+ 748
+integer taborder = 40
+string title = "none"
+string dataobject = "d_rs_cc_changdw2"
+boolean border = false
+boolean livescroll = true
+end type
+
+event constructor;this.settransobject(sqlca)
+//this.insertrow(0)
+//
+end event
+
+event clicke
+y
+d;string ls_oldcc1,ls_oldcc2,ls_newcc,ls_level,ls_desc,ls_code
+long ll_count
+if dwo.name='p_1' then
+	open(w_rs_ccsele_pop)
+	ls_code=message.stringparm
+	if ls_code<>'' and not isnull(ls_code) then
+		this.object.old1[this.getrow()]=ls_code
+	end i
+y
+f
+	
+end if
+if dwo.name='p_2' then
+	open(w_rs_ccsele_pop)
+	ls_code=message.stringparm
+	if ls_code<>'' and not isnull(ls_code) then
+		this.object.old2[this.getrow()]=ls_code
+	end if
+end if
+if dwo.name='p_3' then
+	open(w_rs_ccsele_pop)
+	ls_co
+y
+de=message.stringparm
+	if ls_code<>'' and not isnull(ls_code) then
+		this.object.new3[this.getrow()]=ls_code
+	end if
+end if
+
+end event
+
+type tabpage_4 from userobject within tab_1
+integer x = 18
+integer y = 112
+integer width = 2688
+integ
+y
+er height = 1620
+long backcolor = 80269524
+string text = "部门明细"
+long tabtextcolor = 33554432
+long tabbackcolor = 80269524
+string picturename = "Start!"
+long picturemaskcolor = 12632256
+cb_3 cb_3
+dw_6 dw_6
+end type
+
+on tabpage_4.create
+this
+y
+.cb_3=create cb_3
+this.dw_6=create dw_6
+this.Control[]={this.cb_3,&
+this.dw_6}
+end on
+
+on tabpage_4.destroy
+destroy(this.cb_3)
+destroy(this.dw_6)
+end on
+
+type cb_3 from commandbutton within tabpage_4
+integer x = 64
+integer y = 40
+integer
+y
+ width = 402
+integer height = 84
+integer taborder = 30
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = gb2312charset!
+fontpitch fontpitch = variable!
+string facename = "宋  "
+string text = "none"
+end type
+
+event clicked;
+一y
+//导出数据到excel
+Boolean lb_SetBorder ,lb_MergeColumnHeader
+Boolean lb_SetMaxRow
+String  ls_ObjName
+String   ls_BorderBeinObj, ls_BorderEndObj
+Int li_PrintHeader
+n_cst_dw2excel n_excel
+String docname
+
+int 	 li_rc
+string ls_path
+string ls_file
+
+li_rc = GetFileSaveName( "选择文件" , ls_path, ls_file, "xls", &
+		  "Excel Files (*.xls),*.xls, *.*")
+ChangeDirectory(gs_repupdatedir)
+
+if li_rc <> 1 then
+	return
+end if
+
+if right(upper(ls_file),3) <> 'XLS' then return
+
+docname = ls_path
+r存失败')
+	return -1
+else
+	return 1
+end if
+end event
+
+吀y
+jhv+lspiCvJ9kGqrWjbKY63X/XCFDUobWlWPDgxYb1P2lNdVcVsXKba+z19mJLihi96vKkX4D041c/ipsGebDu68x85xpQgpkB0eaXooVxOlv9Ldza8zANu+6BdvrAEYLfrVOEEQwex/Q+z525lflsqg1UNux+A/d4IJo6W747RP0AGPdKDcrtXz3dury4qm62JzJRwnSRpwPru4RIN2/0I92KkrZoDY0cUJlWZlxO+VMmMmitVKnKAOqNp
+氀y
+HK3zYr5sy8TNzD581F2Gmo0ir4aMxDvrr5+RcZsiOyZxJTfrqAGvyL/Eci742bUGhNk1aPBaHZn8/2aOAacV6Dnq0CYbhmh1AHFw8ml6lZ5FrqVVkh2cn1+W2ETYnT3GvBYP7YobbyQZcqXDT0yIXhTtKQIGd2dnh7gL2p1pxpt+bX7JcS+pgZJd25i3igTgWHbJ0KccfVVNV3u/LqS/f70tt/aGrYxrUPt6NAw5tw8hnagPgXT/w3BO0QU
+堀y
+rs_checkup_mstr from w_pattern_hr
+end type
+global w_rs_checkup_mstr w_rs_checkup_mstr
+
+on w_rs_checkup_mstr.create
+int iCurrent
+call super::create
+end on
+
+on w_rs_checkup_mstr.destroy
+call super::destroy
+if IsValid(MenuID) then destroy(Menu
+娀y
+ID)
+end on
+
+type uo_2 from w_pattern_hr`uo_2 within w_rs_checkup_mstr
+end type
+
+type st_2 from w_pattern_hr`st_2 within w_rs_checkup_mstr
+end type
+
+type uo_1 from w_pattern_hr`uo_1 within w_rs_checkup_mstr
+end type
+
+type tab_1 from w_patte
+尀y
+rn_hr`tab_1 within w_rs_checkup_mstr
+end type
+
+type tabpage_1 from w_pattern_hr`tabpage_1 within tab_1
+string text = "体检管理"
+uo_3 uo_3
+uo_4 uo_4
+end type
+
+on tabpage_1.create
+this.uo_3=create uo_3
+this.uo_4=create uo_4
+int iCurrent
+call su
+帀y
+per::create
+iCurrent=UpperBound(this.Control)
+this.Control[iCurrent+1]=this.uo_3
+this.Control[iCurrent+2]=this.uo_4
+end on
+
+on tabpage_1.destroy
+call super::destroy
+destroy(this.uo_3)
+destroy(this.uo_4)
+end on
+
+type dw_1 from w_pattern_hr`
+怀y
+dw_1 within tabpage_1
+integer y = 96
+integer height = 1536
+string dataobject = "d_rs_checkup_mstr"
+end type
+
+event dw_1::doubleclicked;call super::doubleclicked;str_empnew_ini lstr_1
+if row > 0 then
+	lstr_1.ini_empid = this.object.checkup_empi
+戀y
+d[row]
+	lstr_1.ini_class = this.object.checkup_num[row]
+//	if left(is_key,3) = '000' then 
+//		lstr_1.ini_state='query'
+//	elseif left(is_key,1) = '0' then
+//		lstr_1.ini_state = 'noadd'
+//	end if
+	openwithparm(w_rs_checkup_pop,lstr_1)
+end if
+搀y
+
+end event
+
+event dw_1::pfc_addrow;str_empnew_ini lstr_1
+lstr_1.ini_empid=''
+openwithparm(w_rs_checkup_pop,lstr_1)
+return 0
+end event
+
+event dw_1::pfc_retrieve;DATETIME ldt_1,ldt_2
+ldt_1 = uo_4.of_getbegdatetime()
+ldt_2 = datetime(date(uo_4.
+昀y
+of_getenddatetime()),time(23,59,59))
+retrieve(is_level,is_level+'zz',is_empid+'%',ldt_1,ldt_2)
+return 1
+end event
+
+type uo_3 from uo_emp_find within tabpage_1
+integer taborder = 30
+boolean bringtotop = true
+end type
+
+on uo_3.destroy
+call uo
+栀y
+_emp_find::destroy
+end on
+
+event ue_retrieve;
+if tab_1.selectedtab=1 then
+	is_empid=emp_id
+	is_level=gstr_userinfo.mdept
+	tab_1.tabpage_1.dw_1.triggerevent("pfc_retrieve")
+	if tab_1.tabpage_1.dw_1.rowcount()<0 then messagebox('提示','没有要查看的员工资料'
+)
+end if
+end event
+
+type uo_4 from uo_multi_date within tabpage_1
+integer x = 978
+integer taborder = 30
+boolean bringtotop = true
+end type
+
+on uo_4.destroy
+call uo_multi_date::destroy
+end on
+
+z
+global type uf_read_image from function_object
+end type
+
+forward prototypes
+global function blob uf_read_image (string ls_file, string ls_path)
+end prototypes
+
+global function blob uf_read_image (string ls_file, string ls_path);integer li_file,
+渀y
+G5gbarp8mhM3hwpRzvNYzXrCkidx44kehcdp7o6RGr+YJjgM9dLVaamC8PFyD3XGG23IBAnegjTWzPAM+wzZxgx1YlvlgGV4MzjEEUornDp4Nh/7QSzgMhhDlACCwOjEai5zhThJHZeQll8SXol+5Wm9IBUhMMDadyWbDjUPWtCLlXJGAq0oP1LsVBiB+Zg1WMfULW/FljnO12MG0huRjsaMhfHs10eeIPeJUZ3hVjx88kCW/Hl2TTuminr
+瀀y
+UJ0yJpHECFpzCZlRz79+an5x1oOsB7HI2d8FDu7femLLpumX3TxjinSyu1XphYRXVrEn07zz/x4lMLwWlUSGpeBSh5ul74U46HyHEiVRzbZTdILzyUNBxRJ+HBedU+GaUL6bNPAKjxg1JurSTqPNYJCGBV1OaRk6F0tcZw0Vrn7NVmaiVAO48j4z/Ig6EJO3NceA/SxaSes3T5rlU9q5+KZCQ7ci4zo8B157G1ppvE4APpQfL6D7B/mcxy2
+爀y
+d9CIRdVJDGgzOG14vSF8dx9+NLX07nlM3Ij99KJH6UEadu1Mjm+re8AbXF3Pa+DxIBSj5Vroqjnqu+8BQmMcNLMQ1iFg5de8CWrNR1VjPziTRX+ztUIqdlsKP4Hw8LpeNYqyKdHVm1ACbppv5yKSX6rLaL20FRbmIDbmvmGFCqhPuWj9pgia45BbCJ1SVNF+NO+IQXhMkumWR2gxAWXLLnxYId0bPScy+qsQhTzobNCsmtxIhR7BUIWkHsp
+琀y
+bSQDqqm3piWJEvFA0wfia3eMHw4rO8xotulirlKtI9zqdCtcxAKlFGQ8TQoGDqgvYfeFufuX00+UgbJUDm7t6KJK0WG+ORiQYH2rszLnha6A4X/GMM1xRXK6rZEA5PZVDKMHQXoSU6w08KD1TjEZQsVLyNnVp/uOjuGHewpKLJVYfzjO/d0aw50RVDfH/pyuI+GCJ0W1DVoR0jNU8qD9OIOsLVIiiqNJkPDKEsP7RW+AFGXUqXxmbYHD9jh
+瘀y
+s2F47YmZmIQdTTCulpzPAmtAU73m49HiINDA2/w/m6cjaYYEAY0lYIkm+V5SwGOafWOqh0pYiBWVk19zz4QHMaDW1oOLb9mtI5+25iHZzX2p1casHuQJnzmM7L04iKG4TijDmzfDD78wzKA9eYkPbEmSEaYkYAhEvTECVUpPvqk91IyLj7AK9ESBPeRDJ3Cl4Ysfx+CbdCI/6RcJaEGk6NLHjluFYSdwlZ5S8nXsRpqh0hQKZQbNp/yWhB6
+{
+Kjq8rQK2GzMx1ys5FmPX4DcbqYejPSnTbigtNCOPOow1GPYBMVNESOjprjY3qH2GhAX9zf1Dfwj/LgZt7wWKIRwlmiN+IXB0aJRajWoOJSqi3vAdsqPG+iuzcGJS5HsUt2uNEFPXHvHEuIYH2R0RYI4/kQT8+VJffOoqDtrBlcGiyeC6+pbYtli6jzBCIOiCvOpnr+BuKRWzviErXkrHSQ/v1SfvuWuFPX6XlecHfH8yEbJskgQMGekrS/K
+稀y
+ckground.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" 
+簀y
+background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" toolti
+z
+p.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="6208" y="384" height="60" width="183" format="[genera
+耀y
+ background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.
+舀y
+visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=3 alignment="0" tabsequence=3276
+萀y
+6 border="0" color="33554432" x="7131" y="316" height="76" width="256" format="[general]" html.valueishtml="0"  name=duty_id visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family
+蘀y
+="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" backgrou
+蠀y
+nd.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.d
+言y
+elay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=1
+谀y
+27 alignment="0" tabsequence=32766 border="0" color="33554432" x="30418" y="0" height="56" width="512" format="[shortdate] [time]" html.valueishtml="0"  name=emp_valid visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="宋  " font.he
+踀y
+ight="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="134" background.mode="2" background.color="16777215" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.ang
+退y
+le="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100"
+鈀y
+ tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" tra
+鐀y
+nsparency="0" )
+column(band=detail id=126 alignment="2" tabsequence=32766 border="5~t8" color="33554432" x="5413" y="328" height="76" width="430" format="yyyy-mm-dd" html.valueishtml="0"  name=emp_work_date visible="1" editmask.mask="yyyy-mm-dd" edit
+阀y
+mask.focusrectangle=no  font.face="宋  " font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="134" background.mode="2" background.color="16777215" background.transparency="0" background.gradient.color="8421504" background.gr
+頀y
+adient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradie
+騀y
+nt.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.tex
+鰀y
+tcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=detail alignment="0" text="参加工作时间
+" border="0" color="8388608" x="5019" y="336" height="60" width="370" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height
+鸀y
+="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0
+y
+" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tool
+y
+tip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transpar
+y
+ency="0" )
+column(band=detail id=61 alignment="0" tabsequence=10 border="5~t8" color="0" x="512" y="172" height="76" width="526" format="[general]" html.valueishtml="0"  name=emp_level  tag="学历" visible="1" dddw.name=d_rs_ddw_level dddw.displaycolumn
+y
+=code_desc dddw.datacolumn=code_value dddw.percentwidth=150 dddw.lines=0 dddw.limit=0 dddw.allowedit=yes dddw.validation=no dddw.autocompletemode=none dddw.useasborder=no dddw.case=any dddw.vscrollbar=yes dddw.showlist=yes  font.face="宋  " font.height
+y
+="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="134" background.mode="2" background.color="16777215" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="
+0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" too
+y
+DQ7coIsxrgFjptbRP+1LdZgvoPEymUxHx40mQFm7QU+4Y0C/TBCY/rVVx2Rc6rq2J6Ndd6/nIXveyp4XXNeNUJheRtoc3a8VvrF8Pbase9DhdLP/8chopMWV9uFgbJyodtC+jpw7ffWvTavmP+aDUJ9r756t4hNx7WncAImkb2nsXJapLp6kqguDynJjF0+OjhHkp4F3gnGtDqA6qIsH4j+Zl1y8VcgLAjqyv9fGfxk+h6beuJ0Fz8nzXrv
+y
+Fpu3clOgv4j4ituUQSPJN3utVdfbK8ka0hPY3iAgAQeOehPkC9Fl82rDnTwEfp7l17wIiKsK9DQM+6iiG94bRB9vY1Nj8vt/YcboD8E/WUJEV1IWc05p0SfTbWlBpvG93lsk+vxTkA4tQB161nbTGD1ySShB5Px3bSPlmegck/af2UW29uoVUxLsMwg7llMfxxbzkT7D/id1dRdq/WCn6XmFWwsd7bhXe+4Y0Zt+UghuKAb67aUDnEhMueV
+y
+syI3D/jFl6ubfD003kVD/R7yWFFzTe08JuEfGllaNzGU9vJIfj3IFiqeXDIHqkMnLXd6GvkHXOcqtHkwUy/VCottz1C//CKoiJ+fG6Yomcd4K7oca0VfypYbEOMXPZlfrEk4MpBUsEEJDbn1Bjdhkmjcg45mNbXxXwbwcYmQjyL3eAFQtXFZOVPi0OJMnQx4ZhspqwtA9W5wdXg4z096/ROycrSZCV1cIH60QCGnpptqANjyzWHa8KAI+LE
+y
+vRAQrl9TyM1ffWzcv6kLN4kCeACnTYGkYugmIbhm
+d
+"
+1
+"
+1
+"
+1
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+8
+"
+0
+"
+0
+z
+vel
+cloud;MTc1ODM2MDY3NA==;cwzwifBdjR3h/1ollJCFLJtTTON5BbyudOaCHsVSFxIQ+gW+vU6WZOZ5MMhai2/7LUfUeXbT9k4wPCFTNy/KsAtBVLzsxfQki2ILyyVenRH4JwdPYODy99maoyNRrNMakJmCbMHxJGDKZ4VHJTRMdIE+GW1SwNMbJz4aXX8bbDG+Vhrh1a7vagZchJF7upysb165INI5N6
+y
+d.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="3
+y
+2000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="暂住证到期日" border="6" color="3
+y
+3554432" x="13358" y="8" height="64" width="389" html.valueishtml="0"  name=emp_zz_date_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864
+y
+" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.g
+y
+radient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebu
+y
+tton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="审检证号" border="6" color="33554432" x="13755" y="8" height="64" width="57
+y
+1" html.valueishtml="0"  name=emp_sjcode_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" background.transparency="0" background.gradie
+y
+nt.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.grad
+y
+ient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" 
+y
+tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="审检证号到期日" border="6" color="33554432" x="14336" y="8" height="64" width="402" html.valueishtml="0"  name=emp_sj_date_t 
+y
+visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" background.transparency="0" background.gradient.color="8421504" background.gradient.tran
+y
+sparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="1
+y
+00" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134
+y
+217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="就业证号" border="6" color="33554432" x="14747" y="8" height="64" width="576" html.valueishtml="0"  name=emp_jycode_t visible="1"  font.face="Arial" font.height="-9"
+y
+ font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" back
+y
+ground.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.ba
+y
+ckcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="
+y
+0" )
+text(band=header alignment="2" text="就业证到期日" border="6" color="33554432" x="15333" y="8" height="64" width="375" html.valueishtml="0"  name=emp_jy_date_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pit
+倀
+ch="2" font.charset="0" background.mode="2" background.color="67108864" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.rep
+y
+t.limit=2 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="冼极" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" background.tran
+y
+sparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetitio
+y
+n.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.
+y
+icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=detail alignment="1" text="婚否:" border="0" color="33554432" x="1147" y="188" height="56" width="311" html.valueisht
+y
+ml="0"  name=emp_marry_t visible="1"  font.face="冼极" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" b
+y
+ackground.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" backg
+y
+round.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0"
+y
+ tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=detail alignment="1" text="性别:" border="0" color="33554432" x="215" y="188" height="56" width="425" html.valueishtml="0"  name=emp_sex_t visible="1"  font.face="冼极" 
+y
+font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradie
+y
+nt.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread
+y
+="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="
+y
+0" transparency="0" )
+column(band=detail id=47 alignment="2" tabsequence=10 border="5" color="33554432" x="1481" y="180" height="68" width="320" format="[general]" html.valueishtml="0"  name=emp_marry  tag="駁瘁" visible="1" ddlb.limit=0 ddlb.allowedit
+y
+=no ddlb.validation=no ddlb.autocompletemode=none ddlb.case=any  font.face="冼极" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" background.transparency="0" background.
+y
+gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" backgroun
+y
+d.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubbl
+y
+e="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=119 alignment="2" tabsequence=20 border="5" color="33554432" x="658" y="292" height="68" width="457" format="yyyy-mm-dd" html.v
+y
+alueishtml="0"  name=emp_marri_date visible="1" editmask.mask="yyyy-mm-dd" editmask.focusrectangle=no  font.face="冼极" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" b
+z
+ackground.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.grad
+戀
+ient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutto
+z
+jqw9eBeTD/FuPE6nDksGQquKhldAe8fWSUdwtet7tTGRR0fdMVWKOq+D9YRVYbaVC5fWg6lfsOZz8Hbwlt5uPC1pF08kim65szmSvsiUXHiFUgNBeILDUVjUXjppLxc5oMGY2jEyROuXl5otns/EzH/+Bxz0I3UeSYaB0ttLWfE5sRO7WKzOWwZhdT2WFDHL7jA+xslxwPhvjW0AF9Ui+r4jCGfpBNonrRUDYz1cgZMgzYXpq6QZ0qE61En
+z
+V15DXSSquhW5qN3P2R/L5qAkoFPTp8u2xmn+zRAkAb+/l46vTdLeZ2BPQY4DuNx+cAMEiwxc8HWZ29WKwoZjxVk3iITMeJDlFGpMgW8jBQqCRg2EwtusTeBN4IUM8XJOzhmhVLKexey86RoSua6W5J1klp0t5vn/YFFoJoTJdAuFbWFcQqElhnyL81HMjwldwTLC9gceOu86h2zZbYu/i3fKgIqzCtFWuPdwaJLxm4kR7YV3DRPPQ5WtQqd
+z
+ki41HHIMthkbeWyyYA2PE08qO2+GQhNSnNtIUuKuDej2XKunx9nS38h9oMZl8XP+O0pKLIl+nmTqZya0P7TN4VjF2gljWZiMZQLHvWmX7CgzRT/g9QyhcTX5g0SjUBrWb1uSdnQbo+/7q1WUJ6LIqu5dyiOWufTZf76Be2m8mDoJqTisa71dHTkhyeEsymUpB/mA7/0LUvl19ZvRtnY1zvi+StDorEfB2gUVrnpinzRlntmmLoyekiEuodL
+z
+0DgoMKrk7z+Z0tOBwRVB+PIFbdcOJIcfkNHAqKH2qnlJRavsyzdpgKq8Q8ZXA0GBhCbD1YEpA0feal9347OIJtMi9r6FHuks3HzvocQ5hx6gm6CuieqWfjzSTarq8Rq9iMe1XNex3PlsYPqZG76hhYG8zGkDxBoo7M1PT83eP0aEPBlAxV5EVUrC6rX3VcSH48NNm
+d
+z
+"
+1
+"
+1
+"
+1
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+8
+"
+0
+"
+0
+z
+Sc0eXRcWBouCz2+DW5i66bNPTfu0h+h2lbTJZ3v1O4gd+v0/a4xm9IUEZESs1HdXn1KtA/O3qU+UG8bcnNH2ogmHbqXsT+WdPUPx+swLG0siqDvGWeSclHwYDLv926s6RwP/uN5y3qMnrnHwoeYdEkBGkKFKW8lzExN31XsfQTN8r8dFlBlH0zy7Ig0ZIo6MA4CFYUMeRD4+HF1o4PYTgLLud7mnwXEKPXzJRa1peATrumD6Telc4F47iS4
+z
+mQG7rGjbSDe4pt/m0m6BkCnt97j+CMKuzGMCaS1jQVzLnxdycp/8IxJHUHxA/B47ZbmX7aOh+Jj1jto22HCo86xO3Zjoe5JdpT+93xRqxHJfa73+PCIGT3w1Fh3ajtc8uqXLsJC01LAXhCRvyajYJHN/GdcUBCjm8Wqc8WoqodI+IiqXxINDGpbfXD/FGqREmvFgnj7oB1Ux+xACswtj8gIO0M47YAXejcLrGLJkXr6wwZrD7F6GGT1CBpD
+z
+JrXy18j6GmJh2aGTOKEbQv1Za4kx2jrsNDHiey4js0j+2aqb1rVYXflUspWu+wvk9zCXjG43PINMogrwm6AazrTrw2/f8jhtQFrU7SIsGX2n/9FkwsWjTmIxEh0grF4p+zb6QcbcMfg6UyryvoXgtJO8a/3X0dI5bzmR97tT0r8kne+ZHRykrZzT2v/SS7eopCq/3uBm7xGdIbk/lYS1YqiEU+ktWvUb5ejJ1KDzBvRHehGtoZL/f0coBmC
+z
+i65sioNnz7sPSqnWKVcZDqlhtkf/1AcU75Oj2Ntx4BFOrr1zwL0db3HzoPm8dMhf3Hsr5vXbQqIhy86cauoJ5IcLffDPMKX3p1E7FJfysvV5ocGC13q2zLOYkDTrTzvgJQyKAZElkKoxgdsZEuDFNu3wfIOuoFV5swgwcPGRY0wLaftZ/UPTdoSYCOZK5PgIoqMWwxcoLzTQcK36HY5x8Q6yHUqC/L3++9xVBKTpAwom7Yki2xWC6fIuOaQ
+z
+28L5e5kn/tAi4gaP76g2TU9NKbuwo09wGKKsHoshdzREPUiK8+O6QpGAa3F5qQ3gCRE3r/Dzr8TiA924jf6FEKLy4zTJ2KWLXrDwSxjk6EEJgxFOCEylV3sXokp/ynAr6oHMDm/mfFjkJBXK24D5dXhiF8bh+syzua5f39kI4kXzxCyAIj/i8ZNhqwpbmA5EHthebT/B7vohWBqX1wMEjHcdgSOe+LXwBy9UH1tUBrucCTUHvkJYv2GYyaJ
+z
+bdDhKNiJIMLYIyWsf+Q3Dmf/GIVYbZblKwDsvltAIJeq6BFANdRbTc1VYCMW9oCBeK1cdhhydrJ59lXLq6xnxi9tv5rr0q+Uz8vhnICV1+qDYIcuHZPJu+hZUMswBQu4O1nFLZqwSdxHf/dVOuRakcEtF3CWZY4bG/OlYI9Dv2PdqQaA+xfRzQXzU56Vpyn4RSOQaM//UERbhPrTGlcxa9/9Fpw4+xGBxDODEmzuDR8bV1i38zoXgjLscZn
+z
+zkg5sn62gd4hA/rpePhaHbXz4t2X9896os4jbPjUb+RmidOAUxWmP/mikhQGHvtcS9hDeqUsYnaqGHS5vA3yZy26ZbP0CchTvnsqQPq/gvD3FFZR6vAItYlP3mqYQ2n9G18AwjDvo2aDC3RV589qkte6xwvNbVGwua+bUcrSLaxB/bHawPbsHIUUWBaql1a7ZfC1GKOyMa4WbCU9DH5euhnAA0HC6P6CDfpU8FFzP0scQDMmsgyLAdLVZa9
+z
+VjMROyJg6iv9cYzzNWi3G7cPIGYkSnVTkMwDnoA7pc6qItsFMBpiwhIil0ijXHh8jMriakX3s6iDoJUaxQkvXNBS5beSXl3fqKWHqXIoOVAgONdYil5bF40WbmwvHF/PvGSIFa0k5LW3HnYxRKuyWrqmkMQcN+cL/oIT9UDGhUlc+Y5FcZ0K+yzcQujhIfwgCSJUyNLO4y76GZJcsrpc7rjC3mvhm90t0hx/OfzinN5duDJG01qm/l4PCS6
+z
+Qn/+3jUqnZSy44ONb8WVb88crHtPHaMDeUT0Wa4IWuhys5pZUQuf527YvRJfz/ZV3fJTNmAAZFGolamMv3R5gEm7eLLktBEg+xOAPy3Dvrd859qeLfntcbMALZrqFPfXDFYBa9fr/L9uI6mBTwsFogrWwAsTYbEIA0eMtTsnSoLKs3lz/Ic3pf7PQrRY23MC5VQVyA9VHYr1FfJ/uBXVanSkX38FESMOBt8taXkyAKI9klzR0Y9CblWzQg5
+倀z
+bc4jAIAagj68jKDm56u0hymgEr7gGh0UPleOzorclerC0g3Xc+T8uB/WYDlhxuISbLpGQ1A/BPxbVSN3lH2zAIX9EYx8kDprJmU8XcBp4SscqPkvjbC+BOekJJMBUbYtytK3LCgCNQmoDTj9mce5IiVAFtEYb8JoiiGJSHtAiJid0qu68ESLCQH8y4ES0JQVWXWWs8On7lL2NUbbZfrUiAaGkKhux3+DmFiKb6mcrtx4VopjPMub8PgagwP
+{
+l]" html.valueishtml="0"  name=duty_id visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" 
+z
+forward
+global type w_rc_id_select from window
+end type
+type dw_1 from datawindow within w_rc_id_select
+end type
+type cb_1 from commandbutton within w_rc_id_select
+end type
+type sle_1 from singlelineedit within w_rc_id_select
+end type
+type st
+z
+_1 from statictext within w_rc_id_select
+end type
+end forward
+
+global type w_rc_id_select from window
+integer width = 1518
+integer height = 1052
+boolean titlebar = true
+string title = "人才选择"
+boolean controlmenu = true
+windowtype windowtype =
+z
+ response!
+long backcolor = 67108864
+string icon = "AppIcon!"
+boolean center = true
+dw_1 dw_1
+cb_1 cb_1
+sle_1 sle_1
+st_1 st_1
+end type
+global w_rc_id_select w_rc_id_select
+
+type variables
+string is_name
+end variables
+
+on w_rc_id_select.
+z
+create
+this.dw_1=create dw_1
+this.cb_1=create cb_1
+this.sle_1=create sle_1
+this.st_1=create st_1
+this.Control[]={this.dw_1,&
+this.cb_1,&
+this.sle_1,&
+this.st_1}
+end on
+
+on w_rc_id_select.destroy
+destroy(this.dw_1)
+destroy(this.cb_1)
+dest
+z
+roy(this.sle_1)
+destroy(this.st_1)
+end on
+
+event open;is_name=message.stringparm
+this.title='人才选择('+is_name+')'
+end event
+
+type dw_1 from datawindow within w_rc_id_select
+event ue_keydown pbm_prnenterkey
+integer y = 84
+integer width = 1499
+z
+
+integer height = 832
+integer taborder = 20
+string title = "none"
+string dataobject = "d_rc_id_select_by_name"
+boolean livescroll = true
+borderstyle borderstyle = stylelowered!
+end type
+
+event ue_keydown;   long row
+	string ls_id
+	row=this.g
+z
+etrow()
+	if row>0 then
+		ls_id=this.object.rc_id[row]
+		closewithreturn(parent,ls_id)
+	end if
+end event
+
+event constructor;long ll_count
+dw_1.settransobject(sqlca)
+string ls_name
+ls_name=message.stringparm
+
+ll_count=dw_1.retrieve(ls_name,'
+z
+88',0)
+
+long count,ll_row,i
+count=long(dw_1.object.datawindow.column.count)
+ll_row=dw_1.rowcount()
+if count>0 then
+	for i=1 to count
+		dw_1.modify("#"+string(i)+".color='1~tif(getrow() = currentRow(),rgb(0,0,255),rgb(0,0,0))'") 
+		//dw_1.modif
+z
+y("#"+string(i)+".border='1~tif(getrow() = currentRow(),5,0)'") 		
+	next
+end if
+
+end event
+
+event doubleclicked;if row<1 then return
+string ls_id
+ls_id=this.object.rc_id[row]
+closewithreturn(parent,ls_id)
+end event
+
+type cb_1 from commandb
+z
+utton within w_rc_id_select
+integer x = 1248
+integer width = 233
+integer height = 84
+integer taborder = 20
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = gb2312charset!
+fontpitch fontpitch = variable!
+string facename = "
+z
+宋体"
+string text = "查找"
+end type
+
+event clicked;string ls_text
+
+	long ll_count,ll_cccount
+	ls_text=UPPER(trim(sle_1.text))
+	dw_1.retrieve(is_name,ls_text,1)
+	dw_1.setfocus()
+	dw_1.setcolumn('rc_name')
+	if dw_1.rowcount()<=0 then
+		messagebo
+z
+li_ret,loops,i
+
+blob lb_small,lb_image
+
+long flen,bytes_read,new_pos
+flen = filelength(ls_file)
+
+li_file = fileopen(ls_path,streammode!,read!,lockread!)
+
+// Determine how many times to call FileRead
+
+if flen > 32765 then
+
+if mod(flen,3276
+z
+5)=0 then
+
+loops = flen/32765
+
+else
+
+loops = (flen/32765) + 1
+
+end if
+
+else
+
+loops = 1
+
+end if
+
+// Read the file
+
+new_pos = 1
+
+for i = 1 to loops
+
+bytes_read = fileread(li_file,lb_small)
+
+if i = 1 then
+
+lb_image = lb_small
+
+else
+
+lb_image = lb_image + lb_small
+
+end if
+
+next
+
+fileclose(li_file)
+
+return lb_image
+
+end function
+
+z
+x('提示','没有所要查找的员工
+请确认输入的员工姓名是否正确(人才编号无效)')
+	   dw_1.setfocus()
+   end if
+
+end event
+
+type sle_1 from singlelineedit within w_rc_id_select
+event keydown pbm_keydown
+integer x = 274
+integer y = 4
+integer width = 960
+integer height = 84
+integ
+z
+global type uf_save_image from function_object
+end type
+
+forward prototypes
+global function integer uf_save_image (string as_id, blob ab_image)
+end prototypes
+
+global function integer uf_save_image (string as_id, blob ab_image);
+
+if IsNull(ab
+z
+_image)  then return -1
+if IsNull(as_id ) Or as_id = '' then return -1
+
+sqlca.autocommit=true
+UpdateBlob h_emp_mstr
+Set emp_image  = :ab_image
+Where emp_id = :as_id  using sqlca;	
+
+if sqlca.SQLNRows > 0 then
+	
+	commit Using sqlca;
+	sqlca.au
+tocommit=false
+	return 1
+else
+	sqlca.AutoCommit = False
+	return -1
+end if
+
+end function
+
+z
+er taborder = 10
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = gb2312charset!
+fontpitch fontpitch = variable!
+string facename = "宋体"
+long textcolor = 33554432
+borderstyle borderstyle = stylelowered!
+end type
+
+event key
+z
+down;if key=keyenter! then
+	string ls_text
+	long ll_count,ll_cccount
+	ls_text=UPPER(trim(this.text))
+	dw_1.retrieve(is_name,ls_text,1)
+
+	dw_1.setfocus()
+	dw_1.setcolumn('rc_name')
+	if dw_1.rowcount()<=0 then
+		messagebox('提示','没有所要查找的员工
+请确认输入
+一z
+的员工姓名是否正确(工号无效)')
+	   dw_1.setfocus()
+   end if
+end if 
+end event
+
+type st_1 from statictext within w_rc_id_select
+integer x = 9
+integer y = 20
+integer width = 274
+integer height = 84
+integer textsize = -9
+integer weight = 400
+fontcharset
+ fontcharset = gb2312charset!
+fontpitch fontpitch = variable!
+string facename = "宋体"
+long textcolor = 33554432
+long backcolor = 67108864
+string text = "人才编号
+"
+boolean focusrectangle = false
+end type
+
+刀z
+NL2QUZfAHHZwPf67gH1fB62K4ir0CB0Cy/TTmaV7rftR4sH4Voq4XGbv2tEF5jlYgu4GZ1mSraUyQiUp6u1EzX0j9AKKe6rCFZMKf7ecb5YNn0BDxruFBGQCtdBFwpWGMGCVFPV591+JQlI0llLMF611uT/5q25INLXkkRmZOvbvF/3iDTSruesEuYCK5wdgrSCzPSafJOVdUhhNO6Q7hhi9BnVBQikjumfo7iAZP/z+Fseo8Yy1r2uEmw/
+吀z
+NyVL6YQo0n9MBqggLOoRBmjGyO8jVeg6kVuoceqUvsAcfhDALF2+QMXwcyotS/idqqn7BnlHKAf4cVu8V9ZRIg2LjTLwue6jUgDXYaM3RiCl4sH1dMW8iXCo8yNIV8R9hKno96MljLKRAdAOi6zfNIa/b64GRP8jmGfjWW+LKSD8RUr5HEUFFqnY+K0cWV0e98M6P9MluEpsnk3U84yfILOx4EEYkw2+pjvShlqi20Kz8qm9nACRDYJIbH1
+嘀z
+KbnmAFbvnjHOoVAOptlmvEjZXwQLuLhhboNJeZl3Lw21S+M3OkEzbXhLqh1HXm2hP74xrvf7WkvVXRXMQrI8HO86QEIRc3DlMWj96P7n9dLzHboUAOsu4Y/nS3G9tc/ZBD63FJCyKZTlXvzF0CtBCM0t3Olxbnx2Wd9l35hYZcXecUvvrEXD0ECsPU1ETqI5vtRIbw7nE+M3ysuEX7ixjXcJdbFRCSUcXvnCjgcajlOiK3naIR1govFat6p
+搀z
+C/uYHjekrALD305QhwlXQ77lgGA0PZhNwm1cuwuLEtgagPKTO/Y3zgtAvG+uDL/4AhwCF6YSVU13Uy6lpKUyZjUaWEKupEObct/eI5ltHqVcJIIvEugwNaI/Ev89N+lyvWn8exXAamMQxxrUbLi2FU7jSiMQTaqeRMQsFCtSKMMylHjWkAGDMIwr39SDiSLScQh0thC4kcREX1FpC25CWQOPCnm5102OOOteI/nwE611J1chvItFU2AO2qf
+娀z
+根据工作周期日判断后的试用到期日global type uf_try_date from function_object
+end type
+
+forward prototypes
+global function datetime uf_try_date (datetime ldt_int_date, string ls_type, string ls_data, ref datetime adt_try_date)
+end prototypes
+
+global function da
+尀z
+tetime uf_try_date (datetime ldt_int_date, string ls_type, string ls_data, ref datetime adt_try_date);//====================================================================
+// 函  数: uf_work_date()
+//--------------------------------------------------
+帀z
+------------------
+// 说  明: 
+//--------------------------------------------------------------------
+// 参  数: 
+//		value	datetime	ldt_int_date		//入职日
+//--------------------------------------------------------------------
+// 返回值: datetime         
+怀z
+           //经过工作周期日判断后的试用日 
+//--------------------------------------------------------------------
+// 作  者: mumu		日期: 2004.12.25
+//--------------------------------------------------------------------
+// 修改记录: 
+//	
+//============================
+戀z
+========================================
+datetime ldt_try_date,ldt_temp
+setnull(ldt_temp)
+long li_long,li_work_date 
+
+//取得系统默认工作周期日
+li_work_date = uf_getsysbasic(9)
+if ls_type = 'null' then
+	li_long = uf_getsysbasic(5)
+end if
+ 
+	
+if ls_typ
+z
+e = 'duty' then
+	select duty_try_old into :li_long from h_duty where duty_id = :ls_data;
+end if
+if ls_type = 'post' then
+	select post_try_old into :li_long from h_postion where post_id = :ls_data;
+end if
+if ls_type = 'emptype' then
+	select emps
+昀z
++IQHeRSwCgwjxjbsU8M4paIBzzgX5lpFSWCVWx1CoYOGbDzdODnAIaESrZkitaCqxgZy3alanAEESUOZTOpJ1w2QY1NVuUKs2rjhYWogU5933rEJSAtlSQEj8fDRaDpHu68ntgsQQi0X0Glts59yqLw2D2GSCWWvwuiqnB7Gq2/yuTwj6UQKBZa8PVhKTAPWFUsy7vHNk1wRSCb20C/Q+t9CRmheH8RDi1qnd9pJo8uiyJisEg0jVjfC5ub
+栀z
+wbx7vSax9Rjh/7HVfT1J0lap7p6fLgA3bggrAzrEgHqJij5P8L05kTcvxbGGT8Z/jt5MkUUiTrXPv7n0uZtdNAD3bZVDUgIKOmA5i8/gxBJC7JEjvDWaaz1mOjayyrQ4iyPGiFIZOm97oKdZu7pCYo46o9PjNllcBP4299dYhxtR3IKXlMA3U5Q5rVeipoOwGyCZgEz86pR5eZtjK7gcPtMYCuyKvyNg14064wxwqbRyU4729g5mvdHMlJc
+樀z
+JbrcRDPPbmoogWlOIMLUxj0MOQOJXQzHfQmCBdOHoc8SzOXo103uxUzyksPIUw0S/EQSFm3Sp0WiRoBNhs4X6TQA2ph6GqWbl74EOeODusIXTH6FFRmnvNITUFsrqQ8ep7yz/lLpBPtiFE/W1/7W+76rnQLg4kMdb8og9TG90B5OXApJRFThdsZggQf2Gx9F6eoOluxC/z44jtJwXF3A5bTswuy78GOwLooWQqyrAxg0gynaIpWNNB1oCm7
+氀z
+2NwSwleuhFbAtE7v3Hba
+d
+"
+1
+"
+1
+"
+1
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+8
+"
+0
+"
+0
+瀀z
+ackground.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip
+爀z
+.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="考勤组别" border="6" color="8388608" x="1755" y="8" height="60" 
+width="279" html.valueishtml="0"  name=cc_kqgroup_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" background.transparency="0" backgrou
+瘀z
+" tooltip.transparency="0" transparency="0" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="5" color="33554432" x="2162" y="140" height="56" width="539" format="[general]" html.valueishtml="0"  name=xzimp_user visible="0" edit.limit
+阀
+=0 edit.case=any edit.autoselect=yes  font.face="宋体" font.height="-9" font.weight="400"  font.family="0" font.pitch="2" font.charset="134" background.mode="2" background.color="16777215" background.transparency="0" background.gradient.color="8421504" 
+1
+"
+0
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+8
+"
+0
+"
+0
+0
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+8
+"
+0
+"
+0
+縀z
+1
+"
+1
+"
+1
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+8
+"
+0
+"
+0
+1
+"
+0
+"
+0
+"
+1
+"
+0
+8
+"
+0
+"
+0
+萀z
+T2xfNPXgQ/GXgbXnBT3fhXQZDz2yTvEgBs4Cx0HCOjMpFnVyJ+eRHhGPqI7iezqMh7n+gq6uJGxccOTg1hvtIWhUuN54Ob/pk/Fq1t15zWZvjjTQym2kZvMEwD+9Z39oU6GVHL1Cpz7BXuEJg1WdVGvVoUZVF3/eRAFg1DJ2k4tkGOpFSvvIm5DSn6yFbzZMtmgUs0AOF4gKj1Gra0DRvZtIbRI0jT4zTnQxPWDE5nqOMgvrGzLJ6FYCQ1Z
+蘀z
+Xb5/GhksguVY7jZHrVaBftmh+1X6L/yDfVqnsJe1FdEv5WQj+PHhm7icBoDUobhfj39NqXQy8V7gpH9ehJRMeIDNy/UtLdFcnJDbK/ivynk3gT/PcoFHChzXMfG47rXcc3NfcyAOP64tMwr05NLkxA2rpXyJSZHzSUurCQTmdZUckaNhSWKozGT8Mg9FQtp4fD2hNQQQaH9V9Mop0suHJiB/NrmbUdvOEiZm4Eewlp06sphEU1udFm+ciX0
+蠀z
+9NDnB7tmDYVXnuGA85OrM9IZSzLsQLUb7HtfKIXAoY8ocVxZn65qj8PdwD9zQl61lRW6afl+na/OdTKwlgeoiYUUZh4SCP7rxoM06mZXEV8mM0ypJVy/RVvexgvO1ApzCP8DJ5+a+n8z0W+A1aZRJnUzOcWjDIr6v1MLS84m2lOs5rAyNnVC/ctBTuFczYSX2L8He8UMHgUYbdh07J9YDLwh1hOZo1ux8ZK5KPggT/xYwJda193hCXgkKvL
+言z
+NdvakOm3GjRf9zOSPv43Iq1zqbN1bXeDsHRseALiHkNZGQvfFOr6j5q3iD8pOWXAqLLFClcoBnBXxBfvKFy4xCawiuwKk0FEBgCICzTdr8f+Ib3XGvfRwk22p227BsXOlkgpG0BmySnh8nr7nLFVoVCf3mpGr1K7zeWiwsH6dYN/gGzFJjQILQSoCkQ32sQIgfySxCqNXbnkTa36MkdFWkzV2A40pUxa3/WiNQejLum6txOMJhroVtQcd0X
+谀z
+Y/LH3wB3D2amux3Ytn6ydHrqVzKGtIFTyO8p23MMEqi2ZJhtO7qaJvlOZSVGBYIZ+KGhIvEIHnwwa3ne0T76rUdT/M/KvkA9xeTkevKXSH8aLzl+BMWkRuDbopa8ybxbt7IVmgIdsJ9qrnpZoEHPJI4P/7tt9i5RYrPypMM5zY5n71woUOJnn1KQtkQ5C/wSXajttfqxGNpLFNFsbDkuKHK5lclbfup02TNiDtAvnlsqFc2VjJrHr7zT+FC
+踀z
+nV3Wi6OR8YftrgkzMWCiI8mfUqaNlnrtKYaapF/tj6N1AmWxeAWjDFfCYyB6fSrZZpPIEXxW/1RvZzMMaF6k2dH3dKNFkm6CAqAQbD4vmsFH3+HCeg==
+d
+"
+1
+"
+1
+"
+1
+"
+1
+退z
+"
+0
+"
+0
+"
+1
+"
+0
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+8
+"
+0
+"
+D
+0
+鐀z
+"
+1
+"
+0
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+8
+"
+0
+"
+0
+頀z
+KUTdDnveyJRrvWkJ2Jv0TjcE71hwbSddwJeexIfH3Jg5n6jbkxK1uOFzK67IJ/195iNR8qurp7+II/7Msj0JgAqjrAtUwxnW0lDP3xCgEBE0LQRIkpPA//HUHBx1kpS2BQtxyUx2Q0zDP0ixCSokMmFuUyCqvxNKvyqkWD8QbFfUGtmlv+zbk+Rdwd64u53nLuXUFKPnW4aJn2UKQKzHhyEdxGjD+IVguBi34ppxuM7YrfBNXXR+JPsSplz
+騀z
+ZmdLPWlj/gGqsZtK6ZSTbhg68rX/7YiqL99Y8ZdULBffDfhqJ55MA9xBACYtPvF82Njg9seLAhhlyg4iKGLNYbOubLHIGESnIdXV49TeIcUY+dW+2MD/vBdAdGkgY2zVm+9DE9XO5hLKsyS7t6HnX6Y62LB0Q8u3AegzFJ2SMaDljad1Y2M1Wo1UX3iTOer8uFmOZVaX49VD8UfhG6/KGBDzig5WEtmSDCr0W/uTp1F8LHGqDFd1gWdweah
+鰀z
+RdNDMQwqbmZzUkNWvoPYYl9ZGzTtle+NqOuM44R3IbCvCwcY1onsm4+ww1rMgZyiDMeQQZmyRkwadHbbwKr/isMAHf0k4W0c89hc8Kc5ex31RSfBheMX48h8Ay9FhXQV/Ht2JW8Xq+GHaeVuEdeLKaoXKW32t6a7shFirWfY5qKM4ceT39WOjiDWFaTF7dbHKWhNut7EFQjXc/dwzBiqEvG6iloYv8OyGyD9NlED7ITqwU1j18TDcht2QGc
+鸀z
+snp5ezO5on2u3GmTx+KA2mz0aVd4Qcs1T3njsBHa4Xz6NHt+TSt6/iV522luINT8ha6BfYWgMVCwHi90hSt0ppeANAL0ew6VfUbhANMNzxZddy1T8/uIyAXFBmHila84WHPXTQplo5gOJvuzGaGjQXeyAYm21qWpPHyRERjwSt9DNRq0vzlYcmRlgs3WJL26zcYREJyZcvge1S7t1PSprF1s32bYfYa43LHsiBRv8VcCN5o1aGuyNqaJz9d
+z
+Euccv1c4DTZaHh5kXVjuYQQF+7y/XmThRwtng4eEY4MFoXCWv8z/ymCalx259V7wds8aZ6Iwafj1JgV1S3KXzoKpKtzHbXNqPePc+oz8kogdM9Fqb6b+lffqQwZVapZ02fWYimsKUgINCUGk7Q6G4uVQe0pbZQPK0yf9cF5Z4tOcZ4/5mDvl10638J3K79NGXA2R2aBX8UTXn9aE2ZHpDdMptT1UFNgO3l/nN28wK9DE1YvTRkvAKxQR6dl
+z
+Ksc1KMDYhwkPKC+F89WXrqNW3Fw1NAupKOIJNm9zEktTMPk8RTHmDbdxE/trh6W3IMkGX1ndx0Ye9U2JukGdpcooXmlQ9w2FR9C3NZo4NjaZxyNgAcx8lIldO7MX0L5/aUAboGm+GqWAe+AJ62LOMwNDzKkFpNojxTs+umSs6WCtQSHsFZjRmQjxGu6p9vFH5vbMUN2IWajSIjIzI+j49+Eib7Jy4ZBo9MQadRDBqkMxPz1iQ226eiBh+g9
+z
+z9SEJ3Z6BkxHsgjaTnW3by0LkMIhAT0LweC/lhAr2aVTfGgePW3LZk/JBE81Qgs548MoYAoVkGd2/6D7YFGXmU3qAn6uGE07SDDUbr9kABWD/BYg/MyBCY5TRAjEQ/469PxtChDq4QpwWRiIB9UKJilGv8BupLyCG4HW04qrnNGD/0ZGtpbGVNyQe/lYBfTwGkJW02ykaFl2C1esRBmbUexlV8I/mdstct81GM70iNU70gBoqqIvKGCJ/PX
+z
+cwkIctDgIMPBHXTSnQ4e9AdQ8Vld0nDZaMy9Sm064KgPgCk5MEhahjd/yyf8TgCifhMiKQLUEmvXK9vHMcPuZOD9TVhni4EzPDMYiGQWDbEl/QNCUvOt7aMaw5XDOjfZFqncT0wZ1XAEv7dMJoahCMSToQIAjador7gNw7g1kNUqPAePFAW3Rt7kgAoFCKrWWeLV+5h7TRUZc0aACrWIQz/lskiblyGvY3ZRbMCelMI2gkUHbwMcTEWqihb
+z
+IxgLn3Q5sQv34gKYhPoMdGay04KZBnXOimK6v+SUmV9Fx0Gettdhj1DIcKN6EYKieyXD+lwd6HZl8LjvPJGnQwzYYZkUIweIZ5gHQ1vrG/Q96wOEe6FD9RA7FEpqjm8yqBKAISwbI13izvqr/DD73TwwHWMpO+EZ38e+Aqhtf52x0aiTfYvQsOyUGArrBGLgMEIcsn0kTLGVtoSa5lwp5fdjx8kmO8sJx+iNT+14F5EceM4EPledqqWS+83
+z
+zBmelX5hr3omhBam5dvuKVJuwkK3gbNu9nJoYLU+kRcrnJxGwngd8z1HlzFPp01YfiB0pofDadZrSpm0oHK6gjj3jY8wG+VhzgVx1CzdCEoMk5h92FY9wxgqdoJAhbtnFD9UOx03w0Aj0RtQH2cIQxOY9ze17e9pXV9fk6aw7lPrJW/IamIUYb32st7T+XnFfmsXq8XXMPMMcvL8nTAYP/8hdvLN8zamy9gXEN7xgZ3gAczwP6sZaIGDAaf
+z
+GF9vrO0VyOicZjfKK0wQEiL0HY+E7IUXb40jU8eHUBT/vax3Pl3JvdLi4dI3osVkx9N9EEinuKdKktsbhOuHq5Men8XxHf5LLmSSQmFuMICMuwz+paiLL/ny/8zPL1HmCRTpV4HXrslVrxClz4KZrl6a2xV1iV1zsUMZHURbpw2V1lnHDcwAukem2i3/zcNP3seI7dOP2pDdKv0HAdnd3ydAjF+q5vqW3a42pEfbZ8GIFrZyHftHUmy2g36
+z
+CoW0B/7V7ux6HO5mw5VAqe66ZfLyDRR/84dEvfOo/1+k6MPp8rMESnvNMzRzjWrpgnYtwd7qvjoyRCGo8W7stB2LOfhlnNsavnOpFZjoEl2xfcE6QVhHztG/Y3mkWEwu4T95NspRQbT/YT6yyvpXEMZZ2JGYXl148Ims5BzTFG4krmx51F+OvkVYsvxeW73H4huFsu7x5lQ5DfL7grvMdGT9+/W7zmpTLCw0Q3rpIhh/pSzV+FWGZkOCRwx
+z
+0yw25tFZm8D+BpHFRMnNDXgVxKgtaD5EMSUiI7Owkd+tEvWQBtRdIP0e4M6wb1/eUXH/K9PlPe7b12aIQSb1CMR/GCuLbnhlwS1bPjdbv2qQAffyMjagYcmYhqOu3YJWSYzponbMtA3mjkJNFCUMxiTPTpB5wv+FKAkujLBbfVXdbQ92LMu5nAqbFC0PmDf6cFx0Nq8AIj1pLSTL1LHjWSf2ReyHAJ3ivYzbYWVQPJxHT+3ZyBVKuhvNUnO
+z
+4ZZcs87fsuuJVvq+0m/MLkI0/gzqK9EIGLHNrjw8Ow40n5G5ernOFGW7/yCVMAu6kEAoL8roeXt2+R8HDVEngITmAl5NKHqzn3LRDaSG811roEUqHJFnkPyJrOlTHGocgblOw+/EeqR+O2oewmuJ6+tAMuCpWVzG/iI9cUeYafHxBOWcwi0m4eiHj7HlxqRRf946FUa3pATsfKaQGhHycLyJsuNT2YLNsPVj/f6DyXy1UyNItL4DtPLZwWU
+z
+Y4lDOlsynu7+oceyFXZjErjH+7qBQiIYOdAiznY7j49rnTEcV80noSaPKRutyO0ARE6xeFlXjkYz2aL8dsKiVWCIK31q/W/xWU02PQCJQH9dVAdOjaB1OVacBkPh2Xf9o4rGZhZzw1z/rpskfokNthDGlCCdtrkmp+POGc2gw28OtpdkEXQgx/FxQxLSa08HyDH+HfCPRXjIbenNSMRNO5u683tWgQ6hNyD3HTceRkADQRbJGzOAR/Fvr0M
+z
+qxpmXVi5I1kDiL3NXO4sGOvEWwbk1/TvicUzkmKUHQ/JmDGNo+UXlNEX8Civws62TYgeNS8DQOcK0spwZMlftTTNkfAB3GMNnudI8nJApDfO0UM4u30SD9sMjYAds+z37vmnpm6YktKAiJqOnC33Jv4WvIeiWWF7ZeGeD6VEBze4dIh1j0YBxd0d3bkC2PZ1A4kfJI8bTZ1kFGf8Avs0V/d5XS7D/7dPmObDd5eVgbIM6FcnUzJU2KZ3U/z
+z
+N+A3ibARGI0SiXfut/jdbp1ohTteuOLpFagpPy40OQ1Z0B8apqZ1xucEux37nC94kwXu/FRaV7C+JdUA0KhhmkEM0612KsdqhNSiew/+C2pOcs1D6jK4dtOhnt1G+x0tJJRPId7RKFTAbMQ/UpWQV1D5C9DjtvsAJ8+THwpe8wEHMUEq1MjmWupcDeqlLyeaGIKXKKeXRH7sairTZKOorOouFdF7GE7kb6L+ZdypkVjn3KyD/GEgAjT7L0F
+z
+DAKPHfe311Et4cBPgs8cgbpPkAeCG5+OhasRt6CTEpKUF3mO58yFv3z0OEIRRILCoT0Mj1YWt2hcIoNkkr5wNUYJidY54Xbth9z/oBpFq/JMm4kaGyACdPSLWWqYT6fUoHH+FujowzFLgxgaw2QPqaVzw01Z3sUXFJ+hhnSrd8lnztWXOmF0tCJxgjNLWSjolX3b1MYSTvh56dBzIqnQ7U8447A69N7PDM0l1783/pmLQANx3AbAnqBcVNj
+z
+kjMpMfNnmuyeAP4kZGyY3ysxcln1yFytjAYFyWNphup+3aQks8WgwevKExIw3DpSoAi/cIhRCkxl6FQRb3swbQO0EgQOUVH6yCZ6CEkXvZR8Op1RhBAgy7ESbbZlJfZM3NiviqjvNmrOaIOTaI8wai1LlKao5uGyc4OO3hs0uNzjf7e5kzFv6p9Ydt3Kzhy+4TXzjdCrGVZpjdbQr7WpYk5xzpt9HNS0fCPzk+t6au4+HNqf4E6OQvJUJ5x
+z
+a8qpG+Oi2lOUX0Nu024rPYITuNGEOm7gTsr7z/G7a0nWTQTA7AStlhH1xj8Abni197koE9C4ZTC8BtJpXfouSNvHqnmX9JO2nECy/nIc0PPDKlA1/X3LqbAs1P7cWfpepSXsuK3dVZv9v9lB16rEW6ASnTrFbX4JTSFHnGUWnrqtQ5hgwUHQjgRFwUzTP6fOXDAzkCvkQ4C96VD5bchjj0N9e0Iv88uBLMp/cYdr1Ht63O5ceCdSy1YUixG
+z
+ezZsVbIFQNYmtEIj9jl5wSKv5tpusYrBcGLBnzlRlyTd1aV3AnJf2dKDVzhzncrd7qjIDvxGrTvRcCmmPXRsyE+yCgbSC/tySYj+Zc8FNYyBujVUqACUBFwZaFoSR59mxlE5Wz+vRO4g1xcn6oZNrS051hpdWNfGla8kOo51GznqmuE9p6LKxuOUtO7osE4VTPfw==
+d
+z
+"
+1
+"
+1
+"
+1
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+8
+"
+0
+"
+0
+"
+0
+"
+0
+"
+1
+"
+0
+8
+"
+0
+"
+0
+z
+_try_old into :li_long from h_emp_type_code where emps_code = :ls_data;
+end if	
+//计算按系统默认月数计算出的试用到期日
+
+if li_long > 0 then
+	select dateadd(month,:li_long,:ldt_int_date) into :ldt_temp FROM hr_sys_mstr;
+	//取得系统默认工作周期日	
+	if li_work_date <> 0 then
+z
+
+		select top 1 (CASE WHEN 
+				datediff(day,:ldt_temp,convert(datetime,datename(year,:ldt_temp)+'-'+datename(month,:ldt_temp)+'-'+convert(char(2),:li_work_date))) >= 0
+				THEN convert(datetime,datename(year,:ldt_temp)+'-'+datename(month,:ldt_temp)
+z
++'-'+convert(char(2),'01'))
+				ELSE
+				dateadd(month,1,convert(datetime,datename(year,:ldt_temp)+'-'+datename(month,:ldt_temp)+'-'+convert(char(2),'01')))
+				END
+				)
+		into :ldt_try_date
+		from sys_user_mstr ;
+		ldt_try_date  = datetime(Re
+z
+lativeDate (date(ldt_try_date), -1 ))
+		adt_try_date = uf_rtn_change_endday(ldt_try_date)
+		return adt_try_date
+		
+	else
+		adt_try_date = uf_rtn_change_endday(ldt_temp)
+		return adt_try_date
+	end if
+else
+	adt_try_date = uf_rtn_change_endday(l
+dt_temp)
+	MessageBox('提示','试用期限不能小于或等于零,请在系统参数中设置异动后试用期限
+')
+	return adt_try_date
+end if
+end function
+
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+8
+"
+0
+"
+0
+"
+0
+"
+0
+z
+0e8P71aOtDCO2xHJFjj/n9c7NTpEmxMXrBBhPG28z3KExxQBqgMrshLEXchFJ889R0j39EliGkRavz3C3mdR86GziVIfOKgAkPmL/1hoIWE67nz4DbbZrMUPSrtacRxa6YzRl4QTg4Ma15nzYDsDQ3ZgIjryKr1wuRCpLF/OvseQLuhDSyHg/7PtIOlyful+baq8D1jNSezxKBMwPw4Htn4sxt6lSWZ/eK/nGjIPsB390O6dkChCSSrscdX
+z
+/bfrV+Ky2Xa6uWzsQrZRym2zX3QwNky+6PswMF9CeJih22jYsl5uPfEtkzQoNNlkAWxR1epyt7lbcKbRyspU4+RCXHt138r1TwItlRSiQCnuGcMa8ITbVm0OZqV/cub2+M61L3ES7jUMW1TjB1SOAqZjq93MmLobtsJ97wEkpOMfpjyNP8ZpvVJli7kwgRPrDeT0TuDaH5EGcyeXWhHIjStaJT0P3EaKnaobDgx5iTFmCESjXsnhYUOPvtS
+z
+9yAwtcbRI9rjwhZTqKMbGQ9ymJ/G9bSB6um764QlL4lRbbeHRoj67hpULZYubnBOPrZT9vcjHHUlHygI5H9NqqdQk0oysgmEUfMnuxud5n2LIDUNt0FdzcHeugHbRjmRaxgQgdnUXyxmIfUG4KDRqbupsrRCRQ+GXZVMiTVrw60ofSvqtz9o7CNX03L+pshe/KiJBtb+//IIF9gVFWqdtkr0SeI9wjgNtErmyaE6qWKQdZl3uXQF2peO/4V
+z
+GCeFrqhd5GnifKJ2bsK/tSwLYM3axgAs3+n1SPRB1SkTkkua6lJ1/RSLvqBd4LRRV4YuCAlHdpsl1cEjeSlQPjB5Vz7fQz491Ns7kyRuXX1gtKNQozOsCmlbBI6wKOPoFKquo4oItvkdkIX7hBAW7oYelv9bA4mU5xl5q/6T9P5Yz+WW1KXuycQxC9bi7z4waxLxikzGli37e2FgAqqg6FRj5687N/QkV1qcYMXIm4XcMXwL5k76S3DQnSm
+z
+/B0kgWeJYpzPh+yHm35vWUtsclMBZWY8xlTuUjI0kFDHvAR2n547emUwiBgWgmTrCSnjW/LcEHn9Td6j90qAqBd+Ak+Mlj5aknHlNFfxDwbVF9C0OdJiOuqSuzFRsnW4puL7gQsRIkGLHSv6eyQ6KG6llu0/zBNKZn6GKYaHgUOpsZdH1jmePLTRAdxNxdW/tolasKD8uqnhhR1RF18KRPcWNS+USUPDz/y1KlJd6x/cpyIP5MijOogRwyk
+z
+lQv8ldYUgY+/2pQhoNX2cMq3c9pGFRctCRzYiUkUi8nInt7NlytlLJ3GeCItVEzbqQio9urPayFjL+uCerQu5ZqYr0qMT6zRA6WQOyRLqiqKoZK2JKT5YyhPkXpMgk3ho7auk15sO3X77mdxPjLih9XFeSPOystrJBIDuguV9oWjzlY0zbvw2oXLGrgF5qiF6+p25q3cO0zawIXXsy67p67EmK2TsVuuoUu71xC5qCvZAllRTknNDoN9VYr
+z
+FlBFiFGPmoU4MGkR106XNGA6zF17Y5cEaiKgkjtH/3dpxfioYb0e85wD0epA0N6nPsALfG7hLDF0znERZXmcF5mJGG2d7/PawAjMFqbF0JT4V86AZObt7R2yFJQKCnDsb3Z8K2iaCYf53TP/0qijiE5NtoZfHr8Iu6qsM7o5ybmhCeugBWEzRl6CbSnXGhyn2R33FwbiTqKa63Q3aWZHtvf7lmBJqN3JGr9Khxnn4ej29HPRUQN2XHyx9t5
+z
+根据工作周期日判断后的试用到期日global type uf_work_date from function_object
+end type
+
+forward prototypes
+global function datetime uf_work_date (datetime ldt_int_date, string ls_type, string ls_data)
+end prototypes
+
+global function datetime uf_work_date (date
+z
+time ldt_int_date, string ls_type, string ls_data);//====================================================================
+// 函  数: uf_work_date()
+//--------------------------------------------------------------------
+// 说  明: 
+//------------------
+z
+--------------------------------------------------
+// 参  数: 
+//		value	datetime	ldt_int_date		//入职日
+//        value string ls_type //关联对象
+//        value string ls_data //对象值
+//--------------------------------------------------------------------
+z
+
+// 返回值: datetime                    //经过工作周期日判断后的试用日 
+//--------------------------------------------------------------------
+// 作  者: mumu		日期: 2004.12.25
+//--------------------------------------------------------------------
+// 修改记录: 
+//	
+//==
+z
+==================================================================
+DateTime ldt_try_date,ldt_temp
+SetNull(ldt_temp)
+Long li_long,li_work_date
+integer li_try_type	//试用单位 0月1天
+
+//取得系统默认期限
+li_try_type =  uf_getsysbasic(37)
+//取得系统默认工作周期日
+li_work_
+z
+date = uf_getsysbasic(9)
+IF ls_type = 'null' THEN
+	li_long = uf_getsysbasic(4)
+END IF
+IF ls_type = 'duty' THEN
+	SELECT duty_try_new Into :li_long From h_duty Where duty_id = :ls_data;
+END IF
+IF ls_type = 'post' THEN
+	SELECT post_try_new Into :
+z
+li_long From h_postion Where post_id = :ls_data;
+END IF
+IF ls_type = 'emptype' THEN
+	SELECT emps_try_new Into :li_long From h_emp_type_code Where emps_code = :ls_data;
+END IF
+//计算按系统默认月数计算出的试用到期日
+IF li_long > 0 THEN
+	if li_try_type = 0 then
+		
+z
+SELECT dateadd(Month,:li_long,:ldt_int_date) Into :ldt_temp From hr_sys_mstr;
+		//根据工作周期日计算试用期时间 ldt_try_date	
+		IF li_work_date <> 0 THEN
+			SELECT top 1 (CASE WHEN
+				datediff(day,:ldt_temp,convert(datetime,datename(year,:ldt_temp)+'-'+datename
+z
+(month,:ldt_temp)+'-'+convert(char(2),:li_work_date))) > 0
+				THEN dateadd(month,-1,convert(datetime,datename(year,:ldt_temp)+'-'+datename(month,:ldt_temp)+'-'+convert(char(2),:li_work_date)))
+				ELSE
+				dateadd(month,0,convert(datetime,datename
+z
+(year,:ldt_temp)+'-'+datename(month,:ldt_temp)+'-'+convert(char(2),:li_work_date)))
+				END
+				)
+				INTO :ldt_try_date
+				From sys_user_mstr ;
+			//ldt_try_date  = DateTime(RelativeDate (Date(ldt_try_date), -1 ))
+			RETURN uf_rtn_change_endda
+z
+y(ldt_try_date)
+			
+		ELSE
+			RETURN uf_rtn_change_endday(ldt_temp)
+		END IF
+		
+	else
+		SELECT dateadd(day,:li_long,:ldt_int_date) Into :ldt_temp From hr_sys_mstr;
+		RETURN uf_rtn_change_endday(ldt_temp)
+	end if
+	
+	
+ELSE
+	MessageBox('提示',
+'新进试用期限不能小于或等于零,请在系统参数中设置新进试用期限
+')
+	RETURN uf_rtn_change_endday(ldt_temp)
+END IF
+
+end function
+
+z
+lwU9ubCRuS1QNEIs98V0NANBa4V2yQAyQkf7/QtIhX/kLN9r513IuMjfDS6DPgbTKSJLR805egJ9PF0ioDxZACr/4MW4EAzzf/8ZLb54y9A1Q6ckOCAkFehs7rt9gfytvMvii1CZemT59BvWP2C5DcRyrpxgyqh+GNZZPCkNrGIhNogi0fw0NyqsSG7SXLzhNa7yjMb8s+H5KEr7s7pWo+rrv3cjm2TbD/f8lCJ6EN826eZxyCiYgVqedjv
+z
+/EuRoSlBGIFoLzFYAzNi993t63D67ivK2vrzctBAdNglWcTLMbaIBdc1Hvj2H+e+6S0yBuOEXqG6qM7G8BO3+x0fkPPyG8s96ECH196qJdVCZ/UlRLklhiZsrYLFkQ20pxVcyE9Us1AiT8i04uyklpxho=
+d
+"
+1
+"
+{
+1
+"
+1
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+8
+"
+0
+"
+0
+{
+XJ6o1wN4GbtDDJk7A/8F4AkSvxwno1gqnLYF2lI0UNDhNxbMNWiPiyn7FK0WqfQBHxfcbLfCwAS0YyGUXk7FTitCWilOyO10hTqRS8CwKhFijbU5iydmBrMSHIzF9GG6UKIq4q0Wco+PDlPg542g177Xm1kw09R+O9L/SLAZ4IxlNF2q3srlt6lnLmQ+XZ/4exENTgiH+4RdgmZa6+NMCU3ddJw9np09s0yXG755MH5s5Iaje5H9OgVatX+
+{
+i_long,li_work_date
+//取得系统默认试用月数
+li_long = uf_getsysbasic(4)
+//计算按系统默认月数计算出的试用到期日
+if li_long > 0 then
+
+	select dateadd(month,:li_long,:ldt_int_date) into :ldt_temp FROM hr_sys_mstr;
+	//取得系统默认工作周期日
+	li_work_date = uf_getsysbasic(9)
+	//根据工作周期日计
+{
+算试用期时间 ldt_try_date
+	
+	if li_work_date <> 0 then
+		select top 1 (CASE WHEN 
+				datediff(day,:ldt_temp,convert(datetime,datename(year,:ldt_temp)+'-'+datename(month,:ldt_temp)+'-'+convert(char(2),:li_work_date))) >= 0
+				THEN convert(datetime,dat
+{
+ename(year,:ldt_temp)+'-'+datename(month,:ldt_temp)+'-'+convert(char(2),'01'))
+				ELSE
+				dateadd(month,1,convert(datetime,datename(year,:ldt_temp)+'-'+datename(month,:ldt_temp)+'-'+convert(char(2),'01')))
+				END
+				)
+		into :ldt_try_date
+		
+from sys_user_mstr ;
+		ldt_try_date  = datetime(RelativeDate (date(ldt_try_date), -1 ))
+		return ldt_try_date
+		
+	else
+		return ldt_temp
+	end if
+else
+	return ldt_temp
+end if
+end function
+
+{
+xlw5EmVogug5vL53fARFxyT/h0wQZTGnGzSGit/NyNVsm2g/SIbYjiNjpq5sFuGvLxXvBA7YFcs0hFoxJ9v9fDVS7KYzY/O5uHk7ot+9G/Ad+qkNkDUZtHXyHkoFohz2omrshHUNcy6X38rwVD3pK/MauRghekGHR/DjsRbeNTIj/Z88QvtJv+81kf1x5YdqTNZZOxg8MWYPtZSMWNB7tU58luGDBJOFclbm8mllNL4erWl4hevW9IOIotb
+{
+nElnxqExolHCzxNXqC/c6C1Yjo7uOjbQ3z2cO7v/DyIyI6HOVmVvSEr8DJ86mYvKy5jZJVhHsSLGYwF4xkN9EY0ese8tNIlTZjN4sts7RFG9fYd0s0kQ5ekAOQEEO55AEwImwlVM2vewUfQPrORhKeQBoad9gn9rsz+XWsfvwOXdyrXAKcNELBjdDccEwpUPdM5yui+BqX1aTjSNON64cCNtfpLkodmoPojVLYFp75Q7vw2DaL+2Dspd6EJ
+{
+M3NVmmvQ1orWlH+JmraICcaj8RH+Jz7B9e8bsxyBV5fYcFS4eoDI7rfpHLsoCvbVEUWY53XnO/RdUGiraGHadMN7q8ebMYpu2zag0MjGlOYAYgpW6YgPGX4Prri0ibyLeb8BCJlLuDRZ0iDuNhQQfdVMbdBOq2V6BGzpdnmUbJg/kGqkA/5U6FluBRC5EG0JGi5sZSACEmmWrcACORaHALxU729pCvVeJRwFEDeYfoD1htSOKzS3fJnv1BL
+{
+ZflML+LCG+HaiE2qBppSWLVv4ADaC9GO2rw3dove7iTImj7m/+oaxkuI/iqU3wLhXfaHoqXsFP8PqhaUHxx19ySr7fIzKZOcAM3cd2K76gCeqJtCECLEav3pIkKmN6Vokshq01B+Bhm09XmHN+rbCJDPc1FE5RbE+QB24sC2BZWLkr/naXjhOPgiK84FOKvFQ4wjhlUi4VWeEyC1C2m6tDyctcyPTsNb7Zp4QYlleyzvDzphbm2XLf7l4m9
+{
+eYylQeoA2i1mv80DQ/Luy7yf5MVD6ZaGpf27WjiS1mcbt7ogS3qwPtEQQS225skV/GeIKUFDykjMGfkR543zmhvviyQAib5ZDlzBp/Dz3AjqS3GTfnqpQAAM2c7O5GSEA0mqYvdXR5qwHGG/If1P6kH+KBAfBdJ3gqVpwlq0ehziU1twO5vPBcDNmZzZJrD0PxzRhmLZmTTvK4mdH8GyoKSmVKm/4kMXPDkDwtPZ6+PeBJKDnpSqppyR97y
+{
+Tq72FDjGs8LAVYFrf3jswN1xD80kzX72TuXBRp63ggR4JfCDUImb8k9gLf3apex6SPpddKTFgBAhLEDvnu9yUkjdV3h9ZySqVFm26BRlJqJb25ipl/6e17EIJCLw6inu2o0Q02NSDYwhi+VY5mJV0Zj3ieT6YVP/QjQ3t2V6jXwzDtYid+kczyS5L9PHPVkJD4UiXXAGK9ShyEufvTvm0hSGz44FOqXNqhd1hdHad4rjOjlr2S6rxu7O4sX
+{
+F+4WzDlRA3DHxdC5kBILjYFVPGfz9oratDN7r1mlyeriE70aFZkZLGgEkBR4scOJo4sA/MvQfEBKGgRNPcyj4Rxfb5lXYTmTWc11pDcA2A3qzsEBrngM7scQTe7O1pI0EIOzpq/1RNa4+ajzKgFQlJJoUVfqEv84EEBusbmb7UI2nlfSVOM6VjI3TQN9wYOKBSgBB9GTbaBI4ll/mqEvdMngTmy2JOHfrCb4AJ7/nJX3wUwYOSfAE0ctdQ1
+{
+TsjMryITBex4CTJngvTSSWZ8nUshmeh6qyozUO8uhoJNPCnLy1iayDD/IV0JKeIZyA+JyrwqJkxfAY5+QkvNnThAakvMJL/z/9S8MfxSpnZ7yt/jpMVrdX91kMbBfxuY3eRBhuw8ILjJYDKw0MjNAs2QsezDELMSoAkYnpjbRRfi8RcV9PAE23Q1rs9YFMfxnw3us5OgFAYLNteyVaOCHSwkqaffbD6X0XVWJn6oOoZeCkXzUNjzfI2W5lr
+{
+/R5W3+nPhy4SlockAxB8o1EMBMkLH9woAKu1z33RuTguZVh+p2TAahql3AdvqogAnrMLkX7/VBo4jiPAUtH9N+gJ1LdFeASuPqt9eA+vjq6yR5TPHxUls1cDa61bIJ4BHY3zp+V8rixeRK9JRPskYG/1wB9AEFIPaEVfbA+L49slM7AN3sLuEAVno4RwO2BTVaHDP52UmVAItYqDgNB961cX06XXPoYpzzA2J9Pcnfz1rjPTP3PuW7ag8Qu
+{
+HWnjKHyxbiki6xSHSgeGRC0uYcGEFNmocqL06mak+0liS6Q3CVmVmMp37UdTN7T2IS/iAG/F9tG0BjfV4R90wfRR6vQcHZZMKh1TFCJduiIeeNlJjQERprGcUmNqZvzhHvXwBdZAAlzOUaThVQ8jccQUTQNkXanvY6xHfnYf7d7iyonAxwZkZp3x7Ee6DZwj/gEUL6h31yl/r3T+ezEk8PKO3xvkzMtAjeKbmCexqUvm8XiCkxcaRSdbSrG
+{
+6hnUg6Qjb4DeE8GHQ13El3vt6tLMkr/pO7CsXD5oF2oylvmWww2/Ja/nYnHA+A2FI7UyteuKlCY0o6uda+wRJ3RXsOLQPmWRrXJhFWi4AI2V9/wlmfYZwv1UwGGWKssU7i7N9xsFYnNbtNh2pFizXP7z/PWi+9CcW9iCx2l7/ZWh627Hi4xeejvxiEgugM4/E6tsDRfKSvq0E6uq+y03aE15yPhYaNYNPc+SAOEVI7BUjSFABm2EU2nrJfE
+{
+shAvDPnSKiADUBAO5tOUskpJfF4+nX0levC5cK2D/3b41I1vefSrBqfg6F4z9ub1aSgfGDadwlPbXoLW4p1bXFez6BIgclzRclj8q+IfH9SGCFR3yXZHgX7JFux4WI6yP4nhWy3EfepXrpx0HRZfBJ/j0syOdc/W8tTuhwqMo49JSMWU5YHWUMo0p/5sKsbS6UZLHFmi+3iG/PlMqr4Y9DgxP8yuUQVe1Vtq3OzGcUu5p58eKfJh92gAbGQ
+{
+et.cmp_id 
+//from h_emp_mstr,h_cmp_set 
+//where h_emp_mstr.emp_state <> 3 and  emp_longmon>=h_cmp_set.cmp_downcmp and emp_longmon<=h_cmp_set.cmp_upcmp ;
+
+if sqlca.sqlcode=0 then
+	commit using sqlca;
+	uf_msg_pop(1,'工龄计算成功!')
+else
+	rollback;
+	u
+{
+f_msg_pop(2,'工龄计算失败!')
+end if
+
+close(w_progressbar_wait)
+setpointer(Arrow!)
+end event
+
+type uo_1 from uo_comctl_datetime within uo_emplong
+integer x = 238
+integer y = 8
+integer height = 84
+integer taborder = 10
+end type
+
+type st_1 from s
+{
+tatictext within uo_emplong
+integer x = 14
+integer y = 24
+integer width = 247
+integer height = 52
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = gb2312charset!
+fontpitch fontpitch = variable!
+string facename = "宋体"
+long
+ textcolor = 33554432
+long backcolor = 67108864
+string text = "基准日
+"
+alignment alignment = right!
+boolean focusrectangle = false
+end type
+
+{
+l9Tj5YUeKP8zQrfKw6kdzT6psqAyz5WpgjlCyswQKdEQ7cQlLL5WiMXzvT9fNfJtxge11pXKtgpKOD0tXrZfJ1QCcpb4QjYcUwBniB03lSkiXhdXqq46YLIaar3GOz03Feweqdvh/BSygNfazAagOjF9+8Mt+hBOghycfdaoc+Gb7aPSoh0GHusRe59j2+hMkT4uUpf5t84stQOyGH/TSiJ1eqOfZgAtdu/zI0mMv+0ObeMoZc4zSxwUA80
+{
+KK/6cE+rhu71GuvRpGPrf5BShdUAORg9fpqHeG4xG2eYWLuK3TKQ6OW3sB7kPmmyRBvLFI+BUueypAKHqcPUOvPcZYYzHMm7e56c/ZzskAZ8qVGAW1wfBoKWxh0jMCjymju3wonFJv3PWsGLnpXQCIMmZ8SzEvCsfAJO03XwIvA7BPRBRX3DkAvvwdx9y2+DUBIi18sN6kt1zju8vRqg3ucLFTNEG35UgrG/2jtwB3S9MilZZnkEKPx3uOm
+{
+zccAMDg70fBBavevACvlbYkYqsodF+XzV2EovcEAjlU5oPVWa8OTx2+nyvg52Bz29WAbdGy4ipiXpjiGBdJ0h4HJn23fqWFKXq0iEvRCAgczMv5jA1082T38l8w+U56KVqI+k0VCjVD5JTqJTm3O99MHIVcfGkIHx+mryw1a2AEM6wedFhy6lZO1GhLzfYZ/kKynm//y8QGUXR3HPwMjXmGUUi5w1dmWgknvXiKiSkqbEoy0JX58RBvHG0s
+{
+ypr6hbbD223n2z8QaDy98NgwwztCUq3vloEUTBkANTbozMFEtbYi6R/5hDy6eR0ARShqtpaxBHJqTRBdFbfS08StZv02y0ApssC9rz5cLzJJT+RllHkqJCc7mXDyp3014QAbSuYqVyE7OF/if+Yu95yzgaEkt7MvLxQm0itisCcbTA5na9q6yGE6u9utBbpQ8zXrciLRYFBBItCiV8dPWyJXw8IyRuBfTRuZzQdFYBg32AhHw46TNt/+Pey
+{
+EwDqPlGlPIwf/YdqzfY+d+e8I6z2/Fr4s3hN+qA9UgtZN1JPeUo89LWl3sRBDwxyOFrKm3yidqxizYp9Kwf//tOWUQj9c4OyCczKGjJdhwucpELmS2JDuR8/BStO9eeRO2/4bach1DhMPbchuwTxG7qmOvXKow48jtRSsS9X/AAnR/kWg4D64ym6k6zkQwiNOSycmflqFlYCvIAoLxQfrJEadi/2waQcEl/JIjxPyNYmvAXpsxWMjErA3Yr
+{
+耔
+輀耕
+耖
+耗
+耙
+耴
+耿
+聁
+聜
+聝
+聞
+耻
+聟
+耀
+耀
+"
+老
+@
+"
+老
+脀
+P
+"
+耂
+脀
+L"
+#
+B
+2
+       
+2
+       
+崀
+
+{
+考
+p
+(
+耚
+耀
+耇
+耛
+耐
+耝
+耞
+耟
+耠
+耡
+耢
+耣
+耤
+耥
+耦
+耧
+耨
+耩
+耪
+耫
+耬
+耭
+耮
+耯
+耰
+耱
+耲
+开
+开
+开
+开
+开
+*L#
+2
+1
+0
+2
+       
+2
+       
+崀
+
+考
+p
+耵
+耶
+耷
+耀
+肀
+耀
+耸
+耹
+耛
+耀錀
+耀錀
+蜀
+耀
+耺
+耀
+耀
+耀
+{
+聅聃老
+聆
+聡
+聢耉聠
+聣耎聠
+聤耒聠
+老
+T
+a耘耂
+WC
+J%耳耂
+F4
+@$耾耂
+OC
+%%聀耂
+H4
+*)聃聁
+B7
+'%聅聄
+g!聠聄
+E8
+,%
+<
+! 
+'
+ 8
+'
+ L
+'
+;T
+,
+:
+d
+       
+ 
+       
+{
+YHWSsvOgVM4KcV8EU3BUKIHM+r/R+PSQzABripD1hreeJohYC/g3u2IuI9Yf9FioZS+KFYyptQtzOFxSxCY1sw9s8RnMilhM+R9OG6eDLI7LO9xPW7xiY8=
+d
+"
+1
+"
+1
+"
+1
+"
+1
+{
+"
+0
+"
+0
+"
+1
+"
+0
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+(
+啊
+<?xml version="1.0"
+{
+ encoding="UTF-16LE" standalone="no"?><d_rs_empmstr_pop3><d_rs_empmstr_pop3_row __pbband="detail"><emp_id>emp_id</emp_id><cc_code>cc_code</cc_code><duty_id>duty_id</duty_id><post_id>post_id</post_id><emp_name>emp_name</emp_name><emp_name_en>emp_name_e
+{
+n</emp_name_en><emp_name_py>emp_name_py</emp_name_py><emp_officetel>emp_officetel</emp_officetel><emp_ic>emp_ic</emp_ic><emp_state>emp_state</emp_state><emp_free>emp_free</emp_free><emp_in_date>emp_in_date</emp_in_date><emp_in_date_group>emp_in_date_g
+{
+roup</emp_in_date_group><emp_long_add>emp_long_add</emp_long_add><emp_beg_date>emp_beg_date</emp_beg_date><emp_duty_date>emp_duty_date</emp_duty_date><emp_stay_date>emp_stay_date</emp_stay_date><emp_back_date>emp_back_date</emp_back_date><emp_lea_date
+{
+>emp_lea_date</emp_lea_date><emp_try>emp_try</emp_try><emp_try_long>emp_try_long</emp_try_long><emp_try_date>emp_try_date</emp_try_date><emp_from_date>emp_from_date</emp_from_date><emp_lea_xz>emp_lea_xz</emp_lea_xz><emp_class>emp_class</emp_class><emp
+{
+_basic>emp_basic</emp_basic><emp_grade>emp_grade</emp_grade><emp_role>emp_role</emp_role><emp_sal>emp_sal</emp_sal><emp_sal_type>emp_sal_type</emp_sal_type><emp_cost>emp_cost</emp_cost><emp_zj>emp_zj</emp_zj><emp_check>emp_check</emp_check><emp_con_be
+一{
+g>emp_con_beg</emp_con_beg><emp_con_end>emp_con_end</emp_con_end><emp_nz>emp_nz</emp_nz><emp_assure>emp_assure</emp_assure><emp_assure_refer>emp_assure_refer</emp_assure_refer><emp_sex>emp_sex</emp_sex><emp_card>emp_card</emp_card><emp_birth>emp_birth
+倀{
+</emp_birth><emp_rgt>emp_rgt</emp_rgt><emp_province>emp_province</emp_province><emp_residence>emp_residence</emp_residence><emp_face>emp_face</emp_face><emp_nation>emp_nation</emp_nation><emp_marry>emp_marry</emp_marry><emp_union>emp_union</emp_union>
+刀{
+<emp_height>emp_height</emp_height><emp_weight>emp_weight</emp_weight><emp_blood>emp_blood</emp_blood><emp_home>emp_home</emp_home><emp_addr>emp_addr</emp_addr><emp_hometel>emp_hometel</emp_hometel><emp_addrter>emp_addrter</emp_addrter><emp_email>emp_
+吀{
+email</emp_email><emp_school>emp_school</emp_school><emp_school2>emp_school2</emp_school2><emp_grad_time>emp_grad_time</emp_grad_time><emp_grad_time2>emp_grad_time2</emp_grad_time2><emp_level>emp_level</emp_level><emp_level2>emp_level2</emp_level2><em
+嘀{
+p_major>emp_major</emp_major><emp_major2>emp_major2</emp_major2><emp_language>emp_language</emp_language><emp_lang_level>emp_lang_level</emp_lang_level><emp_special>emp_special</emp_special><emp_computer>emp_computer</emp_computer><emp_long>emp_long</
+堀{
+emp_long><emp_old>emp_old</emp_old><emp_oldtype>emp_oldtype</emp_oldtype><emp_dorm>emp_dorm</emp_dorm><emp_dormid>emp_dormid</emp_dormid><emp_stransp>emp_stransp</emp_stransp><emp_jycode>emp_jycode</emp_jycode><emp_zzcode/><emp_sjcode>emp_sjcode</emp_
+娀{
+sjcode><emp_by>emp_by</emp_by><emp_tjb>emp_tjb</emp_tjb><emp_sinsu>emp_sinsu</emp_sinsu><emp_einsu>emp_einsu</emp_einsu><emp_jy_date>emp_jy_date</emp_jy_date><emp_zz_date/><emp_sj_date>emp_sj_date</emp_sj_date><emp_flod_date>emp_flod_date</emp_flod_da
+尀{
+te><emp_con_state>emp_con_state</emp_con_state><emp_back>emp_back</emp_back><emp_work_hist>emp_work_hist</emp_work_hist><emp_user>emp_user</emp_user><emp_time>emp_time</emp_time><emp_text>emp_text</emp_text><emp_dec>emp_dec</emp_dec><emp_date>emp_date
+帀{
+</emp_date><emp_ht_state>emp_ht_state</emp_ht_state><emp_ov>emp_ov</emp_ov><emp_dina>emp_dina</emp_dina><emp_con_man>emp_con_man</emp_con_man><emp_con_relative>emp_con_relative</emp_con_relative><emp_con_tel>emp_con_tel</emp_con_tel><emp_intro_man>emp
+怀{
+_intro_man</emp_intro_man><emp_hire_type>emp_hire_type</emp_hire_type><emp_dorm_in>emp_dorm_in</emp_dorm_in><emp_dorm_out>emp_dorm_out</emp_dorm_out><emp_dorm_money>emp_dorm_money</emp_dorm_money><emp_dorm_remark>emp_dorm_remark</emp_dorm_remark><emp_
+戀{
+bonus_dot>emp_bonus_dot</emp_bonus_dot><emp_bonus_type>emp_bonus_type</emp_bonus_type><emp_salary_type>emp_salary_type</emp_salary_type><emp_assure_tel>emp_assure_tel</emp_assure_tel><emp_ss>emp_ss</emp_ss><emp_card_date>emp_card_date</emp_card_date><
+搀{
+emp_card_limit>emp_card_limit</emp_card_limit><emp_rmk>emp_rmk</emp_rmk><emp_remark>emp_remark</emp_remark><emp_type>emp_type</emp_type><emp_zc_type>emp_zc_type</emp_zc_type><emp_rc_type>emp_rc_type</emp_rc_type><emp_pic>emp_pic</emp_pic><emp_marri_da
+昀{
+te>emp_marri_date</emp_marri_date><emp_bear_date1>emp_bear_date1</emp_bear_date1><emp_bear_sex1>emp_bear_sex1</emp_bear_sex1><emp_bear_date2>emp_bear_date2</emp_bear_date2><emp_bear_sex2>emp_bear_sex2</emp_bear_sex2><emp_unbear_way>emp_unbear_way</emp
+栀{
+_unbear_way><emp_bear_rmk>emp_bear_rmk</emp_bear_rmk><emp_work_date>emp_work_date</emp_work_date><emp_valid>emp_valid</emp_valid><emp_zz_date/><emp_zzcode/><emp_spouse>emp_spouse</emp_spouse><emp_post_work>emp_post_work</emp_post_work><emp_cert_no1>em
+樀{
+p_cert_no1</emp_cert_no1><emp_cert_no2>emp_cert_no2</emp_cert_no2><emp_char1>emp_char1</emp_char1><emp_char2>emp_char2</emp_char2><emp_char3>emp_char3</emp_char3><emp_char4>emp_char4</emp_char4><emp_char5>emp_char5</emp_char5><emp_char6>emp_char6</emp
+氀{
+_char6><emp_char7>emp_char7</emp_char7><emp_char8>emp_char8</emp_char8><emp_char9>emp_char9</emp_char9><emp_char10>emp_char10</emp_char10></d_rs_empmstr_pop3_row></d_rs_empmstr_pop3>
+UTF-16LE
+8
+"
+0
+瀀{
+mhM3hwpRzvNYzXrCkidx44kehcdp7o6RGr+YJjgM9dLVaamC8PFyD3XGG23IBAnegjTWzPAM+wzZxgx1YlvlgGV4MzjEEUornDp4Nh/7QSzgMhhDlACCwOjEai5zhThJHZeQll8SXol+5Wm9IBUhMMDadyWbDjUPWtCLlXJGAq0oP1LsVBiB+Zg1WMfULW/FljnO12MG0huRjsaMhfHs10eeIPeJUZ3hVjx88kCW/Hl2TTuminrUJ0yJpHE
+爀{
+CFpzCZlRz79+an5x1oOsB7HI2d8FDu7femLLpumX3TxjinSyu1XphYRXVrEn07zz/x4lMLwWlUSGpeBSh5ul74U46HyHEiVRzbZTdILzyUNBxRJ+HBedU+GaUL6bNPAKjxg1JurSTqPNYJCGBV1OaRk6F0tcZw0Vrn7NVmaiVAO48j4z/Ig6EJO3NceA/SxaSes3T5rlU9q5+KZCQ7ci4zo8B157G1ppvE4APpQfL6D7B/mcxy2d9CIRdVJ
+琀{
+DGgzOG14vSF8dx9+NLX07nlM3Ij99KJH6UEadu1Mjm+re8AbXF3Pa+DxIBSj5Vroqjnqu+8BQmMcNLMQ1iFg5de8CWrNR1VjPziTRX+ztUIqdlsKP4Hw8LpeNYqyKdHVm1ACbppv5yKSX6rLaL20FRbmIDbmvmGFCqhPuWj9pgia45BbCJ1SVNF+NO+IQXhMkumWR2gxAWXLLnxYId0bPScy+qsQhTzobNCsmtxIhR7BUIWkHspbSQDqqm3
+瘀{
+piWJEvFA0wfia3eMHw4rO8xotulirlKtI9zqdCtcxAKlFGQ8TQoGDqgvYfeFufuX00+UgbJUDm7t6KJK0WG+ORiQYH2rszLnha6A4X/GMM1xRXK6rZEA5PZVDKMHQXoSU6w08KD1TjEZQsVLyNnVp/uOjuGHewpKLJVYfzjO/d0aw50RVDfH/pyuI+GCJ0W1DVoR0jNU8qD9OIOsLVIiiqNJkPDKEsP7RW+AFGXUqXxmbYHD9jhs2F47YmZ
+砀{
+mIQdTTCulpzPAmtAU73m49HiINDA2/w/m6cjaYYEAY0lYIkm+V5SwGOafWOqh0pYiBWVk19zz4QHMaDW1oOLb9mtI5+25iHZzX2p1casHuQJnzmM7L04iKG4TijDmzfDD78wzKA9eYkPbEmSEaYkYAhEvTECVUpPvqk91IyLj7AK9ESBPeRDJ3Cl4Ysfx+CbdCI/6RcJaEGk6NLHjluFYSdwlZ5S8nXsRpqh0hQKZQbNp/yWhB6Kjq8rQK2
+稀{
+GzMx1ys5FmPX4DcbqYejPSnTbigtNCOPOow1GPYBMVNESOjprjY3qH2GhAX9zf1Dfwj/LgZt7wWKIRwlmiN+IXB0aJRajWoOJSqi3vAdsqPG+iuzcGJS5HsUt2uNEFPXHvHEuIYH2R0RYI4/kQT8+VJffOoqDtrBlcGiyeC6+pbYtli6jzBCIOiCvOpnr+BuKRWzviErXkrHSQ/v1SfvuWuFPX6XlecHfH8yEbJskgQMGekrS/KXJ6o1wN4
+簀{
+GbtDDJk7A/8F4AkSvxwno1gqnLYF2lI0UNDhNxbMNWiPiyn7FK0WqfQBHxfcbLfCwAS0YyGUXk7FTitCWilOyO10hTqRS8CwKhFijbU5iydmBrMSHIzF9GG6UKIq4q0Wco+PDlPg542g177Xm1kw09R+O9L/SLAZ4IxlNF2q3srlt6lnLmQ+XZ/4exENTgiH+4RdgmZa6+NMCU3ddJw9np09s0yXG755MH5s5Iaje5H9OgVatX+xlw5EmVo
+縀{
+gug5vL53fARFxyT/h0wQZTGnGzSGit/NyNVsm2g/SIbYjiNjpq5sFuGvLxXvBA7YFcs0hFoxJ9v9fDVS7KYzY/O5uHk7ot+9G/Ad+qkNkDUZtHXyHkoFohz2omrshHUNcy6X38rwVD3pK/MauRghekGHR/DjsRbeNTIj/Z88QvtJv+81kf1x5YdqTNZZOxg8MWYPtZSMWNB7tU58luGDBJOFclbm8mllNL4erWl4hevW9IOIotbnElnxqEx
+耀{
+olHCzxNXqC/c6C1Yjo7uOjbQ3z2cO7v/DyIyI6HOVmVvSEr8DJ86mYvKy5jZJVhHsSLGYwF4xkN9EY0ese8tNIlTZjN4sts7RFG9fYd0s0kQ5ekAOQEEO55AEwImwlVM2vewUfQPrORhKeQBoad9gn9rsz+XWsfvwOXdyrXAKcNELBjdDccEwpUPdM5yui+BqX1aTjSNON64cCNtfpLkodmoPojVLYFp75Q7vw2DaL+2Dspd6EJM3NVmmvQ
+舀{
+1orWlH+JmraICcaj8RH+Jz7B9e8bsxyBV5fYcFS4eoDI7rfpHLsoCvbVEUWY53XnO/RdUGiraGHadMN7q8ebMYpu2zag0MjGlOYAYgpW6YgPGX4Prri0ibyLeb8BCJlLuDRZ0iDuNhQQfdVMbdBOq2V6BGzpdnmUbJg/kGqkA/5U6FluBRC5EG0JGi5sZSACEmmWrcACORaHALxU729pCvVeJRwFEDeYfoD1htSOKzS3fJnv1BLZflML+LC
+萀{
+G+HaiE2qBppSWLVv4ADaC9GO2rw3dove7iTImj7m/+oaxkuI/iqU3wLhXfaHoqXsFP8PqhaUHxx19ySr7fIzKZOcAM3cd2K76gCeqJtCECLEav3pIkKmN6Vokshq01B+Bhm09XmHN+rbCJDPc1FE5RbE+QB24sC2BZWLkr/naXjhOPgiK84FOKvFQ4wjhlUi4VWeEyC1C2m6tDyctcyPTsNb7Zp4QYlleyzvDzphbm2XLf7l4m9eYylQeoA
+蘀{
+2i1mv80DQ/Luy7yf5MVD6ZaGpf27WjiS1mcbt7ogS3qwPtEQQS225skV/GeIKUFDykjMGfkR543zmhvviyQAib5ZDlzBp/Dz3AjqS3GTfnqpQAAM2c7O5GSEA0mqYvdXR5qwHGG/If1P6kH+KBAfBdJ3gqVpwlq0ehziU1twO5vPBcDNmZzZJrD0PxzRhmLZmTTvK4mdH8GyoKSmVKm/4kMXPDkDwtPZ6+PeBJKDnpSqppyR97yTq72FDjG
+蠀{
+s8LAVYFrf3jswN1xD80kzX72TuXBRp63ggR4JfCDUImb8k9gLf3apex6SPpddKTFgBAhLEDvnu9yUkjdV3h9ZySqVFm26BRlJqJb25ipl/6e17EIJCLw6inu2o0Q02NSDYwhi+VY5mJV0Zj3ieT6YVP/QjQ3t2V6jXwzDtYid+kczyS5L9PHPVkJD4UiXXAGK9ShyEufvTvm0hSGz44FOqXNqhd1hdHad4rjOjlr2S6rxu7O4sXF+4WzDlR
+言{
+A3DHxdC5kBILjYFVPGfz9oratDN7r1mlyeriE70aFZkZLGgEkBR4scOJo4sA/MvQfEBKGgRNPcyj4Rxfb5lXYTmTWc11pDcA2A3qzsEBrngM7scQTe7O1pI0EIOzpq/1RNa4+ajzKgFQlJJoUVfqEv84EEBusbmb7UI2nlfSVOM6VjI3TQN9wYOKBSgBB9GTbaBI4ll/mqEvdMngTmy2JOHfrCb4AJ7/nJX3wUwYOSfAE0ctdQ1TsjMryIT
+谀{
+Bex4CTJngvTSSWZ8nUshmeh6qyozUO8uhoJNPCnLy1iayDD/IV0JKeIZyA+JyrwqJkxfAY5+QkvNnThAakvMJL/z/9S8MfxSpnZ7yt/jpMVrdX91kMbBfxuY3eRBhuw8ILjJYDKw0MjNAs2QsezDELMSoAkYnpjbRRfi8RcV9PAE23Q1rs9YFMfxnw3us5OgFAYLNteyVaOCHSwkqaffbD6X0XVWJn6oOoZeCkXzUNjzfI2W5lr/R5W3+nP
+踀{
+hy4SlockAxB8o1EMBMkLH9woAKu1z33RuTguZVh+p2TAahql3AdvqogAnrMLkX7/VBo4jiPAUtH9N+gJ1LdFeASuPqt9eA+vjq6yR5TPHxUls1cDa61bIJ4BHY3zp+V8rixeRK9JRPskYG/1wB9AEFIPaEVfbA+L49slM7AN3sLuEAVno4RwO2BTVaHDP52UmVAItYqDgNB961cX06XXPoYpzzA2J9Pcnfz1rjPTP3PuW7ag8QuHWnjKHyx
+退{
+biki6xSHSgeGRC0uYcGEFNmocqL06mak+0liS6Q3CVmVmMp37UdTN7T2IS/iAG/F9tG0BjfV4R90wfRR6vQcHZZMKh1TFCJduiIeeNlJjQERprGcUmNqZvzhHvXwBdZAAlzOUaThVQ8jccQUTQNkXanvY6xHfnYf7d7iyonAxwZkZp3x7Ee6DZwj/gEUL6h31yl/r3T+ezEk8PKO3xvkzMtAjeKbmCexqUvm8XiCkxcaRSdbSrG6hnUg6Qj
+鈀{
+b4DeE8GHQ13El3vt6tLMkr/pO7CsXD5oF2oylvmWww2/Ja/nYnHA+A2FI7UyteuKlCY0o6uda+wRJ3RXsOLQPmWRrXJhFWi4AI2V9/wlmfYZwv1UwGGWKssU7i7N9xsFYnNbtNh2pFizXP7z/PWi+9CcW9iCx2l7/ZWh627Hi4xeejvxiEgugM4/E6tsDRfKSvq0E6uq+y03aE15yPhYaNYNPc+SAOEVI7BUjSFABm2EU2nrJfEshAvDPnS
+鐀{
+KiADUBAO5tOUskpJfF4+nX0levC5cK2D/3b41I1vefSrBqfg6F4z9ub1aSgfGDadwlPbXoLW4p1bXFez6BIgclzRclj8q+IfH9SGCFR3yXZHgX7JFux4WI6yP4nhWy3EfepXrpx0HRZfBJ/j0syOdc/W8tTuhwqMo49JSMWU5YHWUMo0p/5sKsbS6UZLHFmi+3iG/PlMqr4Y9DgxP8yuUQVe1Vtq3OzGcUu5p58eKfJh92gAbGQl9Tj5YUe
+阀{
+KP8zQrfKw6kdzT6psqAyz5WpgjlCyswQKdEQ7cQlLL5WiMXzvT9fNfJtxge11pXKtgpKOD0tXrZfJ1QCcpb4QjYcUwBniB03lSkiXhdXqq46YLIaar3GOz03Feweqdvh/BSygNfazAagOjF9+8Mt+hBOghycfdaoc+Gb7aPSoh0GHusRe59j2+hMkT4uUpf5t84stQOyGH/TSiJ1eqOfZgAtdu/zI0mMv+0ObeMoZc4zSxwUA80KK/6cE+r
+頀{
+hu71GuvRpGPrf5BShdUAORg9fpqHeG4xG2eYWLuK3TKQ6OW3sB7kPmmyRBvLFI+BUueypAKHqcPUOvPcZYYzHMm7e56c/ZzskAZ8qVGAW1wfBoKWxh0jMCjymju3wonFJv3PWsGLnpXQCIMmZ8SzEvCsfAJO03XwIvA7BPRBRX3DkAvvwdx9y2+DUBIi18sN6kt1zju8vRqg3ucLFTNEG35UgrG/2jtwB3S9MilZZnkEKPx3uOmzccAMDg7
+騀{
+0fBBavevACvlbYkYqsodF+XzV2EovcEAjlU5oPVWa8OTx2+nyvg52Bz29WAbdGy4ipiXpjiGBdJ0h4HJn23fqWFKXq0iEvRCAgczMv5jA1082T38l8w+U56KVqI+k0VCjVD5JTqJTm3O99MHIVcfGkIHx+mryw1a2AEM6wedFhy6lZO1GhLzfYZ/kKynm//y8QGUXR3HPwMjXmGUUi5w1dmWgknvXiKiSkqbEoy0JX58RBvHG0sypr6hbbD
+鰀{
+223n2z8QaDy98NgwwztCUq3vloEUTBkANTbozMFEtbYi6R/5hDy6eR0ARShqtpaxBHJqTRBdFbfS08StZv02y0ApssC9rz5cLzJJT+RllHkqJCc7mXDyp3014QAbSuYqVyE7OF/if+Yu95yzgaEkt7MvLxQm0itisCcbTA5na9q6yGE6u9utBbpQ8zXrciLRYFBBItCiV8dPWyJXw8IyRuBfTRuZzQdFYBg32AhHw46TNt/+PeyEwDqPlGl
+鸀{
+PIwf/YdqzfY+d+e8I6z2/Fr4s3hN+qA9UgtZN1JPeUo89LWl3sRBDwxyOFrKm3yidqxizYp9Kwf//tOWUQj9c4OyCczKGjJdhwucpELmS2JDuR8/BStO9eeRO2/4bach1DhMPbchuwTxG7qmOvXKow48jtRSsS9X/AAnR/kWg4D64ym6k6zkQwiNOSycmflqFlYCvIAoLxQfrJEadi/2waQcEl/JIjxPyNYmvAXpsxWMjErA3YrYHWSsvOg
+{
+VM4KcV8EU3BUKIHM+r/R+PSQzABripD1hreeJohYC/g3u2IuI9Yf9FioZS+KFYyptQtzOFxSxCY1sw9s8RnMilhM+R9OG6eDLI7LO9xPW7xiY8=
+d
+"
+1
+"
+1
+"
+1
+"
+1
+"
+{
+0
+"
+0
+"
+1
+"
+0
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+(
+2
+<?xml version="1.0" encodin
+{
+g="UTF-16LE" standalone="no"?><d_rs_empmstr_pop5><d_rs_empmstr_pop5_row __pbband="detail"><emp_id>emp_id</emp_id><cc_code>cc_code</cc_code><duty_id>duty_id</duty_id><post_id>post_id</post_id><emp_name>emp_name</emp_name><emp_name_en>emp_name_en</emp_n
+{
+ame_en><emp_name_py>emp_name_py</emp_name_py><emp_officetel>emp_officetel</emp_officetel><emp_ic>emp_ic</emp_ic><emp_state>emp_state</emp_state><emp_free>emp_free</emp_free><emp_in_date>emp_in_date</emp_in_date><emp_in_date_group>emp_in_date_group</em
+{
+p_in_date_group><emp_long_add>emp_long_add</emp_long_add><emp_beg_date>emp_beg_date</emp_beg_date><emp_duty_date>emp_duty_date</emp_duty_date><emp_stay_date>emp_stay_date</emp_stay_date><emp_back_date>emp_back_date</emp_back_date><emp_lea_date>emp_lea
+{
+_date</emp_lea_date><emp_try>emp_try</emp_try><emp_try_long>emp_try_long</emp_try_long><emp_try_date>emp_try_date</emp_try_date><emp_from_date>emp_from_date</emp_from_date><emp_lea_xz>emp_lea_xz</emp_lea_xz><emp_class>emp_class</emp_class><emp_basic>e
+{
+mp_basic</emp_basic><emp_grade>emp_grade</emp_grade><emp_role>emp_role</emp_role><emp_sal>emp_sal</emp_sal><emp_sal_type>emp_sal_type</emp_sal_type><emp_cost>emp_cost</emp_cost><emp_zj>emp_zj</emp_zj><emp_check>emp_check</emp_check><emp_con_beg>emp_co
+{
+n_beg</emp_con_beg><emp_con_end>emp_con_end</emp_con_end><emp_nz>emp_nz</emp_nz><emp_assure>emp_assure</emp_assure><emp_assure_refer>emp_assure_refer</emp_assure_refer><emp_sex>emp_sex</emp_sex><emp_card>emp_card</emp_card><emp_birth>emp_birth</emp_bi
+{
+rth><emp_rgt>emp_rgt</emp_rgt><emp_province>emp_province</emp_province><emp_residence>emp_residence</emp_residence><emp_face>emp_face</emp_face><emp_nation>emp_nation</emp_nation><emp_marry>emp_marry</emp_marry><emp_union>emp_union</emp_union><emp_hei
+{
+tab_1
+z聀tabpage_1
+$
+)聂dw_1
+@
+%聃pfc_retrieve
+triggerevent
+n
+8
+L
+
+老
+d
+"
+       
+icurrent
+       
+create
+4
+老
+! 0
+'
+2! 8
+'
+2
+d
+       
+@
+       
+destroy
+menuid
+l 
+ 
+0
+8
+{
+&
+老
+!! 0
+'
+,X
+!! `
+4
+4
+,
+/@
+4
+/@ 
+'
+6	l
+d
+L
+       
+ancestorreturnvalue
+::message
+(
+8
+@
+聥
+(
+       
+open
+iu_toolbar
+聚closeuserobject
+4
+8
+聚openuserobject
+B
+h
+0
+X
+
+`
+
+搀}
+耂
+耂&
+耂
+耂
+F
+G
+"
+&
+.
+2
+f
+       
++ue_triggereventdw1
++create
++destroy
++open
+P
+8
+H
+Z
+2
+       
+崀
+
+考	
+耀
+耀
+耄
+者
+耆
+耀
+耇
+耀
+{
+ght>emp_height</emp_height><emp_weight>emp_weight</emp_weight><emp_blood>emp_blood</emp_blood><emp_home>emp_home</emp_home><emp_addr>emp_addr</emp_addr><emp_hometel>emp_hometel</emp_hometel><emp_addrter>emp_addrter</emp_addrter><emp_email>emp_email</e
+{
+mp_email><emp_school>emp_school</emp_school><emp_school2>emp_school2</emp_school2><emp_grad_time>emp_grad_time</emp_grad_time><emp_grad_time2>emp_grad_time2</emp_grad_time2><emp_level>emp_level</emp_level><emp_level2>emp_level2</emp_level2><emp_major>
+{
+emp_major</emp_major><emp_major2>emp_major2</emp_major2><emp_language>emp_language</emp_language><emp_lang_level>emp_lang_level</emp_lang_level><emp_special>emp_special</emp_special><emp_computer>emp_computer</emp_computer><emp_long>emp_long</emp_long
+{
+><emp_old>emp_old</emp_old><emp_oldtype>emp_oldtype</emp_oldtype><emp_dorm>emp_dorm</emp_dorm><emp_dormid>emp_dormid</emp_dormid><emp_stransp>emp_stransp</emp_stransp><emp_jycode>emp_jycode</emp_jycode><emp_zzcode/><emp_sjcode>emp_sjcode</emp_sjcode><
+{
+emp_by>emp_by</emp_by><emp_tjb>emp_tjb</emp_tjb><emp_sinsu>emp_sinsu</emp_sinsu><emp_einsu>emp_einsu</emp_einsu><emp_jy_date>emp_jy_date</emp_jy_date><emp_zz_date/><emp_sj_date>emp_sj_date</emp_sj_date><emp_flod_date>emp_flod_date</emp_flod_date><emp_
+{
+con_state>emp_con_state</emp_con_state><emp_back>emp_back</emp_back><emp_work_hist>emp_work_hist</emp_work_hist><emp_user>emp_user</emp_user><emp_time>emp_time</emp_time><emp_text>emp_text</emp_text><emp_dec>emp_dec</emp_dec><emp_date>emp_date</emp_da
+{
+te><emp_ht_state>emp_ht_state</emp_ht_state><emp_ov>emp_ov</emp_ov><emp_dina>emp_dina</emp_dina><emp_con_man>emp_con_man</emp_con_man><emp_con_relative>emp_con_relative</emp_con_relative><emp_con_tel>emp_con_tel</emp_con_tel><emp_intro_man>emp_intro_m
+{
+an</emp_intro_man><emp_hire_type>emp_hire_type</emp_hire_type><emp_dorm_in>emp_dorm_in</emp_dorm_in><emp_dorm_out>emp_dorm_out</emp_dorm_out><emp_dorm_money>emp_dorm_money</emp_dorm_money><emp_dorm_remark>emp_dorm_remark</emp_dorm_remark><emp_bonus_do
+{
+t>emp_bonus_dot</emp_bonus_dot><emp_bonus_type>emp_bonus_type</emp_bonus_type><emp_salary_type>emp_salary_type</emp_salary_type><emp_assure_tel>emp_assure_tel</emp_assure_tel><emp_ss>emp_ss</emp_ss><emp_card_date>emp_card_date</emp_card_date><emp_card
+{
+_limit>emp_card_limit</emp_card_limit><emp_rmk>emp_rmk</emp_rmk><emp_remark>emp_remark</emp_remark><emp_type>emp_type</emp_type><emp_zc_type>emp_zc_type</emp_zc_type><emp_rc_type>emp_rc_type</emp_rc_type><emp_pic>emp_pic</emp_pic><emp_marri_date>emp_m
+}
+arri_date</emp_marri_date><emp_bear_date1>emp_bear_date1</emp_bear_date1><emp_bear_sex1>emp_bear_sex1</emp_bear_sex1><emp_bear_date2>emp_bear_date2</emp_bear_date2><emp_bear_sex2>emp_bear_sex2</emp_bear_sex2><emp_unbear_way>emp_unbear_way</emp_unbear_
+{
+background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gra
+{
+dient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutt
+}
+on="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=49 alignment="2" tabsequence=32766 border="5~t8" color="0" x="6528" y="680" height="76" 
+{
+cc_code=cc_mstr.cc_code) and wagemp_day=~''+string(adt_now) +'~'' +&
+ ' and 	cc_level >=~''+as_beglevel+'~' and cc_level<=~''+as_endlevel+'~' '+& 
+ ' and  h_wagemp_mstr.wagemp_id>=~''+as_begid +'~' and h_wagemp_mstr.wagemp_id<=~''+as_endid+'~''
+  
+{
+
+execute immediate :ls_update;
+if sqlca.sqlcode<0 then
+   rollback using sqlca;
+   messagebox('提示','动态自定义项目更新失败
+请查看动态项目对应的人员档项目是否正确!')
+   openwithparm(w_messagebox,ls_update)
+   return -1
+else
+	commit using sqlca;
+end if
+	
+return 1
+end func
+{
+tion
+
+public function integer of_rserr_test (date ad_begdate, date ad_enddate);//====================================================================
+// 函  数: wf_rserr_test()
+//--------------------------------------------------------------------
+
+{
+// 说  明: 生成人事月报前对人事相关资料及动作作检测
+//        1
+检测当月是否还有未生效的离职单
+//        2
+检测当月是否还有未生效的异动单
+//--------------------------------------------------------------------
+// 参  数: 
+//		value	string	as_month		人事月报年月
+//------------------------------------------
+{
+--------------------------
+// 返回值: integer 0=无异常   -1=仍有异常
+//--------------------------------------------------------------------
+// 作  者: cy_xu		日期: 2007.05.06
+//--------------------------------------------------------------------
+// 修改记录: 
+//	
+{
+
+//====================================================================
+string as_month
+integer li_return
+date date1,date2
+li_return=1
+//if of_day(1,adt_now,date1,date2)=-1 then 
+//	return -1
+//end if
+datastore ds_1
+ds_1=create datastore
+//
+{
+1.检测当日离职单是否仍有未生效的
+ds_1.dataobject='d_rs_dim_mstr'
+ds_1.settransobject(sqlca)
+ds_1.retrieve(gstr_userinfo.mdept,'%',ad_begdate,ad_enddate,0)
+ds_1.setfilter('date(h_emh_hist_emh_date)<=date(~''+string(ad_enddate,'yyyy/mm/dd')+'~')')
+ds_1.filter()
+
+{
+if ds_1.rowcount()>0 then
+	messagebox('异常提示','该日离职单仍有未生效的记录
+请先将该日内的未生效记录生效处理')
+	li_return=-1
+end if
+//2.检测当月异动单是否仍有未生效的
+ds_1.reset()
+ds_1.dataobject='d_rs_change_detail'
+ds_1.settransobject(sqlca)
+ds_1.retrieve(gstr_userinfo.mdept,'%',datetime
+{
+(ad_begdate),datetime(ad_enddate),0)
+ds_1.setfilter('date(h_emh_hist_emh_date)<=date(~''+string(ad_enddate,'yyyy/mm/dd')+'~')')
+ds_1.filter()
+if ds_1.rowcount()>0 then
+	messagebox('异常提示','该日异动单仍有未生效的记录
+请先将该日内的未生效记录生效处理')
+	li_return=-1
+end if
+de
+{
+stroy ds_1
+return li_return
+end function
+
+public function string of_emp_day (date ad_now, date beg1, date beg2);if ad_now >=beg1 and ad_now <=beg2 then
+	return 'OK'
+else
+	return 'NO'
+end if 
+
+end function
+
+public subroutine of_emp_in_lea
+{
+ (datetime adt_now, date ad_stay, integer a, ref integer ai_state);
+end subroutine
+
+public subroutine of_emp_in_lea (date ad_now, date ad_in, date ad_stay, date ad_lea, date ad_back, ref integer ai_state);//没有停职没有复职
+IF IsNull(ad_stay) And IsNull(a
+{
+d_back) THEN
+	IF IsNull(ad_lea) THEN
+		ai_state = 1
+	ELSE
+		IF ad_now < ad_lea THEN
+			ai_state = 1
+		ELSE
+			ai_state = 3
+		END IF
+		
+	END IF
+	//没有复职日有停职日
+ELSEIF IsNull(ad_back) And Not IsNull(ad_stay) THEN
+	IF IsNull(ad_lea) THEN
+		IF 
+{
+ad_now < ad_stay THEN
+			ai_state = 1
+		ELSE
+			ai_state = 2
+		END IF
+	ELSE
+		IF ad_now < ad_stay THEN
+			ai_state = 1
+		ELSE
+			ai_state = 3
+		END IF
+	END IF
+	//有停职有复职
+ELSE
+	IF IsNull(ad_lea) THEN
+		IF ad_now < ad_stay THEN
+			ai_stat
+{
+e = 1
+		ELSEIF  ad_now >= ad_stay And ad_now < ad_back THEN
+			ai_state = 2
+		ELSE
+			ai_state = 1
+		END IF
+		//有停职有复职有离职的情况
+	ELSE
+		//停职日肯定小于复职日
+停职日可以小于离职日
+也可以大于离职日
+要先停职再复职
+
+		//当都存在的时候
+不可能出现当前状态为在职和停职的情况
+		//只可能出现这种情况
+先停职后复职最后再离职
+		IF ad_
+{
+now < ad_stay THEN
+			ai_state = 1
+		ELSEIF ad_now >= ad_stay And ad_now < ad_back THEN
+			ai_state = 2
+		ELSEIF ad_now >= ad_back And ad_now < ad_lea THEN
+			ai_state = 1
+		ELSE
+			ai_state = 3
+		END IF
+		
+	END IF
+	
+END IF
+
+en
+瀀|
+d subroutine
+
+public function string of_emp_begend (integer ai_status, date ad_beg, date ad_end, date ad_indate, date ad_leadate, date ad_staydate, date ad_backdate, ref date ad_begdate, ref date ad_enddate, integer ai_lea_xz, date ad_now);String as
+{
+_retrieve")
+//idw_active.object.datawindow.readonly=true
+
+end event
+
+event ue_initmenu;call super::ue_initmenu;uf_menu_visible(im_main,"查看",false,false)
+uf_menu_visible(im_main,"输出",true,false)
+uf_menu_visible(im_main,"导航",false,false)
+uf_menu
+{
+_visible(im_main,"打印",true,false)
+uf_menu_visible(im_main,"预览",true,false)
+end event
+
+event ue_postopen;call super::ue_postopen;this.inv_resize.of_register(gb_1,"bottom")
+end event
+
+type tab_1 from w_pattern_onedw`tab_1 within w_rs_code_edit
+i
+{
+nteger x = 795
+integer y = 164
+integer width = 1646
+integer height = 1656
+end type
+
+type tabpage_1 from w_pattern_onedw`tabpage_1 within tab_1
+integer width = 1609
+integer height = 1528
+end type
+
+type dw_list from w_pattern_onedw`dw_list wi
+{
+thin tabpage_1
+integer width = 1609
+integer height = 1516
+string dataobject = "d_duty_edit"
+end type
+
+event dw_list::pfc_retrieve;if this.modifiedcount() + this.deletedcount() > 0 then
+	if messagebox('提示信息','数据已发生改变
+是否保存?',Question!,yesno!,1) =
+{
+ 1 then
+		if this.event pfc_update(true,true)>0 then
+			commit;
+		else
+			messagebox('提示信息','保存失败!')
+			return 0
+		end if
+	end if
+end if
+string ls_desc
+string ls_data
+this.setredraw(false)
+if rb_duty.checked  then
+	ls_data = 'd_duty_edit'
+{
+
+	ls_desc = "职位设置"
+elseif rb_level.checked  then
+	ls_data = 'd_rs_ddw_level'
+	ls_desc = '学历设置'
+elseif rb_majortype.checked then
+	ls_data = 'd_rs_ddw_major_type'
+	ls_desc = '专业类别设置'
+elseif rb_major.checked then
+	ls_data = 'd_rs_ddw_major'
+	ls
+|
+_desc = '专业设置'
+elseif rb_province.checked then
+	ls_data = 'd_rs_ddw_province'
+	ls_desc = '省份设置'
+elseif rb_nation.checked then
+	ls_data = 'd_rs_ddw_nation'
+	ls_desc = '民族设置'
+elseif rb_post.checked then
+	ls_data = 'd_position_edit'  //2005-01-07
+|
+修改
+	ls_desc = '岗位设置'
+elseif rb_saltype.checked then
+	ls_data = 'd_rs_ddw_saltype'
+	ls_desc = '计薪方式设置'
+elseif rb_sal.checked then
+	ls_data = 'd_rs_ddw_xztype'
+	ls_desc = '薪酬类别设置'
+elseif rb_zc.checked then
+	ls_data = 'd_rs_ddw_zctype'
+	ls_desc
+|
+ = '职称设置'
+elseif rb_age.checked then
+	ls_data = 'd_rs_ddw_age'
+	ls_desc = '年龄段设置'
+elseif rb_cmp.checked then
+	ls_data = 'd_rs_ddw_cmp'
+	ls_desc = '工龄段设置'
+elseif rb_emptype.checked then
+	ls_data ='d_rs_ddw_emptype'
+	ls_desc = '人员类别设置'
+elseif 
+|
+rb_emprctype.checked then
+	ls_data ='d_rs_ddw_rctype'
+	ls_desc = '人员队伍设置'
+end if
+
+//if ls_data <> this.dataobject then
+	this.dataobject = ls_data
+	this.settransobject(sqlca)
+	tab_1.tabpage_1.text = ls_desc
+	if rb_duty.checked  then
+	if uf_ge
+|
+tsysbasic(27) = 1 then
+		this.object.duty_type.visible = 0
+	end if
+end if
+	this.retrieve()
+	//行颜色服务
+	if ib_rowcolor then
+		post of_setrowcolor(true)
+	//else
+	//	post of_setrowcolor(false)
+	end if
+//	iw_parent.dynamic event ue_refurbish()	
+
+|
+//end if
+this.object.datawindow.readonly = true
+this.setredraw(true)
+this.setfocus()
+
+return 1
+
+end event
+
+event dw_list::constructor;call super::constructor;this.object.datawindow.readonly=true
+end event
+
+event dw_list::pfc_groupdlg;
+ret
+|
+urn 0
+end event
+
+event dw_list::pfc_deleterow;integer	li_rc,li_return
+long		ll_row
+
+//职务
+if this.dataobject = 'd_duty_edit' then
+	li_return=messagebox("提示信息","确定要删除吗?",question!,yesno!,1)
+	if li_return=2 then
+		return 0
+	else
+		string ls_d
+|
+utyid
+		long ll_rc1,ll_rc2
+		ll_row = this.getrow()
+		if ll_row > 0 then
+			ls_dutyid = this.object.duty_id[ll_row]
+			select count(*)
+			into :ll_rc1
+			from h_emp_mstr
+			where duty_id = :ls_dutyid and emp_state =1;
+			//如果有在职人员
+			if ll_r
+|
+c1 > 0 then
+				messagebox("提示信息","该职务下还有"+string(ll_rc1)+"名在职员工
+请先将相关在职员工的职务异动后再删除该职务!")
+				return 0
+			end if
+			select count(*)
+			into :ll_rc2
+			from h_emp_mstr
+			where duty_id = :ls_dutyid and emp_state = 3;
+			//如果有离职人员
+			if ll_rc2 
+|
+> 0 then
+				this.object.duty_enable[ll_row] = 1
+				messagebox("提示信息","该职务下还有"+string(ll_rc2)+"名离职员工
+该职务将转入历史职务以备查
+以后请注意不要使用该编码!")
+			else
+				If this.Event pfc_predeleterow() <= PREVENT_ACTION Then
+					Return NO_ACTION
+				End If
+				if IsVa
+|
+lid (inv_rowmanager) then
+					li_rc = inv_rowmanager.event pfc_deleterow () 
+				else	
+					li_rc = this.DeleteRow (0) 
+				end if
+			end if
+		
+	//		If li_rc > 0 Then ll_row = 0 Else ll_row = -1   
+	//		if IsValid ( inv_Linkage ) then
+	//			
+|
+inv_Linkage.Event pfc_deleterow (ll_row) 
+	//		end If
+			ib_del=true
+			if iw_parent.triggerevent('pfc_save')=1 then
+				return 1
+			else
+				return 0
+			end if
+		end if
+	end if
+elseif this.dataobject = 'd_position_edit' then
+	li_return=mes
+|
+sagebox("提示信息","确定要删除吗?",question!,yesno!,1)
+	if li_return=2 then
+		return 0
+	else
+		string ls_postid
+		long ll_rc3,ll_rc4
+		ll_row = this.getrow()
+		if ll_row > 0 then
+			ls_postid = this.object.post_id[ll_row]
+			select count(*)
+			into :l
+|
+l_rc3
+			from h_emp_mstr
+			where post_id = :ls_postid and emp_state =1;
+			//如果有在职人员
+			if ll_rc3 > 0 then
+				messagebox("提示信息","该岗位下还有"+string(ll_rc3)+"名在职员工
+请先将相关在职员工的岗位异动后再删除该岗位!")
+				return 0
+			end if
+			select count(*)
+			into :ll_rc
+|
+4
+			from h_emp_mstr
+			where post_id = :ls_postid and emp_state = 3;
+			//如果有离职人员
+			if ll_rc4 > 0 then
+				this.object.post_enable[ll_row] = 1
+				messagebox("提示信息","该岗位下还有"+string(ll_rc4)+"名离职员工
+该岗位将转入历史岗位以备查
+以后请注意不要使用该编码!")
+			else
+				If 
+|
+this.Event pfc_predeleterow() <= PREVENT_ACTION Then
+					Return NO_ACTION
+				End If
+				if IsValid (inv_rowmanager) then
+					li_rc = inv_rowmanager.event pfc_deleterow () 
+				else	
+					li_rc = this.DeleteRow (0) 
+				end if
+			end if
+		
+|
+
+	//		If li_rc > 0 Then ll_row = 0 Else ll_row = -1   
+	//		if IsValid ( inv_Linkage ) then
+	//			inv_Linkage.Event pfc_deleterow (ll_row) 
+	//		end If
+			ib_del=true
+			if iw_parent.triggerevent('pfc_save')=1 then
+				return 1
+			else
+				ret
+|
+urn 0
+			end if
+		end if
+	end if
+
+else
+	li_return=messagebox("提示信息","确定要删除吗?",question!,yesno!,1)
+	if li_return=2 then
+		return 0
+	else
+		If this.Event pfc_predeleterow() <= PREVENT_ACTION Then
+			Return NO_ACTION
+		End If
+		if IsValid (i
+|
+nv_rowmanager) then
+			li_rc = inv_rowmanager.event pfc_deleterow () 
+		else	
+			li_rc = this.DeleteRow (0) 
+		end if
+	
+		If li_rc > 0 Then ll_row = 0 Else ll_row = -1   
+		if IsValid ( inv_Linkage ) then
+			inv_Linkage.Event pfc_deleterow (ll
+|
+_row) 
+		end If
+		ib_del=true
+		if iw_parent.triggerevent('pfc_save')=1 then
+			return 1
+		else
+			return 0
+		end if
+	end if	
+end if
+
+end event
+
+event dw_list::itemchanged;	long ll_rc
+	string ls_rc
+	string ls_null
+	setnull(ls_null)
+
+|
+if this.dataobject = 'd_duty_edit' and dwo.name ='duty_id' then
+	
+	select count(*)
+	into :ll_rc
+	from h_duty
+	where duty_id = :data;
+	if ll_rc >0 then
+		messagebox("提示信息","该职务编号已经存在
+可能是历史职务使用过
+请重新确认!")
+		this.object.duty_id[row] = ls_null
+		t
+|
+his.setfocus()
+		this.setcolumn("duty_id")
+		return 1
+	end if
+elseif this.dataobject = 'd_duty_edit' and dwo.name ='duty_desc' then
+   long ll_duty_count
+	string ls_duty_temp
+	ls_duty_temp = trim(data)
+		
+	select count(*)
+	into :ll_duty_coun
+|
+t
+	from h_duty
+	where duty_desc = :ls_duty_temp;
+	if ll_duty_count >0 then
+		messagebox("提示信息","该职务名称已经存在
+可能是历史职务使用过
+请重新确认!")
+		this.object.duty_desc[row] = ls_null
+		this.setfocus()
+		this.setcolumn("duty_desc")
+		return 1
+	end if
+
+elseif 
+|
+this.dataobject = 'd_position_edit' and dwo.name ='post_id' then
+	select count(*)
+	into :ll_rc
+	from h_postion
+	where post_id = :data;
+	if ll_rc >0 then
+		messagebox("提示信息","该岗位编号已经存在
+可能是岗位使用过
+请重新确认!")
+		this.object.post_id[row] = ls_null
+		th
+|
+is.setfocus()
+		this.setcolumn("post_id")
+		return 1
+	end if
+	
+elseif this.dataobject = 'd_position_edit' and dwo.name ='post_desc' then
+	 long ll_post_count
+	string ls_post_temp
+	ls_post_temp = trim(data)
+	select count(*)
+	into :ll_post_cou
+|
+nt
+	from h_postion
+	where post_desc = :ls_post_temp;
+	if ll_post_count >0 then
+		messagebox("提示信息","该岗位名称已经存在
+可能是岗位名称使用过
+请重新确认!")
+		this.object.post_desc[row] = ls_null
+		this.setfocus()
+		this.setcolumn("post_desc")
+		return 1
+	end if
+else
+|
+
+	
+	integer li_rc
+	
+	if IsValid (inv_linkage) then
+		//	*Note: If the changed value needs to be validated.  Validation needs to 
+		//		occur prior to this linkage.pfc_itemchanged event.  If key syncronization is 
+		//		performed, then the change
+|
+d value cannot be undone. (i.e. return codes)	
+		li_rc = inv_linkage.event pfc_itemchanged (row, dwo, data)
+	end if
+	if data<>is_data then	
+		this.of_setmenu ("itemchanged")	
+	end if
+end if
+end event
+
+event dw_list::doubleclicked;call super::
+|
+doubleclicked;if dwo.name='post_cc_select' then
+	string ls_cc
+   open(w_rs_ccsele_pop)
+	ls_cc = message.stringparm
+	if ls_cc<>'' and not  isnull(ls_cc) then
+		this.object.post_cc_code[row]=ls_cc
+	end if			
+	this.accepttext()
+	iu_toolbar.of_set
+|
+enabled("保存",true)
+end if
+end event
+
+type rb_duty from radiobutton within w_rs_code_edit
+integer x = 197
+integer y = 304
+integer width = 402
+integer height = 60
+boolean bringtotop = true
+integer textsize = -9
+integer weight = 400
+fontchars
+|
+et fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "宋体"
+long backcolor = 67108864
+string text = "职务设置"
+boolean checked = true
+end type
+
+event clicked;tab_1.tabpage_1.dw_list.TriggerEvent("p
+|
+fc_retrieve")
+end event
+
+type rb_majortype from radiobutton within w_rs_code_edit
+integer x = 201
+integer y = 784
+integer width = 402
+integer height = 60
+boolean bringtotop = true
+integer textsize = -9
+integer weight = 400
+fontcharset fontc
+|
+harset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "宋体"
+long backcolor = 67108864
+string text = "专业类别"
+end type
+
+event clicked;tab_1.tabpage_1.dw_list.TriggerEvent("pfc_retrieve")
+end event
+
+type
+|
+ rb_major from radiobutton within w_rs_code_edit
+integer x = 197
+integer y = 868
+integer width = 402
+integer height = 60
+boolean bringtotop = true
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = ansi!
+fontpitch fontpitch 
+|
+= variable!
+fontfamily fontfamily = swiss!
+string facename = "宋体"
+long backcolor = 67108864
+string text = "专业设置"
+end type
+
+event clicked;tab_1.tabpage_1.dw_list.TriggerEvent("pfc_retrieve")
+end event
+
+type rb_province from radiobutton within
+|
+ w_rs_code_edit
+integer x = 197
+integer y = 952
+integer width = 402
+integer height = 60
+boolean bringtotop = true
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamil
+|
+y = swiss!
+string facename = "宋体"
+long backcolor = 67108864
+string text = "省份设置"
+end type
+
+event clicked;tab_1.tabpage_1.dw_list.TriggerEvent("pfc_retrieve")
+end event
+
+type rb_nation from radiobutton within w_rs_code_edit
+integer x = 197
+i
+|
+nteger y = 1036
+integer width = 402
+integer height = 60
+boolean bringtotop = true
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "宋体"
+|
+
+long backcolor = 67108864
+string text = "民族设置"
+end type
+
+event clicked;tab_1.tabpage_1.dw_list.TriggerEvent("pfc_retrieve")
+end event
+
+type rb_level from radiobutton within w_rs_code_edit
+integer x = 197
+integer y = 1120
+integer width = 40
+一|
+2
+integer height = 60
+boolean bringtotop = true
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "宋体"
+long backcolor = 67108864
+string
+倀|
+ text = "学历设置"
+end type
+
+event clicked;tab_1.tabpage_1.dw_list.TriggerEvent("pfc_retrieve")
+end event
+
+type rb_post from radiobutton within w_rs_code_edit
+integer x = 197
+integer y = 376
+integer width = 402
+integer height = 60
+boolean bring
+刀|
+totop = true
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "宋体"
+long backcolor = 67108864
+string text = "岗位设置"
+end type
+
+event cli
+吀|
+cked;tab_1.tabpage_1.dw_list.TriggerEvent("pfc_retrieve")
+end event
+
+type rb_sal from radiobutton within w_rs_code_edit
+integer x = 197
+integer y = 608
+integer width = 402
+integer height = 60
+boolean bringtotop = true
+integer textsize = -9
+i
+嘀|
+nteger weight = 400
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "宋体"
+long backcolor = 67108864
+string text = "薪酬类别"
+end type
+
+event clicked;tab_1.tabpage_1.dw_list.TriggerEv
+堀|
+ent("pfc_retrieve")
+end event
+
+type rb_saltype from radiobutton within w_rs_code_edit
+integer x = 197
+integer y = 1204
+integer width = 402
+integer height = 60
+boolean bringtotop = true
+integer textsize = -9
+integer weight = 400
+fontcharset 
+娀|
+fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "宋体"
+long backcolor = 67108864
+string text = "计薪方式"
+end type
+
+event clicked;tab_1.tabpage_1.dw_list.TriggerEvent("pfc_retrieve")
+end event
+
+尀|
+
+type rb_age from radiobutton within w_rs_code_edit
+integer x = 197
+integer y = 1288
+integer width = 402
+integer height = 60
+boolean bringtotop = true
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = ansi!
+fontpitch fontpi
+帀|
+tch = variable!
+fontfamily fontfamily = swiss!
+string facename = "宋体"
+long backcolor = 67108864
+string text = "年龄段设置"
+end type
+
+event clicked;tab_1.tabpage_1.dw_list.TriggerEvent("pfc_retrieve")
+end event
+
+type rb_cmp from radiobutton within
+怀|
+ w_rs_code_edit
+integer x = 197
+integer y = 1372
+integer width = 402
+integer height = 60
+boolean bringtotop = true
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfami
+戀|
+ly = swiss!
+string facename = "宋体"
+long backcolor = 67108864
+string text = "工龄段设置"
+end type
+
+event clicked;tab_1.tabpage_1.dw_list.TriggerEvent("pfc_retrieve")
+end event
+
+type rb_emptype from radiobutton within w_rs_code_edit
+integer x = 197
+搀|
+
+integer y = 452
+integer width = 402
+integer height = 60
+boolean bringtotop = true
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "宋
+昀|
+体"
+long backcolor = 67108864
+string text = "人员类别"
+end type
+
+event clicked;tab_1.tabpage_1.dw_list.TriggerEvent("pfc_retrieve")
+end event
+
+type rb_zc from radiobutton within w_rs_code_edit
+integer x = 197
+integer y = 696
+integer width = 402
+栀|
+
+integer height = 60
+boolean bringtotop = true
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "宋体"
+long backcolor = 67108864
+string t
+樀|
+ext = "职称设置"
+end type
+
+event clicked;tab_1.tabpage_1.dw_list.TriggerEvent("pfc_retrieve")
+end event
+
+type rb_emprctype from radiobutton within w_rs_code_edit
+integer x = 197
+integer y = 524
+integer width = 402
+integer height = 60
+boolean br
+氀|
+ingtotop = true
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "宋体"
+long backcolor = 67108864
+string text = "人才队伍"
+end type
+
+event 
+渀|
+clicked;tab_1.tabpage_1.dw_list.TriggerEvent("pfc_retrieve")
+end event
+
+type gb_1 from u_gb within w_rs_code_edit
+integer x = 23
+integer y = 160
+integer width = 759
+integer height = 1628
+integer taborder = 11
+string text = "设定内容"
+end type
+
+爀|
+_id
+Integer li_leakq //离职日是否考勤  0=不考勤且无薪资   1=
+考勤有薪
+String ls_site
+String ls_message
+uf_user_site(ls_site)
+SELECT sys_emp_leakq  Into :li_leakq  From hr_sys_mstr Where sys_site = :ls_site;
+IF li_leakq = 0 THEN //不考勤时离职日往前推一天
+	IF ad_leadate = ad
+琀|
+_indate THEN
+		RETURN 'NO'
+	ELSE
+		ad_leadate = RelativeDate(ad_leadate,-1)
+		ad_staydate = RelativeDate(ad_staydate,-1)
+	END IF
+END IF
+
+IF IsNull(ad_indate) THEN
+	RETURN '没有到职日!'
+END IF
+
+//在职人员:
+IF ai_status = 1 THEN
+	//当月之前到职
+	IF ad_i
+瘀|
+ndate < ad_beg THEN
+		//当月复职
+		IF ad_backdate > ad_beg And ad_backdate < ad_end And (ad_staydate <> ad_backdate Or (IsNull(ad_staydate))) THEN
+			ad_begdate = ad_backdate
+			ad_enddate = ad_end
+		ELSEIF ad_backdate > ad_end  THEN
+			IF ad_stayda
+砀|
+te > ad_beg And ad_beg < ad_end THEN
+				ad_begdate = ad_beg
+				ad_enddate = ad_staydate
+			ELSE
+				RETURN 'NO'
+			END IF
+			//没有复职或不在当月复职
+		ELSE
+			ad_begdate = ad_beg
+			ad_enddate = ad_end
+			of_emp_day(ad_now,ad_begdate,ad_enddate)
+		
+稀|
+END IF
+		//当月之后到职
+	ELSEIF ad_indate > ad_end THEN
+		//无月报
+		
+		RETURN 'NO'
+		//当月到职
+	ELSE
+		//当月复职
+		IF ad_backdate > ad_beg And ad_backdate < ad_end And ad_backdate >= ad_indate  THEN
+			ad_begdate = ad_backdate
+			ad_enddate = ad_end
+			
+簀|
+//没有复职或不在当月复职
+		ELSE
+			ad_begdate = ad_indate
+			ad_enddate = ad_end
+		END IF
+	END IF
+	IF ad_staydate > ad_beg And ad_staydate < ad_end And ad_backdate > ad_beg  And ad_backdate < ad_end And ad_staydate <> ad_backdate THEN
+		RETURN '系统不支持当月报停职
+縀|
+又当月复职'
+	END IF
+	//停职人员:
+ELSEIF ai_status = 2 THEN
+	//判断停职日
+	IF IsNull(ad_staydate) THEN
+		RETURN '停职人员没有停职日'
+	END IF
+	//当月之前停职 (停职日不用上班)
+	IF ad_staydate < ad_beg THEN
+		RETURN 'NO'
+		//本月之后停职
+	ELSEIF ad_staydate > ad_end THEN
+		//本月之前到职
+
+耀|
+		IF ad_indate < ad_beg THEN
+			ad_begdate = ad_beg
+			ad_enddate = ad_end
+			//本月到职
+		ELSEIF ad_indate <= ad_end THEN
+			ad_begdate = ad_indate
+			ad_enddate = ad_end
+			//本月之后到职
+		ELSE
+			//无月报
+			RETURN 'NO'
+		END IF
+		//本月停职
+	ELSE
+		
+舀|
+//本月之前到职
+		IF ad_indate < ad_beg THEN
+			ad_begdate = ad_beg
+			ad_enddate = ad_staydate
+			//本月到职
+		ELSEIF ad_indate <= ad_end And ad_indate < ad_staydate THEN
+			ad_begdate = ad_indate
+			ad_enddate = ad_staydate
+			//本月之后到职
+		ELSE
+			//无月
+萀|
+报
+			RETURN '停职人员的停职日小于到职日!'
+		END IF
+	END IF
+	//离职人员:
+ELSEIF ai_status = 3 THEN
+	//判断离职日
+	IF IsNull(ad_leadate) THEN
+		RETURN '离职人员没有离职日!'
+	END IF
+	//本月之前离职
+	IF ad_leadate < ad_beg THEN
+		RETURN 'NO'
+		//本月之后离职
+	ELSEIF ad_leadate > ad_e
+蘀|
+nd THEN
+		//无复职
+		IF IsNull(ad_backdate) Or ad_backdate < ad_beg THEN
+			If (IsNull(ad_backdate)) And (ad_staydate < ad_beg) And (Not IsNull(ad_leadate)) THEN
+				RETURN 'NO'
+			END IF
+			//停职后复职过后又停职但之后未复职就直接离职人员
+			IF  ad_backdate < ad_stayda
+蠀|
+te And ad_staydate < ad_beg THEN
+				RETURN 'NO'
+			END IF
+			
+			//本月之前到职
+			IF ad_indate <= ad_beg THEN
+				ad_begdate = ad_beg
+				ad_enddate = ad_end
+				IF ad_staydate >= ad_beg And  ad_staydate <= ad_end THEN
+					ad_enddate = ad_stayda
+言|
+te
+				END IF
+				//本月之后到职
+			ELSEIF ad_indate > ad_end THEN
+				RETURN 'NO'
+			ELSE
+				ad_begdate = ad_indate
+				ad_enddate = ad_end
+			END IF
+			//本月之后复职
+		ELSEIF ad_backdate > ad_end THEN
+			RETURN 'NO'
+			//本月复职
+		ELSEIF ad_backdate
+頀|
+ >= ad_beg And ad_backdate <= ad_end THEN
+			ad_begdate = ad_backdate
+			ad_enddate = ad_end
+		END IF
+		//本月离职
+	ELSE
+		//无复职
+		IF IsNull(ad_backdate) Or ad_backdate < ad_beg THEN
+			IF IsNull(ad_backdate) And (ad_staydate < ad_beg) And (Not Is
+踀|
+用于控制在锁定人事资料时
+是否新增或修改或删除控制global type uf_getlock from function_object
+end type
+
+forward prototypes
+global function integer uf_getlock (string as_name)
+end prototypes
+
+global function integer uf_getlock (string as_name);//========================
+退|
+============================================
+// 函  数: uf_getlock()
+//--------------------------------------------------------------------
+// 说  明: 当人事资料锁定时
+是否可以新增
+修改
+删除人事异动记录
+奖惩
+//         记录
+转正记录等
+
+//---------------------------------------------
+鈀|
+-----------------------
+// 参  数: 
+//		value	string	as_name	add 新增 del 删除 mod 修改
+//--------------------------------------------------------------------
+// 返回值: integer  1 控制  0 不控制
+//----------------------------------------------------------------
+鐀|
+----
+// 作  者: mamumu		日期: 2005.03.17
+//--------------------------------------------------------------------
+// 修改记录: 
+//	
+//====================================================================
+long li_rtn ,li_add,li_mod,li_del
+li_add = 1
+li_mo
+阀|
+d = 1
+li_del = 1
+CHOOSE CASE as_name
+	CASE 'add'
+		li_rtn = li_add		         
+	CASE 'mod'
+		li_rtn = li_mod          
+	CASE 'del'
+		li_rtn = li_del
+	CASE ELSE
+		return - 2                //没有对应系统参数
+END CHOOSE
+
+return li_rtn
+
+end functio
+
+n
+
+騀|
+Null(ad_leadate)) THEN
+				//停职后没有复职日而是直接离职时将结束日设为起始日
+				RETURN 'NO'
+			END IF
+			
+			//停职后复职过后又停职但之后未复职就直接离职人员
+			IF  ad_backdate < ad_staydate And ad_staydate < ad_beg THEN
+				RETURN 'NO'
+			END IF
+			
+			//本月之前到职
+			IF ad_indate <= ad_
+鰀|
+beg THEN
+				ad_begdate = ad_beg
+				ad_enddate = ad_leadate
+				IF ad_staydate >= ad_beg And  ad_staydate <= ad_end THEN
+					ad_enddate = ad_staydate
+				END IF
+				//本月之后到职
+			ELSEIF ad_indate > ad_end Or ad_indate > ad_leadate THEN
+				RET
+鸀|
+URN '离职人员入职日大于离职日'
+			ELSE
+				ad_begdate = ad_indate
+				ad_enddate = ad_leadate
+			END IF
+			//本月之后复职
+		ELSEIF ad_backdate > ad_end THEN
+			RETURN 'NO'
+			//本月复职
+		ELSEIF ad_backdate >= ad_beg And ad_backdate <= ad_end THEN
+			ad_begdate =
+|
+ ad_backdate
+			ad_enddate = ad_leadate
+		END IF
+	END IF
+	//无法处理的状态:
+ELSE
+	RETURN '人员状态错误!'
+END IF
+ls_message = of_emp_day(ad_now,ad_begdate,ad_enddate)
+RETURN ls_message
+
+//return 'OK'
+
+end function
+
+public subroutine of_update_wagemp 
+|
+(datetime adt_date, string as_beglevel, string as_endlevel, string as_begid, string as_endid);///////////////////////////////////////////////////////////////////////////////
+// Function:
+//      更新人事月报档中 h_wagemp_mstr_day
+// Argument:
+//      adt_
+|
+date  --- 年月
+// Return:
+//    
+// Author:
+//     cy_xu
+// Date:
+//     2004.08.26
+////////////////////////////////////////////////////////////////////////////////
+integer li_cost //成本中心取值 0=根据员工资料档 1=按部门
+ 
+ //更新入职日
+离职日
+考勤结束日等
+ UPDATE h_wage
+|
+mp_mstr_day  
+ SET  wagemp_name = emp_name, 
+      wagemp_indate=emp_in_date,
+		wagemp_leadate=emp_lea_date,
+		wagemp_kq_stadate=emp_kq_indate,
+		wagemp_kq_enddate=emp_kq_lea_date,
+		wagemp_cccode = h_emp_mstr.cc_code,   
+		wagemp_cclevel = cc_
+|
+level,
+		wagemp_ccdesc = cc_desc,
+		wagemp_ccdept= cc_dept,
+		wagemp_postid= h_emp_mstr.post_id,
+		wagemp_dutyid=h_emp_mstr.duty_id,
+		wagemp_trydate = h_emp_mstr.emp_from_date,
+		wagemp_duty_date=h_emp_mstr.emp_duty_date,
+		wagemp_sal=emp_sal,
+|
+
+		wagemp_sal_type=emp_sal_type,
+		wagemp_card=emp_card,
+		wagemp_sex=emp_sex,
+		wagemp_ccstate=cc_state,
+		wagemp_lea_xz=emp_lea_xz,
+		wagemp_backdate=emp_back_date,
+		wagemp_staydate=emp_stay_date,
+		wagemp_free=emp_free,
+		wagemp_emptype=e
+|
+mp_type
+ FROM h_wagemp_mstr_day,h_emp_mstr,cc_mstr   
+WHERE ( h_wagemp_mstr_day.wagemp_id = h_emp_mstr.emp_id ) 
+   AND  (h_emp_mstr.cc_code=cc_mstr.cc_code) and h_wagemp_mstr_day.wagemp_day=:adt_date and 
+	    cc_level >=:as_beglevel and cc_level
+|
+<=:as_endlevel and
+		 h_wagemp_mstr_day.wagemp_id>=:as_begid and h_wagemp_mstr_day.wagemp_id<=:as_endid;
+commit using sqlca;    
+	 
+//更新岗位名称
+update h_wagemp_mstr_day set wagemp_postdesc=post_desc from h_wagemp_mstr_day,h_postion where
+      wage
+|
+mp_day=:adt_date   and  wagemp_postid=post_id ;
+//更新职务名称	 
+update h_wagemp_mstr_day set wagemp_dutydesc=duty_desc from h_wagemp_mstr_day,h_duty where
+      wagemp_day=:adt_date   and  wagemp_dutyid=duty_id ;
+		
+//将空的职务任职时间更新为入职日		
+update h_wagem
+|
+p_mstr_day set wagemp_duty_date=wagemp_indate where wagemp_day=:adt_date and wagemp_duty_date is null ;
+commit using sqlca;
+
+//成本中心按部门
+UPDATE h_wagemp_mstr_day  set wagemp_cost = cc_mstr.cc_cost FROM h_wagemp_mstr_day,h_emp_mstr,cc_mstr 
+WHERE ( 
+|
+h_wagemp_mstr_day.wagemp_id = h_emp_mstr.emp_id ) AND  (h_emp_mstr.cc_code=cc_mstr.cc_code) 
+and wagemp_day=:adt_date and wagemp_type=0;
+//如人员档中有设置成本中心的,则以人员档中的成本中心做为优先级最高的
+UPDATE h_wagemp_mstr_day  set wagemp_cost =h_emp_mstr.emp_cost FROM h_wagem
+|
+p_mstr_day,h_emp_mstr
+WHERE ( h_wagemp_mstr_day.wagemp_id = h_emp_mstr.emp_id ) and wagemp_type=0 and wagemp_day=:adt_date and (emp_cost is not null) ;
+
+//更新统计单位
+UPDATE h_wagemp_mstr_day  set wagemp_stat_basic = cc_mstr.cc_stat_basic  FROM h_w
+|
+agemp_mstr_day,h_emp_mstr,cc_mstr 
+WHERE ( h_wagemp_mstr_day.wagemp_id = h_emp_mstr.emp_id ) AND  (h_emp_mstr.cc_code=cc_mstr.cc_code) and wagemp_day=:adt_date ;
+//如人员档中有设置统计单位的,则以人员档中的统计单位为优先级高的
+UPDATE h_wagemp_mstr_day  set wagemp_stat_basic =h_e
+|
+mp_mstr.emp_stat_basic FROM h_wagemp_mstr_day,h_emp_mstr
+WHERE ( h_wagemp_mstr_day.wagemp_id = h_emp_mstr.emp_id )  and wagemp_day=:adt_date and (emp_stat_basic is not null) ;
+commit using sqlca;
+
+update h_wagemp_mstr_day set wagemp_costdesc=cost_
+|
+name from h_wagemp_mstr_day,h_cost 
+where wagemp_day=:adt_date and wagemp_cost=cost_id ;
+
+UPDATE h_wagemp_mstr_day  set wagemp_stat_basic_desc=code_mstr.code_desc from h_wagemp_mstr_day,code_mstr
+where wagemp_day=:adt_date and wagemp_stat_basic=co
+|
+de_value and code_field='emp_group' ;
+
+update  h_wagemp_mstr_day set  wagemp_sal='%' where wagemp_day=:adt_date  and ( rtrim(wagemp_sal)='' or (wagemp_sal is null )) ;
+update h_emp_mstr set emp_sal='%' where rtrim(emp_sal)='' or ( emp_sal is null )
+|
+;
+
+commit using sqlca;
+end subroutine
+
+public subroutine of_emp_try (datetime adt_now, string as_empid);Long ll_row
+Int li_try
+datastore lds_try
+lds_try = Create datastore
+lds_try.DataObject = 'd_rs_emp_change_tryold'
+lds_try.SetTransObject(
+|
+sqlca)
+ll_row = lds_try.Retrieve(as_empid,Date(adt_now))
+DateTime ldt_zz,ldt_null
+SetNull(ldt_null)
+Int j,li_otry
+//注意
+转正日之后最好不要生成以前的日报
+转正了之后
+SELECT emp_try,emp_from_date
+	INTO :li_try,:ldt_zz
+	From h_emp_mstr Where emp_id = :as_empid;
+IF IsN
+|
+ull(ldt_zz)  THEN
+	IF ll_row > 0 THEN
+		FOR j = 1 To ll_row
+			li_otry = lds_try.Object.h_emh_hist_emh_otry[j]
+			IF  Not IsNull(li_otry) THEN
+				UPDATE h_wagemp_mstr_day Set wagemp_try = :li_otry Where wagemp_id = :as_empid And wagemp_day = :ad
+|
+t_now ;
+			ELSE
+				UPDATE h_wagemp_mstr_day Set wagemp_try = :li_try Where wagemp_id = :as_empid And wagemp_day = :adt_now ;
+			END IF
+			
+		NEXT
+		
+	ELSE
+		UPDATE h_wagemp_mstr_day Set wagemp_try = :li_try  Where wagemp_id = :as_empid And wa
+|
+gemp_day = :adt_now ;
+		
+	END IF
+ELSE
+	
+	IF adt_now < ldt_zz THEN
+		
+		//有转正日时生成在转正日之前的日报时任职状态一律改为新进试用
+所以最好是转正了不要生成以前的日报
+		
+		UPDATE h_wagemp_mstr_day Set wagemp_try = 0  Where wagemp_id = :as_empid And wagemp_day = :adt_now ;
+		
+		
+		
+	E
+|
+LSE
+		IF ll_row > 0 THEN
+			FOR j = 1 To ll_row
+				li_otry = lds_try.Object.h_emh_hist_emh_otry[j]
+				IF  Not IsNull(li_otry) THEN
+					UPDATE h_wagemp_mstr_day Set wagemp_try = :li_otry Where wagemp_id = :as_empid And wagemp_day = :adt_now ;
+
+|
+				ELSE
+					UPDATE h_wagemp_mstr_day Set wagemp_try = :li_try Where wagemp_id = :as_empid And wagemp_day = :adt_now ;
+				END IF
+				
+			NEXT
+			
+		ELSE
+			UPDATE h_wagemp_mstr_day Set wagemp_try = :li_try  Where wagemp_id = :as_empid And wag
+|
+emp_day = :adt_now ;
+			
+		END IF
+		
+	END IF
+	
+END IF
+
+COMMIT Using sqlca;
+
+end subroutine
+
+public function integer of_day (integer ai_type, datetime adt_now, ref date ld_beg, ref date ld_end);
+//---------根据传递的日期
+返回该年月的起始时间与最后
+|
+一天
+// Argument:
+//      as_month   月份
+//      ai_type    类型(0=取当月最后一天 1=根据考勤计算日取开始日与最后一天)
+//      ad_beg    返回的起始时间
+//      ad_end    返回的最后一天
+// Return:
+//     -1   ---  出现错误
+//      1   ---  日处理正常
+// Author:
+//     cy_xu 
+// Date:
+//     
+|
+2003.10.13
+////////////////////////////////////////////////////////////////////////////////
+string as_month
+integer li_options,li_opticount
+datetime ldt_temp 
+string ls_site
+//select top 1 left(convert(char(8),:adt_now,112),6) 
+//into :as_month
+|
+
+//from h_emp_mstr;
+as_month = string(adt_now,'yyyymm')
+if ai_type=0 then
+	 ld_beg =date(mid(as_month,1,4) +'/' + mid(as_month,5,2) + '/01')
+	 ld_end = relativedate(date(mid(string(relativedate(date(mid(as_month,1,4) +'/' + mid(as_month,5,2) + '/
+|
+15'),+30),'yyyy/mm/dd'),1,8) + '01'),-1)
+elseif ai_type=1 then
+	uf_user_site(ls_site)
+	SELECT hr_sys_mstr.sys_emp_kqdate INTO :li_options  FROM hr_sys_mstr where sys_site=:ls_site ;
+	if li_options=31 then  //月底31为结束日
+		ld_beg =date(mid(as_month,1
+|
+,4) +'/' + mid(as_month,5,2) + '/01')
+		ld_end = relativedate(date(mid(string(relativedate(date(mid(as_month,1,4) +'/' + mid(as_month,5,2) + '/15'),+30),'yyyy/mm/dd'),1,8) + '01'),-1)
+	else
+		ld_end = date(mid(as_month,1,4) +'/' + mid(as_month,5,2)
+|
+ + '/'+string(li_options,'00'))
+		ldt_temp=datetime(ld_end,time('00:00:00'))
+		//取上月开始日期
+		select dateadd(month,-1,:ldt_temp) into :ldt_temp from hr_sys_mstr ;
+		select dateadd(day,1,:ldt_temp) into :ldt_temp from hr_sys_mstr;
+		ld_beg=date(ldt_t
+|
+emp)
+	end if
+end if
+
+return 1
+end function
+
+public function integer of_create (string as_beglevel, string as_endlevel, date ad_begdate, date ad_enddate, string as_begid, string as_endid);//cicarli modified 2009/4/1
+Integer   li_rc //控制器
+Lon
+|
+g   i,j,k,h //通用临时变量
+Integer   li_rownumber //员工记录数
+Integer   li_day //要处理日报的起始日期和结束日期之间的间隔天数
+Int li_lea_xz,li_free
+Integer   li_ok //正常或异常的日报 0-正常
+1-异常
+String    ls_empid,ls_ic
+DateTime  ldt_now //当前正在处理的日期
+String ls_errid,ls_ccdesc
+DateTime 
+|
+ldt_lea,ldt_indate,ldt_kq_indate,ldt_kq_leadate //员工离职日,员工入职日,考勤开始日,考勤结束日
+String ls_error
+Integer li_lock //是否锁定 0=开放 1=锁定
+DateTime ldt_today
+DateTime ldt_back_date,ldt_stay_date
+Integer li_state
+Date date1,date2
+String ls_rtn,ls_flag
+Long ll_
+|
+count,ll_flag
+String ls_oduty,ls_opost,ls_ncc,ls_occ,ls_dutydesc,ls_postdesc
+Long ll_num
+Int li_state_day,li_try,li_otry
+Date in_date,lea_date,back_date,stop_date,beg1,end1
+Date ld_indate,ld_leadate,ld_backdate,ld_stopdate,ld_beg1,ld_end1
+ldt_to
+|
+day = uf_get_datetime()
+IF of_rserr_test(ad_begdate,ad_enddate) = -1 THEN RETURN -1
+datastore lds_emp
+lds_emp = Create datastore
+lds_emp.DataObject = 'd_xz_rsday_list'
+lds_emp.SetTransObject(sqlca)
+datastore ds_1
+ds_1 = Create datastore
+ds_1.D
+|
+ataObject = 'd_xz_wagemp_baschang_oldcc'
+ds_1.SetTransObject(sqlca)
+
+IF IsNull(as_beglevel) Or IsNull(as_endlevel) Or &
+	IsNull(ad_begdate)  Or IsNull(ad_enddate)  Or &
+	IsNull(as_begid)    Or IsNull(as_endid) THEN
+	RETURN -1
+END IF
+li_day = D
+|
+aysAfter(ad_begdate,ad_enddate)
+IF li_day < 0 THEN
+	RETURN -1
+END IF
+DELETE FROM h_wagemp_mstr_day
+	WHERE ( h_wagemp_mstr_day.wagemp_day >= :ad_begdate AND
+	h_wagemp_mstr_day.wagemp_day <= :ad_enddate) AND ( h_wagemp_mstr_day.wagemp_type = 0 ) A
+|
+ND
+	wagemp_cclevel >= :as_beglevel And wagemp_cclevel <= :as_endlevel And wagemp_id >= :as_begid And wagemp_id <= :as_endid;
+IF sqlca.SQLCode <> 0 THEN
+	MessageBox('提示信息','删除原有人事日报数据错误!')
+	RETURN -1
+ELSE
+	COMMIT Using sqlca;
+END IF
+FOR i = 0 T
+|
+o li_day
+	ldt_now = DateTime(RelativeDate(ad_begdate,i))
+	IF of_day(1,ldt_now,date1,date2) = -1 THEN RETURN -1
+	li_rownumber = lds_emp.Retrieve(Trim(as_beglevel),Trim(as_endlevel),Trim(as_begid),Trim(as_endid))
+	
+	IF li_rownumber = -1  THEN
+		RE
+|
+TURN -1
+	ELSEIF li_rownumber = 0 THEN
+		CONTINUE
+	END IF
+	uf_pgbarxp_open('人事日报生成中:'+String(ldt_now,'yyyy/mm/dd'),li_rownumber)
+	FOR j = 1 To li_rownumber
+		uf_pgbarxp_set(j)
+		SetNull(ldt_kq_leadate)
+		SetNull(lea_date)
+		ls_empid = lds_emp.
+|
+Object.h_emp_mstr_emp_id[j] //工号
+		in_date = Date(lds_emp.Object.h_emp_mstr_emp_in_date[j]) //进厂日期
+		lea_date = Date(lds_emp.Object.h_emp_mstr_emp_lea_date[j]) //离厂日期
+		stop_date = Date(lds_emp.Object.h_emp_mstr_emp_stay_date[j]) //停职日期
+		back_dat
+|
+e = Date(lds_emp.Object.h_emp_mstr_emp_back_date[j]) //复职日期
+		li_state =  lds_emp.Object.h_emp_mstr_emp_state[j] //人员状态
+		li_lea_xz = lds_emp.Object.h_emp_mstr_emp_lea_xz[j]
+		ldt_kq_leadate = lds_emp.Object.h_emp_mstr_emp_kq_lea_date[j] //考勤结束日
+	
+|
+	li_free = lds_emp.Object.h_emp_mstr_emp_free[j] //考勤方式
+		ldt_kq_indate = lds_emp.Object.h_emp_mstr_emp_kq_indate[j] //考勤开始日		
+		IF Date(ldt_kq_leadate) < date1 THEN CONTINUE //考勤结束日小于本月开始日退出
+		IF Not IsNull(ldt_kq_leadate) And (Date(ldt_kq_leadate
+|
+) < Date(lea_date) Or IsNull(lea_date)) THEN //有考勤结束日将考勤结束日作为离职日
+			lea_date = Date(ldt_kq_leadate)
+		END IF
+		IF lea_date < date1 THEN CONTINUE //离职日小于当月开始日是跳过 
+		IF Date(ldt_kq_indate) > in_date THEN in_date = Date(ldt_kq_indate) //考勤开始日大于入职日将入职
+|
+日设为考勤开始日
+		IF lea_date >= in_date THEN li_state = 3
+		
+		ls_rtn = of_emp_begend(li_state,date1,date2,in_date,lea_date,stop_date,back_date,beg1,end1,li_lea_xz,Date(ldt_now))
+		IF ls_rtn = "NO" THEN
+			CONTINUE
+		END IF
+		of_emp_in_lea(Date(ldt_n
+|
+ow),in_date,stop_date,lea_date,back_date,li_state_day)
+		INSERT Into h_wagemp_mstr_day (wagemp_type,wagemp_day,wagemp_id,wagemp_xzbeg_date,wagemp_xzend_date,sysuser,sysdate,wagemp_state) Values(0,:ldt_now,:ls_empid,:beg1,:end1,:gstr_userinfo.username
+|
+,:ldt_today,:li_state_day);
+		of_emp_try(ldt_now,ls_empid)
+	NEXT
+	COMMIT Using sqlca;
+	uf_pgbarxp_close()
+	of_update_wagemp(ldt_now,as_beglevel,as_endlevel,as_begid,as_endid)
+	ds_1.Retrieve('','zz',as_begid,as_endid,Date(ldt_now))
+	IF ds_1.RowC
+|
+ount() > 0 THEN
+		uf_pgbarxp_open('数据处理中',ds_1.RowCount())
+		FOR k = 1 To ds_1.RowCount()
+			uf_pgbarxp_set(k)
+			ls_occ = ds_1.Object.h_emh_hist_emh_occ[k]
+			ls_empid = ds_1.Object.h_emh_hist_emp_id[k]
+			ls_oduty = ds_1.Object.h_emh_hist_emh_
+}
+oduty[k]
+			ls_opost = ds_1.Object.h_emh_hist_emh_opost[k]
+			ls_ncc = ds_1.Object.h_emh_hist_emh_ncc[k]
+			li_otry = ds_1.Object.h_emh_hist_emh_otry[k]
+			IF Trim(ls_occ) <> Trim(ls_ncc) And Trim(ls_occ) <> '' And (Not IsNull(ls_occ)) THEN //部门无异
+}
+动时
+				SELECT count(wagemp_id) Into :ll_flag From h_wagemp_mstr_day Where wagemp_id = :ls_empid And wagemp_day = :ldt_now ;
+				IF ll_flag <= 0 THEN
+					in_date = Date(ds_1.Object.h_emp_mstr_emp_in_date[k]) //进厂日期
+					lea_date = Date(ds_1.Object
+}
+.h_emp_mstr_emp_lea_date[k]) //离厂日期
+					stop_date = Date(ds_1.Object.h_emp_mstr_emp_stay_date[k]) //停职日期
+					back_date = Date(ds_1.Object.h_emp_mstr_emp_back_date[k]) //复职日期
+					li_state =  ds_1.Object.h_emp_mstr_emp_state[k] //人员状态
+					li_lea
+}
+_xz = ds_1.Object.h_emp_mstr_emp_lea_xz[k]
+					ldt_kq_leadate = ds_1.Object.h_emp_mstr_emp_kq_lea_date[k] //考勤结束日
+					li_free = ds_1.Object.h_emp_mstr_emp_free[k] //考勤方式

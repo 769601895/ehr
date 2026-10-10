@@ -153,7 +153,7 @@ src/
 | `BX` | INM 保险管理 | `flow_bx` |
 | `HM` | HOM 公积金管理 | `flow_house` |
 | `ETM` | TRM 培训管理 | `flow_etm` |
-| `KPI` | KPI 考核管理 | `flow_kh` |
+| `KPI` | KPI 考核管理 | `w_rs_check_query`（库实测；非 `flow_kh`） |
 | `WAM` | POM 编制管理 | `flow_bz` |
 | `zp` | REM 招聘管理 | `flow_zp` |
 | `PRM` | PRM 计件管理 | `flow_pr` |

@@ -50,3 +50,5 @@ node_modules/
 /App/pnpm-lock.yaml
 /EHR/NHR.NClient
 /NHR.NClient
+/hr12
+/yuenan

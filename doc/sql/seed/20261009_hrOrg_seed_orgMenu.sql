@@ -7,6 +7,9 @@
  * 影响库：ehr（主库 SysMenu）
  * 是否幂等：是（IF NOT EXISTS 包裹，可重复执行不报错）
  *
+ * [DEPRECATED] 2026-10-10 已移除该菜单，请勿再执行本脚本。
+ *              移除脚本：doc/sql/seed/20261010_hrOrg_delete_orgMenu.sql
+ *
  * 说明：
  *   1. SysMenu 继承 EntityBase，无 TenantId 列，无需处理租户。
  *   2. MenuTypeEnum：Dir=1、Menu=2、Button=3 -> 子菜单 Type=2。

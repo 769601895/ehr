@@ -1,0 +1,4124 @@
+﻿global type w_deptmanger from w_module_hr
+integer width = 3867
+integer height = 1692
+end type
+global w_deptmanger w_deptmanger
+
+type variables
+int li_deptchange          //组织是否有增改动作 
+end variables
+
+on w_deptmanger.create
+int 
+砀
+iCurrent
+call super::create
+end on
+
+on w_deptmanger.destroy
+call super::destroy
+end on
+
+event sbo_ue_postopen;call super::sbo_ue_postopen; event ue_setobjectview( tab_1.tabpage_3.dw_3,'')
+this.inv_resize.of_register(tab_1.tabpage_3.dw_3,"scal
+稀
+etoright&bottom")//FixedToRight&ScaleToBottom
+ event ue_setobjectview( tab_1.tabpage_2.dw_2,'')
+this.inv_resize.of_register(tab_1.tabpage_2.dw_2,"scaletoright&bottom")//FixedToRight&ScaleToBottom
+
+end event
+
+type uo_titlebar from w_module_hr`uo_
+簀
+titlebar within w_deptmanger
+end type
+
+type sp_1 from w_module_hr`sp_1 within w_deptmanger
+end type
+
+type dw_toolbar from w_module_hr`dw_toolbar within w_deptmanger
+end type
+
+type p_selected from w_module_hr`p_selected within w_deptmanger
+en
+縀
+d type
+
+type tab_1 from w_module_hr`tab_1 within w_deptmanger
+integer x = 901
+integer width = 2935
+integer height = 1460
+tabpage_2 tabpage_2
+tabpage_3 tabpage_3
+tabpage_4 tabpage_4
+tabpage_5 tabpage_5
+end type
+
+on tab_1.create
+this.tabpag
+耀
+e_2=create tabpage_2
+this.tabpage_3=create tabpage_3
+this.tabpage_4=create tabpage_4
+this.tabpage_5=create tabpage_5
+int iCurrent
+call super::create
+iCurrent=UpperBound(this.Control)
+this.Control[iCurrent+1]=this.tabpage_2
+this.Control[iCurren
+舀
+t+2]=this.tabpage_3
+this.Control[iCurrent+3]=this.tabpage_4
+this.Control[iCurrent+4]=this.tabpage_5
+end on
+
+on tab_1.destroy
+call super::destroy
+destroy(this.tabpage_2)
+destroy(this.tabpage_3)
+destroy(this.tabpage_4)
+destroy(this.tabpage_5)
+萀
+
+end on
+
+type tabpage_1 from w_module_hr`tabpage_1 within tab_1
+integer y = 112
+integer width = 2898
+integer height = 1332
+string text = "部门维护"
+string picturename = "res\edit.ico"
+end type
+
+type dw_1 from w_module_hr`dw_1 within tabpage_1
+i
+蘀
+nteger x = 0
+integer y = 0
+integer width = 2875
+integer height = 1240
+string dataobject = "d_deptmanager"
+boolean ib_refreshauto = true
+end type
+
+event dw_1::sbo_ue_refresh;  
+ f_myretrieve(this," cc_mstr.cc_level like '"+is_level+"%' and len
+蠀
+(cc_mstr.cc_level)="  + string(len(is_level)+2) +" and cc_enable =0 " )
+ 
+end event
+
+event dw_1::sbo_ue_addrow;Long ll_row
+Long ll_cc_code //部门代码
+String ls_cc_code ////部门代码
+String ls_deptlevel //部门层级
+两位为1级 
+String ls_leveladd //新部门
+//ll_row=t
+言
+his.getrow() 
+//if ll_row <1 then return 1 
+
+Select count(1) Into :ll_row   From v_usercc Where  guserID = 1 And cclevel = :is_level;
+If IsNull(ll_row) Then ll_row = 0
+If ll_row = 0 Then
+	ms("无该部门管辖权限
+不能新增")
+	Return 1
+End If
+
+This.Object.D
+谀
+ataWindow.Readonly = False //设置默认可修改状态 
+ll_row = This.InsertRow(0)
+This.ScrollToRow( ll_row)
+This.SetRow( ll_row)
+This.SetFocus()
+This.SetColumn( 1)
+
+Select Max(cc_code) Into :ls_cc_code From cc_mstr;
+If IsNull(ls_cc_code) Or ls_cc_code = '' T
+hen
+	ls_cc_code = '0000000001'
+Else
+	ls_cc_code = String(Long(ls_cc_code) + 1  ,'0000000000')
+End If
+//部门赋值
+This.Object.cc_code[ll_row] = ls_cc_code
+Select Max(cc_level) Into :ls_deptlevel    From cc_mstr Where cc_level Like :is_level+'%' And  
+退
+release 12.5;
+datawindow(units=0 timer_interval=0 color=1073741824 brushmode=0 transparency=0 gradient.angle=0 gradient.color=8421504 gradient.focus=0 gradient.repetition.count=0 gradient.repetition.length=100 gradient.repetition.mode=0 gradient.scal
+e=100 gradient.spread=100 gradient.transparency=0 picture.blur=0 picture.clip.bottom=0 picture.clip.left=0 picture.clip.right=0 picture.clip.top=0 picture.mode=0 picture.scale.x=100 picture.scale.y=100 picture.transparency=0 processing=1 HTMLDW=no pri
+鐀
+global type uf_getnew_level from function_object
+end type
+
+forward prototypes
+global function string uf_getnew_level (string as_level)
+end prototypes
+
+global function string uf_getnew_level (string as_level); 
+ string ls_end  
+string ls_char1
+阀
+,ls_char2
+string ls_levelpre
+string ls_levelback 
+ls_levelback= as_level
+ls_levelpre =mid(ls_levelback,1,Len(ls_levelback)-2 ) 
+as_level = right(ls_levelback,2)
+ls_char1 = mid(as_level,1,1) 
+ls_char2 =  mid(as_level,2,1) 
+
+if as_level='99' th
+頀
+en //99级次时处理
+	ls_char1='A'
+	ls_char2='0'
+	ls_end =ls_char1 + ls_char2 
+elseif ls_char1 >'9' then //大于99级处理
+		if ls_char2 ='9' then 
+			ls_char2='A'
+		ELSEif ls_char2<'9' then 
+			ls_char2=string(integer(ls_char2) + 1)  
+		elseif ls_char2='Z' 
+騀
+then 
+			ls_char1=char(asc(ls_char1)+1 )
+			ls_char2='0'
+			if ls_char1 >'Z' then 
+//				messagebox('','获取资料错误')
+				return 'err'
+			end if 
+		elseif ls_char2 ='9' then 
+			ls_char2='A'
+		else
+			IF ls_char2<'9' THEN 
+				ls_char2=string((a
+舀	
+sc(ls_char2)+1 ))
+			ELSE
+				ls_char2=char(asc(ls_char2)+1 )
+			END IF 
+		end if 
+		  	
+	ls_end =ls_char1 + ls_char2 
+		 
+else
+		ls_end = string(integer(as_level) + 1 ,'00')
+end if 
+ls_end = ls_levelpre +ls_end
+return ls_end 
+end functio
+鸀
+蹈忑
+敕
+0
+#
+老
+P
+d
+f老
+j
+       
+uf_getnew_level
+function_object
+structure
+mailrecipient
+environment
+mailfiledescription
+mailmessage
+syncparm
+datawindowchild
+listviewitem
+tree
+viewitem
+connectioninfo
+powerobject
+2
+       
+B
+       
+as_level
+uf_getnew_level
+"
+       
+SS
+
+x
+       
+function_object
+uf_getnew_level
+structure
+mailrecipient
+environment
+mailfiledescription
+mailmessage
+syncparm
+datawindowc
+hild
+listviewitem
+treeviewitem
+connectioninfo
+powerobject
+0
+P
+d
+	
+
+       
+老
+耀
+ 
+4
+4
+\
+4
+4
+4
+4
+4
+;
+;
+;
+}
+;
+;
+;
+;
+4
+?
+U
+;"
+5
+E
+V
+;
+;"
+;&
+;
+;
+;
+5
+E
+V
+5
+E
+V
+}
+4
+?
+U;.
+}
+D	h
+
+ 
+!
+"
+&
+(
+)
++
+,
+-
+d
+   
+    
+as_level
+ls_end
+ls_char1
+ls_char2
+ls_levelpre
+ls_levelback
+x
+"
+0
+B
+T
+l
+4
+       
+99
+A
+0
+9
+Z
+err
+00
+老
+2
+0
+       
+uf_getnew_level
+2
+       
+"
+老
+nt.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no pr
+int.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.background=no print.preview.background=no print.preview.outline=yes hidegrayline=no showbackcoloronxp=no picture.file="" grid.lines=0 )
+header
+(height=72 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode="0" gradient.repetition.mode="0" gradient.repetition.count="0" gradient.repetition.length="100" gradient.focus="0" gradient.s
+cale="100" gradient.spread="100" )
+summary(height=76 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode="0" gradient.repetition.mode="0" gradient.repetition.count="0" gradient.repetition
+.length="100" gradient.focus="0" gradient.scale="100" gradient.spread="100" )
+footer(height=0 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode="0" gradient.repetition.mode="0" gradient
+.repetition.count="0" gradient.repetition.length="100" gradient.focus="0" gradient.scale="100" gradient.spread="100" )
+detail(height=84 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode
+="0" gradient.repetition.mode="0" gradient.repetition.count="0" gradient.repetition.length="100" gradient.focus="0" gradient.scale="100" gradient.spread="100" )
+table(column=(type=decimal(0) updatewhereclause=yes name=id dbname="cc_mstr.id" )
+ colum
+n=(type=char(50) update=yes updatewhereclause=yes name=cc_code dbname="cc_mstr.cc_code" )
+ column=(type=char(250) update=yes updatewhereclause=yes name=cc_desc dbname="cc_mstr.cc_desc" )
+ column=(type=char(150) update=yes updatewhereclause=yes name=
+Len(cc_level) = Len(:is_level)+2 ;
+If IsNull(ls_deptlevel) Then ls_deptlevel = ''
+ls_deptlevel = Mid(ls_deptlevel,Len(is_level)+1,Len(ls_deptlevel)) //取出后两位
+If ls_deptlevel = '' Then ls_deptlevel = '00'
+ls_deptlevel = uf_getnew_level(ls_deptlevel)
+
+ls_leveladd = is_level + ls_deptlevel
+
+//层级/排序赋值
+This.Object.cc_level[ll_row] = ls_leveladd
+This.Object.cc_sort[ll_row] = ls_leveladd
+This.Object.parentid[ll_row] = il_deptid
+This.Object.cc_mstr_dept_parentlevel[ll_row] = is_level
+//存在新增情况
+l
+i_deptchange = 1
+
+Return  1
+
+end event
+
+event dw_1::sbo_ue_deleterow;long ll_row 
+string ls_cc_code //当前部门level
+string ls_deptlevel //当前部门level
+long ll_subdeptcount //当前部门是否存在在用下级部门
+long ll_empcount     //当前部门及子部门是否存在在职员工
+ll_row = this.getr
+ow()
+if ll_row<1 then return 1
+ ls_deptlevel= this.object.cc_level[ll_row] 
+ 
+ select count(1)  into :ll_empcount from cc_mstr a ,h_emp_mstr b where a.cc_code =b.cc_code and empstate =0; 
+ select count(1) into :ll_subdeptcount from cc_mstr  where
+ cc_level like :ls_deptlevel +'%' and cc_enable=0 and cc_level<>:ls_deptlevel ;
+ if isnull(ll_empcount) then ll_empcount=0 
+ if isnull(ll_subdeptcount) then ll_subdeptcount = 0  
+ 
+ if ll_empcount>0 then 
+		messagebox(gl.ls('提示'),gl.ls('该部门下还有在职员
+工
+无法删除
+'))
+		return 1  
+end if 
+  if ll_subdeptcount>0 then 
+		if messagebox(gl.ls('提示'),gl.ls('该部门下还有使用中部门
+是否同步删除
+'),question!,yesno!,2)=2 then 
+			  return 1  
+		end if 
+end if 
+ 
+ datetime ldt_sydate
+ ldt_sydate = uf_getsysdatetime()
+ th
+is.object.cc_enable[ll_row]=1 
+ this.object.cc_dele_date[ll_row]=ldt_sydate
+ this.object.deleteuser[ll_row] =gstr_userinfo.username
+ this.object.cc_dele_remark[ll_row]='删除'
+ if this.update() =1 then 
+ 	if ll_subdeptcount>0 then 
+		update cc_mstr
+ set cc_enable =1,cc_dele_date=:ldt_sydate,deleteuser=:gstr_userinfo.username,cc_dele_remark='删除' where cc_level like :ls_deptlevel +'%' and cc_enable=0 ;
+	end if 
+	
+		 if sqlca.sqlcode= 0 then 
+			commit ;
+			messagebox(gl.ls('提示'),gl.ls('保存成功
+'
+))
+		else 
+			rollback ;
+			messagebox(gl.ls('提示'),gl.ls('保存失败
+')) 
+			 this.object.cc_enable[ll_row]=0 
+ 			return 1   
+		end if 
+else 
+	rollback ;
+		this.object.cc_enable[ll_row]=0 
+		messagebox(gl.ls('提示'),gl.ls('保存失败
+'))
+end if 
+ 
+ //
+cc_desc_en dbname="cc_mstr.cc_desc_en" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=cc_level dbname="cc_mstr.cc_level" )
+ column=(type=char(150) update=yes updatewhereclause=yes name=cc_sort dbname="cc_mstr.cc_sort" )
+ column=(typ
+e=char(50) update=yes updatewhereclause=yes name=dept_precode dbname="cc_mstr.dept_precode" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=dept_tel dbname="cc_mstr.dept_tel" )
+ column=(type=char(50) update=yes updatewhereclause=yes n
+ame=dept_fax dbname="cc_mstr.dept_fax" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=cc_sortnum dbname="cc_mstr.cc_sortnum" )
+ column=(type=char(150) update=yes updatewhereclause=yes name=dept_path dbname="cc_mstr.dept_path" )
+ col
+umn=(type=char(50) update=yes updatewhereclause=yes name=sysuser dbname="cc_mstr.sysuser" )
+ column=(type=datetime update=yes updatewhereclause=yes name=sysdate dbname="cc_mstr.sysdate" )
+ column=(type=char(150) update=yes updatewhereclause=yes name
+=cc_codeuser dbname="cc_mstr.cc_codeuser" )
+ column=(type=long update=yes updatewhereclause=yes name=cc_enable dbname="cc_mstr.cc_enable" )
+ column=(type=datetime updatewhereclause=yes name=cc_dele_date dbname="cc_mstr.cc_dele_date" )
+ column=(type
+=char(50) updatewhereclause=yes name=deleteuser dbname="cc_mstr.deleteuser" )
+ column=(type=char(120) updatewhereclause=yes name=cc_dele_remark dbname="cc_mstr.cc_dele_remark" )
+ retrieve="  SELECT cc_mstr.id,   
+		cc_mstr.cc_code,   
+         cc_
+数据窗口重新刷新 
+of_refresh()
+	if messagebox('提示','是否重构组织树  ',information!,yesno!,2)=1 then
+		tv_cc.TriggerEvent('ue_reset_tree_ids')
+		tv_cc.tv_main.Event ue_constror( ) 
+	end if
+ 
+
+end event
+
+event dw_1::itemchanged;call super::itemchanged;
+if r
+ow < 1 then return 1   
+this.object.sysdate[row] = uf_getsysdatetime()  
+this.object.sysuser[row] = gstr_userinfo.username
+end event
+
+event dw_1::sbo_ue_save;call super::sbo_ue_save;
+If li_deptchange = 1 Then
+	//针对在线用户重新刷新下管辖部门
+	uf_ini_usercc_
+online()
+	If MessageBox(gl.ls('提示'),gl.ls('是否重新构建组织树'),question!,yesno!) = 1 Then
+		tv_cc.TriggerEvent('ue_reset_tree_ids')
+		tv_cc.tv_main.Event ue_constror( )
+	End If
+	Return  1
+End If
+
+end event
+
+type tv_cc from w_module_hr`tv_cc within w
+_deptmanger
+boolean ib_loademp = false
+end type
+
+event tv_cc::ue_depttreeselectchaged;call super::ue_depttreeselectchaged;tab_1.tabpage_1.dw_1.triggerevent( 'ue_auto_refresh')  
+end event
+
+type tabpage_2 from userobject within tab_1
+integer x 
+= 18
+integer y = 112
+integer width = 2898
+integer height = 1332
+long backcolor = 67108864
+string text = "部门变更"
+long tabtextcolor = 33554432
+long tabbackcolor = 1073741824
+string picturename = "res\treeedit.ico"
+long picturemaskcolor = 5368709
+12
+dw_2 dw_2
+end type
+
+on tabpage_2.create
+this.dw_2=create dw_2
+this.Control[]={this.dw_2}
+end on
+
+on tabpage_2.destroy
+destroy(this.dw_2)
+end on
+
+type dw_2 from u_dw within tabpage_2
+integer width = 2857
+integer height = 1308
+integer
+ taborder = 30
+string dataobject = "d_department_group"
+end type
+
+event constructor;call super::constructor;if this.rowcount( )<1 then 
+	this.insertrow(0) 
+end if 
+end event
+
+event doubleclicked;call super::doubleclicked;
+string ls_departmen
+t 
+if dwo.name ='b_1' or dwo.name ='b_2' or dwo.name ='b_3' or dwo.name ='b_4'  then 
+	open(w_dept_select)
+	ls_department=message.stringparm 
+//	messagebox('',ls_department)
+ 
+ choose  case dwo.name 
+	case 'b_1'
+		this.object.a[row]=ls_departm
+ent
+	case 'b_2'
+		this.object.b[row]=ls_department
+	case 'b_3'
+		this.object.c[row]=ls_department
+	case 'b_4'
+		this.object.d[row]=ls_department
+end choose 		
+		
+		
+		
+		
+end if 
+end event
+
+event clicked;call super::clicked;if row <1 th
+en return  1  
+this.accepttext( )
+string ls_a,ls_b ,ls_c,ls_d
+string ls_level ,ls_newLevel 
+string ls_descold,ls_descnew 
+string ls_maxlevel//子集最大level 
+int i 
+string ls_deptall 
+long ll_parentid //父级部门内码
+datetime ldt_now 
+ldt_now = uf_getsy
+sdatetime()
+
+datastore lds_1,lds_to
+lds_1= create datastore 
+lds_1.dataobject='ds_depthistroy'
+lds_1.settransobject( sqlca)
+
+lds_to= create datastore 
+lds_to.dataobject='ds_depthistroy'
+lds_to.settransobject( sqlca)
+lds_to.reset() 
+
+ls_a
+=this.object.a[row] 
+ls_b =this.object.b[row] 
+ls_c=this.object.c[row] 
+ls_d=this.object.d[row] 
+if isnull(ls_a) then ls_a =''
+if isnull(ls_b) then ls_b=''
+if isnull(ls_c) then ls_c =''
+if isnull(ls_d) then ls_d =''
+if dwo.name ='b_5' then 
+	
+ if ls_a = ls_b and len(ls_a)>0 then 
+		  ms(f_translate("调动前后部门不能一样"))
+		  return 
+	end if 
+	
+	if ls_a='' or ls_b ='' then 
+		 ms(f_translate("调动前后部门不能为空"))
+		  return 
+	end if 
+	select cc_level,cc_desc into :ls_level,:ls_descold  from cc_ms
+tr where cc_code =:ls_a;
+	if isnull(ls_level) then ls_level='' 
+	
+	select rtrim(cc_level),cc_desc,id  into :ls_newLevel,:ls_descnew,:ll_parentid  from cc_mstr where cc_code =:ls_b;
+	if isnull(ls_newLevel) then ls_newLevel='' 
+ 	
+	 select max(cc_
+level)  into :ls_maxlevel  from cc_mstr where   cc_level like :ls_newLevel +'%' and 
+	        len(cc_level)=len(:ls_newLevel) +2; 
+	if isnull(ls_maxlevel) then ls_maxlevel =''
+	
+	if ls_maxlevel='' then 
+		ls_maxlevel=ls_newLevel+'01'
+	else
+		ls
+_maxlevel = uf_getnew_level(ls_maxlevel)  
+	end if   
+	 
+	lds_1.retrieve( ls_level)
+	lds_1.rowscopy( 1,lds_1.rowcount(), primary!, lds_to, 1, primary!)
+	
+	
+	string ls_cc_code
+	select max(cc_code) into :ls_cc_code from cc_mstr; 
+	if isnull(ls_
+8
+;
+=
+>
+A
+F
+       
+耀
+耂
+耊耋老
+耋
+耏耓耎
+耐耙耎
+耑耚耎
+耒耜耎
+耓耠耎
+耘耘老
+耙
+耣耣老
+耤
+耬耬老
+耭
+耮耷老
+耯
+耱耹老
+耲
+耳耻老
+耴
+耸聂老
+洉曄
+柽
+#,
+耂萁
+耂膉:
+脁X
+脁b
+脁x
+脁
+脁
+脁
+脁
+耂
+f
+耂
+.
+耂
+耂
+耂
+耲
+0
+       
+w_dept_select
+w_
+forward
+global type w_dept_select from w_base
+end type
+type uo_1 from uo_depttreeonly within w_dept_select
+end type
+type cb_1 from commandbutton within w_dept_select
+end type
+type cb_2 from commandbutton within w_dept_select
+end type
+end forw
+ard
+
+global type w_dept_select from w_base
+integer width = 919
+integer height = 1564
+boolean border = true
+windowtype windowtype = response!
+boolean center = true
+uo_1 uo_1
+cb_1 cb_1
+cb_2 cb_2
+end type
+global w_dept_select w_dept_select
+
+on w_dept_select.create
+int iCurrent
+call super::create
+this.uo_1=create uo_1
+this.cb_1=create cb_1
+this.cb_2=create cb_2
+iCurrent=UpperBound(this.Control)
+this.Control[iCurrent+1]=this.uo_1
+this.Control[iCurrent+2]=this.cb_1
+this.Control[iC
+言
+urrent+3]=this.cb_2
+end on
+
+on w_dept_select.destroy
+call super::destroy
+destroy(this.uo_1)
+destroy(this.cb_1)
+destroy(this.cb_2)
+end on
+
+type uo_titlebar from w_base`uo_titlebar within w_dept_select
+string tag = "选择....."
+integer width = 
+耹
+耻耓耺
+耼耘耺
+耽耟耺
+耾耣耺
+耿耤耺
+聀耥耺
+聁耦耺
+聂
+聎
+聏耒聍
+聐耓聍
+聑
+聓
+联
+聕
+聖
+聗
+老
+}
+W
+W1耊耂
+Q;
+0%耘耂
+E2
+H$耣耂
+C
+
+L!耬耂
+0!
+耮耂
+G4
+.)耱耯
+cc_code) or ls_cc_code='' then 
+		ls_cc_code='0000000001'
+	else
+		ls_cc_code=string(long(ls_cc_code) + 1  ,'0000000000')
+	end if 
+	if lds_1.rowcount( )>0 then 
+		for i =1 to lds_1.rowcount()
+//			   ls_cc_code=string(long(ls_cc_code) + i  ,'000
+0000000')
+//			   lds_1.object.cc_code[i] =ls_cc_code
+			   lds_1.object.deletedate[i]=ldt_now
+			   lds_1.object.deleteuser[i]=gstr_userinfo.username
+			   lds_1.object.dept_enable[i]=1
+			   lds_1.object.deleteremark[i] = '由' +ls_descold+'调动到' 
+base
+accessiblerole
+menu
+windowtype
+windowstate
+windowobject
+toolbaralignment
+windowanimationstyle
+userobjects
+borderstyle
+u_controlbar
+powerobject
+Untitled
+none
+耇
+鄘
+n_cst_resize
+datawindow
+AppIcon!
+耇
+uo_depttreeonly
+window
+datastore
+耇
+commandbutton
+fontcharset
+fontpitch
+fontfamily
+structure
+mailrecipient
+environment
+mailfiledescription
+mailmessage
+syncparm
+datawindowchild
+listviewitem
+treeviewitem
+connectioninfo
+耇
+选择.....
+耇
+耇
+Arial
+确定
+取消
+n_cst_msg
+message
+2
+,
+       
+w_dept_select
+耂
+^
+       
++create
++destroy
++constructor
++clicked
+       
+Q
+L
+
+x
+       
+_initsrc
+w_base
+w_dept_select
+acces
+siblerole
+menu
+windowtype
+windowstate
+windowobject
+toolbaralignment
+windowanimationstyle
+w_base`uo_titlebar
+uo_titlebar
+userobjects
+borderstyle
+u_controlbar
+u_controlbar`st_title
+u_controlbar`l2
+u_controlbar`l1
+u_controlbar`p_control
+u_controlbar`uo_c
+ontrolmenu
+powerobject
+n_cst_resize
+datawindow
+uo_depttreeonly
+uo_1
+uo_depttreeonly`ddlb_1
+uo_depttreeonly`uo_filter
+uo_depttreeonly`st_1
+uo_depttreeonly`rb_ccall
+uo_depttreeonly`rb_ccenable
+uo_depttreeonly`st_back
+uo_depttreeonly`tv_main
+window
+datas
++ls_descnew 
+		next  
+	end if  
+	
+	string ls_leveltmp
+	if lds_1.rowcount( )>0 then 
+		for i =1 to lds_to.rowcount()
+			     ls_cc_code=string(long(ls_cc_code) + i  ,'0000000000')
+				lds_to.object.oldcc_code[i] = lds_to.object.cc_code[i] 
+			
+     lds_to.object.cc_code[i] =ls_cc_code
+				ls_leveltmp= trim(lds_1.object.old_cc_level[i])
+			   lds_to.object.cc_level[i]= ls_maxlevel + mid(ls_leveltmp,len(ls_level)+1,len(ls_leveltmp))     
+				uf_add_string(ls_cc_code,ls_deptall)
+		next  
+
+release 12.5;
+datawindow(units=0 timer_interval=0 color=1073741824 brushmode=0 transparency=0 gradient.angle=0 gradient.color=8421504 gradient.focus=0 gradient.repetition.count=0 gradient.repetition.length=100 gradient.repetition.mode=0 gradient.scal
+e=100 gradient.spread=100 gradient.transparency=0 picture.blur=0 picture.clip.bottom=0 picture.clip.left=0 picture.clip.right=0 picture.clip.top=0 picture.mode=0 picture.scale.x=100 picture.scale.y=100 picture.transparency=0 processing=1 HTMLDW=no pri
+nt.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no pr
+int.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.background=no print.preview.background=no print.preview.outline=yes hidegrayline=no showbackcoloronxp=no picture.file="" grid.lines=0 )
+header
+(height=72 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode="0" gradient.repetition.mode="0" gradient.repetition.count="0" gradient.repetition.length="100" gradient.focus="0" gradient.s
+cale="100" gradient.spread="100" )
+summary(height=80 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode="0" gradient.repetition.mode="0" gradient.repetition.count="0" gradient.repetition
+.length="100" gradient.focus="0" gradient.scale="100" gradient.spread="100" )
+footer(height=0 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode="0" gradient.repetition.mode="0" gradient
+.repetition.count="0" gradient.repetition.length="100" gradient.focus="0" gradient.scale="100" gradient.spread="100" )
+detail(height=84 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode
+="0" gradient.repetition.mode="0" gradient.repetition.count="0" gradient.repetition.length="100" gradient.focus="0" gradient.scale="100" gradient.spread="100" )
+table(column=(type=decimal(0) updatewhereclause=yes key=yes identity=yes name=id dbname="
+cc_mstr.id" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=cc_code dbname="cc_mstr.cc_code" )
+ column=(type=char(250) update=yes updatewhereclause=yes name=cc_desc dbname="cc_mstr.cc_desc" )
+ column=(type=char(150) update=yes update
+whereclause=yes name=cc_desc_en dbname="cc_mstr.cc_desc_en" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=cc_level dbname="cc_mstr.cc_level" )
+ column=(type=char(150) update=yes updatewhereclause=yes name=cc_sort dbname="cc_mstr.cc_
+sort" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=dept_precode dbname="cc_mstr.dept_precode" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=dept_tel dbname="cc_mstr.dept_tel" )
+ column=(type=decimal(0) update=yes 
+updatewhereclause=yes name=parentid dbname="cc_mstr.parentid" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=dept_fax dbname="cc_mstr.dept_fax" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=cc_sortnum dbname="cc_mstr
+.cc_sortnum" )
+ column=(type=char(150) update=yes updatewhereclause=yes name=dept_path dbname="cc_mstr.dept_path" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=sysuser dbname="cc_mstr.sysuser" )
+ column=(type=datetime update=yes up
+datewhereclause=yes name=sysdate dbname="cc_mstr.sysdate" )
+ column=(type=char(150) update=yes updatewhereclause=yes name=cc_codeuser dbname="cc_mstr.cc_codeuser" )
+ column=(type=long update=yes updatewhereclause=yes name=cc_enable dbname="cc_mstr.c
+c_enable" )
+ column=(type=datetime update=yes updatewhereclause=yes name=cc_dele_date dbname="cc_mstr.cc_dele_date" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=deleteuser dbname="cc_mstr.deleteuser" )
+ column=(type=char(120) upda
+te=yes updatewhereclause=yes name=cc_dele_remark dbname="cc_mstr.cc_dele_remark" )
+ column=(type=long update=yes updatewhereclause=yes name=deptcount dbname="cc_mstr.deptcount" )
+ column=(type=char(150) update=yes updatewhereclause=yes name=deptdec 
+dbname="cc_mstr.deptdec" )
+ column=(type=char(150) update=yes updatewhereclause=yes name=cc_mstr_dept_parentlevel dbname="cc_mstr.dept_parentlevel" )
+ retrieve="  SELECT cc_mstr.id,
+        cc_mstr.cc_code,   
+         cc_mstr.cc_desc,    
+      
+   cc_mstr.cc_desc_en,   
+         cc_mstr.cc_level,   
+         cc_mstr.cc_sort,   
+         cc_mstr.dept_precode,   
+         cc_mstr.dept_tel,   
+         cc_mstr.parentid,   
+         cc_mstr.dept_fax,   
+         cc_mstr.cc_sortnum,   
+  
+       cc_mstr.dept_path,   
+         cc_mstr.sysuser,   
+         cc_mstr.sysdate,   
+         cc_mstr.cc_codeuser,   
+         cc_mstr.cc_enable,   
+         cc_mstr.cc_dele_date,   
+         cc_mstr.deleteuser,   
+         cc_mstr.cc_dele_re
+mark,   
+         cc_mstr.deptcount,   
+         cc_mstr.deptdec  ,
+		cc_mstr.dept_parentlevel
+    FROM cc_mstr     , v_usercc
+where cc_mstr.id = v_usercc.cc_id  AND guserid=:ai_user 
+order by cc_sort,cc_mstr.cc_level
+" update="cc_mstr" updatew
+here=0 updatekeyinplace=yes arguments=(("ai_user", number)) )
+text(band=header alignment="2" text="部门名称" border="0" color="33554432" x="398" y="8" height="60" width="809" html.valueishtml="0"  name=cc_desc_t visible="1"  font.face="Arial" font.height
+="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0
+" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tool
+tip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transpar
+ency="0" )
+text(band=header alignment="2" text="部门名称(en)" border="0" color="33554432" x="1216" y="8" height="60" width="759" html.valueishtml="0"  name=cc_desc_en_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" fo
+nt.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradi
+一
+ent.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.ini
+倀
+tial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" 
+刀
+text="排序" border="0" color="33554432" x="2231" y="8" height="60" width="338" html.valueishtml="0"  name=cc_sort_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" ba
+吀
+ckground.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetiti
+退
+on.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabl
+堀
+0
+摰w
+````
+肀
+d
+dd
+dd
+検
+n
+n
+`
+`
+娀
+
+尀
+艄
+H
+.
+	
+
+!
+#
+%
+'
+)
+,
+c
+帀
+c_desc_t
+$
+1
+$
+0
+$
+
+134217751
+$
+134217752
+$
+紀
+32000
+<
+%
+Arial
+Arial
+$
+2
+$
+-9
+$
+4
+怀
+00
+$
+536870912
+$
+肀
+8421504
+$
+d
+100
+$
+ 
+33554432
+$
+"
+398
+$
+$
+8
+$
+&
+<
+60
+$
+(
+809
+%
+*
++
+
+部门名称
+
+部门名称
+"
+-
+0
+9
+/
+戀
+	
+
+0
+#
+%
+2
+4
+7
+cc_desc_en_t
+$
+1
+
+1216
+$
+3
+759
+%
+5
+6
+部门名称(en)
+部门名称(en)
+"
+8
+0
+D
+.
+:
+搀
+	
+
+;
+#
+%
+=
+?
+B
+cc_sort_t
+$
+<
+
+2231
+$
+>
+338
+%
+@
+A
+排序
+排序
+"
+C
+0
+O
+9
+E
+	
+
+昀
+F
+#
+%
+H
+J
+M
+sysuser_t
+$
+G
+
+2578
+$
+I
+320
+%
+K
+L
+维护人
+维护人
+"
+N
+0
+Z
+D
+P
+	
+
+栀
+Q
+#
+%
+S
+U
+X
+sysdate_t
+$
+R
+
+2907
+$
+T
+453
+%
+V
+W
+
+维护时间
+
+维护时间
+"
+Y
+0
+i
+O
+[
+\
+^
+樀
+`
+%
+b
+d
+g
+cc_dele_date_t
+$
+]
+1073741824
+$
+_
+
+3369
+$
+a
+4
+$
+c
+334
+%
+e
+f
+
+失效时间
+
+失效时间
+"
+h
+0
+t
+Z
+j
+\
+氀
+k
+`
+%
+m
+o
+r
+deleteuser_t
+$
+l
+
+3712
+$
+n
+361
+%
+p
+q
+失效操作人
+失效操作人
+"
+s
+0
+i
+u
+\
+渀
+v
+`
+%
+x
+z
+}
+"
+cc_dele_remark_t
+$
+w
+
+4082
+$
+y
+599
+%
+{
+|
+
+删除操作
+
+删除操作
+"
+~
+0
+t
+\
+`
+瀀
+%
+parentid_t
+$
+
+1984
+$
+238
+%
+
+父级部门
+
+父级部门
+"
+0
+	
+
+\
+#
+%
+爀
+cc_codeuser_t
+$
+	
+9
+$
+379
+%
+
+部门代码
+
+部门代码
+"
+0
+\
+`
+%
+deptdec_t
+$
+琀
+
+5339
+$
+407
+%
+
+数字测算
+
+数字测算
+"
+0
+\
+`
+%
+deptcount_t
+$
+
+4690
+$
+瘀
+224
+%
+人数
+人数
+"
+0
+\
+`
+%
+6
+cc_mstr_dept_parentlevel_t
+$
+
+4923
+%
+
+父级层
+砀
+级
+
+父级层级
+"
+0
+T
+	
+
+稀
+0
+#
+2
+cc_desc_en
+<
+$
+D
+68
+&
+[general]
+[general]
+"
+0
+	
+
+簀
+;
+#
+=
+2
+d
+cc_sort
+"
+0
+	
+
+F
+縀
+#
+H
+<
+d
+sysuser
+"
+0
+	
+
+!
+#
+'
+耀
+cc_desc
+"
+0
+	
+
+\
+#
+
+cc_codeuser
+"
+0
+舀
+	
+
+Q
+#
+S
+F
+sysdate
+&
+&
+[shortdate] [time]
+&
+[shortdate] [time]
+"
+0
+萀
+	
+
+^
+#
+b
+P
+cc_dele_date
+"
+0
+	
+
+蘀
+k
+#
+m
+Z
+deleteuser
+"
+0
+	
+
+#
+	(
+蠀
+parentid
+&
+
+[general]
+[general]
+ddw_department
+cc_desc
+cc_code
+"
+0
+	
+
+v
+#
+x
+言
+d
+cc_dele_remark
+"
+0
+	
+
+#
+谀
+deptdec
+"
+0
+	
+
+#
+n
+deptcount
+&
+[general]
+[general]
+"
+0
+	
+
+#
+x
+2
+cc_mstr_dept_parentlevel
+"
+0
+P
+forward
+global type w_companyset from w_module_hr
+end type
+end forward
+
+global type w_companyset from w_module_hr
+integer width = 3209
+integer height = 1692
+end type
+global w_companyset w_companyset
+
+type variables
+int li_deptchange       
+鈀
+ed="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="维护人" border="0" color="33554432" x="2578" y="8
+鐀
+" height="60" width="320" html.valueishtml="0"  name=sysuser_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency=
+阀
+"0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length=
+頀
+"100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" 
+騀
+tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="维护时间" border="0" color="33554432" x="2907" y="8" height="60" width="453" html.valueishtml="0"  na
+鰀
+me=sysdate_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background
+鸀
+.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gra
+dient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.
+textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="失效时间" border="0" color="33554432" x="3369" y="4" height="60" width="334" html.valueishtml="0"  name=cc_dele_date_t visible="1"  font.face="Arial" f
+ont.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" background.transparency="0" background.gradient.color="0" background.gradient.transparency="0" background.gradient.ang
+le="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="0" background.gradient.focus="0" background.gradient.scale="0" background.gradient.spread="0" toolt
+ip.backcolor="0" tooltip.delay.initial="0" tooltip.delay.visible="0" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="0" tooltip.transparency="0" transparency="0" )
+text(band
+=header alignment="2" text="失效操作人" border="0" color="33554432" x="3712" y="4" height="60" width="361" html.valueishtml="0"  name=deleteuser_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charse
+t="0" background.mode="2" background.color="1073741824" background.transparency="0" background.gradient.color="0" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" backg
+round.gradient.repetition.count="0" background.gradient.repetition.length="0" background.gradient.focus="0" background.gradient.scale="0" background.gradient.spread="0" tooltip.backcolor="0" tooltip.delay.initial="0" tooltip.delay.visible="0" tooltip.
+enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="0" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="删除操作" border="0" color="33554432" x="4082" y="4" 
+height="60" width="599" html.valueishtml="0"  name=cc_dele_remark_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" background.transpa
+rency="0" background.gradient.color="0" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length=
+"0" background.gradient.focus="0" background.gradient.scale="0" background.gradient.spread="0" tooltip.backcolor="0" tooltip.delay.initial="0" tooltip.delay.visible="0" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="
+0" tooltip.maxwidth="0" tooltip.textcolor="0" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="父级部门" border="0" color="33554432" x="1984" y="4" height="60" width="238" html.valueishtml="0"  name=parentid_t visible="1" 
+ font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" background.transparency="0" background.gradient.color="0" background.gradient.transparency="0" bac
+kground.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="0" background.gradient.focus="0" background.gradient.scale="0" background.gradi
+ent.spread="0" tooltip.backcolor="0" tooltip.delay.initial="0" tooltip.delay.visible="0" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="0" tooltip.transparency="0" transpare
+ncy="0" )
+text(band=header alignment="2" text="部门代码" border="0" color="33554432" x="9" y="8" height="60" width="379" html.valueishtml="0"  name=cc_codeuser_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitc
+h="2" font.charset="0" background.mode="2" background.color="1073741824" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.re
+petition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="
+0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="0" text="
+数字测算" border="0" color="33554432" x="5339" y="4" height="60" width="407" html.valueishtml="0"  name=deptdec_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" backgr
+ound.color="1073741824" background.transparency="0" background.gradient.color="0" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count=
+"0" background.gradient.repetition.length="0" background.gradient.focus="0" background.gradient.scale="0" background.gradient.spread="0" tooltip.backcolor="0" tooltip.delay.initial="0" tooltip.delay.visible="0" tooltip.enabled="0" tooltip.hasclosebutt
+on="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="0" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="0" text="人数" border="0" color="33554432" x="4690" y="4" height="60" width="224" html.value
+ishtml="0"  name=deptcount_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" background.transparency="0" background.gradient.color="0"
+	
+
+\
+`
+compute_1
+&
+[general]
+[general]
+$
+#
+tore
+commandbutton
+cb_1
+fontcharset
+fontpitch
+fontfamily
+structure
+mailrecipient
+environment
+mailfiledescription
+mailmessage
+syncparm
+datawindowchild
+listviewitem
+treeviewitem
+connectioninfo
+cb_2
+n_cst_msg
+"
+0
+L
+j
+t
+	
+
+	
+
+   //组织是否有增改动作 
+end variables
+
+on w_companyset.create
+int iCurrent
+call super::create
+end on
+
+on w_companyset.destroy
+call super::destroy
+end on
+
+type uo_titlebar from w_module_hr`uo_titlebar within w_companyset
+end type
+
+type sp_1 from
+ w_module_hr`sp_1 within w_companyset
+end type
+
+type dw_toolbar from w_module_hr`dw_toolbar within w_companyset
+end type
+
+type p_selected from w_module_hr`p_selected within w_companyset
+end type
+
+type tab_1 from w_module_hr`tab_1 within w_com
+!
+       
+耀
+耂
+耊耖老
+耋
+耏耓耎
+耐耙耎
+耑耚耎
+耒耜耎
+耓耠耎
+耘
+耙耈耗
+耚耎耗
+耛耖耗
+耜耚耗
+耝耜耗
+耞耞耗
+耟耠耗
+耣
+耱
+老
+~P
+E1耊耂
+Q;
+0%耗耂
+M;
+8%耢耂
+-
+耢耂
+-
+	
+老
+! (
+-0
+! D
+-L
+耀
+! `
+-h
+! 
+'
+! 
+4
+?
+U
+! 
+'
+! 
+4
+?
+U
+! 
+'
+! 
+4
+?
+U
+! 
+'
+(
+>
+T
+r	
+
+d
+"
+       
+icurrent
+h
+       
+create
+uo_1
+B耘
+耘
+cb_1
+8
+C耣8
+耣
+cb_2
+T
+D耱T
+耱
+control
+p
+p
+B耘p
+8
+C耣p
+T
+D耱(
+0
+D
+mstr.cc_desc,   
+         cc_mstr.cc_desc_en,   
+         cc_mstr.cc_level,   
+         cc_mstr.cc_sort,   
+         cc_mstr.dept_precode,   
+         cc_mstr.dept_tel,   
+         cc_mstr.dept_fax,    
+         cc_mstr.cc_sortnum,   
+        
+ cc_mstr.dept_path,   
+         cc_mstr.sysuser,   
+         cc_mstr.sysdate,   
+         cc_mstr.cc_codeuser,   
+         cc_mstr.cc_enable,   
+         cc_mstr.cc_dele_date,   
+         cc_mstr.deleteuser,   
+         cc_mstr.cc_dele_remark  
+
+  
+    FROM cc_mstr   , v_usercc
+where cc_mstr.id = v_usercc.cc_id  AND guserid=:ai_user 
+order by cc_mstr.cc_level" arguments=(("ai_user", number)) )
+text(band=header alignment="2" text="部门名称(en)" border="0" color="33554432" x="1216" y="8" heig
+ht="60" width="759" html.valueishtml="0"  name=cc_desc_en_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0"
+翯6
+count(cc_codeuser for all)
+[
+"
+0
+
+舀
+3
+3
+İ
+3
+3
+	
+
+3
+3
+
+3
+ background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="0" background.gradient.focus="0" backg
+瘀
+round.gradient.scale="0" background.gradient.spread="0" tooltip.backcolor="0" tooltip.delay.initial="0" tooltip.delay.visible="0" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcol
+公司表release 12.5;
+datawindow(units=0 timer_interval=0 color=1073741824 brushmode=0 transparency=0 gradient.angle=0 gradient.color=8421504 gradient.focus=0 gradient.repetition.count=0 gradient.repetition.length=100 gradient.repetition.mode=0 gradient.s
+cale=100 gradient.spread=100 gradient.transparency=0 picture.blur=0 picture.clip.bottom=0 picture.clip.left=0 picture.clip.right=0 picture.clip.top=0 picture.mode=0 picture.scale.x=100 picture.scale.y=100 picture.transparency=0 processing=1 HTMLDW=no 
+print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no
+ print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.background=no print.preview.background=no print.preview.outline=yes hidegrayline=no showbackcoloronxp=no picture.file="" grid.lines=0 )
+hea
+der(height=72 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode="0" gradient.repetition.mode="0" gradient.repetition.count="0" gradient.repetition.length="100" gradient.focus="0" gradien
+t.scale="100" gradient.spread="100" )
+summary(height=80 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode="0" gradient.repetition.mode="0" gradient.repetition.count="0" gradient.repetit
+ion.length="100" gradient.focus="0" gradient.scale="100" gradient.spread="100" )
+footer(height=0 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode="0" gradient.repetition.mode="0" gradi
+ent.repetition.count="0" gradient.repetition.length="100" gradient.focus="0" gradient.scale="100" gradient.spread="100" )
+detail(height=84 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushm
+ode="0" gradient.repetition.mode="0" gradient.repetition.count="0" gradient.repetition.length="100" gradient.focus="0" gradient.scale="100" gradient.spread="100" )
+table(column=(type=char(50) update=yes updatewhereclause=yes key=yes name=dept_code db
+name="cc_mstr.dept_code" )
+ column=(type=char(100) update=yes updatewhereclause=yes name=cc_desc dbname="cc_mstr.cc_desc" )
+ column=(type=char(200) update=yes updatewhereclause=yes name=cc_desc_en dbname="cc_mstr.cc_desc_en" )
+ column=(type=char(10
+0) update=yes updatewhereclause=yes name=cc_level dbname="cc_mstr.cc_level" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=cc_sort dbname="cc_mstr.cc_sort" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=dept_precode d
+bname="cc_mstr.dept_precode" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=dept_tel dbname="cc_mstr.dept_tel" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=parentid dbname="cc_mstr.parentid" )
+ column=(type=char(50
+) update=yes updatewhereclause=yes name=dept_fax dbname="cc_mstr.dept_fax" )
+ column=(type=long update=yes updatewhereclause=yes name=cc_sortnum dbname="cc_mstr.cc_sortnum" )
+ column=(type=char(255) update=yes updatewhereclause=yes name=dept_path db
+name="cc_mstr.dept_path" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=sysuser dbname="cc_mstr.sysuser" )
+ column=(type=datetime update=yes updatewhereclause=yes name=sysdate dbname="cc_mstr.sysdate" )
+ column=(type=char(50) update
+=yes updatewhereclause=yes name=dept_codeuser dbname="cc_mstr.dept_codeuser" )
+ column=(type=long update=yes updatewhereclause=yes name=cc_enable dbname="cc_mstr.cc_enable" )
+ column=(type=datetime update=yes updatewhereclause=yes name=cc_dele_date 
+dbname="cc_mstr.cc_dele_date" )
+ column=(type=char(50) update=yes updatewhereclause=yes name=deleteuser dbname="cc_mstr.deleteuser" )
+ column=(type=char(250) update=yes updatewhereclause=yes name=cc_dele_remark dbname="cc_mstr.cc_dele_remark" )
+ co
+lumn=(type=long update=yes updatewhereclause=yes name=deptcount dbname="cc_mstr.deptcount" )
+ column=(type=decimal(2) update=yes updatewhereclause=yes name=deptdec dbname="cc_mstr.deptdec" )
+ column=(type=long updatewhereclause=yes name=deptiscompan
+y dbname="cc_mstr.deptIsCompany" initial="1" values="是	1/否	0/" )
+ retrieve="  SELECT cc_mstr.dept_code,   
+         cc_mstr.cc_desc,    
+         cc_mstr.cc_desc_en,   
+         cc_mstr.cc_level,   
+         cc_mstr.cc_sort,   
+         cc_mstr.
+dept_precode,   
+         cc_mstr.dept_tel,   
+         cc_mstr.parentid,   
+         cc_mstr.dept_fax,   
+         cc_mstr.cc_sortnum,   
+         cc_mstr.dept_path,   
+         cc_mstr.sysuser,   
+         cc_mstr.sysdate,   
+         cc_mst
+r.dept_codeuser,   
+         cc_mstr.cc_enable,   
+         cc_mstr.cc_dele_date,   
+         cc_mstr.deleteuser,   
+         cc_mstr.cc_dele_remark,   
+         cc_mstr.deptcount,   
+         cc_mstr.deptdec,   
+         cc_mstr.deptIsCompany 
+ 
+    FROM cc_mstr   
+" update="cc_mstr" updatewhere=0 updatekeyinplace=yes )
+text(band=header alignment="2" text="是否集团/公司" border="0" color="33554432" x="5353" y="0" height="60" width="425" html.valueishtml="0"  name=deptiscompany_t visible="1"  f
+ont.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" background.transparency="0" background.gradient.color="0" background.gradient.transparency="0" backg
+round.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="0" background.gradient.focus="0" background.gradient.scale="0" background.gradien
+t.spread="0" tooltip.backcolor="0" tooltip.delay.initial="0" tooltip.delay.visible="0" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="0" tooltip.transparency="0" transparenc
+y="0" )
+text(band=header alignment="2" text="集团/公司名称" border="0" color="33554432" x="398" y="8" height="60" width="809" html.valueishtml="0"  name=cc_desc_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch
+="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repe
+tition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0"
+ tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="集团
+/公司名称(en)" border="0" color="33554432" x="1221" y="8" height="60" width="759" html.valueishtml="0"  name=cc_desc_en_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1
+" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repe
+tition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.e
+nabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="排序" border="0" color="33554432" x="2235" y
+="8" height="60" width="338" html.valueishtml="0"  name=cc_sort_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparen
+cy="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.leng
+th="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="
+0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="维护人" border="0" color="33554432" x="2583" y="8" height="60" width="320" html.valueishtml="0"  
+name=sysuser_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" backgrou
+nd.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.g
+radient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" toolti
+p.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="维护时间" border="0" color="33554432" x="2912" y="8" height="60" width="453" html.valueishtml="0"  name=sysdate_t visible="1"  font.face="Arial" font
+.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.a
+ngle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="10
+0" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" t
+ransparency="0" )
+text(band=header alignment="2" text="失效时间" border="0" color="33554432" x="3374" y="4" height="60" width="334" html.valueishtml="0"  name=cc_dele_date_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="
+2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" background.transparency="0" background.gradient.color="0" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradi
+一
+ent.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="0" background.gradient.focus="0" background.gradient.scale="0" background.gradient.spread="0" tooltip.backcolor="0" tooltip.delay.initial="0" toolt
+倀
+ip.delay.visible="0" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="0" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="失效操作人" border="0" co
+踀
+lor="33554432" x="3717" y="4" height="60" width="361" html.valueishtml="0"  name=deleteuser_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073
+吀
+0
+摰w走
+````
+肀
+d
+dd
+dd
+泬
+n
+n
+`
+`
+嘀
+
+堀
+H
+,
+.
+0
+0
+0
+$
+	
+
+"
+ 
+d
+娀
+eptiscompany_t
+$
+1
+$
+0
+<
+
+%
+Arial
+Arial
+$
+2
+$
+-9
+$
+400
+$
+1073741824
+$
+33554432
+$
+尀
+
+5353
+$
+0
+$
+<
+60
+$
+425
+%
+ 
+!
+是否集团/公司
+是否集团/公司
+"
+#
+0
+=
+%
+&
+(
+*
+	
+,
+.
+0
+0
+0
+
+2
+4
+6
+8
+;
+c
+帀
+c_desc_t
+$
+'
+134217751
+$
+)
+134217752
+$
++
+紀
+32000
+$
+-
+536870912
+$
+/
+肀
+8421504
+$
+1
+d
+100
+$
+3
+398
+$
+5
+8
+$
+7
+809
+%
+9
+:
+集团/公司名
+怀
+称
+集团/公司名称
+"
+<
+0
+H
+$
+>
+&
+(
+*
+	
+,
+.
+0
+0
+0
+
+?
+4
+A
+C
+F
+cc_desc_en_t
+$
+@
+
+1221
+$
+B
+759
+%
+D
+E
+集团/公司名称(en)
+集团/公司名
+戀
+称(en)
+"
+G
+0
+S
+=
+I
+&
+(
+*
+	
+,
+.
+0
+0
+0
+
+J
+4
+L
+N
+Q
+cc_sort_t
+$
+K
+
+2235
+$
+M
+338
+%
+O
+P
+排序
+排序
+"
+R
+0
+^
+H
+搀
+T
+&
+(
+*
+	
+,
+.
+0
+0
+0
+
+U
+4
+W
+Y
+\
+sysuser_t
+$
+V
+
+2583
+$
+X
+320
+%
+Z
+[
+维护人
+维护人
+"
+]
+0
+i
+S
+_
+&
+昀
+(
+*
+	
+,
+.
+0
+0
+0
+
+`
+4
+b
+d
+g
+sysdate_t
+$
+a
+
+2912
+$
+c
+453
+%
+e
+f
+
+维护时间
+
+维护时间
+"
+h
+0
+v
+^
+j
+	
+
+栀
+
+k
+m
+o
+q
+t
+cc_dele_date_t
+$
+l
+
+3374
+$
+n
+4
+$
+p
+334
+%
+r
+s
+
+失效时间
+
+失效时间
+"
+u
+0
+i
+w
+	
+
+樀
+
+x
+m
+z
+|
+deleteuser_t
+$
+y
+
+3717
+$
+{
+361
+%
+}
+~
+失效操作人
+失效操作人
+"
+0
+v
+	
+
+氀
+
+m
+"
+cc_dele_remark_t
+$
+
+4087
+$
+599
+%
+
+删除操作
+
+删除操作
+"
+0
+	
+
+渀
+
+m
+parentid_t
+$
+
+1989
+$
+238
+%
+父级集团/公司
+父级集团/公司
+"
+0
+&
+(
+*
+	
+
+.
+0
+0
+0
+
+瀀
+4
+ 
+dept_codeuser_t
+$
+	
+9
+$
+379
+%
+集团/公司代码
+集团/公司代码
+"
+0
+	
+
+m
+爀
+deptdec_t
+$
+
+4933
+$
+411
+%
+
+数字测算
+
+数字测算
+"
+0
+	
+
+m
+deptcount
+琀
+_t
+$
+
+4695
+$
+229
+%
+人数
+人数
+"
+0
+,
+.
+0
+0
+0
+T
+,
+.
+0
+0
+0
+嘀
+&
+(
+*
+,
+.
+0
+0
+0
+?
+4
+A
+cc_desc_en
+<
+
+$
+D
+68
+$
+0	1
+&
+砀
+or="0" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="父级层级" enabled="0" border="0" color="33554432" x="4923" y="4" height="60" width="407" html.valueishtml="0"  name=cc_mstr_dept_parentlevel_t visible="1"  font.face=
+稀
+"Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" background.transparency="0" background.gradient.color="0" background.gradient.transparency="0" background.gra
+簀
+dient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="0" background.gradient.focus="0" background.gradient.scale="0" background.gradient.spread=
+縀
+"0" tooltip.backcolor="0" tooltip.delay.initial="0" tooltip.delay.visible="0" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="0" tooltip.transparency="0" transparency="0" )
+
+帀
+column(band=detail id=4 alignment="0" tabsequence=30 border="0" color="33554432" x="1216" y="8" height="68" width="759" format="[general]" html.valueishtml="0"  name=cc_desc_en visible="1" edit.limit=255 edit.case=any edit.focusrectangle=no edit.autos
+舀
+L
+`
+h
+>
+老
+! ,
+'
+! @
+'
+! T
+'
+ 
+.
+<
+d
+       
+\
+       
+destroy
+uo_1
+ 
+B耘cb_1
+4
+C耣cb_2
+H
+D耱,
+@
+T
+耂
+耂
+F
+&
+.
+2
+2
+       
++create
++destroy
+(
+ 
+2
+z
+       
+wi
+dth
+height
+border
+windowtype
+center
+uo_1
+cb_1
+cb_2
+*
+8
+者
+N
+\
+耘
+f
+耣
+p
+耱
+崀
+
+ 
+考
+耄
+者
+耆
+耀
+耇
+耀
+       
+耂
+C
+D
+E
+F
+G
+H
+I
+J
+耋
+1
+2
+耘
+9
+:
+;
+<
+=
+>
+耣
+
+ 
+!
+"
+#
+$
+%
+&
+'
+(
+)
+*
+耱
+
+ 
+!
+"
+#
+$
+%
+&
+'
+(
+)
+*
+蠀
+敌
+柽
+:
+耂
+耂
+V
+t
+~
+耂
+耂
+f
+耂
+.
+耂
+耂
+耂
+L耫
+耀
+0
+       
+w_dept_multipleslect
+w_dept_select
+accessiblerole
+menu
+windowtype
+windowstat
+鐀
+e
+windowobject
+toolbaralignment
+windowanimationstyle
+userobjects
+borderstyle
+u_controlbar
+w_base
+powerobject
+选择.....
+none
+耇
+n_cst_resize
+datawindow
+uo_depttreeonly
+window
+datastore
+耇
+fontcharset
+fontpitch
+fontfamil
+谀
+896
+end type
+
+type uo_1 from uo_depttreeonly within w_dept_select
+integer x = 14
+integer y = 92
+integer width = 896
+integer height = 1352
+integer taborder = 70
+boolean bringtotop = true
+end type
+
+on uo_1.destroy
+call uo_depttreeonly::dest
+踀
+roy
+end on
+
+event constructor;call super::constructor;//this.tv_main.checkboxes= true 
+end event
+
+type cb_1 from commandbutton within w_dept_select
+integer x = 224
+integer y = 1448
+integer width = 343
+integer height = 104
+integer taborder =
+退
+ 70
+boolean bringtotop = true
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "Arial"
+string text = "确定"
+end type
+
+event clicked; 
+
+鈀
+closewithreturn(parent,uo_1.is_departmentcode)
+//messagebox('',string(uo_1.il_deptidtv))
+ 
+//closewithreturn(parent,string(uo_1.il_deptidtv))
+
+end event
+
+type cb_2 from commandbutton within w_dept_select
+integer x = 562
+integer y = 1448
+inte
+ger width = 343
+integer height = 104
+integer taborder = 80
+boolean bringtotop = true
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "
+阀
+y
+Arial
+确定
+取消
+AppIcon!
+,
+耇
+耇
+抈
+耇
+耇
+n_cst_msg
+message
+2
+:
+       
+w_dept_multipleslect
+耂
+L
+       
++create
++destroy
++constructor
+       
+Q
+頀
+L
+
+x
+       
+_initsrc
+w_dept_select
+w_dept_multipleslect
+accessiblerole
+menu
+windowtype
+windowstate
+windowobject
+toolbaralignment
+windowanimationstyle
+w_dept_select`uo_titlebar
+uo_titlebar
+userobjects
+borderstyle
+u_controlbar
+u_controlbar`st_titl
+騀
+e
+u_controlbar`l2
+u_controlbar`l1
+u_controlbar`p_control
+u_controlbar`uo_controlmenu
+w_base
+powerobject
+n_cst_resize
+datawindow
+w_dept_select`uo_1
+uo_1
+uo_depttreeonly
+uo_depttreeonly`ddlb_1
+uo_depttreeonly`uo_filter
+uo_depttreeonly`st_1
+uo_depttreeon
+鰀
+ly`rb_ccall
+uo_depttreeonly`rb_ccenable
+uo_depttreeonly`st_back
+uo_depttreeonly`tv_main
+window
+datastore
+w_dept_select`cb_1
+cb_1
+fontcharset
+fontpitch
+fontfamily
+w_dept_select`cb_2
+cb_2
+n_cst_msg
+"
+>
+h
+鸀
+	
+
+	
+
+       
+耀
+耂
+耊耋老
+耋
+耏耓耎
+耐耙耎
+耑耚耎
+耒耜耎
+耓耠耎
+耘耘老
+耙
+耛耈耚
+耜耎耚
+耝耖耚
+耞耚耚
+耟耜耚
+耠耞耚
+耡耠耚
+耤耣老
+耥
+耩耱老
+耪
+老
+~P
+E1耊耂
+Q;
+0%耘耂
+M;
+8%耤耂
+-
+耩耂
+-
+老
+d
+"
+       
+icurrent
+       
+create
+老
+d
+旡
+柽
+4
+老
+T
+h
+i老
+j
+耂
+p耍
+[
+耂
+s耎
+       
+uf_updateparentid
+function_object
+structure
+mailrecipient
+environment
+mailfiledescription
+mailmessage
+syncparm
+datawin
+dowchild
+listviewitem
+treeviewitem
+connectioninfo
+powerobject
+n_cst_tr
+sqlca
+update dbo.cc_mstr SET dept_parentlevel =isnull ( LEFT ( cc_level , LEN ( cc_level ) - 2 ) , '' ) 
+耀
+柽
+update dbo.cc_mstr SET parentid =( SELECT top 1
+ id FROM cc_mstr a WHERE a.cc_level =cc_mstr.dept_parentlevel ) 
+耀
+柽
+w_error
+	
+	
+2
+       
+Z
+       
+as_deptcode
+ai_msg
+uf_updateparentid
+0
+       
+(
+ISI
+
+x
+       
+function_object
+uf_updatepar
+B7
+&%耳耲
+b
+U!耸耂
+M;
+8%耡耯
+B7
+&%聍聂
+b
+U!耡耯
+B7
+'%聒聑
+-
+聍聑
+b
+U!耡耯
+B7
+&%聍聕
+b
+U!耡耯
+B7
+%%
+老
+d
+"
+       
+icurrent
+       
+create
+老
+d
+       
+ 
+       
+destroy
+}
+老
+!! <
+'
+ X
+'
+ l
+'
+;t
+,
+! 
+'
+! 
+'
+ 
+'
+ 
+'
+;
+,
+!! 
+'
+ 
+'
+ 
+'
+;t
+,
+! 
+'
+! 
+'
+ 
+'
+ 
+'
+;
+,
+N
+d
+       
+       
+sbo_ue_postopen
+tab_1
+耈
+耉
+耉
+耋
+耕
+耖
+耖
+耀
+耀
+耘
+耣
+耱
+b
+耀
+脀
+ 
+b
+老
+脀
+L"
+D
+F
+C
+)
+B
+2
+       
+2
+$
+       
+ta
+panyset
+integer width = 2258
+integer height = 1460
+end type
+
+type tabpage_1 from w_module_hr`tabpage_1 within tab_1
+integer y = 112
+integer width = 2222
+integer height = 1332
+string text = "集团
+公司
+事业部维护"
+string picturename = "res\edit.ico"
+e
+nd type
+
+type dw_1 from w_module_hr`dw_1 within tabpage_1
+integer x = 0
+integer width = 2199
+integer height = 1240
+string dataobject = "d_companymanager"
+boolean ib_refreshauto = true
+end type
+
+event dw_1::sbo_ue_refresh; f_myretrieve(this,"
+ cc_level like '"+is_level+"%' and len(cc_level)="  + string(len(is_level)+2) +" and cc_enable =0 " )
+ 
+end event
+
+event dw_1::sbo_ue_addrow;call super::sbo_ue_addrow;long ll_row 
+long ll_cc_code//部门代码
+string ls_cc_code ////部门代码
+string ls_deptl
+evel //部门层级
+两位为1级 
+string ls_leveladd //新部门
+ll_row=this.getrow() 
+if ll_row <1 then return 1 
+select max(cc_code) into :ls_cc_code from cc_mstr; 
+if isnull(ls_cc_code) or ls_cc_code='' then 
+	ls_cc_code='0000000001'
+else
+	ls_cc_code=string(lon
+g(ls_cc_code) + 1  ,'0000000000')
+end if 
+//部门赋值 
+this.object.cc_code[ll_row]=ls_cc_code 
+select max(cc_level) into :ls_deptlevel    from cc_mstr where cc_level like :is_level+'%' and  len(cc_level) = len(:is_level)+2 ; 
+if isnull(ls_deptlevel) t
+hen ls_deptlevel=''
+ls_deptlevel=mid(ls_deptlevel,len(is_level)+1,len(ls_deptlevel)) //取出后两位
+if ls_deptlevel='' then ls_deptlevel ='00'
+ls_deptlevel=uf_getnew_level(ls_deptlevel)
+ls_leveladd = is_level + ls_deptlevel
+ 
+ //层级/排序赋值
+this.object.cc
+_level[ll_row]=ls_leveladd
+this.object.dept_sort[ll_row]=ls_leveladd
+ 
+ //存在新增情况
+li_deptchange =1 
+
+return  1  
+end event
+
+event dw_1::sbo_ue_deleterow;long ll_row 
+string ls_cc_code //当前部门level
+string ls_deptlevel //当前部门level
+long ll_subd
+eptcount //当前部门是否存在在用下级部门
+long ll_empcount     //当前部门及子部门是否存在在职员工
+ll_row = this.getrow()
+if ll_row<1 then return 1
+ ls_deptlevel= this.object.cc_level[ll_row]
+ 
+ select count(1)  into :ll_empcount from cc_mstr a ,h_emp_mstr b where a.cc_code =b.
+cc_code and empstate =0; 
+ select count(1) into :ll_subdeptcount from cc_mstr  where cc_level like :ls_deptlevel +'%' and cc_enable=0 and cc_level<>:ls_deptlevel ;
+ if isnull(ll_empcount) then ll_empcount=0 
+ if isnull(ll_subdeptcount) then ll_subd
+eptcount = 0 
+ 
+ if ll_empcount>0 then 
+		messagebox(gl.ls('提示'),gl.ls('该部门下还有在职员工
+无法删除
+'))
+		return 1  
+end if 
+  if ll_subdeptcount>0 then 
+		if messagebox(gl.ls('提示'),gl.ls('该部门下还有使用中部门
+是否同步删除
+'),question!,yesno!,2)=2 then 
+			  return 1  
+
+		end if 
+end if 
+ 
+ datetime ldt_sydate
+ ldt_sydate = uf_getsysdatetime()
+ this.object.cc_enable[ll_row]=1 
+ this.object.cc_dele_date[ll_row]=ldt_sydate
+ this.object.deleteuser[ll_row] =gstr_userinfo.username
+ this.object.cc_dele_remark[ll_r
+ow]='删除'
+ if this.update() =1 then  
+ 	if ll_subdeptcount>0 then 
+		update cc_mstr set cc_enable =1,cc_dele_date=:ldt_sydate,deleteuser=:gstr_userinfo.username,cc_dele_remark='删除' where cc_level like :ls_deptlevel +'%' and cc_enable=0 ;
+	end if 
+
+鸀
+	
+		 if sqlca.sqlcode= 0 then 
+			commit ;
+			messagebox(gl.ls('提示'),gl.ls('保存成功
+'))
+		else 
+			rollback ;
+			messagebox(gl.ls('提示'),gl.ls('保存失败
+')) 
+			 this.object.cc_enable[ll_row]=0 
+ 			return 1   
+		end if 
+else 
+	rollback ;
+		this.o
+ background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="10
+0" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" too
+ltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="部门名称" border="0" color="33554432" x="398" y="8" height="60" width="809" html.valueishtml="0"  name=c
+c_desc_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gra
+dient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradien
+t.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.text
+color="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="部门代码" border="0" color="33554432" x="9" y="8" height="60" width="379" html.valueishtml="0"  name=cc_codeuser_t visible="1"  font.face="Arial" font.heig
+ht="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle
+="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" t
+ooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" trans
+parency="0" )
+text(band=header alignment="2" text="排序" border="0" color="33554432" x="1984" y="8" height="60" width="567" html.valueishtml="0"  name=cc_sort_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pit
+ch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.re
+petition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="
+0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="
+维护人" border="0" color="33554432" x="4210" y="8" height="60" width="489" html.valueishtml="0"  name=sysuser_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" backgro
+und.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.co
+unt="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0
+" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="维护时间" border="0" color="33554432" x="4709" y="8" he
+ight="60" width="603" html.valueishtml="0"  name=sysdate_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" 
+background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100
+" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tool
+tip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="失效时间" enabled="0" border="0" color="33554432" x="2560" y="4" height="60" width="334" html.valueishtml
+="0"  name=cc_dele_date_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="0" bac
+kground.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="0" background.gradient.focus="0" backgroun
+d.gradient.scale="0" background.gradient.spread="0" tooltip.backcolor="0" tooltip.delay.initial="0" tooltip.delay.visible="0" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="
+0" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="失效操作人" enabled="0" border="0" color="33554432" x="3767" y="4" height="60" width="434" html.valueishtml="0"  name=deleteuser_t visible="1"  font.face="Arial" font.heig
+ht="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="0" background.gradient.transparency="0" background.gradient.angle="0" ba
+ckground.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="0" background.gradient.focus="0" background.gradient.scale="0" background.gradient.spread="0" tooltip.backco
+lor="0" tooltip.delay.initial="0" tooltip.delay.visible="0" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="0" tooltip.transparency="0" transparency="0" )
+text(band=header a
+lignment="2" text="失效原因" enabled="0" border="0" color="33554432" x="2903" y="4" height="60" width="855" html.valueishtml="0"  name=cc_dele_remark_t visible="1"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.
+charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="0" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" 
+background.gradient.repetition.count="0" background.gradient.repetition.length="0" background.gradient.focus="0" background.gradient.scale="0" background.gradient.spread="0" tooltip.backcolor="0" tooltip.delay.initial="0" tooltip.delay.visible="0" too
+ltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="0" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="0" text="Id" enabled="0" border="0" color="33554432" 
+x="5326" y="4" height="60" width="155" html.valueishtml="0"  name=id_t visible="0"  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" background.tran
+sparency="0" background.gradient.color="0" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.leng
+th="0" background.gradient.focus="0" background.gradient.scale="0" background.gradient.spread="0" tooltip.backcolor="0" tooltip.delay.initial="0" tooltip.delay.visible="0" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubbl
+e="0" tooltip.maxwidth="0" tooltip.textcolor="0" tooltip.transparency="0" transparency="0" )
+column(band=detail id=4 alignment="0" tabsequence=30 border="0" color="33554432" x="1216" y="8" height="68" width="759" format="[general]" html.valueishtml="
+0"  name=cc_desc_en visible="1" edit.limit=255 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-9" font.weight="400"  font.family="0" font.pitch="2" font.charset="0" background.mode="1" bac
+kground.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetitio
+n.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enable
+d="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=3 alignment="0" tabsequence=20 border="0" color="33554432" x="
+398" y="8" height="68" width="809" format="[general]" html.valueishtml="0"  name=cc_desc visible="1" edit.limit=200 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-9" font.weight="400"  fo
+nt.family="0" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" 
+background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" t
+0
+摰w
+````
+肀
+d
+dd
+dd
+検
+n
+n
+`
+`
+
+H
+.
+	
+
+!
+#
+%
+'
+)
+,
+c
+c_desc_en_t
+$
+1
+$
+0
+$
+
+134217751
+$
+134217752
+$
+紀
+32000
+<
+%
+Arial
+Arial
+$
+2
+$
+-9
+$
+400
+$
+536870912
+$
+肀
+8421504
+$
+d
+100
+$
+ 
+33554432
+$
+"
+
+1216
+$
+$
+8
+$
+&
+<
+60
+$
+(
+759
+%
+*
++
+部门名称(en)
+部门名称(en)
+"
+-
+0
+9
+/
+	
+
+0
+#
+%
+2
+4
+7
+cc_desc_t
+$
+1
+398
+$
+3
+809
+%
+5
+6
+
+部门名称
+
+部门名称
+"
+8
+0
+F
+.
+:
+	
+
+;
+=
+#
+%
+?
+A
+D
+cc_codeuser_t
+$
+<
+1073741824
+$
+>
+	
+9
+$
+@
+379
+%
+B
+C
+
+部门代码
+
+部门代码
+"
+E
+0
+Q
+9
+G
+	
+
+H
+#
+%
+J
+L
+O
+cc_sort_t
+$
+I
+
+1984
+$
+K
+567
+%
+M
+N
+排序
+排序
+"
+P
+0
+\
+F
+R
+	
+
+S
+#
+%
+U
+W
+Z
+sysuser_t
+$
+T
+
+4210
+$
+V
+489
+%
+X
+Y
+维护人
+维护人
+"
+[
+0
+g
+Q
+]
+	
+
+^
+#
+%
+`
+b
+e
+sysdate_t
+$
+_
+
+4709
+$
+a
+603
+%
+c
+d
+
+维护时间
+
+维护时间
+"
+f
+0
+t
+\
+h
+i
+k
+%
+m
+o
+r
+cc_dele_date_t
+$
+j
+
+2560
+$
+l
+4
+$
+n
+334
+%
+p
+q
+
+失效时间
+
+失效时间
+"
+s
+0
+g
+u
+v
+k
+%
+x
+z
+}
+deleteuser_t
+$
+w
+
+3767
+$
+y
+434
+%
+{
+|
+失效操作人
+失效操作人
+"
+~
+0
+t
+k
+%
+"
+cc_dele_remark_t
+$
+
+2903
+$
+855
+%
+
+失效原因
+
+失效原因
+"
+0
+;
+k
+%
+
+id_t
+$
+
+5326
+$
+155
+%
+Id
+Id
+"
+0
+T
+	
+
+!
+#
+'
+cc_desc_en
+<
+$
+D
+68
+&
+[general]
+[genera
+l]
+"
+0
+	
+
+0
+#
+2
+cc_desc
+"
+0
+	
+
+;
+=
+#
+?
+
+cc_codeuser
+"
+0
+	
+
+H
+#
+J
+(
+d
+cc_sort
+"
+0
+	
+
+S
+#
+U
+P
+d
+sysuser
+"
+0
+	
+
+^
+#
+`
+Z
+sysdate
+&
+&
+[shortdate] [time]
+&
+[shortdate] [time]
+"
+0
+	
+
+i
+#
+m
+2
+cc_dele_date
+"
+0
+	
+
+v
+#
+x
+F
+deleteuser
+"
+0
+	
+
+#
+<
+cc_dele_remark
+"
+0
+	
+
+%
+d
+一
+id
+$
+
+5330
+$
+0
+$
+151
+&
+
+[general]
+[general]
+"
+0
+L
+倀
+	
+
+;
+=
+k
+%
+?
+compute_1
+&
+[general]
+[general]
+$
+#
+翯6
+count(cc_codeuser for all)
+[
+"
+刀
+0
+匌
+
+吀
+3
+3
+3
+3
+	
+3
+嘀
+
+3
+3
+
+堀
+3
+y
+:ai_user
+a
+ai_user
+8
+
+*
+匌
+id
+cc_mstr.id
+cc_code
+ 
+cc_mstr.cc_code
+cc_desc
+ 
+cc_mstr.cc_desc
+cc
+娀
+_desc_en
+&
+cc_mstr.cc_desc_en
+cc_level
+"
+cc_mstr.cc_level
+cc_sort
+ 
+cc_mstr.cc_sort
+dept_precode
+*
+cc_mstr.dept_precode
+dept_tel
+"
+cc_mstr.dept_tel
+dept_fax
+"
+cc_mstr.dept_fax
+cc_sortnum
+&
+cc_mstr.cc_sortnum
+dept_path
+尀
+$
+cc_mstr.dept_path
+sysuser
+ 
+cc_mstr.sysuser
+sysdate
+ 
+cc_mstr.sysdate
+cc_codeuser
+(
+cc_mstr.cc_codeuser
+cc_enable
+$
+cc_mstr.cc_enable
+cc_dele_date
+*
+cc_mstr.cc_dele_date
+deleteuser
+&
+cc_
+mstr.deleteuser
+cc_dele_remark
+.
+cc_mstr.cc_dele_remark
+  SELECT cc_mstr.id,   
+		cc_mstr.cc_code,   
+         cc_mstr.cc_desc,   
+         cc_mstr.cc_desc_en,   
+         cc_mstr.cc_level,   
+         cc_mstr.cc_sort,   
+怀
+elect=yes edit.autohscroll=yes  font.face="Arial" font.height="-9" font.weight="400"  font.family="0" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" back
+戀
+ground.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" backgrou
+搀
+nd.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" to
+昀
+oltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=6 alignment="0" tabsequence=50 border="0" color="33554432" x="2231" y="8" height="68" width="338" format="[general]" html.valueishtml="0"  name=cc_sort visi
+栀
+ble="1" edit.limit=100 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-9" font.weight="400"  font.family="0" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912
+樀
+" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.g
+氀
+radient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebu
+渀
+tton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=13 alignment="0" tabsequence=60 border="0" color="33554432" x="2578" y="8" height="68"
+瀀
+ width="320" format="[general]" html.valueishtml="0"  name=sysuser visible="1" edit.limit=100 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-9" font.weight="400"  font.family="0" font.pit
+爀
+ch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.re
+琀
+petition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="
+瘀
+0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=3 alignment="0"
+砀
+ tabsequence=20 border="0" color="33554432" x="398" y="8" height="68" width="809" format="[general]" html.valueishtml="0"  name=cc_desc visible="1" edit.limit=200 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face
+稀
+="Arial" font.height="-9" font.weight="400"  font.family="0" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" backgrou
+簀
+nd.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradie
+縀
+nt.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.trans
+耀
+parency="0" transparency="0" )
+column(band=detail id=15 alignment="0" tabsequence=10 border="0" color="33554432" x="9" y="8" height="68" width="379" format="[general]" html.valueishtml="0"  name=cc_codeuser visible="1" edit.limit=0 edit.case=any edit
+舀
+.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" background.transparency="0" background.gradient.color="84215
+萀
+04" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" 
+蘀
+background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidt
+蠀
+h="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=14 alignment="0" tabsequence=70 border="0" color="33554432" x="2907" y="8" height="68" width="453" format="[shortdate] [time]" html.valueishtml="0" 
+言
+ name=sysdate visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-9" font.weight="400"  font.family="0" font.pitch="2" font.charset="0" background.mode="1" background.
+谀
+color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count=
+踀
+"0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" to
+退
+oltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=17 alignment="0" tabsequence=80 border="0" color="33554432" x="3369" y
+鈀
+="8" height="68" width="334" format="[shortdate] [time]" html.valueishtml="0"  name=cc_dele_date visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-9" font.weight="400"  font.family="0" fo
+鐀
+nt.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradi
+阀
+ent.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.ini
+頀
+tial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=18 alignm
+騀
+ent="0" tabsequence=90 border="0" color="33554432" x="3712" y="8" height="68" width="361" format="[general]" html.valueishtml="0"  name=deleteuser visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font
+鰀
+.height="-9" font.weight="400"  font.family="0" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.a
+ngle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="10
+bject.cc_enable[ll_row]=0 
+		messagebox(gl.ls('提示'),gl.ls('保存失败
+'))
+end if 
+ 
+ //数据窗口重新刷新 
+of_refresh()
+ 
+
+end event
+
+event dw_1::itemchanged;call super::itemchanged;
+if row < 1 then return 1   
+this.object.sysdate[row] = uf_getsysdatetime
+()  
+this.object.sysuser[row] = gstr_userinfo.username
+end event
+
+event dw_1::sbo_ue_save;call super::sbo_ue_save;
+if li_deptchange=1 then 
+	if messagebox(gl.ls('提示'),gl.ls('是否重新构建组织树'),question!,yesno!)=1 then 
+		tv_cc.tv_main.event ue_constro
+0" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" t
+ransparency="0" )
+column(band=detail id=9 alignment="2" tabsequence=40 border="0" color="33554432" x="1984" y="8" height="68" width="238" format="[general]" html.valueishtml="0"  name=parentid visible="1" dddw.name=ddw_department dddw.displaycolumn=c
+c_desc dddw.datacolumn=cc_code dddw.percentwidth=200 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Arial" font.height="-9" font.weight="400"  font.family="0" font.pitch="2" font.charset="0" background.mode="
+1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.rep
+etition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.
+enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=19 alignment="0" tabsequence=100 border="0" color="33554
+432" x="4082" y="8" height="68" width="599" format="[general]" html.valueishtml="0"  name=cc_dele_remark visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-9" font.weight="400"  font.famil
+y="0" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" backgrou
+nd.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.d
+3
+y
+a
+:ai_user
+o
+ai_user
+8
+
+cc_mstr
+*
+id
+cc_mstr.id
+cc_code
+ 
+cc_mstr.cc_code
+cc_desc
+ 
+cc_mstr.cc_desc
+cc_desc_en
+&
+cc_mstr.cc_desc_en
+cc_level
+"
+cc_mstr.cc
+_level
+cc_sort
+ 
+cc_mstr.cc_sort
+dept_precode
+*
+cc_mstr.dept_precode
+dept_tel
+"
+cc_mstr.dept_tel
+parentid
+"
+cc_mstr.parentid
+dept_fax
+"
+cc_mstr.dept_fax
+cc_sortnum
+&
+cc_mstr.cc_sortnum
+dept_path
+$
+cc_mstr.dept_path
+sysuser
+ 
+cc_mstr.sysuser
+sysdate
+ 
+cc_mstr.sysdate
+cc_codeuser
+(
+cc_mstr.cc_codeuser
+cc_enable
+$
+cc_mstr.cc_enable
+cc_dele_date
+*
+cc_mstr.cc_dele_date
+deleteuser
+&
+cc_mstr.deleteuser
+cc_dele_remark
+.
+cc_mstr.cc_dele_remark
+deptcount
+$
+cc_mstr.deptcount
+deptdec
+ 
+cc_mstr.deptdec
+2
+cc_mstr_dept_parentlevel
+2
+cc_mstr.dept_parentlevel
+  SELECT cc_mstr.id,
+        cc_mstr.cc_code,   
+
+         cc_mstr.cc_desc,    
+         cc_mstr.cc_desc_en,   
+         cc_mstr.cc_level,   
+         cc_mstr.cc_sort,   
+         cc_mstr.dept_precode,   
+         cc_mstr.dept_tel,   
+         cc_mstr.parentid,   
+         cc_mstr.dept_fax,  
+ 
+         cc_mstr.cc_sortnum,   
+         cc_mstr.dept_path,   
+         cc_mstr.sysuser,   
+         cc_mstr.sysdate,   
+         cc_mstr.cc_codeuser,   
+         cc_mstr.cc_enable,   
+         cc_mstr.cc_dele_date,   
+         cc_mstr.delet
+euser,   
+         cc_mstr.cc_dele_remark,   
+         cc_mstr.deptcount,   
+         cc_mstr.deptdec  ,
+		cc_mstr.dept_parentlevel
+    FROM cc_mstr     , v_usercc
+where cc_mstr.id = v_usercc.cc_id  AND guserid=
+ 
+order by cc_sort,cc_mstr.cc_le
+ooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=det
+ail id=14 alignment="0" tabsequence=10 border="0" color="33554432" x="9" y="8" height="68" width="379" format="[general]" html.valueishtml="0"  name=cc_codeuser visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.fac
+e="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1073741824" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" backgr
+ound.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.grad
+ient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.tra
+nsparency="0" transparency="0" )
+column(band=detail id=6 alignment="0" tabsequence=40 border="0" color="33554432" x="1984" y="8" height="68" width="567" format="[general]" html.valueishtml="0"  name=cc_sort visible="1" edit.limit=100 edit.case=any ed
+it.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-9" font.weight="400"  font.family="0" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" backgroun
+d.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" backgro
+und.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbub
+ble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=12 alignment="0" tabsequence=80 border="0" color="33554432" x="4210" y="8" height="68" width="489" format="[general]" html.va
+lueishtml="0"  name=sysuser visible="1" edit.limit=100 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-9" font.weight="400"  font.family="0" font.pitch="2" font.charset="0" background.mode
+="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.r
+epetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" toolti
+p.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=13 alignment="0" tabsequence=90 border="0" color="3355
+4432" x="4709" y="8" height="68" width="603" format="[shortdate] [time]" html.valueishtml="0"  name=sysdate visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-9" font
+.weight="400"  font.family="0" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" backgrou
+
+         cc_mstr.dept_precode,   
+         cc_mstr.dept_tel,   
+         cc_mstr.dept_fax,    
+         cc_mstr.cc_sortnum,   
+         cc_mstr.dept_path,   
+         cc_mstr.sysuser,   
+         cc_mstr.sysdate,   
+         cc_mstr.cc_codeuse
+nd.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backco
+vel
+
+h
+"
+1
+"
+1
+"
+1
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+"
+1
+"
+0
+"
+0
+"
+1
+"
+0
+(
+d_deptmanager
+<?xml version="1.0" encoding="gb2312" standalone="no"?><untitled><untitled_row __pbband="detail"><cc_code/><cc_desc>c
+lor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+
+column(band=detail id=16 alignment="0" tabsequence=50 border="0" color="33554432" x="2560" y="8" height="68" width="334" format="[shortdate] [time]" html.valueishtml="0"  name=cc_dele_date visible="1" edit.limit=0 edit.case=any edit.focusrectangle=n
+elay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=2
+1 alignment="0" tabsequence=130 border="0" color="33554432" x="5339" y="8" height="68" width="407" format="[general]" html.valueishtml="0"  name=deptdec visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial
+" font.height="-9" font.weight="400"  font.family="0" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.grad
+ient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spre
+ad="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency
+="0" transparency="0" )
+column(band=detail id=20 alignment="0" tabsequence=110 border="0" color="33554432" x="4690" y="8" height="68" width="224" format="[general]" html.valueishtml="0"  name=deptcount visible="1" edit.limit=0 edit.case=any edit.focu
+srectangle=no edit.autoselect=no  font.face="Arial" font.height="-9" font.weight="400"  font.family="0" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" ba
+ckground.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" backgr
+ound.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" 
+tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=22 alignment="0" tabsequence=120 border="0" color="33554432" x="4923" y="8" height="68" width="407" format="[general]" html.valueishtml="0"  name=cc_mstr_
+dept_parentlevel visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-9" font.weight="400"  font.family="0" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" b
+ackground.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.grad
+ient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutto
+release 12.5;
+datawindow(units=0 timer_interval=0 color=1073741824 brushmode=0 transparency=0 gradient.angle=0 gradient.color=8421504 gradient.focus=0 gradient.repetition.count=0 gradient.repetition.length=100 gradient.repetition.mode=0 gradient.scal
+縀
+e=100 gradient.spread=100 gradient.transparency=0 picture.blur=0 picture.clip.bottom=0 picture.clip.left=0 picture.clip.right=0 picture.clip.top=0 picture.mode=0 picture.scale.x=100 picture.scale.y=100 picture.transparency=0 processing=1 HTMLDW=no pri
+g
+width
+(
+耀
+崀
+
+耀
+ 
+考
+T
+
+而
+耀
+耇
+耀
+耍
+耏
+耐
+耑
+耒
+耓
+老
+耗
+d
+ 
+      
+ 
+       
+destroy
+L
+"
+耗
+/"
+44
+J
+B/" @
+'
+J
+d
+L
+       
+ancestorreturnvalue
+::message
+(
+8
+"
+耲H
+       
+constructor
+returnvalue
+(
+@
+耘"
+耘L"
+E
+2
+<
+       
++destroy
++constructor
+(
+"
+昀
+2
+Z
+       
+x
+y
+width
+height
+taborder
+bringtotop
+x
+\
+$
+2
+F
+D
+崀
+
+ 
+考
+\
+F
+而
+耀
+耇
+耀
+耍
+       
+ 
+       
+destroy
+耂
+耂
+F
+&
+.
+2
+2
+       
++create
++destroy
+(
+ 
+2
+       
+崀
+
+ 
+考
+耄
+者
+耆
+耀
+耇
+耀
+耈
+耉
+耉
+耋
+耖
+耗
+耗
+耀
+耀
+耙
+耥
+耪
+b
+耀
+脀
+ 
+b
+老
+脀
+L"
+D
+F
+C
+)
+B
+2
+       
+2
+       
+崀
+
+耀
+ 
+考
+T
+
+而
+耀
+耇
+耀
+耍
+耏
+耐
+耑
+耒
+耓
+耔
+L
+"
+耘
+/
+44
+J
+B/
+ @
+'
+J
+d
+L
+       
+ancestorre
+爀
+turnvalue
+::message
+(
+8
+耫H
+       
+constructor
+returnvalue
+(
+@
+"
+耙L"
+E
+2
+*
+       
++constructor
+2
+       
+崀
+
+ 
+考
+\
+F
+而
+耀
+耇
+耀
+瘀
+entid
+structure
+mailrecipient
+environment
+mailfiledescription
+mailmessage
+syncparm
+datawindowchild
+listviewitem
+treeviewitem
+connectioninfo
+powerobject
+n_cst_tr
+w_error
+0
+T
+h
