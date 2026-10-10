@@ -48,4 +48,8 @@ node_modules/
 /package-lock.json
 **/.vitepress/cache/** 
 /App/pnpm-lock.yaml
+<<<<<<< HEAD
+=======
+/EHR/NHR.NClient
+>>>>>>> 809124fe79264e3f23f9aa7e1f2806060ba6a421
 /NHR.NClient
