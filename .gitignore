@@ -49,3 +49,5 @@ node_modules/
 **/.vitepress/cache/**
 
 /App/pnpm-lock.yaml
+/EHR/NHR.NClient
+/NHR.NClient
