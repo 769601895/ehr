@@ -47,7 +47,6 @@
 							<el-button-group style="padding-left: 12px">
 								<el-button icon="ele-Expand" @click="handleExpand"> {{ $t('message.list.allExpand') }} </el-button>
 								<el-button icon="ele-Fold" @click="handleFold"> {{ $t('message.list.allFold') }} </el-button>
-								<el-button icon="ele-Refresh" @click="handleSync" v-auth="'sysOrg/add'"> 从人事部门导入 </el-button>
 							</el-button-group>
 						</template>
 						<template #toolbar_tools> </template>
@@ -75,7 +74,7 @@
 	</div>
 </template>
 
-<!-- 组织架构 -->
+<!-- 系统机构 -->
 <script lang="ts" setup name="sysOrg">
 import { onMounted, reactive, ref, nextTick } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
@@ -91,20 +90,19 @@ import EditOrg from '/@/views/system/org/component/editOrg.vue';
 import ModifyRecord from '/@/components/table/modifyRecord.vue';
 
 import { getAPI } from '/@/utils/axios-utils';
-import { SysDictDataApi } from '/@/api-services/system/api';
+import { SysDictDataApi, SysOrgApi } from '/@/api-services/system/api';
 import { SysOrg } from '/@/api-services/system/models';
-import { deleteHrOrg, getHrOrgList, syncHrOrgFromCcMstr } from '/@/api/hrms/hrOrg';
 
 const xGrid = ref<VxeGridInstance>();
 const editOrgRef = ref<InstanceType<typeof EditOrg>>();
 const orgTreeRef = ref<InstanceType<typeof OrgTree>>();
 const state = reactive({
-	treeData: [] as Array<SysOrg>, // 机构树所有数据
+	treeData: [] as Array<SysOrg>,
 	queryParams: {
 		id: 0,
-		name: undefined,
-		code: undefined,
-		type: undefined,
+		name: undefined as string | undefined,
+		code: undefined as string | undefined,
+		type: undefined as string | undefined,
 	},
 	title: '',
 	orgTypeList: [] as any,
@@ -112,19 +110,14 @@ const state = reactive({
 
 const i18n = useI18n();
 
-// 表格参数配置
 const options = useVxeTable<SysOrg>(
 	{
 		id: 'sysOrg',
 		name: i18n.t('message.list.orgStructure'),
 		columns: [
-			// { type: 'checkbox', width: 40, fixed: 'left' },
 			{ field: 'seq', type: 'seq', title: i18n.t('message.list.seq'), width: 60, fixed: 'left' },
-			{ field: 'name', title: i18n.t('message.list.organizationName'), minWidth: 200, showOverflow: 'tooltip', treeNode: true, align: 'left', headerAlign: 'center' },
-			{ field: 'code', title: i18n.t('message.list.organizationCode'), minWidth: 140, showOverflow: 'tooltip' },
-			{ field: 'ccDept', title: '部门代号', minWidth: 100, showOverflow: 'tooltip' },
-			{ field: 'ccLevel', title: '层级码', minWidth: 120, showOverflow: 'tooltip' },
-			{ field: 'ccSite', title: '厂区', minWidth: 90, showOverflow: 'tooltip' },
+			{ field: 'name', title: i18n.t('message.list.organizationName'), minWidth: 180, showOverflow: 'tooltip', treeNode: true, align: 'left', headerAlign: 'center' },
+			{ field: 'code', title: i18n.t('message.list.organizationCode'), minWidth: 120, showOverflow: 'tooltip' },
 			{ field: 'level', title: i18n.t('message.list.level'), minWidth: 70, showOverflow: 'tooltip' },
 			{
 				field: 'type',
@@ -133,63 +126,48 @@ const options = useVxeTable<SysOrg>(
 				formatter: ({ cellValue }: any) => state.orgTypeList.find((u: any) => u.value == cellValue)?.label,
 				showOverflow: 'tooltip',
 			},
-			{ field: 'longitude', title: i18n.t('message.list.longitude'), showOverflow: 'tooltip' },
-			{ field: 'latitude', title: i18n.t('message.list.latitude'), showOverflow: 'tooltip' },
 			{ field: 'orderNo', title: i18n.t('message.list.orderNo'), width: 80, showOverflow: 'tooltip' },
 			{ field: 'status', title: i18n.t('message.list.status'), width: 80, showOverflow: 'tooltip', slots: { default: 'row_status' } },
 			{ field: 'record', title: i18n.t('message.list.record'), width: 100, showOverflow: 'tooltip', slots: { default: 'row_record' } },
 			{ field: 'buttons', title: i18n.t('message.list.operation'), fixed: 'right', width: 200, showOverflow: true, slots: { default: 'row_buttons' } },
 		],
 	},
-	// vxeGrid配置参数(此处可覆写任何参数)，参考vxe-table官方文档
 	{
 		stripe: false,
-		// 多选配置
 		checkboxConfig: { range: false },
-		// 代理配置
 		proxyConfig: { autoLoad: true, ajax: { query: () => handleQueryApi() } },
-		// 分页配置
 		pagerConfig: { enabled: false },
-		// 工具栏配置
 		toolbarConfig: { export: true },
-		// 树形配置
 		treeConfig: { expandAll: false },
 	}
 );
 
-// 页面初始化
 onMounted(async () => {
 	let resDicData = await getAPI(SysDictDataApi).apiSysDictDataDataListCodeGet('org_type');
 	state.orgTypeList = resDicData.data.result;
-	// 展开表格所有数据，数据量大时请勿开启
 	nextTick(async () => {
 		if (state.treeData?.length < 100) await xGrid.value?.setAllTreeExpand(true);
 	});
 });
 
-// 查询api
 const handleQueryApi = async () => {
-	const params = Object.assign(state.queryParams);
-	return getHrOrgList({ id: params.id, name: params.name, code: params.code, type: params.type });
+	const params = state.queryParams;
+	return getAPI(SysOrgApi).apiSysOrgListGet(params.id, params.name, params.code, params.type);
 };
 
-// 查询操作
 const handleQuery = async (updateTree: boolean = false) => {
 	options.loading = true;
 	var res = await handleQueryApi();
 	xGrid.value?.loadData(res.data.result ?? []);
 	options.loading = false;
-	// 是否更新左侧机构列表树
 	if (updateTree == true) {
 		const data = await orgTreeRef.value?.fetchTreeData();
 		state.treeData = data ?? [];
 	}
-	// 若无选择节点并且查询条件为空时，更新编辑页面机构列表树
 	if (state.queryParams.id == 0 && state.queryParams.name == undefined && state.queryParams.code == undefined && state.queryParams.type == undefined && updateTree == false)
 		state.treeData = res.data.result ?? [];
 };
 
-// 重置操作
 const resetQuery = async () => {
 	state.queryParams.id = 0;
 	state.queryParams.name = undefined;
@@ -198,36 +176,25 @@ const resetQuery = async () => {
 	await xGrid.value?.commitProxy('reload');
 };
 
-// 打开新增页面
 const handleAdd = () => {
 	state.title = i18n.t('message.list.addOrg');
 	editOrgRef.value?.openDialog({ status: 1, orderNo: 100 });
 };
 
-// 打开编辑页面
 const handleEdit = (row: any) => {
 	state.title = i18n.t('message.list.editOrg');
 	editOrgRef.value?.openDialog(row);
 };
 
-// 打开复制页面
 const openCopyOrg = (row: any) => {
 	state.title = i18n.t('message.list.copyOrg');
 	var copyRow = JSON.parse(JSON.stringify(row)) as any;
 	copyRow.id = 0;
 	copyRow.name = '';
-	copyRow.ccDesc = '';
 	copyRow.code = '';
-	copyRow.ccCode = '';
-	copyRow.ccIdentityId = 0;
-	copyRow.orgId = undefined;
-	copyRow.ccLevel = '';
-	copyRow.ccCodeParent = '';
-	copyRow.parentId = undefined;
 	editOrgRef.value?.openDialog(copyRow);
 };
 
-// 删除
 const handleDelete = (row: any) => {
 	ElMessageBox.confirm(i18n.t('message.list.confirmDeleteOrg', { name: row.name }), i18n.t('message.list.hint'), {
 		confirmButtonText: i18n.t('message.list.confirmButtonText'),
@@ -235,29 +202,22 @@ const handleDelete = (row: any) => {
 		type: 'warning',
 	})
 		.then(async () => {
-			deleteHrOrg({ id: row.id }).then(async (res: any) => {
-				if (res.data.code == 200) {
-					ElMessage.success(i18n.t('message.list.successDelete'));
-					await handleQuery(true);
-				}
-			});
+			await getAPI(SysOrgApi).apiSysOrgDeletePost({ id: row.id });
+			ElMessage.success(i18n.t('message.list.successDelete'));
+			await handleQuery(true);
 		})
 		.catch(() => {});
 };
 
-// 表格事件
 const gridEvents: VxeGridListeners<SysOrg> = {
-	// 只对 proxy-config.ajax.query 配置时有效，当手动点击查询时会触发该事件
 	async proxyQuery() {
 		state.treeData = xGrid.value?.getTableData().tableData ?? [];
 	},
-	// 双击行事件
 	async cellDblclick({ row }) {
 		if (auth('sysOrg/update')) await handleEdit(row);
 	},
 };
 
-// 树组件点击
 const handleNodeChange = async (node: any) => {
 	state.queryParams.id = node.id;
 	state.queryParams.name = undefined;
@@ -267,29 +227,11 @@ const handleNodeChange = async (node: any) => {
 	await handleQuery();
 };
 
-// 全部展开
 const handleExpand = () => {
 	xGrid.value?.setAllTreeExpand(true);
 };
 
-// 全部折叠
 const handleFold = () => {
 	xGrid.value?.clearTreeExpand();
-};
-
-const handleSync = () => {
-	ElMessageBox.confirm('将按 cc_mstr 导入或更新系统机构（以 SysOrg 为后续结构主表，不会删除已有机构）。是否继续？', i18n.t('message.list.hint'), {
-		confirmButtonText: i18n.t('message.list.confirmButtonText'),
-		cancelButtonText: i18n.t('message.list.cancelButtonText'),
-		type: 'warning',
-	})
-		.then(async () => {
-			const res = await syncHrOrgFromCcMstr();
-			if (res.data.code == 200) {
-				ElMessage.success(`已同步 ${res.data.result ?? 0} 条人事部门`);
-				await handleQuery(true);
-			}
-		})
-		.catch(() => {});
 };
 </script>

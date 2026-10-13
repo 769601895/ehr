@@ -1,88 +1,52 @@
 namespace Admin.NET.Application;
 
 /// <summary>
-/// 机构+人事部门聚合输出
+/// 部门树查询（含列排序：Field/Order/DescStr）
 /// </summary>
-public class HrOrgOutput
+public class HrOrgListInput : BasePageInput
 {
-    public long Id { get; set; }
-    public long Pid { get; set; }
-    public string Name { get; set; }
-    public string? Code { get; set; }
-    public int? Level { get; set; }
-    public string? Type { get; set; }
-    public long? DirectorId { get; set; }
-    public decimal Longitude { get; set; }
-    public decimal Latitude { get; set; }
-    public int OrderNo { get; set; }
-    public StatusEnum Status { get; set; }
-    public string? Remark { get; set; }
-    public bool Disabled { get; set; }
-    public DateTime CreateTime { get; set; }
-    public DateTime? UpdateTime { get; set; }
-    public List<HrOrgOutput> Children { get; set; }
+    /// <summary>仅返回该节点下子树；空为整树</summary>
+    public string? ParentCcCode { get; set; }
 
-    public string? CcCode { get; set; }
-    public string? CcCodeParent { get; set; }
-    public string? CcDept { get; set; }
-    public string? CcDesc { get; set; }
-    public string? CcLevel { get; set; }
-    public int? CcGroup { get; set; }
-    public string? CcIndet { get; set; }
-    public float? CcSub { get; set; }
-    public string? CcSite { get; set; }
-    public int? CcState { get; set; }
-    public string? CcCost { get; set; }
-    public float? CcWageRate { get; set; }
-    public string? CcStatBasic { get; set; }
-    public int? CcEnable { get; set; }
-    public DateTime? CcDeleDate { get; set; }
-    public string? CcCountGroup { get; set; }
-    public string? CcUser { get; set; }
-    public DateTime? CcDate { get; set; }
-    public int? CcKqgroup { get; set; }
-    public string? CcWoca { get; set; }
-    public string? CcBzUnit { get; set; }
-    public string? CcDeleRemark { get; set; }
-    public string? CcDescEn { get; set; }
-    public string? CcLevelCensor { get; set; }
-    public string? CcXzGroup { get; set; }
-    public DateTime? CcCreateDate { get; set; }
-    public string? MachineFloor { get; set; }
-    public string? KqNewSysuser { get; set; }
-    public DateTime? KqNewSysdate { get; set; }
-    public int CcIdentityId { get; set; }
-    public int? ParentId { get; set; }
-    public string? CcCode2 { get; set; }
-    public long? OrgId { get; set; }
+    /// <summary>true=含停用（历史部门）</summary>
+    public bool IncludeDisabled { get; set; }
+
+    /// <summary>人数统计人员状态：1在职 2停职 3离职（默认在职）</summary>
+    public int? EmpState { get; set; } = 1;
+
+    /// <summary>true=人数统计全部人员，忽略 EmpState</summary>
+    public bool EmpStateAll { get; set; }
 }
 
 /// <summary>
-/// 保存机构（结构字段 + cc_mstr 全字段）
+/// 部门明细分页查询（Keyword 继承自 BaseFilter：名称/编码/代号）
 /// </summary>
-public class HrOrgSaveInput
+public class HrOrgPageInput : BasePageInput
 {
-    public long Id { get; set; }
-    public long Pid { get; set; }
+    /// <summary>限定在该部门层级码前缀下（含子级）</summary>
+    public string? ParentCcCode { get; set; }
 
-    [Required(ErrorMessage = "机构名称不能为空")]
-    public string Name { get; set; }
+    /// <summary>true=含停用</summary>
+    public bool IncludeDisabled { get; set; }
+}
 
-    public string? Code { get; set; }
-    public int? Level { get; set; }
-    public string? Type { get; set; }
-    public long? DirectorId { get; set; }
-    public decimal Longitude { get; set; }
-    public decimal Latitude { get; set; }
-    public int OrderNo { get; set; } = 100;
-    public StatusEnum Status { get; set; } = StatusEnum.Enable;
-    public string? Remark { get; set; }
+/// <summary>
+/// 部门树/列表输出（基于 cc_mstr）
+/// </summary>
+public class HrOrgOutput
+{
+    /// <summary>自增辅助键，便于树控件绑定</summary>
+    public int Id { get; set; }
 
-    public string? CcCode { get; set; }
+    /// <summary>父节点辅助键</summary>
+    public int Pid { get; set; }
+
+    public string CcCode { get; set; }
     public string? CcCodeParent { get; set; }
     public string? CcDept { get; set; }
-    public string? CcDesc { get; set; }
-    public string? CcLevel { get; set; }
+    public string CcDesc { get; set; }
+    public string? CcDescEn { get; set; }
+    public string CcLevel { get; set; }
     public int? CcGroup { get; set; }
     public string? CcIndet { get; set; }
     public float? CcSub { get; set; }
@@ -100,17 +64,63 @@ public class HrOrgSaveInput
     public string? CcWoca { get; set; }
     public string? CcBzUnit { get; set; }
     public string? CcDeleRemark { get; set; }
-    public string? CcDescEn { get; set; }
     public string? CcLevelCensor { get; set; }
     public string? CcXzGroup { get; set; }
     public DateTime? CcCreateDate { get; set; }
     public string? MachineFloor { get; set; }
     public string? KqNewSysuser { get; set; }
     public DateTime? KqNewSysdate { get; set; }
-    public int CcIdentityId { get; set; }
-    public int? ParentId { get; set; }
     public string? CcCode2 { get; set; }
-    public long? OrgId { get; set; }
+
+    /// <summary>本节点人数（含子部门汇总，受 empState 筛选）</summary>
+    public int EmpCount { get; set; }
+
+    public List<HrOrgOutput> Children { get; set; } = [];
+}
+
+/// <summary>
+/// 保存部门
+/// </summary>
+public class HrOrgSaveInput
+{
+    /// <summary>部门编码；空则自动生成</summary>
+    public string? CcCode { get; set; }
+
+    /// <summary>父部门编码；空表示根级</summary>
+    public string? CcCodeParent { get; set; }
+
+    [Required(ErrorMessage = "部门名称不能为空")]
+    public string CcDesc { get; set; }
+
+    public string? CcDept { get; set; }
+    public string? CcDescEn { get; set; }
+    public int? CcGroup { get; set; }
+    public string? CcIndet { get; set; }
+    public float? CcSub { get; set; }
+    public string? CcSite { get; set; }
+    public int? CcState { get; set; }
+    public string? CcCost { get; set; }
+    public float? CcWageRate { get; set; }
+    public string? CcStatBasic { get; set; }
+    public string? CcCountGroup { get; set; }
+    public int? CcKqgroup { get; set; }
+    public string? CcWoca { get; set; }
+    public string? CcBzUnit { get; set; }
+    public string? CcLevelCensor { get; set; }
+    public string? CcXzGroup { get; set; }
+    public string? MachineFloor { get; set; }
+    public string? CcCode2 { get; set; }
+}
+
+/// <summary>
+/// 停用部门
+/// </summary>
+public class HrOrgDisableInput
+{
+    [Required(ErrorMessage = "部门编码不能为空")]
+    public string CcCode { get; set; }
+
+    public string? Remark { get; set; }
 }
 
 public class HrCodeItemOutput
@@ -119,18 +129,12 @@ public class HrCodeItemOutput
     public string Label { get; set; }
 }
 
-/// <summary>
-/// 成本中心下拉项
-/// </summary>
 public class HrCostItemOutput
 {
     public string Value { get; set; }
     public string Label { get; set; }
 }
 
-/// <summary>
-/// 考勤组别下拉项
-/// </summary>
 public class HrShiftItemOutput
 {
     public string Value { get; set; }
@@ -138,87 +142,37 @@ public class HrShiftItemOutput
 }
 
 /// <summary>
-/// 部门（cc_mstr）扁平行表项，对应 w_rs_cc_mstr_new 各页签的网格字段
-/// </summary>
-public class HrCcListItem
-{
-    public string CcCode { get; set; }
-    public string? CcDept { get; set; }
-    public string CcDesc { get; set; }
-    public string? CcLevel { get; set; }
-    public int? CcGroup { get; set; }
-    public string? CcSite { get; set; }
-    public string? CcCost { get; set; }
-    public int? CcKqgroup { get; set; }
-    public string? CcKqWocachange { get; set; }
-    public string? CcKqControl { get; set; }
-    public string? CcKqCode { get; set; }
-    public string? CcIndet { get; set; }
-    public int? CcEnable { get; set; }
-}
-
-/// <summary>
-/// 批量维护成本中心/考勤（页签2）
-/// </summary>
-public class HrCcBatchCostItem
-{
-    [Required(ErrorMessage = "部门编码不能为空")]
-    public string CcCode { get; set; }
-
-    public string? CcCost { get; set; }
-    public string? CcKqWocachange { get; set; }
-    public int? CcKqgroup { get; set; }
-}
-
-/// <summary>
-/// 批量维护考勤代码（页签3）
-/// </summary>
-public class HrCcBatchKqCodeItem
-{
-    [Required(ErrorMessage = "部门编码不能为空")]
-    public string CcCode { get; set; }
-
-    public string? CcKqCode { get; set; }
-}
-
-/// <summary>
-/// 合并部门入参（对应 合并部门 按钮）
+/// 合并部门
 /// </summary>
 public class HrMergeDeptInput
 {
-    /// <summary>
-    /// 合并前部门一编码
-    /// </summary>
     [Required(ErrorMessage = "请选择合并前部门一")]
     public string OldCode1 { get; set; }
 
-    /// <summary>
-    /// 合并前部门二编码
-    /// </summary>
     [Required(ErrorMessage = "请选择合并前部门二")]
     public string OldCode2 { get; set; }
 
-    /// <summary>
-    /// 合并后新部门编码
-    /// </summary>
-    [Required(ErrorMessage = "请选择合并后新部门")]
+    [Required(ErrorMessage = "请选择合并后目标部门")]
     public string NewCode { get; set; }
 }
 
 /// <summary>
-/// 调动部门入参（对应 调动部门 按钮）
+/// 调动部门：将 FromCcCode 整棵子树挂到 ToParentCcCode 下
 /// </summary>
 public class HrTransferDeptInput
 {
-    /// <summary>
-    /// 调出机构Id（SysOrg.Id）
-    /// </summary>
     [Required(ErrorMessage = "请选择调动部门")]
-    public long FromOrgId { get; set; }
+    public string FromCcCode { get; set; }
 
-    /// <summary>
-    /// 调入归属机构Id（SysOrg.Id）
-    /// </summary>
-    [Required(ErrorMessage = "请选择调至归属部门")]
-    public long ToOrgId { get; set; }
+    /// <summary>调入后的归属父部门；空表示挂到根级</summary>
+    public string? ToParentCcCode { get; set; }
+}
+
+/// <summary>
+/// 按工号查询人事资料（账号关联带出姓名，只读）
+/// </summary>
+public class HrEmpBriefOutput
+{
+    public string EmpId { get; set; }
+    public string? EmpName { get; set; }
 }

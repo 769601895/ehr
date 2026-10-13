@@ -1,11 +1,12 @@
 namespace Admin.NET.Application;
 
 /// <summary>
-/// 人事部门主档（遗留表 cc_mstr）。结构树以 SysOrg 为准，本表作一对一扩展。
+/// 人事部门主档
 /// </summary>
 [Tenant(ApplicationConst.HrDbConfigId)]
 [SugarTable("cc_mstr", "人事部门主档")]
-[IgnoreTable]
+[SugarIndex("ix_cc_mstr_cc_level", nameof(CcLevel), OrderByType.Asc)]
+[SugarIndex("ix_cc_mstr_ParentID", nameof(ParentId), OrderByType.Asc)]
 public class CcMstr
 {
     [SugarColumn(ColumnName = "cc_code", ColumnDescription = "部门编码", IsPrimaryKey = true, Length = 50)]
@@ -47,6 +48,7 @@ public class CcMstr
     [SugarColumn(ColumnName = "cc_stat_basic", ColumnDescription = "统计分类", Length = 50, IsNullable = true)]
     public string? CcStatBasic { get; set; }
 
+    /// <summary>0=启用，1=停用</summary>
     [SugarColumn(ColumnName = "cc_enable", ColumnDescription = "停用标志(0启用/1停用)", IsNullable = true)]
     public int? CcEnable { get; set; }
 
@@ -64,21 +66,6 @@ public class CcMstr
 
     [SugarColumn(ColumnName = "cc_kqgroup", ColumnDescription = "考勤组", IsNullable = true)]
     public int? CcKqgroup { get; set; }
-
-    [SugarColumn(ColumnName = "cc_kq_wocachange", ColumnDescription = "工时变更控制", Length = 10, IsNullable = true)]
-    public string? CcKqWocachange { get; set; }
-
-    [SugarColumn(ColumnName = "cc_kq_code", ColumnDescription = "考勤代码", Length = 50, IsNullable = true)]
-    public string? CcKqCode { get; set; }
-
-    [SugarColumn(ColumnName = "cc_kq_control", ColumnDescription = "考勤控制", Length = 10, IsNullable = true)]
-    public string? CcKqControl { get; set; }
-
-    [SugarColumn(ColumnName = "cc_kq_edituser", ColumnDescription = "考勤代码维护人", Length = 50, IsNullable = true)]
-    public string? CcKqEdituser { get; set; }
-
-    [SugarColumn(ColumnName = "cc_kq_editdate", ColumnDescription = "考勤代码维护时间", IsNullable = true)]
-    public DateTime? CcKqEditdate { get; set; }
 
     [SugarColumn(ColumnName = "cc_woca", ColumnDescription = "工时类别", Length = 50, IsNullable = true)]
     public string? CcWoca { get; set; }
@@ -110,15 +97,12 @@ public class CcMstr
     [SugarColumn(ColumnName = "kq_new_sysdate", ColumnDescription = "考勤同步时间", IsNullable = true)]
     public DateTime? KqNewSysdate { get; set; }
 
-    [SugarColumn(ColumnName = "ID", ColumnDescription = "遗留自增Id", IsIdentity = true, IsNullable = false)]
+    [SugarColumn(ColumnName = "ID", ColumnDescription = "自增辅助键", IsIdentity = true, IsNullable = false)]
     public int CcIdentityId { get; set; }
 
-    [SugarColumn(ColumnName = "ParentID", ColumnDescription = "遗留父Id", IsNullable = true)]
+    [SugarColumn(ColumnName = "ParentID", ColumnDescription = "父节点辅助Id", IsNullable = true)]
     public int? ParentId { get; set; }
 
     [SugarColumn(ColumnName = "cc_code2", ColumnDescription = "辅助编码", Length = 50, IsNullable = true)]
     public string? CcCode2 { get; set; }
-
-    [SugarColumn(ColumnName = "OrgId", ColumnDescription = "对应 SysOrg.Id", IsNullable = true)]
-    public long? OrgId { get; set; }
 }

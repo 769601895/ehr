@@ -3,14 +3,12 @@ using Furion.DatabaseAccessor;
 namespace Admin.NET.Application;
 
 /// <summary>
-/// 人事组织（SysOrg 结构 + cc_mstr 扩展）
+/// 人事组织（部门主档 cc_mstr）
 /// </summary>
 [ApiDescriptionSettings(ApplicationConst.GroupName, Name = "hrOrg", Order = 471, Description = "人事组织")]
 public class HrOrgService : IDynamicApiController, ITransient
 {
     private readonly UserManager _userManager;
-    private readonly SysOrgService _sysOrgService;
-    private readonly SqlSugarRepository<SysOrg> _sysOrgRep;
     private readonly SqlSugarRepository<CcMstr> _ccRep;
     private readonly SqlSugarRepository<CodeMstr> _codeRep;
     private readonly SqlSugarRepository<HrEmployee> _empRep;
@@ -19,8 +17,6 @@ public class HrOrgService : IDynamicApiController, ITransient
 
     public HrOrgService(
         UserManager userManager,
-        SysOrgService sysOrgService,
-        SqlSugarRepository<SysOrg> sysOrgRep,
         SqlSugarRepository<CcMstr> ccRep,
         SqlSugarRepository<CodeMstr> codeRep,
         SqlSugarRepository<HrEmployee> empRep,
@@ -28,8 +24,6 @@ public class HrOrgService : IDynamicApiController, ITransient
         SqlSugarRepository<HShiftSet> shiftRep)
     {
         _userManager = userManager;
-        _sysOrgService = sysOrgService;
-        _sysOrgRep = sysOrgRep;
         _ccRep = ccRep;
         _codeRep = codeRep;
         _empRep = empRep;
@@ -38,188 +32,440 @@ public class HrOrgService : IDynamicApiController, ITransient
     }
 
     /// <summary>
-    /// 获取机构列表（含 cc_mstr 全字段）
+    /// 获取部门树（默认仅启用；支持 Field/Order/DescStr 列排序）
     /// </summary>
     [DisplayName("获取人事机构列表")]
-    public async Task<List<HrOrgOutput>> GetList([FromQuery] OrgInput input)
+    public async Task<List<HrOrgOutput>> GetList([FromQuery] HrOrgListInput input)
     {
-        var tree = await _sysOrgService.GetList(input);
-        var ccList = await TryGetCcList();
-        var ccMap = ccList
-            .Where(u => !string.IsNullOrWhiteSpace(u.CcCode))
-            .GroupBy(u => u.CcCode)
-            .ToDictionary(u => u.Key, u => u.First());
-        return tree.Select(u => ToOutput(u, ccMap)).ToList();
+        input ??= new HrOrgListInput();
+        var q = _ccRep.AsQueryable();
+        if (!input.IncludeDisabled)
+            q = q.Where(u => u.CcEnable == null || u.CcEnable == 0);
+
+        // 树节点同级顺序由扁平查询排序决定；有 Field 时走 OrderBuilder，否则默认层级码+编码
+        var list = await ApplyOrgSort(q, input).ToListAsync();
+
+        var outputs = list.Select(ToOutput).ToList();
+        await FillDirectEmpCounts(outputs, input.EmpStateAll ? null : input.EmpState);
+        var tree = BuildTree(outputs, input.ParentCcCode);
+        foreach (var root in tree)
+            RollupEmpCount(root);
+        return tree;
     }
 
     /// <summary>
-    /// 增加机构并写入 cc_mstr
+    /// 部门明细分页（扁平列表，服务端排序）
     /// </summary>
+    [ApiDescriptionSettings(Name = "Page"), HttpPost]
+    [DisplayName("获取人事机构分页")]
+    public async Task<SqlSugarPagedList<HrOrgOutput>> Page(HrOrgPageInput input)
+    {
+        var q = _ccRep.AsQueryable();
+        if (!input.IncludeDisabled)
+            q = q.Where(u => u.CcEnable == null || u.CcEnable == 0);
+
+        if (!string.IsNullOrWhiteSpace(input.Keyword))
+        {
+            var kw = input.Keyword.Trim();
+            q = q.Where(u => u.CcDesc.Contains(kw) || u.CcCode.Contains(kw) || (u.CcDept != null && u.CcDept.Contains(kw)));
+        }
+
+        if (!string.IsNullOrWhiteSpace(input.ParentCcCode))
+        {
+            var parent = await _ccRep.GetFirstAsync(u => u.CcCode == input.ParentCcCode)
+                ?? throw Oops.Oh("父部门不存在");
+            var level = parent.CcLevel ?? "";
+            q = q.Where(u => u.CcLevel != null && u.CcLevel.StartsWith(level));
+        }
+
+        var page = await ApplyOrgSort(q, input).ToPagedListAsync(input.Page, input.PageSize);
+
+        return new SqlSugarPagedList<HrOrgOutput>
+        {
+            Page = page.Page,
+            PageSize = page.PageSize,
+            Total = page.Total,
+            TotalPages = page.TotalPages,
+            Items = page.Items.Select(ToOutput).ToList(),
+            HasNextPage = page.HasNextPage,
+            HasPrevPage = page.HasPrevPage
+        };
+    }
+
+    /// <summary>有列排序参数时用 OrderBuilder；否则固定 CcLevel、CcCode 升序</summary>
+    private static ISugarQueryable<CcMstr> ApplyOrgSort(ISugarQueryable<CcMstr> query, BasePageInput input)
+    {
+        if (string.IsNullOrWhiteSpace(input.Field))
+            return query.OrderBy(u => u.CcLevel).OrderBy(u => u.CcCode);
+
+        // 前端 camelCase → 实体属性 PascalCase，供 OrderBuilder/GetDbColumnName 解析
+        if (char.IsLower(input.Field[0]))
+            input.Field = char.ToUpperInvariant(input.Field[0]) + input.Field[1..];
+        if (string.IsNullOrWhiteSpace(input.DescStr))
+            input.DescStr = "desc";
+
+        return query.OrderBuilder(input, defaultSortField: nameof(CcMstr.CcLevel), descSort: false);
+    }
+
+    /// <summary>
+    /// 获取直接下级部门列表（固定 CcLevel/CcCode 序，无列头排序）
+    /// </summary>
+    [DisplayName("获取直接下级部门")]
+    public async Task<List<HrOrgOutput>> GetChildren([FromQuery] string? parentCcCode, [FromQuery] bool includeDisabled = false)
+    {
+        var parentLevel = "";
+        int? parentId = null;
+        if (!string.IsNullOrWhiteSpace(parentCcCode))
+        {
+            var parent = await _ccRep.GetFirstAsync(u => u.CcCode == parentCcCode)
+                ?? throw Oops.Oh("父部门不存在");
+            parentLevel = parent.CcLevel ?? "";
+            parentId = parent.CcIdentityId;
+        }
+
+        var expectLen = parentLevel.Length + 2;
+        var q = _ccRep.AsQueryable()
+            .Where(u => u.CcLevel != null && u.CcLevel.Length == expectLen);
+        if (!string.IsNullOrEmpty(parentLevel))
+            q = q.Where(u => u.CcLevel!.StartsWith(parentLevel));
+        else
+            q = q.Where(u => u.CcLevel!.Length == 2);
+
+        if (parentId is > 0)
+            q = q.Where(u => u.ParentId == parentId || u.CcCodeParent == parentCcCode);
+        else if (string.IsNullOrWhiteSpace(parentCcCode))
+            q = q.Where(u => u.ParentId == null || u.ParentId == 0 || u.CcCodeParent == null || u.CcCodeParent == "");
+
+        if (!includeDisabled)
+            q = q.Where(u => u.CcEnable == null || u.CcEnable == 0);
+
+        var list = await q.OrderBy(u => u.CcLevel).OrderBy(u => u.CcCode).ToListAsync();
+        return list.Select(ToOutput).ToList();
+    }
+
+    /// <summary>
+    /// 新增部门
+    /// </summary>
+    [UnitOfWork]
     [ApiDescriptionSettings(Name = "Add"), HttpPost]
     [DisplayName("增加人事机构")]
-    public async Task<long> Add(HrOrgSaveInput input)
+    public async Task<string> Add(HrOrgSaveInput input)
     {
-        await EnsureOrgIdColumn();
-        var ccCode = string.IsNullOrWhiteSpace(input.Code) ? await NextCcCode() : input.Code.Trim();
+        var ccCode = string.IsNullOrWhiteSpace(input.CcCode) ? await NextCcCode() : input.CcCode.Trim();
         if (await _ccRep.IsAnyAsync(u => u.CcCode == ccCode))
             throw Oops.Oh("部门编码已存在");
+        if (string.IsNullOrWhiteSpace(input.CcDept))
+            throw Oops.Oh("部门代号不能为空");
+        if (string.IsNullOrWhiteSpace(input.CcDesc))
+            throw Oops.Oh("部门名称不能为空");
 
-        var ccLevel = await BuildCcLevel(input.Pid, null);
-        var parentCc = await GetParentCc(input.Pid);
+        CcMstr? parent = null;
+        if (!string.IsNullOrWhiteSpace(input.CcCodeParent))
+        {
+            parent = await _ccRep.GetFirstAsync(u => u.CcCode == input.CcCodeParent)
+                ?? throw Oops.Oh("父部门不存在");
+            if (parent.CcEnable == 1)
+                throw Oops.Oh("父部门已停用，不能新增下级");
+        }
+
+        var ccLevel = await BuildCcLevel(parent);
         var now = DateTime.Now;
         var userName = _userManager.RealName ?? _userManager.Account;
-
-        var orgId = await _sysOrgService.AddOrg(ToAddOrgInput(input, ccCode, ccLevel));
-        var entity = ToCcEntity(input, ccCode, ccLevel, parentCc, orgId, userName, now, isNew: true);
+        var entity = MapSaveToEntity(input, ccCode, ccLevel, parent, userName, now, isNew: true);
         await _ccRep.InsertAsync(entity);
-        return orgId;
+        return ccCode;
     }
 
     /// <summary>
-    /// 更新机构并同步 cc_mstr
+    /// 更新部门
     /// </summary>
+    [UnitOfWork]
     [ApiDescriptionSettings(Name = "Update"), HttpPost]
     [DisplayName("更新人事机构")]
     public async Task Update(HrOrgSaveInput input)
     {
-        await EnsureOrgIdColumn();
-        var org = await _sysOrgRep.GetByIdAsync(input.Id) ?? throw Oops.Oh(ErrorCodeEnum.D1002);
-        var oldCode = org.Code;
-        var ccCode = string.IsNullOrWhiteSpace(input.Code) ? oldCode : input.Code.Trim();
-        if (string.IsNullOrWhiteSpace(ccCode))
+        if (string.IsNullOrWhiteSpace(input.CcCode))
             throw Oops.Oh("部门编码不能为空");
-        if (ccCode != oldCode && await _ccRep.IsAnyAsync(u => u.CcCode == ccCode))
-            throw Oops.Oh("部门编码已存在");
+        if (string.IsNullOrWhiteSpace(input.CcDept))
+            throw Oops.Oh("部门代号不能为空");
+        if (string.IsNullOrWhiteSpace(input.CcDesc))
+            throw Oops.Oh("部门名称不能为空");
 
-        var pidChanged = org.Pid != input.Pid;
-        var ccLevel = pidChanged ? await BuildCcLevel(input.Pid, input.Id) : (await GetCcByOrg(org))?.CcLevel;
-        ccLevel ??= await BuildCcLevel(input.Pid, input.Id);
+        var entity = await _ccRep.GetFirstAsync(u => u.CcCode == input.CcCode)
+            ?? throw Oops.Oh("部门不存在");
+        if (entity.CcEnable == 1)
+            throw Oops.Oh("部门已停用，不能修改");
 
-        var oldCc = await GetCcByOrg(org);
-        var oldPrefix = oldCc?.CcLevel;
+        var parentCode = input.CcCodeParent?.Trim();
+        if (parentCode == entity.CcCode)
+            throw Oops.Oh("父部门不能是自身");
 
-        await _sysOrgService.UpdateOrg(ToUpdateOrgInput(input, ccCode, ccLevel));
+        var parentChanged = !string.Equals(entity.CcCodeParent ?? "", parentCode ?? "", StringComparison.OrdinalIgnoreCase);
+        CcMstr? parent = null;
+        if (!string.IsNullOrWhiteSpace(parentCode))
+        {
+            parent = await _ccRep.GetFirstAsync(u => u.CcCode == parentCode)
+                ?? throw Oops.Oh("父部门不存在");
+            if (IsAncestorLevel(entity.CcLevel, parent.CcLevel))
+                throw Oops.Oh("不能将部门挂到自身下级之下");
+        }
 
-        var parentCc = await GetParentCc(input.Pid);
+        var oldLevel = entity.CcLevel ?? "";
+        var newLevel = parentChanged ? await BuildCcLevel(parent) : oldLevel;
+        if (parentChanged && newLevel.Length > 20)
+            throw Oops.Oh("组织架构层级深度已达极限");
+
         var now = DateTime.Now;
         var userName = _userManager.RealName ?? _userManager.Account;
-        var entity = ToCcEntity(input, ccCode, ccLevel, parentCc, input.Id, userName, now, isNew: oldCc == null);
-        if (oldCc == null)
-        {
-            await _ccRep.InsertAsync(entity);
-        }
-        else if (!string.IsNullOrWhiteSpace(oldCode) && oldCode != ccCode)
-        {
-            entity.CcCreateDate = oldCc.CcCreateDate ?? entity.CcCreateDate;
-            await _ccRep.DeleteAsync(u => u.CcCode == oldCode);
-            await _ccRep.InsertAsync(entity);
-        }
-        else
-        {
-            entity.CcIdentityId = oldCc.CcIdentityId;
-            entity.CcCreateDate = oldCc.CcCreateDate ?? entity.CcCreateDate;
-            await _ccRep.AsUpdateable(entity).IgnoreColumns(u => new { u.CcIdentityId }).ExecuteCommandAsync();
-        }
+        ApplySaveFields(entity, input, userName, now);
+        entity.CcCodeParent = parent?.CcCode;
+        entity.ParentId = parent?.CcIdentityId ?? 0;
+        entity.CcLevel = newLevel;
+        await _ccRep.AsUpdateable(entity)
+            .IgnoreColumns(u => new { u.CcIdentityId, u.CcCreateDate, u.CcCode })
+            .ExecuteCommandAsync();
 
-        if (pidChanged && !string.IsNullOrWhiteSpace(oldPrefix) && oldPrefix != ccLevel)
-            await RecalcDescendants(input.Id, oldPrefix, ccLevel);
+        if (parentChanged && oldLevel != newLevel)
+            await RecalcDescendants(oldLevel, newLevel);
     }
 
     /// <summary>
-    /// 删除机构及 cc_mstr
+    /// 停用部门（软删除，含子树）
     /// </summary>
+    [UnitOfWork]
     [ApiDescriptionSettings(Name = "Delete"), HttpPost]
-    [DisplayName("删除人事机构")]
-    public async Task Delete(DeleteOrgInput input)
+    [DisplayName("停用人事机构")]
+    public async Task Delete(HrOrgDisableInput input)
     {
-        await EnsureOrgIdColumn();
-        var org = await _sysOrgRep.GetByIdAsync(input.Id) ?? throw Oops.Oh(ErrorCodeEnum.D1002);
-        var childOrgs = await _sysOrgRep.AsQueryable().ToChildListAsync(u => u.Pid, input.Id, true);
-        var codes = childOrgs.Select(u => u.Code).Where(u => !string.IsNullOrWhiteSpace(u)).Distinct().ToList();
-        if (codes.Count > 0 && await _empRep.IsAnyAsync(u => codes.Contains(u.CcCode)))
-            throw Oops.Oh("该机构或下级机构下存在员工，禁止删除");
+        var entity = await _ccRep.GetFirstAsync(u => u.CcCode == input.CcCode)
+            ?? throw Oops.Oh("部门不存在");
+        if (entity.CcEnable == 1)
+            return;
 
-        await _sysOrgService.DeleteOrg(input);
-        if (codes.Count > 0)
-            await _ccRep.DeleteAsync(u => codes.Contains(u.CcCode));
-        await _ccRep.DeleteAsync(u => u.OrgId != null && childOrgs.Select(o => o.Id).Contains(u.OrgId.Value));
+        var level = entity.CcLevel ?? "";
+        var subtree = await _ccRep.AsQueryable()
+            .Where(u => u.CcLevel != null && u.CcLevel.StartsWith(level) && (u.CcEnable == null || u.CcEnable == 0))
+            .ToListAsync();
+        var codes = subtree.Select(u => u.CcCode).Distinct().ToList();
+        if (codes.Count == 0) return;
+
+        // 在职(1)或停职等非离职占用则拒绝；离职通常为 3
+        if (await _empRep.IsAnyAsync(u => codes.Contains(u.CcCode!) && u.EmpState != null && u.EmpState != 3))
+            throw Oops.Oh("该部门或下级仍有在职/停职人员，请先调离后再停用");
+
+        var now = DateTime.Now;
+        var remark = string.IsNullOrWhiteSpace(input.Remark) ? "停用" : input.Remark.Trim();
+        foreach (var row in subtree)
+        {
+            row.CcEnable = 1;
+            row.CcDeleDate = now;
+            row.CcDeleRemark = remark;
+            row.CcUser = _userManager.RealName ?? _userManager.Account;
+            row.CcDate = now;
+        }
+        await _ccRep.AsUpdateable(subtree)
+            .UpdateColumns(u => new { u.CcEnable, u.CcDeleDate, u.CcDeleRemark, u.CcUser, u.CcDate })
+            .ExecuteCommandAsync();
     }
 
     /// <summary>
-    /// 从 cc_mstr 导入/对齐 SysOrg（结构以导入后的 SysOrg 为准继续维护）
+    /// 合并部门
     /// </summary>
-    [ApiDescriptionSettings(Name = "SyncFromCcMstr"), HttpPost]
-    [DisplayName("从人事部门导入机构")]
-    public async Task<int> SyncFromCcMstr()
+    [UnitOfWork]
+    [ApiDescriptionSettings(Name = "MergeDept"), HttpPost]
+    [DisplayName("合并部门")]
+    public async Task MergeDept(HrMergeDeptInput input)
     {
-        if (!_userManager.SuperAdmin)
-            throw Oops.Oh(ErrorCodeEnum.D2003);
+        if (input.OldCode1 == input.OldCode2)
+            throw Oops.Oh("合并前部门一与合并前部门二不能相同");
 
-        await EnsureOrgIdColumn();
-        var tenantId = _userManager.TenantId;
-        var rootId = tenantId;
-        var list = (await _ccRep.GetListAsync())
-            .OrderBy(u => (u.CcLevel ?? "").Length)
-            .ThenBy(u => u.CcLevel)
-            .ThenBy(u => u.CcCode)
-            .ToList();
+        var newCc = await _ccRep.GetFirstAsync(u => u.CcCode == input.NewCode)
+            ?? throw Oops.Oh("合并后目标部门不存在");
+        if (newCc.CcEnable == 1)
+            throw Oops.Oh("合并后目标部门已停用");
 
-        var idToOrgId = new Dictionary<int, long>();
-        var count = 0;
-        foreach (var cc in list)
+        var oldCodes = new[] { input.OldCode1, input.OldCode2 };
+        var oldRows = new List<CcMstr>();
+        foreach (var oldCode in oldCodes)
         {
-            long pid = rootId;
-            if (cc.ParentId is > 0 && idToOrgId.TryGetValue(cc.ParentId.Value, out var parentOrgId))
-                pid = parentOrgId;
-
-            var exist = await _sysOrgRep.GetFirstAsync(u => u.Code == cc.CcCode && u.TenantId == tenantId);
-            var name = Truncate(cc.CcDesc, 64);
-            var level = string.IsNullOrWhiteSpace(cc.CcLevel) ? 1 : Math.Max(1, cc.CcLevel.Length / 2);
-            var status = ToStatus(cc.CcEnable);
-            if (exist == null)
-            {
-                var orgId = await _sysOrgService.AddOrg(new AddOrgInput
-                {
-                    Pid = pid,
-                    Name = name,
-                    Code = cc.CcCode,
-                    Type = "201",
-                    Level = level,
-                    OrderNo = ParseOrder(cc.CcLevel),
-                    Status = status,
-                    Remark = cc.CcDeleRemark
-                });
-                cc.OrgId = orgId;
-                idToOrgId[cc.CcIdentityId] = orgId;
-            }
-            else
-            {
-                exist.Pid = pid;
-                exist.Name = name;
-                exist.Level = level;
-                exist.Status = status;
-                exist.OrderNo = ParseOrder(cc.CcLevel);
-                await _sysOrgRep.AsUpdateable(exist).IgnoreColumns(true).ExecuteCommandAsync();
-                cc.OrgId = exist.Id;
-                idToOrgId[cc.CcIdentityId] = exist.Id;
-            }
-
-            if (cc.ParentId is > 0 && idToOrgId.TryGetValue(cc.ParentId.Value, out var pOrgId))
-            {
-                var pOrg = await _sysOrgRep.GetByIdAsync(pOrgId);
-                cc.CcCodeParent = pOrg?.Code;
-            }
-            else
-            {
-                cc.CcCodeParent = null;
-                cc.ParentId = 0;
-            }
-
-            await _ccRep.AsUpdateable(cc).UpdateColumns(u => new { u.OrgId, u.CcCodeParent, u.ParentId }).ExecuteCommandAsync();
-            count++;
+            var oldCc = await _ccRep.GetFirstAsync(u => u.CcCode == oldCode)
+                ?? throw Oops.Oh($"合并前部门 {oldCode} 不存在");
+            if (await HasEnabledChildren(oldCc))
+                throw Oops.Oh($"{oldCc.CcDesc} 下还有启用中的子部门，请先处理后再合并");
+            oldRows.Add(oldCc);
         }
 
-        return count;
+        await _empRep.AsUpdateable()
+            .SetColumns(u => u.CcCode == input.NewCode)
+            .Where(u => (u.CcCode == input.OldCode1 || u.CcCode == input.OldCode2) && (u.EmpState == null || u.EmpState != 3))
+            .ExecuteCommandAsync();
+
+        var now = DateTime.Now;
+        var userName = _userManager.RealName ?? _userManager.Account;
+        foreach (var oldCc in oldRows)
+        {
+            if (oldCc.CcCode == input.NewCode) continue;
+            var other = oldRows.First(u => u.CcCode != oldCc.CcCode);
+            oldCc.CcEnable = 1;
+            oldCc.CcDeleDate = now;
+            oldCc.CcDeleRemark = $"与{other.CcDesc}合并为{newCc.CcDesc}";
+            oldCc.CcUser = userName;
+            oldCc.CcDate = now;
+            await _ccRep.AsUpdateable(oldCc)
+                .UpdateColumns(u => new { u.CcEnable, u.CcDeleDate, u.CcDeleRemark, u.CcUser, u.CcDate })
+                .ExecuteCommandAsync();
+        }
+    }
+
+    /// <summary>
+    /// 调动部门：整棵子树改挂父级并重算层级码；原位置写入停用历史镜像（新编码）
+    /// </summary>
+    [UnitOfWork]
+    [ApiDescriptionSettings(Name = "TransferDept"), HttpPost]
+    [DisplayName("调动部门")]
+    public async Task TransferDept(HrTransferDeptInput input)
+    {
+        var fromCc = await _ccRep.GetFirstAsync(u => u.CcCode == input.FromCcCode)
+            ?? throw Oops.Oh("调动部门不存在");
+        if (fromCc.CcEnable == 1)
+            throw Oops.Oh("调动部门已停用");
+
+        CcMstr? toParent = null;
+        if (!string.IsNullOrWhiteSpace(input.ToParentCcCode))
+        {
+            if (input.ToParentCcCode == input.FromCcCode)
+                throw Oops.Oh("调动的部门前后一致，不能调往");
+            toParent = await _ccRep.GetFirstAsync(u => u.CcCode == input.ToParentCcCode)
+                ?? throw Oops.Oh("调至归属部门不存在");
+            if (toParent.CcEnable == 1)
+                throw Oops.Oh("调至归属部门已停用");
+            if (IsAncestorLevel(fromCc.CcLevel, toParent.CcLevel))
+                throw Oops.Oh("不能调往子部门");
+        }
+
+        var oldPrefix = fromCc.CcLevel ?? "";
+        if (string.IsNullOrEmpty(oldPrefix))
+            throw Oops.Oh("调动部门层级码无效");
+
+        var newPrefix = await BuildCcLevel(toParent);
+        if (newPrefix.Length > 20)
+            throw Oops.Oh("组织架构层级深度已达极限，不能调往");
+
+        // 改挂前快照原子树（含自身）；历史行在层级改写后再插入，避免被 RecalcDescendants 误伤
+        var subtree = await _ccRep.AsQueryable()
+            .Where(u => u.CcLevel != null && u.CcLevel.StartsWith(oldPrefix))
+            .OrderBy(u => u.CcLevel)
+            .ToListAsync();
+        if (subtree.Count == 0)
+            throw Oops.Oh("未找到可调动的部门子树");
+
+        var now = DateTime.Now;
+        var userName = _userManager.RealName ?? _userManager.Account;
+        var toDesc = toParent?.CcDesc ?? "根级";
+        var historyRemark = $"被调至{toDesc}";
+
+        fromCc.CcLevel = newPrefix;
+        fromCc.CcCodeParent = toParent?.CcCode;
+        fromCc.ParentId = toParent?.CcIdentityId ?? 0;
+        fromCc.CcUser = userName;
+        fromCc.CcDate = now;
+        await _ccRep.AsUpdateable(fromCc)
+            .UpdateColumns(u => new { u.CcLevel, u.CcCodeParent, u.ParentId, u.CcUser, u.CcDate })
+            .ExecuteCommandAsync();
+
+        if (oldPrefix != newPrefix)
+            await RecalcDescendants(oldPrefix, newPrefix);
+
+        await InsertTransferHistoryMirrors(subtree, historyRemark, userName, now);
+    }
+
+    /// <summary>
+    /// 调动后写入历史部门镜像：新 cc_code、停用、保留调动前层级与挂接，备注「被调至…」
+    /// </summary>
+    private async Task InsertTransferHistoryMirrors(List<CcMstr> subtreeSnapshot, string remark, string userName, DateTime now)
+    {
+        var newCodes = await NextCcCodes(subtreeSnapshot.Count);
+        var codeMap = subtreeSnapshot
+            .Select((row, i) => (Old: row.CcCode, New: newCodes[i]))
+            .ToDictionary(x => x.Old, x => x.New, StringComparer.OrdinalIgnoreCase);
+
+        var mirrors = new List<CcMstr>(subtreeSnapshot.Count);
+        foreach (var src in subtreeSnapshot)
+        {
+            var srcParent = src.CcCodeParent;
+            var parentInSubtree = !string.IsNullOrWhiteSpace(srcParent) && codeMap.ContainsKey(srcParent);
+            var parentCode = parentInSubtree ? codeMap[srcParent!] : srcParent;
+
+            mirrors.Add(new CcMstr
+            {
+                CcCode = codeMap[src.CcCode],
+                CcCodeParent = parentCode,
+                CcDept = src.CcDept,
+                CcDesc = src.CcDesc,
+                CcLevel = src.CcLevel,
+                CcGroup = src.CcGroup,
+                CcIndet = src.CcIndet,
+                CcSub = src.CcSub,
+                CcSite = src.CcSite,
+                CcState = src.CcState,
+                CcCost = src.CcCost,
+                CcWageRate = src.CcWageRate,
+                CcStatBasic = src.CcStatBasic,
+                CcEnable = 1,
+                CcDeleDate = now,
+                CcCountGroup = src.CcCountGroup,
+                CcUser = userName,
+                CcDate = now,
+                CcKqgroup = src.CcKqgroup,
+                CcWoca = src.CcWoca,
+                CcBzUnit = src.CcBzUnit,
+                CcDeleRemark = remark,
+                CcDescEn = src.CcDescEn,
+                CcLevelCensor = src.CcLevelCensor,
+                CcXzGroup = src.CcXzGroup,
+                CcCreateDate = src.CcCreateDate,
+                MachineFloor = src.MachineFloor,
+                CcCode2 = src.CcCode2,
+                // 子树内父级插入后回填；树挂接以 CcCodeParent 为准
+                ParentId = parentInSubtree ? 0 : src.ParentId
+            });
+        }
+
+        await _ccRep.AsInsertable(mirrors).ExecuteCommandAsync();
+
+        // 回填历史子树内部 ParentId（自增 ID 已生成）
+        var inserted = await _ccRep.AsQueryable()
+            .Where(u => newCodes.Contains(u.CcCode))
+            .ToListAsync();
+        var idByCode = inserted.ToDictionary(u => u.CcCode, u => u.CcIdentityId, StringComparer.OrdinalIgnoreCase);
+        var needParentFix = new List<CcMstr>();
+        foreach (var row in inserted)
+        {
+            if (string.IsNullOrWhiteSpace(row.CcCodeParent)) continue;
+            if (!idByCode.TryGetValue(row.CcCodeParent, out var pid)) continue;
+            if (row.ParentId == pid) continue;
+            row.ParentId = pid;
+            needParentFix.Add(row);
+        }
+        if (needParentFix.Count > 0)
+        {
+            await _ccRep.AsUpdateable(needParentFix)
+                .UpdateColumns(u => new { u.ParentId })
+                .ExecuteCommandAsync();
+        }
+    }
+
+    /// <summary>
+    /// 按工号取人事姓名（账号关联带出，只读不落库）
+    /// </summary>
+    [DisplayName("按工号获取人事姓名")]
+    public async Task<HrEmpBriefOutput?> GetEmpById([FromQuery] string empId)
+    {
+        if (string.IsNullOrWhiteSpace(empId)) return null;
+        var id = empId.Trim();
+        var emp = await _empRep.GetFirstAsync(u => u.EmpId == id);
+        if (emp == null) return null;
+        return new HrEmpBriefOutput { EmpId = emp.EmpId, EmpName = emp.EmpName };
     }
 
     /// <summary>
@@ -243,7 +489,7 @@ public class HrOrgService : IDynamicApiController, ITransient
     }
 
     /// <summary>
-    /// 成本中心下拉（对应 绑定下拉框-成本中心）
+    /// 成本中心下拉
     /// </summary>
     [DisplayName("成本中心下拉")]
     public async Task<List<HrCostItemOutput>> GetCostCenterList([FromQuery] string? site)
@@ -260,7 +506,7 @@ public class HrOrgService : IDynamicApiController, ITransient
     }
 
     /// <summary>
-    /// 考勤组别下拉（对应 绑定下拉框-考勤组别）
+    /// 考勤组别下拉
     /// </summary>
     [DisplayName("考勤组别下拉")]
     public async Task<List<HrShiftItemOutput>> GetShiftGroupList([FromQuery] string? tpkSite)
@@ -276,428 +522,232 @@ public class HrOrgService : IDynamicApiController, ITransient
         }).ToList();
     }
 
-    /// <summary>
-    /// 获取部门列表（按层级码过滤，对应 页签1/页签3/页签4 的网格数据）
-    /// </summary>
-    [DisplayName("获取部门列表")]
-    public async Task<List<HrCcListItem>> GetCcList([FromQuery] string? ccLevel)
+    private async Task<bool> HasEnabledChildren(CcMstr cc)
     {
-        await EnsureOrgIdColumn();
-        var q = _ccRep.AsQueryable();
-        if (!string.IsNullOrWhiteSpace(ccLevel))
-            q = q.Where(u => u.CcLevel!.StartsWith(ccLevel));
-        var list = await q.OrderBy(u => u.CcLevel).ToListAsync();
-        return list.Select(ToCcListItem).ToList();
-    }
-
-    /// <summary>
-    /// 批量维护成本中心/工时变更/考勤组（对应 页签3 保存）
-    /// </summary>
-    [ApiDescriptionSettings(Name = "BatchUpdateCostKq"), HttpPost]
-    [DisplayName("批量维护成本中心考勤")]
-    public async Task BatchUpdateCostKq(List<HrCcBatchCostItem> input)
-    {
-        await EnsureOrgIdColumn();
-        foreach (var item in input)
-        {
-            var cc = await _ccRep.GetFirstAsync(u => u.CcCode == item.CcCode);
-            if (cc == null) continue;
-            cc.CcCost = item.CcCost;
-            cc.CcKqWocachange = item.CcKqWocachange;
-            cc.CcKqgroup = item.CcKqgroup;
-            cc.CcUser = _userManager.RealName ?? _userManager.Account;
-            cc.CcDate = DateTime.Now;
-            await _ccRep.AsUpdateable(cc)
-                .UpdateColumns(u => new { u.CcCost, u.CcKqWocachange, u.CcKqgroup, u.CcUser, u.CcDate })
-                .ExecuteCommandAsync();
-        }
-    }
-
-    /// <summary>
-    /// 批量维护考勤代码（对应 页签4 保存）
-    /// </summary>
-    [ApiDescriptionSettings(Name = "BatchUpdateKqCode"), HttpPost]
-    [DisplayName("批量维护考勤代码")]
-    public async Task BatchUpdateKqCode(List<HrCcBatchKqCodeItem> input)
-    {
-        await EnsureOrgIdColumn();
-        var userName = _userManager.RealName ?? _userManager.Account;
-        var now = DateTime.Now;
-        foreach (var item in input)
-        {
-            var cc = await _ccRep.GetFirstAsync(u => u.CcCode == item.CcCode);
-            if (cc == null) continue;
-            cc.CcKqCode = item.CcKqCode;
-            cc.CcKqEdituser = userName;
-            cc.CcKqEditdate = now;
-            await _ccRep.AsUpdateable(cc)
-                .UpdateColumns(u => new { u.CcKqCode, u.CcKqEdituser, u.CcKqEditdate })
-                .ExecuteCommandAsync();
-        }
-    }
-
-    /// <summary>
-    /// 合并部门（对应 合并部门 按钮）：将部门一、部门二下的员工并入新部门，并停用原部门
-    /// </summary>
-    [ApiDescriptionSettings(Name = "MergeDept"), HttpPost]
-    [DisplayName("合并部门")]
-    public async Task MergeDept(HrMergeDeptInput input)
-    {
-        await EnsureOrgIdColumn();
-        if (input.OldCode1 == input.OldCode2)
-            throw Oops.Oh("合并前部门一与合并前部门二不能相同");
-        if (input.OldCode1 == input.NewCode || input.OldCode2 == input.NewCode)
-            throw Oops.Oh("合并后新部门不能与合并前部门相同");
-
-        var newCc = await _ccRep.GetFirstAsync(u => u.CcCode == input.NewCode)
-            ?? throw Oops.Oh("合并后新部门不存在");
-        var oldCodes = new[] { input.OldCode1, input.OldCode2 };
-        foreach (var oldCode in oldCodes)
-        {
-            var oldCc = await _ccRep.GetFirstAsync(u => u.CcCode == oldCode)
-                ?? throw Oops.Oh($"合并前部门 {oldCode} 不存在");
-            // 存在子部门则禁止合并（cc_mstr 与机构树均需为空）
-            if (await _ccRep.IsAnyAsync(u => u.CcCodeParent == oldCode))
-                throw Oops.Oh($"{oldCc.CcDesc} 下还有子部门，请将其子部门撤消后再合并");
-            var oldOrg = await _sysOrgRep.GetFirstAsync(u => u.Code == oldCode);
-            if (oldOrg != null && await _sysOrgRep.IsAnyAsync(u => u.Pid == oldOrg.Id))
-                throw Oops.Oh($"{oldCc.CcDesc} 下还有子机构，请将其子机构撤消后再合并");
-        }
-
-        // 员工并入新部门
-        await _empRep.AsUpdateable().SetColumns(u => u.CcCode == input.NewCode)
-            .Where(u => u.CcCode == input.OldCode1).ExecuteCommandAsync();
-        await _empRep.AsUpdateable().SetColumns(u => u.CcCode == input.NewCode)
-            .Where(u => u.CcCode == input.OldCode2).ExecuteCommandAsync();
-
-        // 停用原部门并同步机构状态
-        foreach (var oldCode in oldCodes)
-        {
-            if (oldCode == input.NewCode) continue;
-            var oldCc = await _ccRep.GetFirstAsync(u => u.CcCode == oldCode);
-            oldCc.CcEnable = 1;
-            oldCc.CcDeleDate = DateTime.Now;
-            oldCc.CcDeleRemark = $"与另一部门合并为 {newCc.CcDesc}";
-            await _ccRep.AsUpdateable(oldCc)
-                .UpdateColumns(u => new { u.CcEnable, u.CcDeleDate, u.CcDeleRemark }).ExecuteCommandAsync();
-
-            var org = await _sysOrgRep.GetFirstAsync(u => u.Code == oldCode);
-            if (org != null)
-            {
-                org.Status = StatusEnum.Disable;
-                await _sysOrgRep.AsUpdateable(org).UpdateColumns(u => u.Status).ExecuteCommandAsync();
-            }
-        }
-    }
-
-    /// <summary>
-    /// 调动部门（对应 调动部门 按钮）：将整个机构子树挂到新父机构下并重新计算层级码
-    /// </summary>
-    [UnitOfWork]
-    [ApiDescriptionSettings(Name = "TransferDept"), HttpPost]
-    [DisplayName("调动部门")]
-    public async Task TransferDept(HrTransferDeptInput input)
-    {
-        await EnsureOrgIdColumn();
-        var fromOrg = await _sysOrgRep.GetByIdAsync(input.FromOrgId)
-            ?? throw Oops.Oh("调出机构不存在");
-        var toOrg = await _sysOrgRep.GetByIdAsync(input.ToOrgId)
-            ?? throw Oops.Oh("调入归属机构不存在");
-        if (fromOrg.Id == toOrg.Id)
-            throw Oops.Oh("调动的部门前后一致，不能调往");
-
-        // 不能调入到自己的子机构
-        var childOrgs = await _sysOrgRep.AsQueryable().ToChildListAsync(u => u.Pid, input.FromOrgId, true);
-        if (childOrgs.Any(u => u.Id == toOrg.Id))
-            throw Oops.Oh("不能调往子部门");
-
-        var fromCc = await GetCcByOrg(fromOrg);
-        var oldPrefix = fromCc?.CcLevel ?? "";
-        var newPrefix = await BuildCcLevel(input.ToOrgId, null);
-
-        // 层级深度限制（每层2位，最大20位）
-        if (newPrefix.Length > 20)
-            throw Oops.Oh("组织架构层级深度已达极限，不能调往");
-
-        // 将调出机构挂到调入机构下
-        await _sysOrgService.UpdateOrg(new UpdateOrgInput
-        {
-            Id = fromOrg.Id,
-            Pid = toOrg.Id,
-            Name = fromOrg.Name,
-            Code = fromOrg.Code,
-            Type = fromOrg.Type,
-            Level = Math.Max(1, newPrefix.Length / 2),
-            DirectorId = fromOrg.DirectorId,
-            Longitude = fromOrg.Longitude,
-            Latitude = fromOrg.Latitude,
-            OrderNo = fromOrg.OrderNo,
-            Status = fromOrg.Status,
-            Remark = fromOrg.Remark
-        });
-
-        // 更新调出部门自身的层级码与父级
-        if (fromCc != null)
-        {
-            var toCc = await GetCcByOrg(toOrg);
-            fromCc.CcLevel = newPrefix;
-            fromCc.CcCodeParent = toCc?.CcCode;
-            fromCc.ParentId = toCc?.CcIdentityId ?? 0;
-            fromCc.OrgId = fromOrg.Id;
-            await _ccRep.AsUpdateable(fromCc)
-                .UpdateColumns(u => new { u.CcLevel, u.CcCodeParent, u.ParentId, u.OrgId })
-                .ExecuteCommandAsync();
-        }
-
-        // 递归重算子树层级
-        if (!string.IsNullOrEmpty(oldPrefix) && oldPrefix != newPrefix)
-            await RecalcDescendants(fromOrg.Id, oldPrefix, newPrefix);
-    }
-
-    private static HrCcListItem ToCcListItem(CcMstr cc)
-    {
-        return new HrCcListItem
-        {
-            CcCode = cc.CcCode,
-            CcDept = cc.CcDept,
-            CcDesc = cc.CcDesc,
-            CcLevel = cc.CcLevel,
-            CcGroup = cc.CcGroup,
-            CcSite = cc.CcSite,
-            CcCost = cc.CcCost,
-            CcKqgroup = cc.CcKqgroup,
-            CcKqWocachange = cc.CcKqWocachange,
-            CcKqControl = cc.CcKqControl,
-            CcKqCode = cc.CcKqCode,
-            CcIndet = cc.CcIndet,
-            CcEnable = cc.CcEnable
-        };
-    }
-
-    private async Task<List<CcMstr>> TryGetCcList()
-    {
-        try
-        {
-            await EnsureOrgIdColumn();
-            return await _ccRep.GetListAsync();
-        }
-        catch
-        {
-            return [];
-        }
-    }
-
-    private async Task EnsureOrgIdColumn()
-    {
-        await _ccRep.Context.Ado.ExecuteCommandAsync("""
-            IF COL_LENGTH('dbo.cc_mstr', 'OrgId') IS NULL
-                ALTER TABLE dbo.cc_mstr ADD OrgId bigint NULL;
-            """);
+        var level = cc.CcLevel ?? "";
+        return await _ccRep.IsAnyAsync(u =>
+            u.CcCode != cc.CcCode
+            && u.CcLevel != null
+            && u.CcLevel.StartsWith(level)
+            && u.CcLevel.Length > level.Length
+            && (u.CcEnable == null || u.CcEnable == 0));
     }
 
     private async Task<string> NextCcCode()
     {
+        var list = await NextCcCodes(1);
+        return list[0];
+    }
+
+    private async Task<List<string>> NextCcCodes(int count)
+    {
+        if (count <= 0) return [];
         var codes = await _ccRep.AsQueryable().Select(u => u.CcCode).ToListAsync();
-        var max = codes.Select(s => int.TryParse(s, out var n) ? n : 0).DefaultIfEmpty(21536).Max();
-        return (max + 1).ToString("000000");
+        var max = codes.Select(s => int.TryParse(s, out var n) ? n : 0).DefaultIfEmpty(0).Max();
+        return Enumerable.Range(1, count).Select(i => (max + i).ToString("000000")).ToList();
     }
 
-    private async Task<CcMstr?> GetParentCc(long pid)
+    private async Task<string> BuildCcLevel(CcMstr? parent)
     {
-        if (pid == 0) return null;
-        var parent = await _sysOrgRep.GetByIdAsync(pid);
-        return await GetCcByOrg(parent);
-    }
+        var parentLevel = parent?.CcLevel ?? "";
+        var expectLen = parentLevel.Length + 2;
+        var siblings = await _ccRep.AsQueryable()
+            .Where(u => u.CcLevel != null && u.CcLevel.Length == expectLen)
+            .WhereIF(!string.IsNullOrEmpty(parentLevel), u => u.CcLevel!.StartsWith(parentLevel))
+            .Select(u => u.CcLevel)
+            .ToListAsync();
 
-    private async Task<CcMstr?> GetCcByOrg(SysOrg? org)
-    {
-        if (org == null) return null;
-        if (org.Id > 0)
+        var maxSuffix = 0;
+        foreach (var level in siblings)
         {
-            var byOrg = await _ccRep.GetFirstAsync(u => u.OrgId == org.Id);
-            if (byOrg != null) return byOrg;
+            if (string.IsNullOrEmpty(level) || level.Length < 2) continue;
+            var suffix = level[^2..];
+            if (int.TryParse(suffix, out var n) && n > maxSuffix)
+                maxSuffix = n;
         }
-        if (!string.IsNullOrWhiteSpace(org.Code))
-            return await _ccRep.GetFirstAsync(u => u.CcCode == org.Code);
-        return null;
+
+        if (maxSuffix >= 99)
+            throw Oops.Oh("同级部门数量已达上限");
+
+        return parentLevel + (maxSuffix + 1).ToString("00");
     }
 
-    private async Task<string> BuildCcLevel(long pid, long? excludeOrgId)
+    private async Task RecalcDescendants(string oldPrefix, string newPrefix)
     {
-        var parentCc = await GetParentCc(pid);
-        var parentLevel = parentCc?.CcLevel ?? "";
-        var siblings = await _sysOrgRep.AsQueryable().Where(u => u.Pid == pid).ToListAsync();
-        var siblingLevels = new List<string>();
-        foreach (var s in siblings)
+        var children = await _ccRep.AsQueryable()
+            .Where(u => u.CcLevel != null && u.CcLevel.StartsWith(oldPrefix) && u.CcLevel.Length > oldPrefix.Length)
+            .ToListAsync();
+        if (children.Count == 0) return;
+
+        foreach (var child in children.OrderBy(u => (u.CcLevel ?? "").Length))
         {
-            if (excludeOrgId != null && s.Id == excludeOrgId) continue;
-            var cc = await GetCcByOrg(s);
-            if (!string.IsNullOrWhiteSpace(cc?.CcLevel))
-                siblingLevels.Add(cc.CcLevel);
+            var suffix = (child.CcLevel ?? "")[oldPrefix.Length..];
+            child.CcLevel = newPrefix + suffix;
+            if (child.CcLevel.Length >= 2)
+            {
+                var parentLevel = child.CcLevel[..^2];
+                var parent = await _ccRep.GetFirstAsync(u => u.CcLevel == parentLevel);
+                child.CcCodeParent = parent?.CcCode;
+                child.ParentId = parent?.CcIdentityId ?? 0;
+            }
         }
-        var max = 0;
-        foreach (var level in siblingLevels)
-        {
-            if (!level.StartsWith(parentLevel) || level.Length != parentLevel.Length + 2) continue;
-            if (int.TryParse(level[^2..], out var n) && n > max)
-                max = n;
-        }
-        return parentLevel + (max + 1).ToString("00");
+
+        await _ccRep.AsUpdateable(children)
+            .UpdateColumns(u => new { u.CcLevel, u.CcCodeParent, u.ParentId })
+            .ExecuteCommandAsync();
     }
 
-    private async Task RecalcDescendants(long orgId, string oldPrefix, string newPrefix)
+    /// <summary>判断 candidate 是否为 node 的子孙层级（或自身）</summary>
+    private static bool IsAncestorLevel(string? nodeLevel, string? candidateLevel)
     {
-        var children = await _sysOrgRep.AsQueryable().ToChildListAsync(u => u.Pid, orgId, false);
-        foreach (var child in children)
-        {
-            var cc = await GetCcByOrg(child);
-            if (cc == null || string.IsNullOrWhiteSpace(cc.CcLevel) || !cc.CcLevel.StartsWith(oldPrefix))
-                continue;
-            cc.CcLevel = newPrefix + cc.CcLevel[oldPrefix.Length..];
-            var parent = await _sysOrgRep.GetByIdAsync(child.Pid);
-            var parentCc = await GetCcByOrg(parent);
-            cc.CcCodeParent = parentCc?.CcCode;
-            cc.ParentId = parentCc?.CcIdentityId ?? 0;
-            cc.OrgId = child.Id;
-            await _ccRep.AsUpdateable(cc).UpdateColumns(u => new { u.CcLevel, u.CcCodeParent, u.ParentId, u.OrgId }).ExecuteCommandAsync();
-
-            child.Level = Math.Max(1, cc.CcLevel.Length / 2);
-            await _sysOrgRep.AsUpdateable(child).UpdateColumns(u => new { u.Level }).ExecuteCommandAsync();
-        }
+        if (string.IsNullOrEmpty(nodeLevel) || string.IsNullOrEmpty(candidateLevel))
+            return false;
+        return candidateLevel.StartsWith(nodeLevel, StringComparison.Ordinal);
     }
 
-    private AddOrgInput ToAddOrgInput(HrOrgSaveInput input, string ccCode, string ccLevel)
+    private static CcMstr MapSaveToEntity(HrOrgSaveInput input, string ccCode, string ccLevel, CcMstr? parent, string userName, DateTime now, bool isNew)
     {
-        return new AddOrgInput
-        {
-            Pid = input.Pid,
-            Name = Truncate(string.IsNullOrWhiteSpace(input.CcDesc) ? input.Name : input.CcDesc, 64),
-            Code = ccCode,
-            Type = string.IsNullOrWhiteSpace(input.Type) ? "201" : input.Type,
-            Level = Math.Max(1, ccLevel.Length / 2),
-            DirectorId = input.DirectorId,
-            Longitude = input.Longitude,
-            Latitude = input.Latitude,
-            OrderNo = input.OrderNo == 0 ? ParseOrder(ccLevel) : input.OrderNo,
-            Status = input.Status,
-            Remark = input.Remark ?? input.CcDeleRemark
-        };
-    }
-
-    private UpdateOrgInput ToUpdateOrgInput(HrOrgSaveInput input, string ccCode, string ccLevel)
-    {
-        var add = ToAddOrgInput(input, ccCode, ccLevel);
-        var update = add.Adapt<UpdateOrgInput>();
-        update.Id = input.Id;
-        return update;
-    }
-
-    private CcMstr ToCcEntity(HrOrgSaveInput input, string ccCode, string ccLevel, CcMstr? parentCc, long orgId, string userName, DateTime now, bool isNew)
-    {
-        var enable = input.Status == StatusEnum.Disable ? 1 : 0;
-        return new CcMstr
+        var entity = new CcMstr
         {
             CcCode = ccCode,
-            CcCodeParent = parentCc?.CcCode,
-            CcDept = input.CcDept,
-            CcDesc = string.IsNullOrWhiteSpace(input.CcDesc) ? input.Name : input.CcDesc,
             CcLevel = ccLevel,
-            CcGroup = input.CcGroup,
-            CcIndet = input.CcIndet,
-            CcSub = input.CcSub ?? 0,
-            CcSite = input.CcSite,
-            CcState = input.CcState,
-            CcCost = input.CcCost,
-            CcWageRate = input.CcWageRate ?? 0,
-            CcStatBasic = input.CcStatBasic,
-            CcEnable = enable,
-            CcDeleDate = input.Status == StatusEnum.Disable ? (input.CcDeleDate ?? now) : null,
-            CcCountGroup = input.CcCountGroup,
+            CcCodeParent = parent?.CcCode,
+            ParentId = parent?.CcIdentityId ?? 0,
+            CcEnable = 0,
             CcUser = userName,
             CcDate = now,
-            CcKqgroup = input.CcKqgroup ?? 1,
-            CcWoca = input.CcWoca,
-            CcBzUnit = input.CcBzUnit,
-            CcDeleRemark = input.CcDeleRemark ?? input.Remark,
-            CcDescEn = input.CcDescEn,
-            CcLevelCensor = input.CcLevelCensor,
-            CcXzGroup = input.CcXzGroup,
-            CcCreateDate = isNew ? (input.CcCreateDate ?? now) : input.CcCreateDate,
-            MachineFloor = input.MachineFloor,
-            KqNewSysuser = input.KqNewSysuser,
-            KqNewSysdate = input.KqNewSysdate,
-            ParentId = parentCc?.CcIdentityId ?? 0,
-            CcCode2 = input.CcCode2,
-            OrgId = orgId
+            CcCreateDate = isNew ? now : null
+        };
+        ApplySaveFields(entity, input, userName, now);
+        // 新增时继承上级厂别/工时等
+        if (isNew && parent != null)
+        {
+            entity.CcSite ??= parent.CcSite;
+            entity.CcWoca ??= parent.CcWoca;
+            entity.CcBzUnit ??= parent.CcBzUnit;
+            entity.CcStatBasic ??= parent.CcStatBasic;
+        }
+        return entity;
+    }
+
+    private static void ApplySaveFields(CcMstr entity, HrOrgSaveInput input, string userName, DateTime now)
+    {
+        entity.CcDesc = input.CcDesc.Trim();
+        entity.CcDept = input.CcDept?.Trim();
+        entity.CcDescEn = input.CcDescEn;
+        entity.CcGroup = input.CcGroup;
+        entity.CcIndet = input.CcIndet;
+        entity.CcSub = input.CcSub;
+        entity.CcSite = input.CcSite;
+        entity.CcState = input.CcState;
+        entity.CcCost = input.CcCost;
+        entity.CcWageRate = input.CcWageRate;
+        entity.CcStatBasic = input.CcStatBasic;
+        entity.CcCountGroup = input.CcCountGroup;
+        entity.CcKqgroup = input.CcKqgroup;
+        entity.CcWoca = input.CcWoca;
+        entity.CcBzUnit = input.CcBzUnit;
+        entity.CcLevelCensor = input.CcLevelCensor;
+        entity.CcXzGroup = input.CcXzGroup;
+        entity.MachineFloor = input.MachineFloor;
+        entity.CcCode2 = input.CcCode2;
+        entity.CcUser = userName;
+        entity.CcDate = now;
+    }
+
+    private static HrOrgOutput ToOutput(CcMstr cc)
+    {
+        return new HrOrgOutput
+        {
+            Id = cc.CcIdentityId,
+            Pid = cc.ParentId ?? 0,
+            CcCode = cc.CcCode,
+            CcCodeParent = cc.CcCodeParent,
+            CcDept = cc.CcDept,
+            CcDesc = cc.CcDesc,
+            CcDescEn = cc.CcDescEn,
+            CcLevel = cc.CcLevel,
+            CcGroup = cc.CcGroup,
+            CcIndet = cc.CcIndet,
+            CcSub = cc.CcSub,
+            CcSite = cc.CcSite,
+            CcState = cc.CcState,
+            CcCost = cc.CcCost,
+            CcWageRate = cc.CcWageRate,
+            CcStatBasic = cc.CcStatBasic,
+            CcEnable = cc.CcEnable,
+            CcDeleDate = cc.CcDeleDate,
+            CcCountGroup = cc.CcCountGroup,
+            CcUser = cc.CcUser,
+            CcDate = cc.CcDate,
+            CcKqgroup = cc.CcKqgroup,
+            CcWoca = cc.CcWoca,
+            CcBzUnit = cc.CcBzUnit,
+            CcDeleRemark = cc.CcDeleRemark,
+            CcLevelCensor = cc.CcLevelCensor,
+            CcXzGroup = cc.CcXzGroup,
+            CcCreateDate = cc.CcCreateDate,
+            MachineFloor = cc.MachineFloor,
+            KqNewSysuser = cc.KqNewSysuser,
+            KqNewSysdate = cc.KqNewSysdate,
+            CcCode2 = cc.CcCode2,
+            Children = []
         };
     }
 
-    private static HrOrgOutput ToOutput(SysOrg org, Dictionary<string, CcMstr> ccMap)
+    private async Task FillDirectEmpCounts(List<HrOrgOutput> outputs, int? empState)
     {
-        var output = org.Adapt<HrOrgOutput>();
-        if (!string.IsNullOrWhiteSpace(org.Code) && ccMap.TryGetValue(org.Code, out var cc))
-            FillCc(output, cc);
-        else
+        if (outputs.Count == 0) return;
+
+        var empQ = _empRep.AsQueryable().Where(u => u.CcCode != null && u.CcCode != "");
+        if (empState.HasValue)
+            empQ = empQ.Where(u => u.EmpState == empState.Value);
+
+        var codes = await empQ.Select(u => u.CcCode).ToListAsync();
+        var map = codes
+            .Where(c => !string.IsNullOrWhiteSpace(c))
+            .GroupBy(c => c!, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => g.Count(), StringComparer.OrdinalIgnoreCase);
+        foreach (var node in outputs)
+            node.EmpCount = map.TryGetValue(node.CcCode, out var c) ? c : 0;
+    }
+
+    /// <summary>将本节点直接人数与子树人数汇总到 EmpCount</summary>
+    private static int RollupEmpCount(HrOrgOutput node)
+    {
+        var sum = node.EmpCount;
+        foreach (var child in node.Children)
+            sum += RollupEmpCount(child);
+        node.EmpCount = sum;
+        return sum;
+    }
+
+    private static List<HrOrgOutput> BuildTree(List<HrOrgOutput> flat, string? rootParentCode)
+    {
+        var byCode = flat.Where(u => !string.IsNullOrWhiteSpace(u.CcCode))
+            .GroupBy(u => u.CcCode)
+            .ToDictionary(u => u.Key, u => u.First());
+        var roots = new List<HrOrgOutput>();
+
+        foreach (var node in flat)
         {
-            var byOrg = ccMap.Values.FirstOrDefault(u => u.OrgId == org.Id);
-            if (byOrg != null) FillCc(output, byOrg);
+            var parentCode = node.CcCodeParent;
+            if (string.IsNullOrWhiteSpace(rootParentCode))
+            {
+                if (string.IsNullOrWhiteSpace(parentCode) || !byCode.ContainsKey(parentCode))
+                    roots.Add(node);
+                else
+                    byCode[parentCode].Children.Add(node);
+            }
+            else
+            {
+                if (string.Equals(parentCode, rootParentCode, StringComparison.OrdinalIgnoreCase))
+                    roots.Add(node);
+                else if (!string.IsNullOrWhiteSpace(parentCode) && byCode.TryGetValue(parentCode, out var p))
+                    p.Children.Add(node);
+            }
         }
 
-        if (org.Children is { Count: > 0 })
-            output.Children = org.Children.Select(u => ToOutput(u, ccMap)).ToList();
-        return output;
-    }
-
-    private static void FillCc(HrOrgOutput output, CcMstr cc)
-    {
-        output.CcCode = cc.CcCode;
-        output.CcCodeParent = cc.CcCodeParent;
-        output.CcDept = cc.CcDept;
-        output.CcDesc = cc.CcDesc;
-        output.CcLevel = cc.CcLevel;
-        output.CcGroup = cc.CcGroup;
-        output.CcIndet = cc.CcIndet;
-        output.CcSub = cc.CcSub;
-        output.CcSite = cc.CcSite;
-        output.CcState = cc.CcState;
-        output.CcCost = cc.CcCost;
-        output.CcWageRate = cc.CcWageRate;
-        output.CcStatBasic = cc.CcStatBasic;
-        output.CcEnable = cc.CcEnable;
-        output.CcDeleDate = cc.CcDeleDate;
-        output.CcCountGroup = cc.CcCountGroup;
-        output.CcUser = cc.CcUser;
-        output.CcDate = cc.CcDate;
-        output.CcKqgroup = cc.CcKqgroup;
-        output.CcWoca = cc.CcWoca;
-        output.CcBzUnit = cc.CcBzUnit;
-        output.CcDeleRemark = cc.CcDeleRemark;
-        output.CcDescEn = cc.CcDescEn;
-        output.CcLevelCensor = cc.CcLevelCensor;
-        output.CcXzGroup = cc.CcXzGroup;
-        output.CcCreateDate = cc.CcCreateDate;
-        output.MachineFloor = cc.MachineFloor;
-        output.KqNewSysuser = cc.KqNewSysuser;
-        output.KqNewSysdate = cc.KqNewSysdate;
-        output.CcIdentityId = cc.CcIdentityId;
-        output.ParentId = cc.ParentId;
-        output.CcCode2 = cc.CcCode2;
-        output.OrgId = cc.OrgId;
-        if (!string.IsNullOrWhiteSpace(cc.CcDesc))
-            output.Name = cc.CcDesc;
-    }
-
-    private static StatusEnum ToStatus(int? ccEnable) => ccEnable == 1 ? StatusEnum.Disable : StatusEnum.Enable;
-
-    private static int ParseOrder(string? ccLevel)
-    {
-        if (string.IsNullOrWhiteSpace(ccLevel) || ccLevel.Length < 2) return 100;
-        return int.TryParse(ccLevel[^2..], out var n) ? n : 100;
-    }
-
-    private static string Truncate(string? value, int max)
-    {
-        if (string.IsNullOrEmpty(value)) return value ?? "";
-        return value.Length <= max ? value : value[..max];
+        return roots;
     }
 }

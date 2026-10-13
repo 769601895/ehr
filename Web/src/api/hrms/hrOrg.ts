@@ -2,24 +2,58 @@ import request from '/@/utils/request';
 
 enum Api {
 	List = '/api/hrOrg/list',
+	Page = '/api/hrOrg/page',
+	Children = '/api/hrOrg/children',
 	Add = '/api/hrOrg/add',
 	Update = '/api/hrOrg/update',
 	Delete = '/api/hrOrg/delete',
-	Sync = '/api/hrOrg/syncFromCcMstr',
+	EmpById = '/api/hrOrg/empById',
 	CodeList = '/api/hrOrg/codeList',
 	CostCenterList = '/api/hrOrg/costCenterList',
 	ShiftGroupList = '/api/hrOrg/shiftGroupList',
-	CcList = '/api/hrOrg/ccList',
-	BatchUpdateCostKq = '/api/hrOrg/batchUpdateCostKq',
-	BatchUpdateKqCode = '/api/hrOrg/batchUpdateKqCode',
 	MergeDept = '/api/hrOrg/mergeDept',
 	TransferDept = '/api/hrOrg/transferDept',
 }
 
-// 机构树（含 cc_mstr 全字段）
-export const getHrOrgList = (params?: any) =>
+/** 部门树（默认仅启用；人数默认按在职统计；支持 field/order/descStr） */
+export const getHrOrgList = (params?: {
+	parentCcCode?: string;
+	includeDisabled?: boolean;
+	/** 人数统计：1在职 2停职 3离职；与 empStateAll 互斥 */
+	empState?: number;
+	/** true=人数统计全部人员，忽略 empState */
+	empStateAll?: boolean;
+	field?: string;
+	order?: string;
+	descStr?: string;
+}) =>
 	request({
 		url: Api.List,
+		method: 'get',
+		params,
+	});
+
+/** 部门明细分页（服务端排序） */
+export const pageHrOrg = (data?: {
+	page?: number;
+	pageSize?: number;
+	field?: string;
+	order?: string;
+	descStr?: string;
+	keyword?: string;
+	parentCcCode?: string;
+	includeDisabled?: boolean;
+}) =>
+	request({
+		url: Api.Page,
+		method: 'post',
+		data,
+	});
+
+/** 直接下级部门 */
+export const getHrOrgChildren = (params?: { parentCcCode?: string; includeDisabled?: boolean }) =>
+	request({
+		url: Api.Children,
 		method: 'get',
 		params,
 	});
@@ -38,21 +72,22 @@ export const updateHrOrg = (data?: any) =>
 		data,
 	});
 
-export const deleteHrOrg = (data?: any) =>
+/** 停用部门（软删除） */
+export const deleteHrOrg = (data: { ccCode: string; remark?: string }) =>
 	request({
 		url: Api.Delete,
 		method: 'post',
 		data,
 	});
 
-// 从人事部门（cc_mstr）导入/对齐系统机构
-export const syncHrOrgFromCcMstr = () =>
+/** 按工号取人事姓名（账号关联带出） */
+export const getHrEmpById = (empId: string) =>
 	request({
-		url: Api.Sync,
-		method: 'post',
+		url: Api.EmpById,
+		method: 'get',
+		params: { empId },
 	});
 
-// 人事代码下拉
 export const getHrCodeList = (codeField: string) =>
 	request({
 		url: Api.CodeList,
@@ -60,7 +95,6 @@ export const getHrCodeList = (codeField: string) =>
 		params: { codeField },
 	});
 
-// 成本中心下拉
 export const getHrCostCenterList = (site?: string) =>
 	request({
 		url: Api.CostCenterList,
@@ -68,7 +102,6 @@ export const getHrCostCenterList = (site?: string) =>
 		params: { site },
 	});
 
-// 考勤组别下拉
 export const getHrShiftGroupList = (tpkSite?: string) =>
 	request({
 		url: Api.ShiftGroupList,
@@ -76,40 +109,14 @@ export const getHrShiftGroupList = (tpkSite?: string) =>
 		params: { tpkSite },
 	});
 
-// 部门列表（按层级码过滤）
-export const getHrCcList = (ccLevel?: string) =>
-	request({
-		url: Api.CcList,
-		method: 'get',
-		params: { ccLevel },
-	});
-
-// 批量维护成本中心/工时变更/考勤组
-export const batchUpdateCostKq = (data?: any) =>
-	request({
-		url: Api.BatchUpdateCostKq,
-		method: 'post',
-		data,
-	});
-
-// 批量维护考勤代码
-export const batchUpdateKqCode = (data?: any) =>
-	request({
-		url: Api.BatchUpdateKqCode,
-		method: 'post',
-		data,
-	});
-
-// 合并部门
-export const mergeHrDept = (data?: any) =>
+export const mergeHrDept = (data: { oldCode1: string; oldCode2: string; newCode: string }) =>
 	request({
 		url: Api.MergeDept,
 		method: 'post',
 		data,
 	});
 
-// 调动部门
-export const transferHrDept = (data?: any) =>
+export const transferHrDept = (data: { fromCcCode: string; toParentCcCode?: string }) =>
 	request({
 		url: Api.TransferDept,
 		method: 'post',

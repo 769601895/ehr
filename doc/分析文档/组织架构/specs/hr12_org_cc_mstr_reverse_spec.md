@@ -1,8 +1,12 @@
 # Reverse-Engineered Specification: 组织架构管理（hr12 ↔ w_rs_cc_mstr）
 
+> **归档 / 只读（2026-10-10）**  
+> 本文为逆向对照材料。文中「SysOrg 双写 / OrgId / 新 Web」为史实描述，**勿写入实现代码**。  
+> 现行建设方案：`../migration-plan/00-roadmap.md`。
+
 ## Overview
 
-从 `hr12` 提取「组织架构管理」功能规格，并对照新一代 HRMS 窗口 `w_rs_cc_mstr`（`src/hr_rs_basic.pbl`）以及已落地的 Web/Admin.NET 实现。
+从 `hr12` 提取「组织架构管理」功能规格，并对照新一代 HRMS 窗口 `w_rs_cc_mstr`（`src/hr_rs_basic.pbl`）以及（当时）已落地的 Web/Admin.NET 实现。
 
 **关键映射（务必先读）：**
 
@@ -311,7 +315,7 @@ Then A 及子孙 `cc_level` 前缀全部替换为 B 下新前缀，父子 `paren
 - [ ] `w_rs_cc_mstr_new` 与 `w_rs_cc_mstr` 是否为同一窗演化版。  
 - [ ] `employee.emp_state` 与 hr12 `empstate=0` 取值约定需业务确认。  
 
-**缺口分析续篇：** `specs/hr12_org_cc_mstr_gap_analysis.md`
+**缺口分析续篇：** `hr12_org_cc_mstr_gap_analysis.md`
 
 ---
 
@@ -322,7 +326,7 @@ Then A 及子孙 `cc_level` 前缀全部替换为 B 下新前缀，父子 `paren
 - `doc/spec-extract/hr12_w_deptmanger.txt`
 - `doc/spec-extract/hr12_w_companyset.txt`
 - `doc/spec-extract/hr12_uf_updateparentid.txt`
-- `doc/spec-extract/src_w_rs_cc_mstr.txt`
+- `../spec-extract/src_w_rs_cc_mstr.txt`
 
 ---
 

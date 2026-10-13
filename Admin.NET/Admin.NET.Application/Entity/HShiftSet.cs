@@ -1,7 +1,7 @@
 namespace Admin.NET.Application;
 
 /// <summary>
-/// 考勤组别（遗留表 h_shift_set）。用于部门考勤组别下拉。
+/// 考勤组别。用于部门考勤组别下拉。
 /// </summary>
 [Tenant(ApplicationConst.HrDbConfigId)]
 [SugarTable("h_shift_set", "考勤组别")]

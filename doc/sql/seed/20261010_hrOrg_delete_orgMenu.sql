@@ -7,10 +7,13 @@
  * 影响库：ehr（主库 SysMenu / SysRoleMenu / SysUserMenu）
  * 是否幂等：是（不存在则跳过）
  *
+ * [DEPRECATED] 2026-10-10 起请勿再执行本脚本。
+ *              组织架构管理已恢复：前端 Web/src/views/hrms/org + 菜单种子
+ *              doc/sql/seed/20261010_hrOrg_seed_menu.sql
+ *
  * 说明：
- *   1. 前端页面 Web/src/views/hrms/org 已删除；后端 HrOrgService 仍被系统管理→机构管理复用，故保留。
- *   2. 执行后需重新登录前端，侧栏菜单方可消失。
- *   3. 执行前请确认当前数据库为 ehr（主库）。
+ *   1. 本脚本仅作历史回滚参考。
+ *   2. 若误执行，请再跑 20261010_hrOrg_seed_menu.sql 恢复菜单。
  */
 
 -- 清理角色菜单关联

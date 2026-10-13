@@ -1,0 +1,9 @@
+﻿[w_rs_cc_mstr]		
+cb_1	=	批 量
+st_4	=	選擇:
+st_3	=	變更部門:
+tabpage_3	=	部門异動
+cb_4	=	合 并
+cb_2	=	調 動
+tabpage_4	=	部門明細
+tabpage_1	=	部門維護

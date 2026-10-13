@@ -39,3 +39,10 @@ BEGIN
     INSERT INTO [SysMenu] ([Id], [Pid], [Type], [Name], [Path], [Component], [Title], [Icon], [IsIframe], [IsHide], [IsKeepAlive], [IsAffix], [OrderNo], [Status], [IsDelete], [CreateTime])
     VALUES (1300000000205, 0, 1, 'contract', '/contract', 'Layout', '合同管理', 'ele-Notebook', 0, 0, 1, 0, 500, 1, 0, GETDATE());
 END;
+
+-- 系统代码设置（空目录，后续挂子模块；亦可单独执行 doc/sql/seed/20261012_sysCode_seed_menu.sql）
+IF NOT EXISTS (SELECT 1 FROM [SysMenu] WHERE [Id] = 1300000000206)
+BEGIN
+    INSERT INTO [SysMenu] ([Id], [Pid], [Type], [Name], [Path], [Component], [Title], [Icon], [IsIframe], [IsHide], [IsKeepAlive], [IsAffix], [OrderNo], [Status], [IsDelete], [CreateTime])
+    VALUES (1300000000206, 0, 1, 'sysCode', '/sysCode', 'Layout', '系统代码设置', 'ele-Collection', 0, 0, 1, 0, 600, 1, 0, GETDATE());
+END;

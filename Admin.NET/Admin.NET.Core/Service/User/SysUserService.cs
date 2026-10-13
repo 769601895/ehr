@@ -121,8 +121,10 @@ public class SysUserService : IDynamicApiController, ITransient
         if (await query.AnyAsync(u => u.Account == input.Account)) throw Oops.Oh(ErrorCodeEnum.D1003);
         if (!string.IsNullOrWhiteSpace(input.Phone) && await query.AnyAsync(u => u.Phone == input.Phone)) throw Oops.Oh(ErrorCodeEnum.D1032);
 
-        // 若没有设置密码则取默认密码
-        var password = !string.IsNullOrWhiteSpace(input.Password) ? input.Password : await _sysConfigService.GetConfigValueByCode<string>(ConfigConst.SysPassword);
+        // 若没有设置密码则取默认密码（LoginPassword 用于接收前端明文，实体 Password 带 JsonIgnore）
+        var password = !string.IsNullOrWhiteSpace(input.LoginPassword) ? input.LoginPassword
+            : !string.IsNullOrWhiteSpace(input.Password) ? input.Password
+            : await _sysConfigService.GetConfigValueByCode<string>(ConfigConst.SysPassword);
         var user = input.Adapt<SysUser>();
         user.Password = CryptogramHelper.Encrypt(password);
         var newUser = await _sysUserRep.AsInsertable(user).ExecuteReturnEntityAsync();
@@ -252,8 +254,10 @@ public class SysUserService : IDynamicApiController, ITransient
         // 默认普通账号
         input.AccountType = AccountTypeEnum.NormalUser;
 
-        // 若没有设置密码则取默认密码
-        var password = !string.IsNullOrWhiteSpace(input.Password) ? input.Password : await _sysConfigService.GetConfigValueByCode<string>(ConfigConst.SysPassword);
+        // 若没有设置密码则取默认密码（LoginPassword 用于接收前端明文，实体 Password 带 JsonIgnore）
+        var password = !string.IsNullOrWhiteSpace(input.LoginPassword) ? input.LoginPassword
+            : !string.IsNullOrWhiteSpace(input.Password) ? input.Password
+            : await _sysConfigService.GetConfigValueByCode<string>(ConfigConst.SysPassword);
         input.Password = CryptogramHelper.Encrypt(password);
 
         var user = input.Adapt<SysUser>();

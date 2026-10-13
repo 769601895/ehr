@@ -51,8 +51,18 @@ public class AddUserInput : SysUser
     /// <summary>
     /// 真实姓名
     /// </summary>
-    [Required(ErrorMessage = "真实姓名不能为空")]
     public override string RealName { get; set; }
+
+    /// <summary>
+    /// 工号（对应人事资料 h_emp_mstr.emp_id）
+    /// </summary>
+    [Required(ErrorMessage = "工号不能为空")]
+    public override string? JobNum { get; set; }
+
+    /// <summary>
+    /// 登录密码（空则使用系统默认密码；实体 Password 带 JsonIgnore，需单独接收）
+    /// </summary>
+    public string LoginPassword { get; set; }
 
     /// <summary>
     /// 域用户

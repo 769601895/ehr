@@ -1,0 +1,43 @@
+---
+description: 新开发列表页必须具备排序功能（前后端约定）
+alwaysApply: true
+---
+
+# 新页面必须支持排序
+
+凡新开发的**列表/分页页**（含代码生成后手工改的页面），必须具备服务端排序能力。禁止只做分页、不做排序。
+
+参考实现：`Web/src/views/system/config/index.vue`；代码生成模板：`Admin.NET/**/wwwroot/template/web_views_index.vue.vm`。
+
+## 前端（Vue + vxe-grid）
+
+1. 使用 `useVxeTable`，开启远程排序（默认已开）。
+2. 可排序列加 `sortable: true`；`field` 用实体属性 camelCase（如 `orderNo`、`name`）。
+3. 默认排序：有 `OrderNo` 用 `orderNo` asc，否则用 `id`。
+4. 查询参数固定传：`field`、`order`、`descStr: 'desc'`（与 vxe 的 `asc`/`desc` 对齐）。
+5. 用 `Local` 持久化 `defaultSort` / `pageSize`（key：`localPageParam:{模块名}`），并在 `sortChange` 中更新。
+6. `proxyConfig.ajax.query` 必须接收并转发 `sort`；`sort` 为空时回退到 `defaultSort`。
+
+```ts
+const params = Object.assign(state.queryParams, {
+  page: page.currentPage,
+  pageSize: page.pageSize,
+  field: sort.field,
+  order: sort.order,
+  descStr: 'desc',
+});
+```
+
+## 后端（Admin.NET）
+
+1. 分页入参继承 `BasePageInput`（含 `Field` / `Order` / `DescStr`），禁止自造 `SortField` 等字段名。
+2. `Page` 查询链末端使用 `.OrderBuilder(input)`（联表加前缀，如 `.OrderBuilder(input, "u.")`），再 `ToPagedListAsync`。
+3. 树形/固定业务序可用 `.OrderBy(...)`，但须在注释或说明中标明「无列头排序」及原因。
+
+## 验收
+
+- [ ] 列表至少一列可点列头排序，请求带 `field`/`order`/`descStr`
+- [ ] 后端 `OrderBuilder`（或等价安全排序）生效
+- [ ] 刷新后默认排序（或本地记忆的排序）仍正确
+
+例外：纯表单/详情/向导页、无表格的配置页可不做列排序。

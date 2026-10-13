@@ -236,7 +236,7 @@ public partial class SysUser : EntityTenant
     /// </summary>
     [SugarColumn(ColumnDescription = "工号", Length = 32)]
     [MaxLength(32)]
-    public string? JobNum { get; set; }
+    public virtual string? JobNum { get; set; }
 
     /// <summary>
     /// 职级

@@ -1,8 +1,11 @@
 # Gap Analysis: 组织架构管理（hr12 / w_rs_cc_mstr → Web）
 
-> 对照基准：`specs/hr12_org_cc_mstr_reverse_spec.md`  
-> 现场库：`HR_2025.dbo.cc_mstr`（MCP 实测 2026-10-10）  
-> 目标态：Admin.NET `HrOrgService` + `Web/src/views/hrms/org`
+> **归档 / 只读（2026-10-10）**  
+> 本文为历史缺口对照，**不是**现行建设方案。  
+> 现行方案：`../migration-plan/00-roadmap.md`（与 SysOrg 零关联；按新系统逻辑编写；无迁移型产品痕迹）。  
+>
+> 对照基准：`hr12_org_cc_mstr_reverse_spec.md`  
+> 现场库：`HR_2025.dbo.cc_mstr`（MCP 实测 2026-10-10）
 
 ---
 
@@ -165,7 +168,7 @@ Web: 左树 + 全树表格 → 增改删/合并/调动/批量 → reload
 
 | 项 | 路径 |
 |----|------|
-| 规格 | `specs/hr12_org_cc_mstr_reverse_spec.md` |
+| 规格 | `hr12_org_cc_mstr_reverse_spec.md`（本目录） |
 | 服务 | `Admin.NET/.../Service/Hr/Org/HrOrgService.cs` |
 | 实体 | `Admin.NET/.../Entity/CcMstr.cs` |
 | 前端 | `Web/src/views/hrms/org/` |

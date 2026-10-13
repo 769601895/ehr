@@ -61,8 +61,9 @@ import type { ElTree } from 'element-plus';
 import { Search, MoreFilled } from '@element-plus/icons-vue';
 import { TreeKey } from 'element-plus/es/components/tree/src/tree.type';
 
+import { getAPI } from '/@/utils/axios-utils';
+import { SysOrgApi } from '/@/api-services/system/api';
 import { SysOrg } from '/@/api-services/system/models';
-import { getHrOrgList } from '/@/api/hrms/hrOrg';
 
 const props = defineProps({
 	checkStrictly: { type: Boolean, default: true },
@@ -74,48 +75,41 @@ const state = reactive({
 	loading: false,
 	orgData: [] as Array<SysOrg>,
 	isShowCheckbox: false,
-	ownOrgData: [],
+	ownOrgData: [] as any[],
 	strictly: false,
 });
 
-// 页面初始化
 onMounted(async () => {
 	await fetchTreeData();
 });
 
-// 查询监听
 watch(filterText, (val) => {
 	treeRef.value!.filter(val);
 });
 
-// 获取树数据
 const fetchTreeData = async (showLoading: boolean = true) => {
 	if (showLoading) state.loading = true;
-	var res = await getHrOrgList({ id: 0 });
+	var res = await getAPI(SysOrgApi).apiSysOrgListGet(0);
 	state.orgData = res.data.result ?? [];
 	if (showLoading) state.loading = false;
 	return res.data.result ?? [];
 };
 
-// 设置默认选择
 const setCheckedKeys = (orgData: any) => {
 	state.isShowCheckbox = true;
 	treeRef.value!.setCheckedKeys(orgData);
 	state.ownOrgData = orgData;
 };
 
-// 获取已经选择
 const getCheckedKeys = () => {
 	return treeRef.value!.getCheckedKeys();
 };
 
-// 节点过滤
 const filterNode = (value: string, data: any) => {
 	if (!value) return true;
 	return data.name.includes(value);
 };
 
-// 节点操作
 const handleCommand = async (command: string | number | object) => {
 	if ('expandAll' == command) {
 		for (let i = 0; i < treeRef.value!.store._getAllNodes().length; i++) {
@@ -133,18 +127,15 @@ const handleCommand = async (command: string | number | object) => {
 	}
 };
 
-// 与父组件的交互逻辑
 const emits = defineEmits(['node-click']);
 const nodeClick = (node: any) => {
 	emits('node-click', { id: node.id, name: node.name });
 };
 
-// 设置当前选中节点
 const setCurrentKey = (key?: TreeKey | undefined, shouldAutoExpandParent?: boolean | undefined) => {
 	treeRef.value?.setCurrentKey(key, shouldAutoExpandParent);
 };
 
-// 导出对象
 defineExpose({ fetchTreeData, setCheckedKeys, getCheckedKeys, setCurrentKey });
 </script>
 

@@ -1,7 +1,7 @@
 namespace Admin.NET.Application;
 
 /// <summary>
-/// 成本中心（遗留表 h_cost）。用于部门成本中心下拉。
+/// 成本中心。用于部门成本中心下拉。
 /// </summary>
 [Tenant(ApplicationConst.HrDbConfigId)]
 [SugarTable("h_cost", "成本中心")]
