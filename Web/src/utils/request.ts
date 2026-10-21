@@ -79,6 +79,8 @@ service.interceptors.request.use(
 				config.url = url;
 			}
 		}
+		const globalI18n = Local.get('themeConfig')?.globalI18n;
+		if (globalI18n) config.headers!['Accept-Language'] = globalI18n;
 		return config;
 	},
 	(error) => {

@@ -7,7 +7,7 @@ namespace Admin.NET.Application;
 [SugarTable("h_emp_mstr", "人员资料")]
 [SugarIndex("ix_h_emp_mstr_cc_code", nameof(CcCode), OrderByType.Asc)]
 [SugarIndex("ix_h_emp_mstr_emp_state", nameof(EmpState), OrderByType.Asc)]
-public class HrEmployee
+public partial class HrEmployee
 {
     /// <summary>内部主键（与 emp_id 组成复合主键）</summary>
     [SugarColumn(ColumnName = "iempid", ColumnDescription = "内部主键", IsPrimaryKey = true)]

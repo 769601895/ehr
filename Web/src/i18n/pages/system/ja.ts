@@ -1,4 +1,4 @@
-﻿export default {
+export default {
 	list: {
 		menuName: 'メニュー名',
 		type: '種類',
@@ -278,16 +278,12 @@
 		organizationCode: '組織コード',
 		organizationType: '組織タイプ',
 		addOrganization: '組織追加',
-		belongingOrg: '組織',
 		editOrganization: '組織編集',
-		belongingOrg: '組織',
 		copyOrganization: '組織コピー',
-		belongingOrg: '組織',
 		confirmDeleteOrg: '組織[{name}]を削除してもよろしいですか？',
 		level: 'レベル',
 		modificationRecord: '変更履歴',
 		parentOrganization: '親組織',
-		belongingOrg: '組織',
 		pleaseSelectParentOrg: '親組織を選択してください',
 		orgNameRequired: '組織名は必須です',
 		orgCodeRequired: '組織コードは必須です',

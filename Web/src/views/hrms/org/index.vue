@@ -2,31 +2,31 @@
 	<div class="hr-org-container">
 		<splitpanes class="default-theme">
 			<pane size="22" style="display: flex">
-				<OrgTree ref="orgTreeRef" @node-click="handleNodeChange" />
+				<OrgTree ref="orgTreeRef" @node-click="handleNodeChange" @loaded="handleTreeLoaded" />
 			</pane>
 			<pane size="78" class="hr-org-right-pane">
 				<div class="hr-org-right">
 					<el-card shadow="hover" :body-style="{ padding: '8px 10px', display: 'flex', width: '100%', alignItems: 'center' }">
 						<el-tabs v-model="state.activeTab" class="hr-org-tabs-header" @tab-change="handleTabChange">
-							<el-tab-pane label="部门维护" name="maintain" />
-							<el-tab-pane label="部门异动" name="change" />
-							<el-tab-pane label="部门明细" name="detail" />
+							<el-tab-pane :label="t('message.hrms.org.tabMaintain')" name="maintain" />
+							<el-tab-pane :label="t('message.hrms.org.tabChange')" name="change" />
+							<el-tab-pane :label="t('message.hrms.org.tabDetail')" name="detail" />
 						</el-tabs>
 					</el-card>
 
 					<!-- 部门维护 -->
 					<template v-if="state.activeTab === 'maintain'">
 						<el-card shadow="hover" :body-style="{ padding: '8px 10px', display: 'flex', width: '100%', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }" style="margin-top: 5px">
-							<el-input v-model="state.keyword" placeholder="按名称/编码筛选" clearable style="width: 220px" @keyup.enter="handleQuery" />
-							<el-checkbox v-model="state.includeDisabled" style="margin-left: 8px" @change="handleQuery">含停用</el-checkbox>
+							<el-input v-model="state.keyword" :placeholder="t('message.hrms.common.filterNameCode')" clearable style="width: 220px" @keyup.enter="handleQuery" />
+							<el-checkbox v-model="state.includeDisabled" style="margin-left: 8px" @change="() => handleQuery(true)">{{ t('message.hrms.common.includeDisabled') }}</el-checkbox>
 							<el-button-group style="margin-left: 8px">
-								<el-button type="primary" icon="ele-Search" :loading="maintainOptions.loading" @click="handleQuery">查询</el-button>
-								<el-button icon="ele-Refresh" :loading="maintainOptions.loading" @click="resetQuery">重置</el-button>
+								<el-button type="primary" icon="ele-Search" :loading="maintainOptions.loading" @click="() => handleQuery(false)">{{ t('message.list.query') }}</el-button>
+								<el-button icon="ele-Refresh" :loading="maintainOptions.loading" @click="resetQuery">{{ t('message.list.reset') }}</el-button>
 							</el-button-group>
-							<el-button type="primary" icon="ele-Plus" style="margin-left: 8px" v-auth="'hrOrg/add'" @click="handleAdd">新增</el-button>
+							<el-button type="primary" icon="ele-Plus" style="margin-left: 8px" v-auth="'hrOrg/add'" @click="handleAdd">{{ t('message.list.add') }}</el-button>
 							<el-button-group style="margin-left: 8px">
-								<el-button icon="ele-Expand" @click="expandAll">全部展开</el-button>
-								<el-button icon="ele-Fold" @click="foldAll">全部折叠</el-button>
+								<el-button icon="ele-Expand" @click="expandAll">{{ t('message.list.allExpand') }}</el-button>
+								<el-button icon="ele-Fold" @click="foldAll">{{ t('message.list.allFold') }}</el-button>
 							</el-button-group>
 						</el-card>
 						<el-card class="full-table" shadow="hover" style="margin-top: 5px; flex: 1">
@@ -35,12 +35,12 @@
 									<el-empty :image-size="160" />
 								</template>
 								<template #row_ccEnable="{ row }">
-									<el-tag v-if="row.ccEnable == null || row.ccEnable === 0" type="success">启用</el-tag>
-									<el-tag v-else type="danger">停用</el-tag>
+									<el-tag v-if="row.ccEnable == null || row.ccEnable === 0" type="success">{{ t('message.hrms.common.enabled') }}</el-tag>
+									<el-tag v-else type="danger">{{ t('message.hrms.common.disabled') }}</el-tag>
 								</template>
 								<template #row_buttons="{ row }">
-									<el-button icon="ele-Edit" text type="primary" v-auth="'hrOrg/update'" :disabled="row.ccEnable === 1" @click="handleEdit(row)">编辑</el-button>
-									<el-button icon="ele-Delete" text type="danger" v-auth="'hrOrg/delete'" :disabled="row.ccEnable === 1" @click="handleDisable(row)">停用</el-button>
+									<el-button icon="ele-Edit" text type="primary" v-auth="'hrOrg/update'" :disabled="row.ccEnable === 1" @click="handleEdit(row)">{{ t('message.list.edit') }}</el-button>
+									<el-button icon="ele-Delete" text type="danger" v-auth="'hrOrg/delete'" :disabled="row.ccEnable === 1" @click="handleDisable(row)">{{ t('message.hrms.common.disabled') }}</el-button>
 								</template>
 							</vxe-grid>
 						</el-card>
@@ -54,11 +54,11 @@
 					<!-- 部门明细 -->
 					<template v-else-if="state.activeTab === 'detail'">
 						<el-card shadow="hover" :body-style="{ padding: '8px 10px', display: 'flex', width: '100%', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }" style="margin-top: 5px">
-							<el-input v-model="state.detailKeyword" placeholder="按名称/编码筛选" clearable style="width: 220px" @keyup.enter="handleDetailQuery(true)" />
-							<el-checkbox v-model="state.detailIncludeDisabled" style="margin-left: 8px" @change="handleDetailQuery(true)">含停用</el-checkbox>
+							<el-input v-model="state.detailKeyword" :placeholder="t('message.hrms.common.filterNameCode')" clearable style="width: 220px" @keyup.enter="handleDetailQuery(true)" />
+							<el-checkbox v-model="state.detailIncludeDisabled" style="margin-left: 8px" @change="handleDetailQuery(true)">{{ t('message.hrms.common.includeDisabled') }}</el-checkbox>
 							<el-button-group style="margin-left: 8px">
-								<el-button type="primary" icon="ele-Search" :loading="detailOptions.loading" @click="handleDetailQuery(true)">查询</el-button>
-								<el-button icon="ele-Refresh" :loading="detailOptions.loading" @click="resetDetailQuery">重置</el-button>
+								<el-button type="primary" icon="ele-Search" :loading="detailOptions.loading" @click="handleDetailQuery(true)">{{ t('message.list.query') }}</el-button>
+								<el-button icon="ele-Refresh" :loading="detailOptions.loading" @click="resetDetailQuery">{{ t('message.list.reset') }}</el-button>
 							</el-button-group>
 						</el-card>
 						<el-card class="full-table" shadow="hover" style="margin-top: 5px; flex: 1">
@@ -67,7 +67,7 @@
 									<el-empty :image-size="160" />
 								</template>
 								<template #row_ccEnable="{ row }">
-									{{ row.ccEnable === 1 ? '是' : '否' }}
+									{{ row.ccEnable === 1 ? t('message.hrms.common.yes') : t('message.hrms.common.no') }}
 								</template>
 							</vxe-grid>
 						</el-card>
@@ -81,7 +81,8 @@
 </template>
 
 <script lang="ts" setup name="hrOrg">
-import { nextTick, onMounted, reactive, ref } from 'vue';
+import { nextTick, onMounted, reactive, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Splitpanes, Pane } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
@@ -95,6 +96,7 @@ import EditOrg from '/@/views/hrms/org/component/editOrg.vue';
 import ChangeOrg from '/@/views/hrms/org/component/changeOrg.vue';
 import { deleteHrOrg, getHrOrgList, pageHrOrg } from '/@/api/hrms/hrOrg';
 
+const { t, locale } = useI18n();
 const orgTreeRef = ref<InstanceType<typeof OrgTree>>();
 const editOrgRef = ref<InstanceType<typeof EditOrg>>();
 const maintainGrid = ref<VxeGridInstance>();
@@ -171,28 +173,46 @@ const expandMaintainTree = async () => {
 	setTimeout(() => grid.setAllTreeExpand(true), 80);
 };
 
+const buildMaintainColumns = () => [
+	{ field: 'ccDesc', title: t('message.hrms.org.ccDesc'), minWidth: 180, treeNode: true, align: 'left', headerAlign: 'center', showOverflow: 'tooltip', sortable: true },
+	{ field: 'ccCode', title: t('message.hrms.org.ccCode'), minWidth: 110, showOverflow: 'tooltip', sortable: true },
+	{ field: 'ccDept', title: t('message.hrms.org.ccDept'), minWidth: 100, showOverflow: 'tooltip', sortable: true },
+	{ field: 'ccLevel', title: t('message.hrms.org.ccLevel'), minWidth: 110, showOverflow: 'tooltip', sortable: true },
+	{ field: 'ccSite', title: t('message.hrms.org.ccSite'), minWidth: 90, showOverflow: 'tooltip', sortable: true },
+	{ field: 'ccCost', title: t('message.hrms.org.ccCost'), minWidth: 90, showOverflow: 'tooltip', sortable: true },
+	{ field: 'ccEnable', title: t('message.hrms.common.status'), width: 90, align: 'center', sortable: true, slots: { default: 'row_ccEnable' } },
+	{ field: 'ccUser', title: t('message.hrms.org.ccUser'), minWidth: 90, showOverflow: 'tooltip', sortable: true },
+	{ field: 'ccDate', title: t('message.hrms.org.ccDate'), minWidth: 160, showOverflow: 'tooltip', sortable: true },
+	{ field: 'buttons', title: t('message.list.operation'), fixed: 'right', width: 160, showOverflow: true, slots: { default: 'row_buttons' } },
+];
+
+const buildDetailColumns = () => [
+	{ field: 'seq', type: 'seq', title: '#', width: 55 },
+	{ field: 'ccCode', title: t('message.hrms.org.code'), minWidth: 100, sortable: true },
+	{ field: 'ccDesc', title: t('message.hrms.org.name'), minWidth: 140, sortable: true },
+	{ field: 'ccDept', title: t('message.hrms.org.alias'), minWidth: 90, sortable: true },
+	{ field: 'ccLevel', title: t('message.hrms.org.ccLevel'), minWidth: 110, sortable: true },
+	{ field: 'ccCodeParent', title: t('message.hrms.org.parentCode'), minWidth: 100, sortable: true },
+	{ field: 'ccSite', title: t('message.hrms.org.ccSite'), minWidth: 80, sortable: true },
+	{ field: 'ccCost', title: t('message.hrms.org.cost'), minWidth: 80, sortable: true },
+	{ field: 'ccWoca', title: t('message.hrms.org.ccWoca'), minWidth: 90, sortable: true },
+	{ field: 'ccXzGroup', title: t('message.hrms.org.ccXzGroup'), minWidth: 90, sortable: true },
+	{ field: 'ccEnable', title: t('message.hrms.org.stopped'), width: 70, align: 'center', sortable: true, slots: { default: 'row_ccEnable' } },
+	{ field: 'ccDeleRemark', title: t('message.hrms.org.ccDeleRemark'), minWidth: 140, showOverflow: 'tooltip' },
+];
+
 const maintainOptions = useVxeTable<any>(
 	{
 		id: 'hrOrgMaintain',
-		name: '部门维护',
-		columns: [
-			{ field: 'ccDesc', title: '部门名称', minWidth: 180, treeNode: true, align: 'left', headerAlign: 'center', showOverflow: 'tooltip', sortable: true },
-			{ field: 'ccCode', title: '部门编码', minWidth: 110, showOverflow: 'tooltip', sortable: true },
-			{ field: 'ccDept', title: '部门代号', minWidth: 100, showOverflow: 'tooltip', sortable: true },
-			{ field: 'ccLevel', title: '层级码', minWidth: 110, showOverflow: 'tooltip', sortable: true },
-			{ field: 'ccSite', title: '厂区', minWidth: 90, showOverflow: 'tooltip', sortable: true },
-			{ field: 'ccCost', title: '成本类型', minWidth: 90, showOverflow: 'tooltip', sortable: true },
-			{ field: 'ccEnable', title: '状态', width: 90, align: 'center', sortable: true, slots: { default: 'row_ccEnable' } },
-			{ field: 'ccUser', title: '维护人', minWidth: 90, showOverflow: 'tooltip', sortable: true },
-			{ field: 'ccDate', title: '维护时间', minWidth: 160, showOverflow: 'tooltip', sortable: true },
-			{ field: 'buttons', title: '操作', fixed: 'right', width: 160, showOverflow: true, slots: { default: 'row_buttons' } },
-		],
+		name: t('message.hrms.org.tabMaintain'),
+		columns: buildMaintainColumns(),
 	},
 	{
 		stripe: false,
 		height: '100%',
 		proxyConfig: {
-			autoLoad: true,
+			// 由左树 loaded 回填，避免与 OrgTree 并发打两次 GetList（切语言整页刷新时易超时）
+			autoLoad: false,
 			ajax: {
 				query: (params) => handleMaintainQueryApi(pickProxySort(params)),
 			},
@@ -211,21 +231,8 @@ const maintainOptions = useVxeTable<any>(
 const detailOptions = useVxeTable<any>(
 	{
 		id: 'hrOrgDetail',
-		name: '部门明细',
-		columns: [
-			{ field: 'seq', type: 'seq', title: '#', width: 55 },
-			{ field: 'ccCode', title: '编码', minWidth: 100, sortable: true },
-			{ field: 'ccDesc', title: '名称', minWidth: 140, sortable: true },
-			{ field: 'ccDept', title: '代号', minWidth: 90, sortable: true },
-			{ field: 'ccLevel', title: '层级码', minWidth: 110, sortable: true },
-			{ field: 'ccCodeParent', title: '父编码', minWidth: 100, sortable: true },
-			{ field: 'ccSite', title: '厂区', minWidth: 80, sortable: true },
-			{ field: 'ccCost', title: '成本', minWidth: 80, sortable: true },
-			{ field: 'ccWoca', title: '工时类别', minWidth: 90, sortable: true },
-			{ field: 'ccXzGroup', title: '薪酬组', minWidth: 90, sortable: true },
-			{ field: 'ccEnable', title: '停用', width: 70, align: 'center', sortable: true, slots: { default: 'row_ccEnable' } },
-			{ field: 'ccDeleRemark', title: '停用备注', minWidth: 140, showOverflow: 'tooltip' },
-		],
+		name: t('message.hrms.org.tabDetail'),
+		columns: buildDetailColumns(),
 	},
 	{
 		height: '100%',
@@ -245,8 +252,29 @@ const detailOptions = useVxeTable<any>(
 	}
 );
 
+/** 用已缓存的 fullTree 刷新右侧维护表，不再二次请求 */
+const applyMaintainFromCache = async () => {
+	await nextTick();
+	if (state.activeTab !== 'maintain' || !maintainGrid.value) return;
+	const scoped = filterTree(pickSubtree(state.fullTree, state.parentCcCode), state.keyword);
+	maintainGrid.value.reloadData?.(scoped);
+	await expandMaintainTree();
+};
+
+const handleTreeLoaded = async (tree: any[], meta: { includeDisabled: boolean; empState: number }) => {
+	state.fullTree = tree ?? [];
+	// 与左树筛选对齐，避免右侧再按另一套 includeDisabled 重查
+	state.includeDisabled = !!meta?.includeDisabled;
+	await applyMaintainFromCache();
+};
+
 const handleMaintainQueryApi = async (sort?: VxeGridPropTypes.ProxyAjaxQuerySortCheckedParams) => {
 	const effectiveSort = resolveSort(sort, Local.get(localPageParamKey)?.defaultSort || state.localPageParam.defaultSort);
+	// 已有缓存且非强制重查时，直接用内存树（排序对树形展示影响有限，以左树一次加载为准）
+	if (state.fullTree.length) {
+		const scoped = filterTree(pickSubtree(state.fullTree, state.parentCcCode), state.keyword);
+		return { data: { result: scoped } };
+	}
 	const res = await getHrOrgList({
 		includeDisabled: state.includeDisabled,
 		field: effectiveSort.field,
@@ -272,25 +300,32 @@ const handleDetailQueryApi = async (page: VxeGridPropTypes.ProxyAjaxQueryPagePar
 	});
 };
 
-const handleQuery = async () => {
+const handleQuery = async (forceRemote = false) => {
 	if (state.activeTab !== 'maintain') return;
 	await nextTick();
 	if (!maintainGrid.value) {
-		// 表格尚未挂载时稍后再查
-		setTimeout(() => handleQuery(), 50);
+		setTimeout(() => handleQuery(forceRemote), 50);
+		return;
+	}
+	if (!forceRemote && state.fullTree.length) {
+		await applyMaintainFromCache();
 		return;
 	}
 	maintainOptions.loading = true;
-	await maintainGrid.value.commitProxy('reload');
-	await expandMaintainTree();
-	maintainOptions.loading = false;
+	try {
+		state.fullTree = [];
+		await maintainGrid.value.commitProxy('reload');
+		await expandMaintainTree();
+	} finally {
+		maintainOptions.loading = false;
+	}
 };
 
 const resetQuery = async () => {
 	state.keyword = '';
 	state.includeDisabled = false;
 	state.parentCcCode = '';
-	await handleQuery();
+	await orgTreeRef.value?.fetchTreeData();
 };
 
 const handleDetailQuery = async (reset = false) => {
@@ -317,19 +352,19 @@ const handleTabChange = async (name: string | number) => {
 };
 
 const reloadAll = async () => {
+	// fetchTreeData → loaded 已回填维护表，勿再 commitProxy 打第二次 GetList
 	await orgTreeRef.value?.fetchTreeData();
-	if (state.activeTab === 'maintain') await handleQuery();
 	if (state.activeTab === 'detail') await handleDetailQuery(true);
 };
 
 const handleNodeChange = async (node: any) => {
 	state.parentCcCode = node?.ccCode ?? '';
-	if (state.activeTab === 'maintain') await handleQuery();
+	if (state.activeTab === 'maintain') await applyMaintainFromCache();
 	if (state.activeTab === 'detail') await handleDetailQuery(true);
 };
 
 const handleAdd = () => {
-	state.title = '新增部门';
+	state.title = t('message.hrms.org.addTitle');
 	editOrgRef.value?.openDialog(
 		{
 			ccCodeParent: state.parentCcCode || undefined,
@@ -342,20 +377,20 @@ const handleAdd = () => {
 };
 
 const handleEdit = (row: any) => {
-	state.title = '编辑部门';
+	state.title = t('message.hrms.org.editTitle');
 	editOrgRef.value?.openDialog(row, true);
 };
 
 const handleDisable = (row: any) => {
-	ElMessageBox.prompt(`确认停用部门「${row.ccDesc}」及其下级？`, '停用部门', {
-		confirmButtonText: '确定',
-		cancelButtonText: '取消',
-		inputPlaceholder: '停用备注（可选）',
+	ElMessageBox.prompt(t('message.hrms.org.confirmDisable', { name: row.ccDesc }), t('message.hrms.org.disableTitle'), {
+		confirmButtonText: t('message.list.confirmButtonText'),
+		cancelButtonText: t('message.list.cancelButtonText'),
+		inputPlaceholder: t('message.hrms.org.disableRemark'),
 		type: 'warning',
 	})
 		.then(async ({ value }) => {
 			await deleteHrOrg({ ccCode: row.ccCode, remark: value || undefined });
-			ElMessage.success('已停用');
+			ElMessage.success(t('message.hrms.common.disabledDone'));
 			await reloadAll();
 		})
 		.catch(() => {});
@@ -394,6 +429,17 @@ const detailGridEvents: VxeGridListeners = {
 		Local.set(localDetailParamKey, state.localDetailParam);
 	},
 };
+
+watch(locale, () => {
+	maintainOptions.name = t('message.hrms.org.tabMaintain');
+	detailOptions.name = t('message.hrms.org.tabDetail');
+	const mCols = buildMaintainColumns();
+	const dCols = buildDetailColumns();
+	maintainOptions.columns = mCols;
+	detailOptions.columns = dCols;
+	maintainGrid.value?.reloadColumn?.(mCols);
+	detailGrid.value?.reloadColumn?.(dCols);
+});
 
 onMounted(async () => {
 	state.localPageParam = Local.get(localPageParamKey) || state.localPageParam;

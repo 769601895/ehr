@@ -25,49 +25,21 @@ public class HrEmpService : IDynamicApiController, ITransient
     public async Task<SqlSugarPagedList<HrEmpOutput>> Page(HrEmpPageInput input)
     {
         var q = await BuildQuery(input);
-        var page = await ApplyEmpSort(q, input).Select(u => new HrEmpOutput
-        {
-            IEmpId = u.IEmpId,
-            EmpId = u.EmpId,
-            CcCode = u.CcCode,
-            DutyId = u.DutyId,
-            PostId = u.PostId,
-            EmpName = u.EmpName,
-            EmpState = u.EmpState,
-            EmpFree = u.EmpFree,
-            EmpInDate = u.EmpInDate,
-            EmpBegDate = u.EmpBegDate,
-            EmpTryDate = u.EmpTryDate,
-            EmpFromDate = u.EmpFromDate,
-            EmpSal = u.EmpSal,
-            EmpSex = u.EmpSex,
-            EmpCard = u.EmpCard,
-            EmpBirth = u.EmpBirth,
-            EmpRgt = u.EmpRgt,
-            EmpProvince = u.EmpProvince,
-            EmpResidence = u.EmpResidence,
-            EmpNation = u.EmpNation,
-            EmpMarry = u.EmpMarry,
-            EmpHome = u.EmpHome,
-            EmpAddr = u.EmpAddr,
-            EmpAddrter = u.EmpAddrter,
-            EmpLongmon = u.EmpLongmon,
-            EmpKqLeaDate = u.EmpKqLeaDate,
-            EmpKqIndate = u.EmpKqIndate,
-            EmpCardDate = u.EmpCardDate,
-            EmpCardLimit = u.EmpCardLimit,
-            EmpType = u.EmpType,
-            EmpCardOverdate = u.EmpCardOverdate,
-            EmpWorkDate = u.EmpWorkDate,
-            EmpInDateGroup = u.EmpInDateGroup,
-            EmpPic = u.EmpPic,
-            BsId = u.BsId
-        }).ToPagedListAsync(input.Page, input.PageSize);
-
-        await FillCcDesc(page.Items);
-        foreach (var item in page.Items)
+        var page = await ApplyEmpSort(q, input).ToPagedListAsync(input.Page, input.PageSize);
+        var items = page.Items.Select(ToOutput).ToList();
+        await FillCcDesc(items);
+        foreach (var item in items)
             item.Age = CalcAge(item.EmpBirth);
-        return page;
+        return new SqlSugarPagedList<HrEmpOutput>
+        {
+            Page = page.Page,
+            PageSize = page.PageSize,
+            Total = page.Total,
+            TotalPages = page.TotalPages,
+            Items = items,
+            HasNextPage = page.HasNextPage,
+            HasPrevPage = page.HasPrevPage
+        };
     }
 
     /// <summary>
@@ -129,7 +101,10 @@ public class HrEmpService : IDynamicApiController, ITransient
         ApplySaveFields(entity, input);
         if (input.EmpState.HasValue)
             entity.EmpState = input.EmpState;
+        // 复合主键 iempid+emp_id：显式 Where 绑定参数；勿把主键放进 IgnoreColumns（会丢 @iempid）
+        var iEmpId = entity.IEmpId;
         await _empRep.AsUpdateable(entity)
+            .Where(u => u.IEmpId == iEmpId && u.EmpId == empId)
             .IgnoreColumns(u => new { u.IEmpId, u.EmpId, u.BsId, u.EmpFree })
             .ExecuteCommandAsync();
     }
@@ -148,7 +123,9 @@ public class HrEmpService : IDynamicApiController, ITransient
         if (entity.EmpState == 3)
             return;
         entity.EmpState = 3;
+        var iEmpId = entity.IEmpId;
         await _empRep.AsUpdateable(entity)
+            .Where(u => u.IEmpId == iEmpId && u.EmpId == empId)
             .UpdateColumns(u => new { u.EmpState })
             .ExecuteCommandAsync();
     }
@@ -286,49 +263,55 @@ public class HrEmpService : IDynamicApiController, ITransient
         entity.EmpWorkDate = input.EmpWorkDate;
         entity.EmpInDateGroup = input.EmpInDateGroup;
         entity.EmpPic = TrimOrNull(input.EmpPic);
+        HrEmpCharFields.ApplyFromInput(entity, input);
     }
 
     private static string? TrimOrNull(string? value)
         => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
-    private static HrEmpOutput ToOutput(HrEmployee u) => new()
+    private static HrEmpOutput ToOutput(HrEmployee u)
     {
-        IEmpId = u.IEmpId,
-        EmpId = u.EmpId,
-        CcCode = u.CcCode,
-        DutyId = u.DutyId,
-        PostId = u.PostId,
-        EmpName = u.EmpName,
-        EmpState = u.EmpState,
-        EmpFree = u.EmpFree,
-        EmpInDate = u.EmpInDate,
-        EmpBegDate = u.EmpBegDate,
-        EmpTryDate = u.EmpTryDate,
-        EmpFromDate = u.EmpFromDate,
-        EmpSal = u.EmpSal,
-        EmpSex = u.EmpSex,
-        EmpCard = u.EmpCard,
-        EmpBirth = u.EmpBirth,
-        EmpRgt = u.EmpRgt,
-        EmpProvince = u.EmpProvince,
-        EmpResidence = u.EmpResidence,
-        EmpNation = u.EmpNation,
-        EmpMarry = u.EmpMarry,
-        EmpHome = u.EmpHome,
-        EmpAddr = u.EmpAddr,
-        EmpAddrter = u.EmpAddrter,
-        EmpLongmon = u.EmpLongmon,
-        EmpKqLeaDate = u.EmpKqLeaDate,
-        EmpKqIndate = u.EmpKqIndate,
-        EmpCardDate = u.EmpCardDate,
-        EmpCardLimit = u.EmpCardLimit,
-        EmpType = u.EmpType,
-        EmpCardOverdate = u.EmpCardOverdate,
-        EmpWorkDate = u.EmpWorkDate,
-        EmpInDateGroup = u.EmpInDateGroup,
-        EmpPic = u.EmpPic,
-        BsId = u.BsId
-    };
+        var o = new HrEmpOutput
+        {
+            IEmpId = u.IEmpId,
+            EmpId = u.EmpId,
+            CcCode = u.CcCode,
+            DutyId = u.DutyId,
+            PostId = u.PostId,
+            EmpName = u.EmpName,
+            EmpState = u.EmpState,
+            EmpFree = u.EmpFree,
+            EmpInDate = u.EmpInDate,
+            EmpBegDate = u.EmpBegDate,
+            EmpTryDate = u.EmpTryDate,
+            EmpFromDate = u.EmpFromDate,
+            EmpSal = u.EmpSal,
+            EmpSex = u.EmpSex,
+            EmpCard = u.EmpCard,
+            EmpBirth = u.EmpBirth,
+            EmpRgt = u.EmpRgt,
+            EmpProvince = u.EmpProvince,
+            EmpResidence = u.EmpResidence,
+            EmpNation = u.EmpNation,
+            EmpMarry = u.EmpMarry,
+            EmpHome = u.EmpHome,
+            EmpAddr = u.EmpAddr,
+            EmpAddrter = u.EmpAddrter,
+            EmpLongmon = u.EmpLongmon,
+            EmpKqLeaDate = u.EmpKqLeaDate,
+            EmpKqIndate = u.EmpKqIndate,
+            EmpCardDate = u.EmpCardDate,
+            EmpCardLimit = u.EmpCardLimit,
+            EmpType = u.EmpType,
+            EmpCardOverdate = u.EmpCardOverdate,
+            EmpWorkDate = u.EmpWorkDate,
+            EmpInDateGroup = u.EmpInDateGroup,
+            EmpPic = u.EmpPic,
+            BsId = u.BsId
+        };
+        HrEmpCharFields.CopyFromEntity(u, o);
+        return o;
+    }
 
     private static int? CalcAge(DateTime? birth)
     {

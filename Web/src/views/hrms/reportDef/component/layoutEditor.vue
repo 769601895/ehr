@@ -14,11 +14,12 @@
 						<span>表，字段区</span>
 						<el-button type="primary" link style="float: right" @click="addRow">新增</el-button>
 					</template>
-					<el-table :data="state.fields" border size="small" height="100%" style="flex: 1">
-						<el-table-column label="操作" width="88" align="center" fixed>
+					<el-table :key="tableRenderKey" ref="tableRef" :data="state.fields" border size="small" height="100%" style="flex: 1" row-key="fieldKey" :row-class-name="rowClass">
+						<el-table-column label="操作" width="72" align="center">
 							<template #default="{ $index, row }">
-								<el-button link type="primary" :disabled="$index === 0" @click="move($index, -1)">↑</el-button>
-								<el-button link type="primary" :disabled="$index >= state.fields.length - 1" @click="move($index, 1)">↓</el-button>
+								<span class="drag-btn" title="按住拖拽排序">
+									<el-icon><ele-Rank /></el-icon>
+								</span>
 								<el-button link type="danger" :disabled="row.locked" @click="removeRow($index)">删</el-button>
 							</template>
 						</el-table-column>
@@ -26,9 +27,10 @@
 						<el-table-column label="表名" width="110" prop="tableName">
 							<template #default>h_emp_mstr</template>
 						</el-table-column>
-						<el-table-column label="中文显示" min-width="110">
+						<el-table-column label="显示名" min-width="140">
 							<template #default="{ row }">
 								<el-input v-model="row.label" size="small" />
+								<el-button link type="primary" size="small" @click="restoreLabel(row)">恢复池默认</el-button>
 							</template>
 						</el-table-column>
 						<el-table-column label="字段名" min-width="130">
@@ -56,6 +58,12 @@
 								</el-select>
 							</template>
 						</el-table-column>
+						<el-table-column label="控件" width="90" prop="controlType" />
+						<el-table-column label="代码类" min-width="120" show-overflow-tooltip>
+							<template #default="{ row }">
+								<span>{{ row.codeField || '—' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column label="显示" width="60" align="center">
 							<template #default="{ row }">
 								<el-checkbox v-model="row.visible" :disabled="row.locked" />
@@ -68,6 +76,7 @@
 				<el-card shadow="never" class="pane-card" :body-style="{ padding: '8px', height: '100%', overflow: 'auto' }">
 					<template #header>
 						<span>报表显示区</span>
+						<el-button type="primary" link style="margin-left: 8px" @click="generatePreview">生成</el-button>
 						<span class="source-tag">来源：{{ sourceText }}</span>
 					</template>
 					<!-- 列表预览：表头 -->
@@ -89,14 +98,27 @@
 					<div v-else class="preview-form">
 						<template v-for="group in formGroups" :key="group.code">
 							<div class="group-title">{{ group.title }}</div>
-							<el-row :gutter="4">
-								<el-col v-for="f in group.fields" :key="f.fieldKey" :span="(f.spanSlots || 1) * 4" class="preview-col">
-									<div class="preview-field" :class="{ photo: f.controlType === 'photo' }">
-										<span class="preview-label">{{ f.label }}</span>
-										<span class="preview-box">{{ f.controlType === 'photo' ? '照片' : '' }}</span>
+							<div class="preview-group" :class="{ 'has-photo': !!group.photo }">
+								<div v-if="group.photo" class="preview-photo-anchor">
+									<div class="preview-field photo">
+										<span class="preview-label">{{ group.photo.label }}</span>
+										<span class="preview-box">照片</span>
 									</div>
-								</el-col>
-							</el-row>
+								</div>
+								<div class="preview-fields" :style="{ '--hr-emp-cols': group.photo ? 5 : 6 }">
+									<div
+										v-for="f in group.fields"
+										:key="f.fieldKey"
+										class="preview-col"
+										:style="{ gridColumn: `span ${Math.min(Number(f.spanSlots) || 1, group.photo ? 5 : 6)}` }"
+									>
+										<div class="preview-field">
+											<span class="preview-label">{{ f.label }}</span>
+											<span class="preview-box"></span>
+										</div>
+									</div>
+								</div>
+							</div>
 						</template>
 					</div>
 				</el-card>
@@ -106,17 +128,24 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, reactive } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
+import { useI18n } from 'vue-i18n';
+import Sortable from 'sortablejs';
 import { Splitpanes, Pane } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
 import { getHrUiFieldPool, getHrUiLayoutDefault, getHrUiLayoutEffective, saveHrUiLayoutDefault, type HrUiLayoutScene } from '/@/api/hrms/hrUiLayout';
+import { hrUiCulture } from '/@/views/hrms/composables/hrUiCulture';
 
 const props = defineProps<{
 	scene: HrUiLayoutScene;
 	title: string;
 }>();
 
+const { locale } = useI18n();
+const tableRef = ref();
+const tableRenderKey = ref(0);
+let sortableInst: Sortable | null = null;
 const state = reactive({
 	loading: false,
 	saving: false,
@@ -132,14 +161,27 @@ const sourceText = computed(() => {
 	return state.source || '-';
 });
 
-const visibleFields = computed(() => state.fields.filter((f) => f.visible !== false));
+/** 报表显示区快照。改左侧字段不会改它，只有「生成」或重新加载后才更新。 */
+const previewFields = ref<any[]>([]);
+
+const cloneFields = (list: any[]) => JSON.parse(JSON.stringify(list ?? []));
+
+const generatePreview = () => {
+	previewFields.value = cloneFields(state.fields);
+};
+
+const visibleFields = computed(() => previewFields.value.filter((f) => f.visible !== false));
 
 const formGroups = computed(() => {
 	const basic = visibleFields.value.filter((f) => (f.groupCode || 'basic') === 'basic');
 	const job = visibleFields.value.filter((f) => f.groupCode === 'job');
 	const groups = [];
-	if (basic.length) groups.push({ code: 'basic', title: '基本信息', fields: basic });
-	if (job.length) groups.push({ code: 'job', title: '任职信息', fields: job });
+	const splitPhoto = (fields: any[]) => {
+		const photo = fields.find((f) => f.fieldKey === 'empPic' || f.controlType === 'photo') || null;
+		return { photo, fields: fields.filter((f) => f !== photo) };
+	};
+	if (basic.length) groups.push({ code: 'basic', title: '基本信息', ...splitPhoto(basic) });
+	if (job.length) groups.push({ code: 'job', title: '任职信息', ...splitPhoto(job) });
 	return groups;
 });
 
@@ -148,25 +190,57 @@ const availablePool = (row: any) => {
 	return state.pool.filter((p) => p.fieldKey === row.fieldKey || !used.has(p.fieldKey));
 };
 
-const mapFields = (fields: any[]) =>
-	(fields || []).map((f: any, i: number) => {
-		const meta = state.pool.find((p) => p.fieldKey === f.fieldKey);
-		return {
-			fieldKey: f.fieldKey,
-			dbColumn: f.dbColumn ?? meta?.dbColumn,
-			label: f.label || meta?.label || f.fieldKey,
-			sortNo: f.sortNo ?? i + 1,
-			visible: f.visible !== false,
-			widthPx: f.widthPx ?? meta?.defaultWidthPx ?? 100,
-			spanSlots: f.spanSlots ?? meta?.defaultSpanSlots ?? 1,
-			groupCode: f.groupCode ?? meta?.groupCode ?? 'basic',
-			controlType: f.controlType ?? meta?.controlType ?? 'text',
-			required: !!(f.required || meta?.required),
-			readonly: !!(f.readonly || meta?.readonly),
-			locked: !!(f.locked || meta?.locked),
-			sortable: meta?.sortable !== false,
-		};
+const mapFields = (fields: any[]) => {
+	const seen = new Set<string>();
+	return (fields || [])
+		.map((f: any, i: number) => {
+			const meta = state.pool.find((p) => p.fieldKey === f.fieldKey);
+			return {
+				fieldKey: f.fieldKey,
+				dbColumn: f.dbColumn ?? meta?.dbColumn,
+				label: f.label || meta?.label || f.fieldKey,
+				sortNo: f.sortNo ?? i + 1,
+				visible: f.visible !== false,
+				widthPx: f.widthPx ?? meta?.defaultWidthPx ?? 100,
+				spanSlots: f.spanSlots ?? meta?.defaultSpanSlots ?? 1,
+				groupCode: f.groupCode ?? meta?.groupCode ?? 'basic',
+				codeField: f.codeField ?? meta?.codeField,
+				controlType: (f.codeField ?? meta?.codeField)
+					? 'select'
+					: (f.controlType || meta?.controlType || 'text'),
+				required: !!(f.required || meta?.required),
+				readonly: !!(f.readonly || meta?.readonly),
+				locked: !!(f.locked || meta?.locked),
+				sortable: meta?.sortable !== false,
+				isStale: !!f.isStale,
+				poolLabel: meta?.label || f.fieldKey,
+			};
+		})
+		.filter((f) => {
+			const key = (f.fieldKey || '').toLowerCase();
+			if (!key || seen.has(key)) return false;
+			seen.add(key);
+			return true;
+		});
+};
+
+/** 按 fieldKey 去重，保留首次出现（拖拽与 el-table 不同步时可能复制出行） */
+const dedupeFields = (list: any[]) => {
+	const seen = new Set<string>();
+	return list.filter((f) => {
+		const key = (f.fieldKey || '').toLowerCase();
+		if (!key || seen.has(key)) return false;
+		seen.add(key);
+		return true;
 	});
+};
+
+const remountTable = async () => {
+	destroyRowDrop();
+	tableRenderKey.value += 1;
+	await nextTick();
+	initRowDrop();
+};
 
 const loadPool = async () => {
 	const res = await getHrUiFieldPool('hrEmp', props.scene);
@@ -181,6 +255,10 @@ const loadEffective = async () => {
 		const data = res.data.result;
 		state.source = data?.source ?? '';
 		state.fields = mapFields(data?.fields ?? []);
+		generatePreview();
+		const stale = state.fields.filter((f) => f.isStale).map((f) => f.fieldKey);
+		if (stale.length) ElMessage.warning(`以下字段已失效，运行时不会显示：${stale.join('、')}`);
+		await remountTable();
 	} finally {
 		state.loading = false;
 	}
@@ -193,7 +271,9 @@ const handleReloadDefault = async () => {
 		const data = res.data.result;
 		state.source = data?.source ?? 'system';
 		state.fields = mapFields(data?.fields ?? []);
+		generatePreview();
 		ElMessage.success('已加载系统默认');
+		await remountTable();
 	} finally {
 		state.loading = false;
 	}
@@ -204,14 +284,23 @@ const onFieldKeyChange = (row: any, key: string) => {
 	if (!meta) return;
 	row.dbColumn = meta.dbColumn;
 	row.label = meta.label;
-	row.controlType = meta.controlType;
+	row.controlType = meta.codeField ? 'select' : meta.controlType;
 	row.groupCode = meta.groupCode || row.groupCode;
 	row.widthPx = meta.defaultWidthPx ?? row.widthPx;
 	row.spanSlots = meta.defaultSpanSlots ?? row.spanSlots;
 	row.required = meta.required;
 	row.readonly = meta.readonly;
 	row.locked = meta.locked;
+	row.codeField = meta.codeField;
+	row.poolLabel = meta.label;
+	row.isStale = false;
 };
+
+const restoreLabel = (row: any) => {
+	row.label = row.poolLabel || row.fieldKey;
+};
+
+const rowClass = ({ row }: { row: any }) => (row.isStale ? 'is-stale' : '');
 
 const addRow = () => {
 	const used = new Set(state.fields.map((f) => f.fieldKey));
@@ -233,6 +322,9 @@ const addRow = () => {
 		required: next.required,
 		readonly: next.readonly,
 		locked: next.locked,
+		codeField: next.codeField,
+		poolLabel: next.label,
+		isStale: false,
 	});
 };
 
@@ -241,18 +333,45 @@ const removeRow = (index: number) => {
 	state.fields.splice(index, 1);
 };
 
-const move = (index: number, delta: number) => {
-	const target = index + delta;
-	if (target < 0 || target >= state.fields.length) return;
-	const arr = state.fields;
-	const tmp = arr[index];
-	arr[index] = arr[target];
-	arr[target] = tmp;
+const destroyRowDrop = () => {
+	sortableInst?.destroy();
+	sortableInst = null;
+};
+
+const initRowDrop = () => {
+	destroyRowDrop();
+	const root = tableRef.value?.$el as HTMLElement | undefined;
+	const tbody = root?.querySelector('.el-table__body-wrapper tbody') as HTMLElement | null;
+	if (!tbody) return;
+	sortableInst = Sortable.create(tbody, {
+		animation: 150,
+		handle: '.drag-btn',
+		ghostClass: 'drag-ghost',
+		chosenClass: 'drag-chosen',
+		// 避免与 el-table 虚拟 DOM 抢行节点导致保存后行翻倍
+		forceFallback: true,
+		fallbackOnBody: true,
+		onEnd: async (evt) => {
+			const oldIndex = evt.oldIndex;
+			const newIndex = evt.newIndex;
+			if (oldIndex == null || newIndex == null || oldIndex === newIndex) return;
+			const list = dedupeFields([...state.fields]);
+			const [moved] = list.splice(oldIndex, 1);
+			if (!moved) return;
+			list.splice(newIndex, 0, moved);
+			state.fields = list;
+			// 整表重挂，清掉 Sortable 挪过的 DOM，防止下次保存/重绘复制行
+			await remountTable();
+		},
+	});
 };
 
 const handleSave = async () => {
+	destroyRowDrop();
+	state.fields = dedupeFields(state.fields);
 	if (!state.fields.length) {
 		ElMessage.warning('至少保留一个字段');
+		await remountTable();
 		return;
 	}
 	state.saving = true;
@@ -270,19 +389,22 @@ const handleSave = async () => {
 				widthPx: props.scene === 'list' ? f.widthPx : undefined,
 				spanSlots: props.scene === 'form' ? f.spanSlots : undefined,
 				groupCode: props.scene === 'form' ? f.groupCode : undefined,
-				controlType: f.controlType,
 				required: f.required,
 				readonly: f.readonly,
+				labels: [{ culture: hrUiCulture(locale.value), label: f.label === f.poolLabel ? '' : f.label }],
 			})),
 		});
 		ElMessage.success('已保存为系统默认');
-		state.source = 'system';
+		// 从服务端重载，避免页面上残留拖拽导致的重复行
+		await loadEffective();
 	} finally {
 		state.saving = false;
 	}
 };
 
+watch(locale, () => loadEffective());
 onMounted(loadEffective);
+onUnmounted(destroyRowDrop);
 </script>
 
 <style scoped>
@@ -342,8 +464,25 @@ onMounted(loadEffective);
 	margin: 8px 0 6px;
 	font-size: 13px;
 }
+.preview-group.has-photo {
+	position: relative;
+	padding-right: 108px;
+	min-height: 132px;
+}
+.preview-photo-anchor {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 96px;
+}
+.preview-fields {
+	display: grid;
+	grid-template-columns: repeat(var(--hr-emp-cols, 6), minmax(0, 1fr));
+	column-gap: 6px;
+}
 .preview-col {
 	margin-bottom: 6px;
+	min-width: 0;
 }
 .preview-field {
 	border: 1px dashed var(--el-border-color);
@@ -355,13 +494,38 @@ onMounted(loadEffective);
 	gap: 2px;
 }
 .preview-field.photo {
-	min-height: 80px;
+	width: 90px;
+	height: 120px;
+	min-height: 120px;
 	align-items: center;
 	justify-content: center;
+	box-sizing: border-box;
 }
 .preview-label {
 	font-size: 12px;
 	color: var(--el-text-color-secondary);
+}
+:deep(.is-stale) {
+	background: #fff7e6;
+}
+.drag-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin-right: 4px;
+	cursor: grab;
+	color: var(--el-text-color-secondary);
+	vertical-align: middle;
+}
+.drag-btn:active {
+	cursor: grabbing;
+}
+:deep(.drag-ghost) {
+	opacity: 0.55;
+	background: var(--el-color-primary-light-9) !important;
+}
+:deep(.drag-chosen) {
+	background: var(--el-fill-color-light) !important;
 }
 .preview-box {
 	flex: 1;

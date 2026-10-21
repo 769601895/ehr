@@ -3,12 +3,12 @@
 		<template #header>
 			<div class="tree-toolbar">
 				<div class="tree-toolbar-row">
-					<span class="tree-toolbar-title">人员</span>
+					<span class="tree-toolbar-title">{{ t('message.hrms.common.person') }}</span>
 					<el-select v-model="state.empState" size="small" style="width: 96px" @change="reloadTree">
-						<el-option label="在职" :value="1" />
-						<el-option label="停职" :value="2" />
-						<el-option label="离职" :value="3" />
-						<el-option label="全部" :value="-1" />
+						<el-option :label="t('message.hrms.common.empStateActive')" :value="1" />
+						<el-option :label="t('message.hrms.common.empStateSuspend')" :value="2" />
+						<el-option :label="t('message.hrms.common.empStateLeave')" :value="3" />
+						<el-option :label="t('message.hrms.common.empStateAll')" :value="-1" />
 					</el-select>
 					<div class="tree-h-right">
 						<el-dropdown @command="handleCommand">
@@ -17,10 +17,10 @@
 							</el-button>
 							<template #dropdown>
 								<el-dropdown-menu>
-									<el-dropdown-item command="expandAll">全部展开</el-dropdown-item>
-									<el-dropdown-item command="collapseAll">全部折叠</el-dropdown-item>
-									<el-dropdown-item command="rootNode">根节点</el-dropdown-item>
-									<el-dropdown-item command="refresh">刷新</el-dropdown-item>
+									<el-dropdown-item command="expandAll">{{ t('message.list.allExpand') }}</el-dropdown-item>
+									<el-dropdown-item command="collapseAll">{{ t('message.list.allFold') }}</el-dropdown-item>
+									<el-dropdown-item command="rootNode">{{ t('message.hrms.common.rootNode') }}</el-dropdown-item>
+									<el-dropdown-item command="refresh">{{ t('message.list.refresh') }}</el-dropdown-item>
 								</el-dropdown-menu>
 							</template>
 						</el-dropdown>
@@ -28,12 +28,12 @@
 				</div>
 				<div class="tree-toolbar-row">
 					<el-radio-group v-model="state.includeDisabled" size="small" @change="reloadTree">
-						<el-radio :value="false">现有有效部门</el-radio>
-						<el-radio :value="true">所有历史部门</el-radio>
+						<el-radio :value="false">{{ t('message.hrms.common.activeDepts') }}</el-radio>
+						<el-radio :value="true">{{ t('message.hrms.common.allHistoryDepts') }}</el-radio>
 					</el-radio-group>
 				</div>
 				<div class="tree-toolbar-row">
-					<el-input :prefix-icon="Search" v-model.lazy="filterText" clearable size="small" placeholder="查询部门" />
+					<el-input :prefix-icon="Search" v-model.lazy="filterText" clearable size="small" :placeholder="t('message.hrms.common.queryDept')" />
 				</div>
 			</div>
 		</template>
@@ -62,7 +62,7 @@
 								<ele-Folder />
 							</el-icon>
 							<span class="tree-node-label">{{ node.label }}</span>
-							<span class="tree-node-count">{{ data.empCount ?? 0 }}人</span>
+							<span class="tree-node-count">{{ data.empCount ?? 0 }}{{ t('message.hrms.common.personUnit') }}</span>
 						</span>
 					</template>
 				</el-tree>
@@ -73,13 +73,19 @@
 
 <script lang="ts" setup>
 import { nextTick, onMounted, reactive, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { ElTree } from 'element-plus';
 import { Search, MoreFilled } from '@element-plus/icons-vue';
 import { getHrOrgList } from '/@/api/hrms/hrOrg';
 
+const { t } = useI18n();
 const filterText = ref('');
 const treeRef = ref<InstanceType<typeof ElTree>>();
-const emits = defineEmits(['node-click']);
+const emits = defineEmits<{
+	(e: 'node-click', node: any): void;
+	/** 树数据加载完成（供右侧表格复用，避免再打一次 GetList） */
+	(e: 'loaded', tree: any[], meta: { includeDisabled: boolean; empState: number }): void;
+}>();
 const state = reactive({
 	loading: false,
 	treeData: [] as any[],
@@ -107,6 +113,7 @@ const fetchTreeData = async (showLoading = true) => {
 			empStateAll: state.empState === -1,
 		});
 		state.treeData = res.data.result ?? [];
+		emits('loaded', state.treeData, { includeDisabled: state.includeDisabled, empState: state.empState });
 		const rootCode = state.treeData[0]?.ccCode as string | undefined;
 		state.expandedKeys = rootCode ? [rootCode] : [];
 		await nextTick();
@@ -114,6 +121,8 @@ const fetchTreeData = async (showLoading = true) => {
 			treeRef.value?.setExpandedKeys(state.expandedKeys);
 			treeRef.value?.setCurrentKey(rootCode);
 			emits('node-click', state.treeData[0]);
+		} else {
+			emits('node-click', { ccCode: '', ccDesc: '', ccLevel: '' });
 		}
 	} finally {
 		if (showLoading) state.loading = false;

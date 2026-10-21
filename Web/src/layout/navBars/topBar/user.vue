@@ -254,12 +254,19 @@ const onLanguageChange = async (lang: string) => {
 	locale.value = lang;
 	other.useTitle();
 	initI18nOrSize('globalI18n', 'disabledI18n');
-	refreshCurrentTabpage();
 
 	if (lang == 'en') window.$changeLang('en');
 	else window.$changeLang('zhcn');
 
-	await getAPI(SysCommonApi).apiSysCommonSetCulturePost(lang);
+	// 文化切换不依赖鉴权库；失败时仍保留前端语言，避免整页被踢回登录
+	try {
+		await getAPI(SysCommonApi).apiSysCommonSetCulturePost(lang);
+	} catch {
+		/* ignore */
+	}
+	// 不再整页 remount：vue-i18n / 页面 locale watch 已覆盖文案；
+	// remount 会让组织树/人员页并发重复打库，远程库易 Connect Timeout。
+	mittBus.emit('onLocaleChanged', lang);
 };
 
 // 聊天点击
@@ -267,11 +274,6 @@ const onChatClick = () => {
 	router.push({
 		path: '/llm/aiChat',
 	});
-};
-
-// 刷新当前标签页
-const refreshCurrentTabpage = () => {
-	mittBus.emit('onCurrentContextmenuClick', { ...routeStores.currentRoute, contextMenuClickId: 0 });
 };
 
 // 初始化组件大小/i18n

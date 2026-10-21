@@ -46,3 +46,10 @@ BEGIN
     INSERT INTO [SysMenu] ([Id], [Pid], [Type], [Name], [Path], [Component], [Title], [Icon], [IsIframe], [IsHide], [IsKeepAlive], [IsAffix], [OrderNo], [Status], [IsDelete], [CreateTime])
     VALUES (1300000000206, 0, 1, 'sysCode', '/sysCode', 'Layout', '系统代码设置', 'ele-Collection', 0, 0, 1, 0, 600, 1, 0, GETDATE());
 END;
+
+-- 报表管理（空目录，位于「关于项目」之后；亦可单独执行 doc/sql/seed/20261014_reportManage_seed_menu.sql）
+IF NOT EXISTS (SELECT 1 FROM [SysMenu] WHERE [Id] = 1300000000207)
+BEGIN
+    INSERT INTO [SysMenu] ([Id], [Pid], [Type], [Name], [Path], [Component], [Title], [Icon], [IsIframe], [IsHide], [IsKeepAlive], [IsAffix], [OrderNo], [Status], [IsDelete], [CreateTime])
+    VALUES (1300000000207, 0, 1, 'reportManage', '/reportManage', 'Layout', '报表管理', 'ele-PieChart', 0, 0, 1, 0, 17000, 1, 0, GETDATE());
+END;

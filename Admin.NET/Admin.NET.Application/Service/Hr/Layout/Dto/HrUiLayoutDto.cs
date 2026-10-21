@@ -27,6 +27,11 @@ public class HrUiLayoutFieldOutput
     public bool Sortable { get; set; }
     /// <summary>字段池中不可删除（如工号/姓名）</summary>
     public bool Locked { get; set; }
+    public string CodeField { get; set; }
+    public string Origin { get; set; }
+    public string DataType { get; set; }
+    /// <summary>池中不存在、未启用，或不在该场景适用表</summary>
+    public bool IsStale { get; set; }
 }
 
 public class HrUiLayoutOutput
@@ -58,6 +63,14 @@ public class HrUiLayoutFieldInput
     public string ControlType { get; set; } = "text";
     public bool Required { get; set; }
     public bool Readonly { get; set; }
+    /// <summary>按语言稀疏覆盖。空文案删除该语言行。</summary>
+    public List<HrUiLayoutLabelInput> Labels { get; set; }
+}
+
+public class HrUiLayoutLabelInput
+{
+    public string Culture { get; set; }
+    public string Label { get; set; }
 }
 
 public class HrUiLayoutSaveInput
@@ -88,4 +101,9 @@ public class HrUiFieldPoolItemOutput
     public bool Readonly { get; set; }
     public bool Locked { get; set; }
     public string TableName { get; set; } = "h_emp_mstr";
+    public string CodeField { get; set; }
+    public string Origin { get; set; }
+    public string DataType { get; set; }
+    /// <summary>池主语言，不随当前文化变化。布局主表 label 写这个值。</summary>
+    public string MainLabel { get; set; }
 }

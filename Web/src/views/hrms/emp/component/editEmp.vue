@@ -1,14 +1,25 @@
 <template>
-	<!-- 栅格：一行 6 列 → span=4；长字段占 2 列 → span=8；加宽以保证日期完整显示 -->
+	<!-- 栅格：无照片一行 6 列；有照片一行 5 列，保证日期 YYYY-MM-DD 完整显示 -->
 	<el-dialog v-model="state.isShowDialog" draggable :close-on-click-modal="false" width="94%" top="4vh" destroy-on-close class="hr-emp-edit-dialog">
 		<template #header>
 			<div style="color: #fff">
 				<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"><ele-Edit /></el-icon>
-				<span>{{ props.title }}</span>
+				<span>{{ dialogTitle }}</span>
 			</div>
 		</template>
-		<el-form :model="state.ruleForm" ref="ruleFormRef" label-width="96px" size="small" class="hr-emp-edit-form">
-			<el-divider content-position="left" class="hr-emp-section-divider">基本信息</el-divider>
+		<div class="hr-emp-shell">
+			<nav class="hr-emp-nav">
+				<button v-for="item in sections" :key="item.id" type="button" class="hr-emp-nav-item" :class="{ active: state.section === item.id }" @click="state.section = item.id">
+					<span>{{ t(item.title) }}</span>
+					<em v-if="item.child">{{ state.childCounts[item.id] || 0 }}</em>
+				</button>
+			</nav>
+			<div class="hr-emp-pane">
+		<el-form v-show="!isChildSection" :model="state.ruleForm" ref="ruleFormRef" label-width="88px" size="small" class="hr-emp-edit-form">
+			<EmpDynamicForm v-if="state.useDynamic" :rule-form="state.ruleForm" :fields="state.dynFields" :code-options="state.codeOptions" :tree-data="props.treeData" :is-edit="state.isEdit" />
+			<template v-else>
+			<el-divider content-position="left" class="hr-emp-section-divider">{{ t('message.hrms.common.groupBasic') }}</el-divider>
+			<div class="hr-emp-group">
 			<el-row :gutter="4">
 				<el-col :span="4" class="mb-field">
 					<el-form-item label="工号" prop="empId" :rules="[{ required: true, message: '工号不能为空', trigger: 'blur' }]">
@@ -35,29 +46,6 @@
 						<el-input :model-value="ageText" disabled placeholder="自动计算" />
 					</el-form-item>
 				</el-col>
-				<el-col :span="4" class="mb-field">
-					<div class="emp-pic-box">
-						<el-upload
-							class="emp-pic-uploader"
-							action
-							:show-file-list="false"
-							:auto-upload="false"
-							accept=".jpg,.jpeg,.png,.bmp,.gif"
-							:disabled="state.picUploading"
-							:on-change="handlePicChange"
-						>
-							<img v-if="state.ruleForm.empPic" :src="state.ruleForm.empPic" class="emp-pic-img" />
-							<div v-else class="emp-pic-placeholder">
-								<el-icon :size="22"><ele-Plus /></el-icon>
-								<div class="emp-pic-tip">照片</div>
-							</div>
-						</el-upload>
-						<div class="emp-pic-actions" v-if="state.ruleForm.empPic">
-							<el-button type="danger" link size="small" @click="clearPic">清除</el-button>
-						</div>
-					</div>
-				</el-col>
-
 				<el-col :span="8" class="mb-field">
 					<el-form-item label="身份证号">
 						<el-input v-model="state.ruleForm.empCard" placeholder="身份证号" clearable />
@@ -121,8 +109,9 @@
 					</el-form-item>
 				</el-col>
 			</el-row>
+			</div>
 
-			<el-divider content-position="left" class="hr-emp-section-divider">任职信息</el-divider>
+			<el-divider content-position="left" class="hr-emp-section-divider">{{ t('message.hrms.common.groupJob') }}</el-divider>
 			<el-row :gutter="4">
 				<el-col :span="8" class="mb-field">
 					<el-form-item label="部门">
@@ -214,38 +203,110 @@
 					</el-form-item>
 				</el-col>
 			</el-row>
+			</template>
 		</el-form>
+		<el-empty v-if="isChildSection && !state.ruleForm.empId" :description="t('message.hrms.emp.needSaveMain')" />
+		<EmpChildGrid v-else-if="isChildSection" :section="state.section" :emp-id="state.ruleForm.empId" @changed="loadChildCounts" />
+			</div>
+		</div>
 		<template #footer>
 			<span class="dialog-footer">
-				<el-button icon="ele-CircleCloseFilled" @click="state.isShowDialog = false">取消</el-button>
-				<el-button type="primary" icon="ele-CircleCheckFilled" @click="submit">确定</el-button>
+				<el-button icon="ele-CircleCloseFilled" @click="state.isShowDialog = false">{{ t('message.hrms.emp.cancel') }}</el-button>
+				<el-button v-if="!isChildSection" type="primary" icon="ele-CircleCheckFilled" @click="submit">{{ t('message.hrms.emp.saveMain') }}</el-button>
 			</span>
 		</template>
 	</el-dialog>
 </template>
 
 <script lang="ts" setup name="hrEditEmp">
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
-import type { UploadFile } from 'element-plus';
+import { useI18n } from 'vue-i18n';
 import { addHrEmp, updateHrEmp } from '/@/api/hrms/hrEmp';
-import { getAPI } from '/@/utils/axios-utils';
-import { SysFileApi } from '/@/api-services/system/api';
+import { countHrEmpChild } from '/@/api/hrms/hrEmpChild';
+import { getHrCodeList } from '/@/api/hrms/hrOrg';
+import { getHrUiLayoutEffective } from '/@/api/hrms/hrUiLayout';
+import EmpDynamicForm from '/@/views/hrms/emp/component/empDynamicForm.vue';
+import EmpChildGrid from '/@/views/hrms/emp/component/empChildGrid.vue';
 
 const props = defineProps({
 	title: String,
 	treeData: { type: Array as () => any[], default: () => [] },
 });
 const emits = defineEmits(['reload']);
+const { locale, t } = useI18n();
 const ruleFormRef = ref();
 const cascaderProps = { checkStrictly: true, emitPath: false, value: 'ccCode', label: 'ccDesc', children: 'children' };
+
+const sections = [
+	{ id: 'profile', title: 'message.hrms.emp.sectionProfile' },
+	{ id: 'family', title: 'message.hrms.emp.sectionFamily', child: true },
+	{ id: 'edu', title: 'message.hrms.emp.sectionEdu', child: true },
+	{ id: 'work', title: 'message.hrms.emp.sectionWork', child: true },
+	{ id: 'title', title: 'message.hrms.emp.sectionTitle', child: true },
+];
 
 const state = reactive({
 	isShowDialog: false,
 	isEdit: false,
-	picUploading: false,
+	section: 'profile',
 	ruleForm: {} as any,
+	useDynamic: false,
+	dynFields: [] as any[],
+	codeOptions: {} as Record<string, { value: string; label?: string; text?: string }[]>,
+	childCounts: { family: 0, edu: 0, work: 0, title: 0 } as Record<string, number>,
 });
+
+const isChildSection = computed(() => sections.some((s) => s.child && s.id === state.section));
+
+const dialogTitle = computed(() => {
+	const empId = String(state.ruleForm?.empId ?? '').trim();
+	const empName = String(state.ruleForm?.empName ?? '').trim();
+	if (empId && empName) return `${empId} ${empName}`;
+	if (empId) return empId;
+	if (empName) return empName;
+	return props.title || '';
+});
+
+const loadChildCounts = async () => {
+	const empId = state.ruleForm.empId;
+	if (!empId) {
+		state.childCounts = { family: 0, edu: 0, work: 0, title: 0 };
+		return;
+	}
+	try {
+		const res = await countHrEmpChild(empId);
+		const c = res.data.result ?? {};
+		state.childCounts = {
+			family: c.family ?? 0,
+			edu: c.edu ?? 0,
+			work: c.work ?? 0,
+			title: c.title ?? 0,
+		};
+	} catch {
+		state.childCounts = { family: 0, edu: 0, work: 0, title: 0 };
+	}
+};
+
+const registered = new Set(['ccCode', 'empPic', 'age', 'empState']);
+
+const loadDynamic = async () => {
+	try {
+		const res = await getHrUiLayoutEffective('hrEmp', 'form');
+		const fields = (res.data.result?.fields ?? []).filter((f: any) => f.visible !== false && !f.isStale);
+		if (!fields.length) {
+			state.useDynamic = false;
+			return;
+		}
+		const codes = [...new Set(fields.filter((f: any) => f.codeField && !registered.has(f.fieldKey)).map((f: any) => f.codeField as string))];
+		const entries = await Promise.all(codes.map(async (c) => [c, (await getHrCodeList(c)).data.result ?? []] as const));
+		state.codeOptions = Object.fromEntries(entries);
+		state.dynFields = fields;
+		state.useDynamic = true;
+	} catch {
+		state.useDynamic = false;
+	}
+};
 
 const ageText = computed(() => {
 	const birth = state.ruleForm.empBirth;
@@ -261,53 +322,35 @@ const ageText = computed(() => {
 
 const openDialog = (row: any, isEdit = false) => {
 	state.isEdit = isEdit;
+	state.section = 'profile';
 	state.ruleForm = JSON.parse(JSON.stringify(row ?? {}));
 	if (state.ruleForm.empState == null) state.ruleForm.empState = 1;
 	if (!isEdit && row?.ccCode) state.ruleForm.ccCode = row.ccCode;
 	state.isShowDialog = true;
 	ruleFormRef.value?.resetFields();
+	loadDynamic();
+	loadChildCounts();
 };
 
-const handlePicChange = async (uploadFile: UploadFile) => {
-	const raw = uploadFile.raw;
-	if (!raw) return;
-	const allow = ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/jpg'];
-	if (raw.type && !allow.includes(raw.type.toLowerCase())) {
-		ElMessage.warning('仅支持 jpg/png/bmp/gif');
-		return;
-	}
-	if (raw.size > 5 * 1024 * 1024) {
-		ElMessage.warning('照片不能超过 5MB');
-		return;
-	}
-	state.picUploading = true;
-	try {
-		const res = await getAPI(SysFileApi).apiSysFileUploadFilePostForm(raw, 'hrEmp', undefined, '.jpg,.jpeg,.png,.bmp,.gif');
-		const url = res.data.result?.url;
-		if (!url) {
-			ElMessage.error('上传失败');
-			return;
-		}
-		state.ruleForm.empPic = url;
-		ElMessage.success('照片已上传');
-	} finally {
-		state.picUploading = false;
-	}
-};
-
-const clearPic = () => {
-	state.ruleForm.empPic = '';
-};
+watch(locale, () => {
+	if (state.isShowDialog) loadDynamic();
+});
 
 const submit = () => {
-	ruleFormRef.value.validate(async (valid: boolean) => {
+	if (!String(state.ruleForm.empId || '').trim() || !String(state.ruleForm.empName || '').trim()) {
+		state.section = 'profile';
+		ElMessage.warning(t('message.hrms.emp.mainRequired'));
+		return;
+	}
+	ruleFormRef.value?.validate(async (valid: boolean) => {
 		if (!valid) return;
 		if (state.isEdit) {
 			await updateHrEmp(state.ruleForm);
 		} else {
 			await addHrEmp(state.ruleForm);
+			state.isEdit = true;
 		}
-		state.isShowDialog = false;
+		ElMessage.success(t('message.hrms.emp.mainSaved'));
 		emits('reload');
 	});
 };
@@ -331,67 +374,73 @@ defineExpose({ openDialog });
 }
 .hr-emp-edit-form :deep(.el-form-item__label) {
 	padding-right: 6px;
+	height: auto;
+	line-height: 1.2;
+	white-space: normal;
+	overflow: hidden;
+	display: inline-flex;
+	align-items: center;
+	justify-content: flex-end;
 }
+.hr-emp-edit-form :deep(.el-date-editor),
 .hr-emp-edit-form :deep(.el-date-editor.el-input),
 .hr-emp-edit-form :deep(.el-date-editor.el-input__wrapper),
 .hr-emp-edit-form :deep(.el-input-number),
 .hr-emp-edit-form :deep(.el-select),
 .hr-emp-edit-form :deep(.el-cascader) {
 	width: 100%;
+	max-width: 100%;
 }
 .hr-emp-edit-form :deep(.el-form-item__content) {
 	min-width: 0;
 	flex: 1;
 }
 .hr-emp-edit-form :deep(.el-date-editor .el-input__wrapper) {
-	padding-left: 6px;
-	padding-right: 6px;
+	padding-left: 4px;
+	padding-right: 4px;
 }
-.emp-pic-box {
+.hr-emp-edit-form :deep(.el-date-editor .el-input__inner) {
+	font-variant-numeric: tabular-nums;
+}
+.hr-emp-shell {
 	display: flex;
-	flex-direction: column;
+	min-height: 460px;
+}
+.hr-emp-nav {
+	width: 148px;
+	flex-shrink: 0;
+	border-right: 1px solid var(--el-border-color-lighter);
+	padding: 4px 0;
+}
+.hr-emp-nav-item {
+	width: 100%;
+	display: flex;
 	align-items: center;
-}
-.emp-pic-label {
-	font-size: 13px;
-	color: var(--el-text-color-regular);
-	margin-bottom: 6px;
-}
-.emp-pic-uploader :deep(.el-upload) {
-	border: 1px dashed var(--el-border-color);
-	border-radius: 6px;
+	justify-content: space-between;
+	border: 0;
+	border-left: 3px solid transparent;
+	background: transparent;
+	padding: 9px 12px;
 	cursor: pointer;
-	overflow: hidden;
-	width: 100%;
-	max-width: 110px;
-	height: 132px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	background: var(--el-fill-color-blank);
+	color: var(--el-text-color-primary);
+	font-size: 13px;
 }
-.emp-pic-uploader :deep(.el-upload:hover) {
-	border-color: var(--el-color-primary);
-}
-.emp-pic-img {
-	width: 100%;
-	height: 132px;
-	object-fit: cover;
-	display: block;
-}
-.emp-pic-placeholder {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	color: var(--el-text-color-secondary);
-	gap: 6px;
-}
-.emp-pic-tip {
+.hr-emp-nav-item em {
+	font-style: normal;
+	color: var(--el-color-primary);
 	font-size: 12px;
 }
-.emp-pic-actions {
-	margin-top: 4px;
+.hr-emp-nav-item.active {
+	color: var(--el-color-primary);
+	background: var(--el-color-primary-light-9);
+	border-left-color: var(--el-color-primary);
+}
+.hr-emp-pane {
+	flex: 1;
+	min-width: 0;
+	padding-left: 12px;
+	max-height: calc(100vh - 220px);
+	overflow: auto;
 }
 </style>
 

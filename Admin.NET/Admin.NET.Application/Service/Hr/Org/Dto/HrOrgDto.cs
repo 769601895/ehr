@@ -126,7 +126,10 @@ public class HrOrgDisableInput
 public class HrCodeItemOutput
 {
     public string Value { get; set; }
+    /// <summary>当前文化描述（下拉显示）</summary>
     public string Label { get; set; }
+    /// <summary>与 Label 相同，仅描述</summary>
+    public string Text { get; set; }
 }
 
 public class HrCostItemOutput

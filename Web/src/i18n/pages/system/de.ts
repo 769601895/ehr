@@ -1,4 +1,4 @@
-﻿export default {
+export default {
 	list: {
 		menuName: 'Menüname',
 		type: 'Typ',
@@ -278,16 +278,12 @@
 		organizationCode: 'Organisationscode',
 		organizationType: 'Organisationstyp',
 		addOrganization: 'Organisation hinzufügen',
-		belongingOrg: 'Organisation',
 		editOrganization: 'Organisation bearbeiten',
-		belongingOrg: 'Organisation',
 		copyOrganization: 'Organisation kopieren',
-		belongingOrg: 'Organisation',
 		confirmDeleteOrg: 'Sind Sie sicher, dass Sie die Organisation [{name}] löschen möchten?',
 		level: 'Ebene',
 		modificationRecord: 'Änderungsprotokoll',
 		parentOrganization: 'Übergeordnete Organisation',
-		belongingOrg: 'Organisation',
 		pleaseSelectParentOrg: 'Bitte wählen Sie die übergeordnete Organisation',
 		orgNameRequired: 'Organisationsname ist erforderlich',
 		orgCodeRequired: 'Organisationscode ist erforderlich',

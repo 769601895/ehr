@@ -12,7 +12,7 @@
         //"ConnectionString": "DataSource=./Admin.NET.db", // Sqlite
         //"ConnectionString": "PORT=5432;DATABASE=xxx;HOST=localhost;PASSWORD=xxx;USER ID=xxx", // PostgreSQL（Kdbndp、OpenGauss通用）
         //"ConnectionString": "User Id=xxx; Password=xxx; Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=ORCL)))", // Oracle
-        "ConnectionString": "Server=10.1.2.14;Database=ehr;User Id=ehr;Password=ehr;Encrypt=False;TrustServerCertificate=True;", // SqlServer
+        "ConnectionString": "Server=jack\\sql2014;Database=ehrnew;User Id=sa;Password=qingfeng;Encrypt=False;TrustServerCertificate=True;Connect Timeout=30;", // SqlServer
         //"ConnectionString": "host=222.71.212.3;Port=27017;Database=testDB;Username= root;Password=123456;authSource=admin;replicaSet=", // MongoDB
 
         //"SlaveConnectionConfigs": [ // 读写分离/主从
@@ -44,7 +44,7 @@
       {
         "ConfigId": "hr_2025",
         "DbType": "SqlServer",
-        "ConnectionString": "Server=10.1.2.14;Database=ehr;User Id=ehr;Password=ehr;Encrypt=False;TrustServerCertificate=True;",
+        "ConnectionString": "Server=jack\\sql2014;Database=ehrnew;User Id=sa;Password=qingfeng;Encrypt=False;TrustServerCertificate=True;Connect Timeout=30;",
         "DbSettings": {
           "EnableInitDb": false,
           "EnableInitView": false,

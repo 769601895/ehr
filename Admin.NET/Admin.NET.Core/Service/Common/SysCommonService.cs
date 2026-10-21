@@ -34,6 +34,7 @@ public class SysCommonService : IDynamicApiController, ITransient
     /// 切换多语言 🔖
     /// </summary>
     /// <param name="culture">区域码</param>
+    [AllowAnonymous]
     [DisplayName("切换多语言")]
     public void SetCulture([FromQuery] string culture)
     {

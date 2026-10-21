@@ -1,4 +1,4 @@
-﻿export default {
+export default {
 	list: {
 		menuName: 'Menynavn',
 		type: 'Type',
@@ -278,16 +278,12 @@
 		organizationCode: 'Organisasjonskode',
 		organizationType: 'Organisasjonstype',
 		addOrganization: 'Legg til Organisasjon',
-		belongingOrg: 'Organisasjon',
 		editOrganization: 'Rediger Organisasjon',
-		belongingOrg: 'Organisasjon',
 		copyOrganization: 'Kopier Organisasjon',
-		belongingOrg: 'Organisasjon',
 		confirmDeleteOrg: 'Er du sikker på at du vil slette organisasjonen: [{name}]?',
 		level: 'Nivå',
 		modificationRecord: 'Endringslogg',
 		parentOrganization: 'Overordnet Organisasjon',
-		belongingOrg: 'Organisasjon',
 		pleaseSelectParentOrg: 'Vennligst velg overordnet organisasjon',
 		orgNameRequired: 'Organisasjonsnavn er påkrevd',
 		orgCodeRequired: 'Organisasjonskode er påkrevd',

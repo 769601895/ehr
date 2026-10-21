@@ -1,4 +1,4 @@
-﻿export default {
+export default {
 	list: {
 		menuName: 'Valikon Nimi',
 		type: 'Tyyppi',
@@ -278,16 +278,12 @@
 		organizationCode: 'Organisaatiokoodi',
 		organizationType: 'Organisaatiotyyppi',
 		addOrganization: 'Lisää Organisaatio',
-		belongingOrg: 'Organisaatio',
 		editOrganization: 'Muokkaa Organisaatiota',
-		belongingOrg: 'Organisaatio',
 		copyOrganization: 'Kopioi Organisaatio',
-		belongingOrg: 'Organisaatio',
 		confirmDeleteOrg: 'Haluatko varmasti poistaa organisaation: [{name}]?',
 		level: 'Taso',
 		modificationRecord: 'Muutoshistoria',
 		parentOrganization: 'Yläorganisaatio',
-		belongingOrg: 'Organisaatio',
 		pleaseSelectParentOrg: 'Valitse yläorganisaatio',
 		orgNameRequired: 'Organisaation nimi vaaditaan',
 		orgCodeRequired: 'Organisaatiokoodi vaaditaan',

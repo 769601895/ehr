@@ -1,4 +1,4 @@
-﻿export default {
+export default {
 	list: {
 		menuName: 'Nama Menu',
 		type: 'Jenis',
@@ -278,16 +278,12 @@
 		organizationCode: 'Kod Organisasi',
 		organizationType: 'Jenis Organisasi',
 		addOrganization: 'Tambah Organisasi',
-		belongingOrg: 'Organisasi',
 		editOrganization: 'Edit Organisasi',
-		belongingOrg: 'Organisasi',
 		copyOrganization: 'Salin Organisasi',
-		belongingOrg: 'Organisasi',
 		confirmDeleteOrg: 'Adakah anda pasti untuk memadam organisasi: [{name}]?',
 		level: 'Tahap',
 		modificationRecord: 'Rekod Pengubahsuaian',
 		parentOrganization: 'Organisasi Induk',
-		belongingOrg: 'Organisasi',
 		pleaseSelectParentOrg: 'Sila pilih organisasi induk',
 		orgNameRequired: 'Nama organisasi diperlukan',
 		orgCodeRequired: 'Kod organisasi diperlukan',

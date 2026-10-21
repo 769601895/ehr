@@ -10,7 +10,7 @@ public class HrOrgService : IDynamicApiController, ITransient
 {
     private readonly UserManager _userManager;
     private readonly SqlSugarRepository<CcMstr> _ccRep;
-    private readonly SqlSugarRepository<CodeMstr> _codeRep;
+    private readonly HrCodeMstrService _codeMstrService;
     private readonly SqlSugarRepository<HrEmployee> _empRep;
     private readonly SqlSugarRepository<HCost> _costRep;
     private readonly SqlSugarRepository<HShiftSet> _shiftRep;
@@ -18,14 +18,14 @@ public class HrOrgService : IDynamicApiController, ITransient
     public HrOrgService(
         UserManager userManager,
         SqlSugarRepository<CcMstr> ccRep,
-        SqlSugarRepository<CodeMstr> codeRep,
+        HrCodeMstrService codeMstrService,
         SqlSugarRepository<HrEmployee> empRep,
         SqlSugarRepository<HCost> costRep,
         SqlSugarRepository<HShiftSet> shiftRep)
     {
         _userManager = userManager;
         _ccRep = ccRep;
-        _codeRep = codeRep;
+        _codeMstrService = codeMstrService;
         _empRep = empRep;
         _costRep = costRep;
         _shiftRep = shiftRep;
@@ -472,20 +472,9 @@ public class HrOrgService : IDynamicApiController, ITransient
     /// 人事代码下拉
     /// </summary>
     [DisplayName("人事代码下拉")]
-    public async Task<List<HrCodeItemOutput>> GetCodeList([FromQuery] string codeField)
+    public Task<List<HrCodeItemOutput>> GetCodeList([FromQuery] string codeField)
     {
-        if (string.IsNullOrWhiteSpace(codeField))
-            return [];
-        var list = await _codeRep.AsQueryable()
-            .Where(u => u.CodeField == codeField)
-            .OrderBy(u => u.CodeSort)
-            .OrderBy(u => u.CodeValue)
-            .ToListAsync();
-        return list.Select(u => new HrCodeItemOutput
-        {
-            Value = u.CodeValue,
-            Label = string.IsNullOrWhiteSpace(u.CodeDesc) ? u.CodeValue : $"{u.CodeValue} {u.CodeDesc}"
-        }).ToList();
+        return _codeMstrService.GetCodeList(codeField);
     }
 
     /// <summary>
@@ -699,15 +688,18 @@ public class HrOrgService : IDynamicApiController, ITransient
     {
         if (outputs.Count == 0) return;
 
+        // 服务端 GROUP BY，避免把全表 cc_code 拉进内存（切语言整页刷新时会并发多次 GetList）
         var empQ = _empRep.AsQueryable().Where(u => u.CcCode != null && u.CcCode != "");
         if (empState.HasValue)
             empQ = empQ.Where(u => u.EmpState == empState.Value);
 
-        var codes = await empQ.Select(u => u.CcCode).ToListAsync();
-        var map = codes
-            .Where(c => !string.IsNullOrWhiteSpace(c))
-            .GroupBy(c => c!, StringComparer.OrdinalIgnoreCase)
-            .ToDictionary(g => g.Key, g => g.Count(), StringComparer.OrdinalIgnoreCase);
+        var rows = await empQ
+            .GroupBy(u => u.CcCode)
+            .Select(u => new { CcCode = u.CcCode, Cnt = SqlFunc.AggregateCount(u.CcCode) })
+            .ToListAsync();
+        var map = rows
+            .Where(r => !string.IsNullOrWhiteSpace(r.CcCode))
+            .ToDictionary(r => r.CcCode!, r => r.Cnt, StringComparer.OrdinalIgnoreCase);
         foreach (var node in outputs)
             node.EmpCount = map.TryGetValue(node.CcCode, out var c) ? c : 0;
     }

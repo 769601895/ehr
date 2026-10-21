@@ -152,7 +152,7 @@ BEGIN
 
             [IsIframe], [IsHide], [IsKeepAlive], [IsAffix], [OrderNo], [Status], [IsDelete], [CreateTime])
 
-        VALUES (1300000000246, 1300000000244, 3, 'hrUiLayoutListGet', N'查询', N'hrUiLayout/getEffective',
+        VALUES (1300000000246, 1300000000244, 3, 'hrUiLayoutListGet', N'查询', N'hrUiLayout/effective',
 
             0, 0, 1, 0, 90, 1, 0, GETDATE());
 
@@ -190,7 +190,7 @@ BEGIN
 
             [IsIframe], [IsHide], [IsKeepAlive], [IsAffix], [OrderNo], [Status], [IsDelete], [CreateTime])
 
-        VALUES (1300000000249, 1300000000245, 3, 'hrUiLayoutFormGet', N'查询', N'hrUiLayout/getEffective',
+        VALUES (1300000000249, 1300000000245, 3, 'hrUiLayoutFormGet', N'查询', N'hrUiLayout/effective',
 
             0, 0, 1, 0, 90, 1, 0, GETDATE());
 

@@ -2,8 +2,8 @@ import request from '/@/utils/request';
 
 enum Api {
 	FieldPool = '/api/hrUiLayout/fieldPool',
-	GetEffective = '/api/hrUiLayout/getEffective',
-	GetDefault = '/api/hrUiLayout/getDefault',
+	Effective = '/api/hrUiLayout/effective',
+	Default = '/api/hrUiLayout/default',
 	SaveDefault = '/api/hrUiLayout/saveDefault',
 	SaveMy = '/api/hrUiLayout/saveMy',
 	ResetMy = '/api/hrUiLayout/resetMy',
@@ -20,14 +20,14 @@ export const getHrUiFieldPool = (moduleCode = 'hrEmp', scene?: HrUiLayoutScene) 
 
 export const getHrUiLayoutEffective = (moduleCode = 'hrEmp', scene: HrUiLayoutScene = 'list') =>
 	request({
-		url: Api.GetEffective,
+		url: Api.Effective,
 		method: 'get',
 		params: { moduleCode, scene },
 	});
 
 export const getHrUiLayoutDefault = (moduleCode = 'hrEmp', scene: HrUiLayoutScene = 'list') =>
 	request({
-		url: Api.GetDefault,
+		url: Api.Default,
 		method: 'get',
 		params: { moduleCode, scene },
 	});

@@ -23,11 +23,13 @@ public class SysMenuSeedData : ISqlSugarEntitySeedData<SysMenu>
         [
             new SysMenu{ Id=1300000000111, Pid=1300000000101, Title="工作台", Path="/dashboard/home", Name="home", Component="/home/index", IsAffix=true, Icon="ele-HomeFilled", Type=MenuTypeEnum.Menu, CreateTime=DateTime.Parse("2022-02-10 00:00:00"), OrderNo=100 },
 
-            // 以下为与"工作台"平级的业务模块目录（人事/考勤/保险公积金/薪酬）
+            // 以下为与"工作台"平级的业务模块目录（人事/考勤/保险公积金/薪酬等）
             new SysMenu{ Id=1300000000201, Pid=0, Title="人事管理", Path="/hr", Name="hr", Component="Layout", Icon="ele-User", Type=MenuTypeEnum.Dir, CreateTime=DateTime.Parse("2026-10-09 00:00:00"), OrderNo=100 },
             new SysMenu{ Id=1300000000202, Pid=0, Title="考勤管理", Path="/attendance", Name="attendance", Component="Layout", Icon="ele-Calendar", Type=MenuTypeEnum.Dir, CreateTime=DateTime.Parse("2026-10-09 00:00:00"), OrderNo=200 },
             new SysMenu{ Id=1300000000203, Pid=0, Title="保险公积金管理", Path="/insurance", Name="insurance", Component="Layout", Icon="ele-OfficeBuilding", Type=MenuTypeEnum.Dir, CreateTime=DateTime.Parse("2026-10-09 00:00:00"), OrderNo=300 },
             new SysMenu{ Id=1300000000204, Pid=0, Title="薪酬管理", Path="/salary", Name="salary", Component="Layout", Icon="ele-Money", Type=MenuTypeEnum.Dir, CreateTime=DateTime.Parse("2026-10-09 00:00:00"), OrderNo=400 },
+            // 报表管理：位于「关于项目」之后的顶级空目录，后续挂子模块
+            new SysMenu{ Id=1300000000207, Pid=0, Title="报表管理", Path="/reportManage", Name="reportManage", Component="Layout", Icon="ele-PieChart", Type=MenuTypeEnum.Dir, CreateTime=DateTime.Parse("2026-10-14 00:00:00"), OrderNo=17000 },
         ];
     }
 }

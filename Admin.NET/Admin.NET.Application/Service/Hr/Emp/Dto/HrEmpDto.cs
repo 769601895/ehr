@@ -21,7 +21,7 @@ public class HrEmpPageInput : BasePageInput
 /// <summary>
 /// 人员资料详情/列表输出
 /// </summary>
-public class HrEmpOutput
+public partial class HrEmpOutput
 {
     public long IEmpId { get; set; }
     public string EmpId { get; set; }
@@ -67,7 +67,7 @@ public class HrEmpOutput
 /// <summary>
 /// 新增/编辑人员资料
 /// </summary>
-public class HrEmpSaveInput
+public partial class HrEmpSaveInput
 {
     [Required(ErrorMessage = "工号不能为空")]
     public string EmpId { get; set; }

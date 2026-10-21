@@ -11,6 +11,7 @@
  * @method openShareTagsView 布局设置弹窗，开启 TagsView 共用
  * @method onTagsViewRefreshRouterView tagsview 刷新界面
  * @method onCurrentContextmenuClick tagsview 右键菜单每项点击时
+ * @method onLocaleChanged 顶栏切换语言后（不整页 remount，页面可自行刷新文案依赖数据）
  * @method submitRefreshFk
  */
 declare type MittType<T = any> = {
@@ -24,6 +25,7 @@ declare type MittType<T = any> = {
 	openShareTagsView?: string;
 	onTagsViewRefreshRouterView?: T;
 	onCurrentContextmenuClick?: T;
+	onLocaleChanged?: T;
 	submitRefreshFk?: T;
 };
 
