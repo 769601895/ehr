@@ -43,6 +43,7 @@ export default {
 		站内信: 'Message Interne',
 		系统接口: 'API Système',
 		系统管理: 'Système',
+		流程配置管理: 'Config. des processus',
 		系统配置: 'Configuration du Système',
 		缓存管理: 'Gestion du Cache',
 		编辑: 'Éditer',

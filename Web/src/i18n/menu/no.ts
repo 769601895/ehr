@@ -43,6 +43,7 @@ export default {
 		站内信: 'Intern melding',
 		系统接口: 'System-API',
 		系统管理: 'System',
+		流程配置管理: 'Prosesskonfigurasjon',
 		系统配置: 'Systemkonfigurasjon',
 		缓存管理: 'Bufferadministrasjon',
 		编辑: 'Rediger',

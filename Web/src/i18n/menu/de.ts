@@ -43,6 +43,7 @@ export default {
 		站内信: 'Interne Nachrichten',
 		系统接口: 'Systemschnittstellen',
 		系统管理: 'System',
+		流程配置管理: 'Prozesskonfiguration',
 		系统配置: 'Systemkonfiguration',
 		缓存管理: 'Cache-Verwaltung',
 		编辑: 'Bearbeiten',

@@ -43,6 +43,7 @@ export default {
 		站内信: 'Tin nhắn nội bộ',
 		系统接口: 'API hệ thống',
 		系统管理: 'Hệ thống',
+		流程配置管理: 'Cấu hình quy trình',
 		系统配置: 'Cấu hình hệ thống',
 		缓存管理: 'Quản lý bộ nhớ đệm',
 		编辑: 'Chỉnh sửa',

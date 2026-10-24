@@ -45,6 +45,7 @@ export default {
 		站内信: 'Internal Message',
 		系统接口: 'System API',
 		系统管理: 'System',
+		流程配置管理: 'Process Config',
 		系统配置: 'System Configuration',
 		缓存管理: 'Cache Management',
 		编辑: 'Edit',

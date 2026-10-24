@@ -43,6 +43,7 @@ export default {
 		站内信: 'Sisäinen viesti',
 		系统接口: 'Järjestelmän rajapinta',
 		系统管理: 'Järjestelmä',
+		流程配置管理: 'Prosessoinnin asetukset',
 		系统配置: 'Järjestelmän määritykset',
 		缓存管理: 'Välimuistin hallinta',
 		编辑: 'Muokkaa',

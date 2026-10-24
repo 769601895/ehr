@@ -43,6 +43,7 @@ export default {
 		站内信: 'Wiadomość wewnętrzna',
 		系统接口: 'API systemu',
 		系统管理: 'System',
+		流程配置管理: 'Konfiguracja procesów',
 		系统配置: 'Konfiguracja systemu',
 		缓存管理: 'Zarządzanie pamięcią podręczną',
 		编辑: 'Edytuj',

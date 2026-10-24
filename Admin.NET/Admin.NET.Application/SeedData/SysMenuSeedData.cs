@@ -28,6 +28,8 @@ public class SysMenuSeedData : ISqlSugarEntitySeedData<SysMenu>
             new SysMenu{ Id=1300000000202, Pid=0, Title="考勤管理", Path="/attendance", Name="attendance", Component="Layout", Icon="ele-Calendar", Type=MenuTypeEnum.Dir, CreateTime=DateTime.Parse("2026-10-09 00:00:00"), OrderNo=200 },
             new SysMenu{ Id=1300000000203, Pid=0, Title="保险公积金管理", Path="/insurance", Name="insurance", Component="Layout", Icon="ele-OfficeBuilding", Type=MenuTypeEnum.Dir, CreateTime=DateTime.Parse("2026-10-09 00:00:00"), OrderNo=300 },
             new SysMenu{ Id=1300000000204, Pid=0, Title="薪酬管理", Path="/salary", Name="salary", Component="Layout", Icon="ele-Money", Type=MenuTypeEnum.Dir, CreateTime=DateTime.Parse("2026-10-09 00:00:00"), OrderNo=400 },
+            // 流程配置管理：位于「系统代码设置」(600) 与「系统管理」(10000) 之间的顶级空目录
+            new SysMenu{ Id=1300000000208, Pid=0, Title="流程配置管理", Path="/moduleFlowConfig", Name="moduleFlowConfig", Component="Layout", Icon="ele-Connection", Type=MenuTypeEnum.Dir, CreateTime=DateTime.Parse("2026-10-21 00:00:00"), OrderNo=700 },
             // 报表管理：位于「关于项目」之后的顶级空目录，后续挂子模块
             new SysMenu{ Id=1300000000207, Pid=0, Title="报表管理", Path="/reportManage", Name="reportManage", Component="Layout", Icon="ele-PieChart", Type=MenuTypeEnum.Dir, CreateTime=DateTime.Parse("2026-10-14 00:00:00"), OrderNo=17000 },
         ];

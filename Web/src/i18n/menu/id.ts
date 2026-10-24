@@ -43,6 +43,7 @@ export default {
 		站内信: 'Pesan Internal',
 		系统接口: 'API Sistem',
 		系统管理: 'Sistem',
+		流程配置管理: 'Konfigurasi Proses',
 		系统配置: 'Konfigurasi Sistem',
 		缓存管理: 'Manajemen Cache',
 		编辑: 'Edit',
