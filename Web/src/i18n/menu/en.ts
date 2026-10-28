@@ -81,6 +81,8 @@ export default {
 		AI对话: 'AI Dialog',
 		字段元数据: 'Field metadata',
 		人事代码设置: 'HR code settings',
+		系统代码设置: 'System code settings',
+		岗位代码设置: 'Job position codes',
 		人事管理: 'HR',
 		考勤管理: 'Attendance',
 		保险公积金管理: 'Insurance & Housing Fund',

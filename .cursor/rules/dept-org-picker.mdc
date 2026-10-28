@@ -1,0 +1,50 @@
+---
+description: 部门/机构选择须用弹窗树形选择器（只读输入 + … 按钮），禁止下拉或可手改
+globs: Web/src/**/*.{vue,ts}
+alwaysApply: false
+---
+
+# 部门选择交互规范
+
+凡表单字段需要选择**部门/机构/管辖部门**时，统一采用「只读输入框 + `….` 打开树形弹窗」模式。禁止用 `el-select` / 可手输文本框代替。
+
+参考实现：
+- 弹窗组件：`Web/src/components/selector/orgPickDialog.vue`
+- 表单接入：`Web/src/views/system/user/component/editUser.vue`
+
+## 触发字段（表单内）
+
+1. 展示值为部门名称（或路径），**只读**（`readonly`），不可键盘录入。
+2. 右侧固定 `….` 按钮打开选择弹窗；点击输入区本身不直接改值。
+3. 必填时加校验（如「管辖部门不能为空」），`trigger: 'change'`。
+4. 存库用部门 `id`；界面只绑显示名。多选场景用「+ 增加…」动态行，每行独立打开同一弹窗。
+
+```vue
+<div class="org-pick-field">
+  <el-input :model-value="displayName" placeholder="管辖部门" readonly class="org-pick-input" />
+  <el-button class="org-pick-btn" @click="openOrgPick()">....</el-button>
+</div>
+```
+
+## 弹窗「部门选择」
+
+1. 标题：`部门选择`（可配建筑/文件夹类图标）。
+2. 顶部筛选框，placeholder：`输入部门名称筛选`；按名称实时过滤树节点。
+3. 主体为可展开/折叠的**机构树**（`el-tree`），节点带文件夹图标；有子节点时显示 `(子节点数)`。
+4. **单选**：点击节点高亮/勾选当前项；未选点「选定」须提示「请选择部门」。
+5. 底部按钮：主按钮 `选定`（确认回写）、次按钮 `取消`（关闭不改）。
+6. 确认回传至少 `{ id, name }`；需要时带路径 `path`（如 `集团 / 易维`）。
+7. `append-to-body`、`destroy-on-close`；打开时回显已选并尽量展开到该节点。
+
+## 复用与禁止
+
+- ✅ 优先复用 `OrgPickDialog`，传入 `orgData` / `modelValue`，监听 `confirm`。
+- ✅ 附属/多管辖部门：同一弹窗，用目标下标区分回写行。
+- ❌ 新建第二套部门树弹窗 UI（除非明确多选勾选、跨租户等新需求且文档说明）。
+- ❌ 部门字段做成可自由输入的文本框或普通下拉（非树）。
+
+## 验收
+
+- [ ] 字段只读 + `….` 打开弹窗
+- [ ] 可按部门名筛选；树可展开；确认后回写 id 与显示名
+- [ ] 未选择点「选定」有提示；取消不改原值

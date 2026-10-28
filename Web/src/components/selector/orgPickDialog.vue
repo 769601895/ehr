@@ -59,7 +59,8 @@ const props = defineProps({
 
 const emits = defineEmits<{
 	(e: 'update:visible', v: boolean): void;
-	(e: 'confirm', payload: { id: number; name: string; path: string }): void;
+	/** id 可为数字（SysOrg）或字符串（人事 CcCode） */
+	(e: 'confirm', payload: { id: number | string; name: string; path: string }): void;
 }>();
 
 const treeRef = ref<InstanceType<typeof ElTree>>();
@@ -131,14 +132,22 @@ const buildOrgPath = (nodes: SysOrg[], id: number | string | undefined | null, p
 	return '';
 };
 
+const normalizePickId = (raw: number | string): number | string => {
+	if (typeof raw === 'number') return raw;
+	const s = String(raw);
+	// 纯数字且无前导零时转为 number，保留 CcCode 等带前导零/非数字编码为 string
+	if (/^\d+$/.test(s) && !/^0\d/.test(s)) return Number(s);
+	return s;
+};
+
 const confirm = () => {
 	if (selectedId.value == null || selectedId.value === '' || !selectedNode.value) {
 		ElMessage.warning('请选择部门');
 		return;
 	}
-	const id = Number(selectedId.value);
+	const id = normalizePickId(selectedId.value);
 	const name = selectedNode.value.name ?? '';
-	const path = buildOrgPath(treeData.value, id) || name;
+	const path = buildOrgPath(treeData.value, selectedId.value) || name;
 	emits('confirm', { id, name, path });
 	emits('update:visible', false);
 };
