@@ -28,6 +28,7 @@ public class HrUiLayoutFieldOutput
     /// <summary>字段池中不可删除（如工号/姓名）</summary>
     public bool Locked { get; set; }
     public string CodeField { get; set; }
+    public string? LookupSource { get; set; }
     public string Origin { get; set; }
     public string DataType { get; set; }
     /// <summary>池中不存在、未启用，或不在该场景适用表</summary>
@@ -102,6 +103,7 @@ public class HrUiFieldPoolItemOutput
     public bool Locked { get; set; }
     public string TableName { get; set; } = "h_emp_mstr";
     public string CodeField { get; set; }
+    public string? LookupSource { get; set; }
     public string Origin { get; set; }
     public string DataType { get; set; }
     /// <summary>池主语言，不随当前文化变化。布局主表 label 写这个值。</summary>

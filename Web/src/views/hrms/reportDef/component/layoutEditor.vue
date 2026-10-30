@@ -478,10 +478,10 @@ onUnmounted(destroyRowDrop);
 .preview-fields {
 	display: grid;
 	grid-template-columns: repeat(var(--hr-emp-cols, 6), minmax(0, 1fr));
-	column-gap: 6px;
+	column-gap: 0;
 }
 .preview-col {
-	margin-bottom: 6px;
+	margin-bottom: 4px;
 	min-width: 0;
 }
 .preview-field {

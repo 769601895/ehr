@@ -16,12 +16,13 @@
 					</div>
 				</div>
 			</div>
+			<!-- 与自定义布局一致：有照片 5 列 / 无照片 6 列；占位以布局 spanSlots 为准 -->
 			<div class="hr-emp-fields" :style="{ '--hr-emp-cols': group.photo ? 5 : 6 }">
 			<div
 				v-for="f in group.fields"
 				:key="f.fieldKey"
 				class="mb-field"
-				:style="{ gridColumn: `span ${Math.min(Number(f.spanSlots) || 1, group.photo ? 5 : 6)}` }"
+				:style="{ gridColumn: `span ${fieldSpan(f, group.photo ? 5 : 6)}` }"
 			>
 				<el-form-item v-if="f.fieldKey === 'age'" :label="f.label">
 					<el-input :model-value="ageText" disabled :placeholder="t('message.hrms.common.autoCalc')" />
@@ -37,10 +38,19 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item v-else :label="f.label" :prop="f.fieldKey" :rules="f.required ? [{ required: true, message: (f.label || f.fieldKey) + t('message.hrms.common.requiredSuffix'), trigger: 'blur' }] : []">
-					<el-date-picker v-if="f.controlType === 'date'" v-model="ruleForm[f.fieldKey]" type="date" value-format="YYYY-MM-DD" class="w100 hr-emp-date" clearable :disabled="f.readonly" />
+					<el-date-picker
+						v-if="f.controlType === 'date'"
+						v-model="ruleForm[f.fieldKey]"
+						type="date"
+						format="YYYY-MM-DD"
+						value-format="YYYY-MM-DD"
+						class="w100 hr-emp-date"
+						clearable
+						:disabled="f.readonly"
+					/>
 					<el-input-number v-else-if="f.controlType === 'number'" v-model="ruleForm[f.fieldKey]" :min="0" controls-position="right" class="w100" :disabled="f.readonly" />
-					<el-select v-else-if="f.controlType === 'select' || f.codeField" v-model="ruleForm[f.fieldKey]" class="w100" clearable filterable :disabled="f.readonly">
-						<el-option v-for="o in codeOptions[f.codeField] || []" :key="o.value" :label="codeOptionText(o)" :value="o.value" />
+					<el-select v-else-if="f.controlType === 'select' || f.codeField || f.lookupSource" v-model="ruleForm[f.fieldKey]" class="w100" clearable filterable :disabled="f.readonly">
+						<el-option v-for="o in codeOptions[optionKey(f)] || []" :key="o.value" :label="codeOptionText(o)" :value="o.value" />
 					</el-select>
 					<el-input v-else v-model="ruleForm[f.fieldKey]" clearable :disabled="f.readonly || (f.fieldKey === 'empId' && isEdit)" />
 				</el-form-item>
@@ -69,6 +79,15 @@ const props = defineProps<{
 }>();
 
 const { t } = useI18n();
+
+const optionKey = (f: any) => {
+	const lookup = String(f?.lookupSource || '').trim();
+	if (lookup) return `lookup:${lookup}`;
+	return String(f?.codeField || '');
+};
+
+/** 占位完全按自定义布局 spanSlots（1～cols） */
+const fieldSpan = (f: any, cols: number) => Math.min(Math.max(Number(f.spanSlots) || 1, 1), cols);
 
 const codeOptionText = (o: { value: string; label?: string; text?: string }) => {
 	const text = (o.text ?? '').trim();
@@ -146,8 +165,9 @@ const handlePicChange = async (uploadFile: UploadFile) => {
 <style scoped>
 .hr-emp-fields {
 	display: grid;
+	/* 与自定义布局预览一致：按 spanSlots 均分，不单独拉宽日期列 */
 	grid-template-columns: repeat(var(--hr-emp-cols, 6), minmax(0, 1fr));
-	column-gap: 8px;
+	column-gap: 0;
 	row-gap: 0;
 }
 .hr-emp-group.has-photo {

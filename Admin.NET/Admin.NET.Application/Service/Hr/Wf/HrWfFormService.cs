@@ -152,6 +152,7 @@ public class HrWfFormService : IDynamicApiController, ITransient
                 GroupCode = u.GroupCode,
                 SpanSlots = u.SpanSlots,
                 CodeField = u.CodeField,
+                LookupSource = u.LookupSource,
                 DefaultValue = u.DefaultValue,
                 Placeholder = u.Placeholder,
                 ExtraJson = u.ExtraJson
@@ -185,23 +186,34 @@ public class HrWfFormService : IDynamicApiController, ITransient
     {
         await _fieldRep.AsDeleteable().Where(u => u.FormId == formId).ExecuteCommandAsync();
         var rows = (fields ?? [])
-            .Select((f, i) => new HrWfFormField
+            .Select((f, i) =>
             {
-                FormId = formId,
-                FieldKey = f.FieldKey.Trim(),
-                Label = f.Label.Trim(),
-                ControlType = string.IsNullOrWhiteSpace(f.ControlType) ? "text" : f.ControlType.Trim(),
-                FieldSource = string.IsNullOrWhiteSpace(f.FieldSource) ? HrWfConsts.FieldSourceCustom : f.FieldSource.Trim(),
-                PoolFieldKey = f.PoolFieldKey?.Trim(),
-                Required = f.Required,
-                Readonly = f.Readonly,
-                SortNo = f.SortNo != 0 ? f.SortNo : (i + 1) * 10,
-                GroupCode = f.GroupCode?.Trim(),
-                SpanSlots = f.SpanSlots,
-                CodeField = f.CodeField?.Trim(),
-                DefaultValue = f.DefaultValue?.Trim(),
-                Placeholder = f.Placeholder?.Trim(),
-                ExtraJson = f.ExtraJson
+                var codeField = string.IsNullOrWhiteSpace(f.CodeField) ? null : f.CodeField.Trim();
+                var lookupSource = string.IsNullOrWhiteSpace(f.LookupSource) ? null : f.LookupSource.Trim();
+                if (codeField != null && lookupSource != null)
+                    throw Oops.Oh("代码类与查找数据源不能同时设置");
+                var control = string.IsNullOrWhiteSpace(f.ControlType) ? "text" : f.ControlType.Trim();
+                if (codeField != null || lookupSource != null)
+                    control = "select";
+                return new HrWfFormField
+                {
+                    FormId = formId,
+                    FieldKey = f.FieldKey.Trim(),
+                    Label = f.Label.Trim(),
+                    ControlType = control,
+                    FieldSource = string.IsNullOrWhiteSpace(f.FieldSource) ? HrWfConsts.FieldSourceCustom : f.FieldSource.Trim(),
+                    PoolFieldKey = f.PoolFieldKey?.Trim(),
+                    Required = f.Required,
+                    Readonly = f.Readonly,
+                    SortNo = f.SortNo != 0 ? f.SortNo : (i + 1) * 10,
+                    GroupCode = f.GroupCode?.Trim(),
+                    SpanSlots = f.SpanSlots,
+                    CodeField = codeField,
+                    LookupSource = lookupSource,
+                    DefaultValue = f.DefaultValue?.Trim(),
+                    Placeholder = f.Placeholder?.Trim(),
+                    ExtraJson = f.ExtraJson
+                };
             })
             .ToList();
         if (rows.Count > 0)
@@ -213,6 +225,13 @@ public class HrWfFormService : IDynamicApiController, ITransient
         var keys = (fields ?? []).Select(u => u.FieldKey?.Trim()).Where(u => !string.IsNullOrWhiteSpace(u)).ToList();
         if (keys.Count != keys.Distinct(StringComparer.OrdinalIgnoreCase).Count())
             throw Oops.Oh(HrWfErrorCodeEnum.FormFieldKeyDup);
+        foreach (var f in fields ?? [])
+        {
+            var code = string.IsNullOrWhiteSpace(f.CodeField) ? null : f.CodeField.Trim();
+            var lookup = string.IsNullOrWhiteSpace(f.LookupSource) ? null : f.LookupSource.Trim();
+            if (code != null && lookup != null)
+                throw Oops.Oh("代码类与查找数据源不能同时设置");
+        }
     }
 
     private static void NormalizeSort(BasePageInput input)

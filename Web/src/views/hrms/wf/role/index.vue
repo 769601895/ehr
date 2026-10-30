@@ -141,19 +141,25 @@
 						</el-table-column>
 					</el-table>
 
-					<el-divider content-position="left">绑定岗位</el-divider>
-					<el-form-item label="岗位编码">
+					<el-divider content-position="left">绑定岗位（可多选，来源：岗位代码设置）</el-divider>
+					<el-form-item label="绑定岗位">
 						<el-select
 							v-model="state.edit.postIds"
 							multiple
 							filterable
-							allow-create
-							default-first-option
+							clearable
+							collapse-tags
+							collapse-tags-tooltip
 							:reserve-keyword="false"
-							placeholder="输入岗位编码（与员工 post_id 一致）回车添加"
+							placeholder="从岗位代码设置中选择，可挂多个"
 							class="w100"
 						>
-							<el-option v-for="pid in state.edit.postIds" :key="pid" :label="pid" :value="pid" />
+							<el-option
+								v-for="p in postSelectOptions"
+								:key="p.postCode"
+								:label="`${p.postName}（${p.postCode}）`"
+								:value="p.postCode"
+							/>
 						</el-select>
 					</el-form-item>
 				</template>
@@ -174,7 +180,7 @@
 </template>
 
 <script lang="ts" setup name="hrWfRole">
-import { onMounted, reactive, ref, watch } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Splitpanes, Pane } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
@@ -183,8 +189,11 @@ import { useVxeTable } from '/@/hooks/useVxeTableOptionsHook';
 import { Local } from '/@/utils/storage';
 import { listEnabledHrWfLevel } from '/@/api/hrms/hrWfLevel';
 import { getHrOrgList } from '/@/api/hrms/hrOrg';
+import { listEnabledHrPost } from '/@/api/hrms/hrPost';
 import { deleteHrWfRole, getHrWfRole, pageHrWfRole, saveHrWfRole, treeHrWfRole } from '/@/api/hrms/hrWfRole';
 import OrgPickDialog from '/@/components/selector/orgPickDialog.vue';
+
+type PostOption = { postCode: string; postName: string };
 
 type ScopeRow = { ccCode: string; ccName?: string; includeChild: boolean };
 
@@ -209,6 +218,23 @@ const state = reactive({
 	orgPickTargetIndex: null as number | null,
 	orgPickData: [] as any[],
 	hrOrgRaw: [] as any[],
+	/** 岗位代码设置（现用） */
+	postOptions: [] as PostOption[],
+});
+
+/** 下拉选项：现用岗位 + 已绑定但不在现用列表中的编码（避免编辑丢值） */
+const postSelectOptions = computed(() => {
+	const map = new Map<string, PostOption>();
+	for (const p of state.postOptions) {
+		if (!p.postCode) continue;
+		map.set(p.postCode, p);
+	}
+	for (const code of state.edit.postIds || []) {
+		const c = String(code || '').trim();
+		if (!c || map.has(c)) continue;
+		map.set(c, { postCode: c, postName: `${c}（未在岗位代码中）` });
+	}
+	return Array.from(map.values());
 });
 
 function blankEdit(parentId?: number, asVirtualRoot = false) {
@@ -250,6 +276,15 @@ const ensureOrgTree = async () => {
 	const res = await getHrOrgList({ includeDisabled: false, empState: 1 });
 	state.hrOrgRaw = res.data?.result ?? res.data ?? [];
 	state.orgPickData = mapHrOrgToPickNodes(state.hrOrgRaw);
+};
+
+const loadPostOptions = async () => {
+	const res = await listEnabledHrPost();
+	const list = res.data?.result ?? res.data ?? [];
+	state.postOptions = (Array.isArray(list) ? list : []).map((u: any) => ({
+		postCode: String(u.postCode ?? u.PostCode ?? '').trim(),
+		postName: String(u.postName ?? u.PostName ?? '').trim() || String(u.postCode ?? ''),
+	})).filter((u: PostOption) => !!u.postCode);
 };
 
 const addScopeRow = () => {
@@ -361,7 +396,7 @@ const onTreeClick = (data: any) => {
 
 /** asChild=右表新增子角色；asVirtualRoot=左上新增组织根（默认「审核流程」） */
 const openEdit = async (row?: any, asChild = false, asVirtualRoot = false) => {
-	await Promise.all([loadLevels(), loadTree(), ensureOrgTree()]);
+	await Promise.all([loadLevels(), loadTree(), ensureOrgTree(), loadPostOptions()]);
 	if (row?.id) {
 		const res = await getHrWfRole(row.id);
 		const d = res.data?.result ?? res.data;

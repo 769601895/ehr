@@ -59,7 +59,6 @@ public class HrWfRuntimeService : IDynamicApiController, ITransient
     public async Task<HrWfStartOutput> Start(HrWfStartInput input)
     {
         var bizType = input.BizType.Trim();
-        var subjectCc = input.SubjectCcCode.Trim();
         var applicantId = input.ApplicantUserId is > 0 ? input.ApplicantUserId.Value : _userManager.UserId;
 
         var def = await _defRep.GetFirstAsync(u => u.BizType == bizType && u.Enabled)
@@ -76,13 +75,23 @@ public class HrWfRuntimeService : IDynamicApiController, ITransient
             .ToListAsync();
         if (nodes.Count == 0) throw Oops.Oh(HrWfErrorCodeEnum.DefNoNodes);
 
-        var formDataDict = ToStringObjectDict(input.FormData);
+        var formDataDict = NormalizeFormDict(input.FormData);
         ValidateRequired(fields, formDataDict);
 
         if (string.IsNullOrWhiteSpace(input.SubjectEmpId))
             throw Oops.Oh(HrWfErrorCodeEnum.SubjectEmpRequired);
 
-        var reportPath = await BuildReportPathForStartAsync(input.SubjectEmpId!.Trim());
+        var subjectEmpId = input.SubjectEmpId.Trim();
+        // 单据部门：优先入参；否则按当事人所属部门自动解析（管辖找人用）
+        var subjectCc = input.SubjectCcCode?.Trim();
+        if (string.IsNullOrWhiteSpace(subjectCc))
+        {
+            subjectCc = await _resolver.GetEmployeeCcCodeAsync(subjectEmpId);
+            if (string.IsNullOrWhiteSpace(subjectCc))
+                throw Oops.Oh("当事人未设置所属部门，无法发起审批");
+        }
+
+        var reportPath = await BuildReportPathForStartAsync(subjectEmpId);
 
         var formDataJson = JsonSerializer.Serialize(formDataDict, JsonOpts);
         var schemaSnap = new HrWfSchemaSnapshot
@@ -125,7 +134,7 @@ public class HrWfRuntimeService : IDynamicApiController, ITransient
             Status = HrWfConsts.InstRunning,
             Title = title,
             ApplicantUserId = applicantId,
-            SubjectEmpId = input.SubjectEmpId?.Trim(),
+            SubjectEmpId = subjectEmpId,
             SubjectCcCode = subjectCc,
             FormDataJson = formDataJson,
             FormSchemaSnapshot = JsonSerializer.Serialize(schemaSnap, JsonOpts),
@@ -254,9 +263,10 @@ public class HrWfRuntimeService : IDynamicApiController, ITransient
             AllowEditWhileRunning = inst.AllowEditWhileRunning,
             EditByApplicant = inst.EditByApplicant,
             EditByAssignee = inst.EditByAssignee,
-            FormSchema = JsonSerializer.Deserialize<object>(inst.FormSchemaSnapshot, JsonOpts),
-            FormData = JsonSerializer.Deserialize<object>(inst.FormDataJson, JsonOpts),
-            DefNodes = JsonSerializer.Deserialize<object>(inst.DefNodesSnapshot, JsonOpts),
+            FormSchema = JsonSerializer.Deserialize<HrWfSchemaSnapshot>(inst.FormSchemaSnapshot, JsonOpts),
+            FormData = NormalizeFormDict(
+                JsonSerializer.Deserialize<Dictionary<string, object?>>(inst.FormDataJson, JsonOpts)),
+            DefNodes = JsonSerializer.Deserialize<HrWfNodesSnapshot>(inst.DefNodesSnapshot, JsonOpts),
             Tasks = tasks.Select(u => new HrWfTaskItemOutput
             {
                 TaskId = u.Id,
@@ -474,7 +484,7 @@ public class HrWfRuntimeService : IDynamicApiController, ITransient
             .ExecuteCommandAsync();
     }
 
-    private Task TryApplyPatchAsync(HrWfInst inst, HrWfTask task, Dictionary<string, JsonElement>? patch)
+    private Task TryApplyPatchAsync(HrWfInst inst, HrWfTask task, Dictionary<string, object?>? patch)
     {
         if (patch == null || patch.Count == 0) return Task.CompletedTask;
         EnsureCanEdit(inst, task);
@@ -491,12 +501,14 @@ public class HrWfRuntimeService : IDynamicApiController, ITransient
         if (!ok) throw Oops.Oh(HrWfErrorCodeEnum.FormEditDenied);
     }
 
-    private static void MergeFormData(HrWfInst inst, Dictionary<string, JsonElement> patch)
+    private static void MergeFormData(HrWfInst inst, Dictionary<string, object?> patch)
     {
         var dict = JsonSerializer.Deserialize<Dictionary<string, object?>>(inst.FormDataJson, JsonOpts)
                    ?? new Dictionary<string, object?>();
-        foreach (var kv in patch)
-            dict[kv.Key] = JsonElementToObject(kv.Value);
+        // 存量值可能是 JsonElement，先规范；再合并补丁
+        dict = NormalizeFormDict(dict);
+        foreach (var kv in NormalizeFormDict(patch))
+            dict[kv.Key] = kv.Value;
         inst.FormDataJson = JsonSerializer.Serialize(dict, JsonOpts);
     }
 
@@ -509,14 +521,28 @@ public class HrWfRuntimeService : IDynamicApiController, ITransient
         }
     }
 
-    private static Dictionary<string, object?> ToStringObjectDict(Dictionary<string, JsonElement>? src)
+    /// <summary>
+    /// 统一表单字典：把 STJ JsonElement / Newtonsoft JToken 打成 CLR 标量，避免 API 输出 {"ValueKind":3}。
+    /// </summary>
+    private static Dictionary<string, object?> NormalizeFormDict(Dictionary<string, object?>? src)
     {
-        var dict = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
-        if (src == null) return dict;
+        var result = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
+        if (src == null || src.Count == 0) return result;
         foreach (var kv in src)
-            dict[kv.Key] = JsonElementToObject(kv.Value);
-        return dict;
+            result[kv.Key] = NormalizeFormValue(kv.Value);
+        return result;
     }
+
+    private static object? NormalizeFormValue(object? value) => value switch
+    {
+        null => null,
+        JsonElement je => JsonElementToObject(je),
+        Newtonsoft.Json.Linq.JValue jv => jv.Value,
+        Newtonsoft.Json.Linq.JToken jt => jt.ToObject<object?>(),
+        string or bool or byte or sbyte or short or ushort or int or uint or long or ulong or float or double or decimal => value,
+        DateTime or DateTimeOffset or Guid => value,
+        _ => value
+    };
 
     private static object? JsonElementToObject(JsonElement el) => el.ValueKind switch
     {
@@ -526,6 +552,7 @@ public class HrWfRuntimeService : IDynamicApiController, ITransient
         JsonValueKind.False => false,
         JsonValueKind.Null => null,
         JsonValueKind.Undefined => null,
+        JsonValueKind.Array or JsonValueKind.Object => el.GetRawText(),
         _ => el.GetRawText()
     };
 
@@ -543,6 +570,7 @@ public class HrWfRuntimeService : IDynamicApiController, ITransient
         GroupCode = u.GroupCode,
         SpanSlots = u.SpanSlots,
         CodeField = u.CodeField,
+        LookupSource = u.LookupSource,
         DefaultValue = u.DefaultValue,
         Placeholder = u.Placeholder,
         ExtraJson = u.ExtraJson

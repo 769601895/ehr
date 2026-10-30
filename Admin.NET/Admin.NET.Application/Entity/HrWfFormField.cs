@@ -44,6 +44,10 @@ public class HrWfFormField : EntityBase
     [SugarColumn(ColumnName = "code_field", ColumnDescription = "代码类", Length = 50, IsNullable = true)]
     public string? CodeField { get; set; }
 
+    /// <summary>查找数据源编码（hr_lookup_def.code）；与 CodeField 互斥</summary>
+    [SugarColumn(ColumnName = "lookup_source", ColumnDescription = "查找数据源", Length = 64, IsNullable = true)]
+    public string? LookupSource { get; set; }
+
     [SugarColumn(ColumnName = "default_value", ColumnDescription = "默认值", Length = 256, IsNullable = true)]
     public string? DefaultValue { get; set; }
 

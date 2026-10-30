@@ -112,6 +112,14 @@ public class HrWfAssigneeResolver : ITransient
             .ToListAsync();
     }
 
+    /// <summary>取在职/停职员工所属部门内码；离职或不存在返回 null。</summary>
+    public async Task<string?> GetEmployeeCcCodeAsync(string empId)
+    {
+        if (string.IsNullOrWhiteSpace(empId)) return null;
+        var emp = await _empRep.GetFirstAsync(u => u.EmpId == empId.Trim() && (u.EmpState == null || u.EmpState != 3));
+        return string.IsNullOrWhiteSpace(emp?.CcCode) ? null : emp!.CcCode!.Trim();
+    }
+
     /// <summary>按员工工号取岗位；无岗位返回 null。</summary>
     public async Task<string?> GetEmployeePostIdAsync(string empId)
     {

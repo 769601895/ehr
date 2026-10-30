@@ -31,6 +31,7 @@ public class SysMenuSeedData : ISqlSugarEntitySeedData<SysMenu>
             // 系统代码设置及其子菜单
             new SysMenu{ Id=1300000000206, Pid=0, Title="系统代码设置", Path="/sysCode", Name="sysCode", Component="Layout", Icon="ele-Collection", Type=MenuTypeEnum.Dir, CreateTime=DateTime.Parse("2026-10-12 00:00:00"), OrderNo=600 },
             new SysMenu{ Id=1300000000310, Pid=1300000000206, Title="岗位代码设置", Path="/sysCode/hrPost", Name="hrPost", Component="/hrms/post/index", Icon="ele-Briefcase", Type=MenuTypeEnum.Menu, CreateTime=DateTime.Parse("2026-10-28 00:00:00"), OrderNo=10 },
+            new SysMenu{ Id=1300000000320, Pid=1300000000206, Title="查找数据源设置", Path="/sysCode/hrLookupDef", Name="hrLookupDef", Component="/hrms/lookupDef/index", Icon="ele-Connection", Type=MenuTypeEnum.Menu, CreateTime=DateTime.Parse("2026-10-29 00:00:00"), OrderNo=20 },
             // 流程配置管理：位于「系统代码设置」(600) 与「系统管理」(10000) 之间
             new SysMenu{ Id=1300000000208, Pid=0, Title="流程配置管理", Path="/moduleFlowConfig", Name="moduleFlowConfig", Component="Layout", Icon="ele-Connection", Type=MenuTypeEnum.Dir, CreateTime=DateTime.Parse("2026-10-21 00:00:00"), OrderNo=700 },
             new SysMenu{ Id=1300000000280, Pid=1300000000208, Title="审核等级", Path="/moduleFlowConfig/wfLevel", Name="hrWfLevel", Component="/hrms/wf/level/index", Icon="ele-Medal", Type=MenuTypeEnum.Menu, CreateTime=DateTime.Parse("2026-10-24 00:00:00"), OrderNo=10 },

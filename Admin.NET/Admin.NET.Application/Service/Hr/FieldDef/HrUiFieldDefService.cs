@@ -71,7 +71,7 @@ public class HrUiFieldDefService : IDynamicApiController, ITransient
                 DbColumn = d.DbColumn,
                 MainLabel = d.Label,
                 Label = HrUiI18nResolver.ResolveFieldLabel(d.FieldKey, d.Label, culture, null, fieldLang),
-                ControlType = HrUiControlGuess.Resolve(d.ControlType, d.CodeField),
+                ControlType = HrUiControlGuess.Resolve(d.ControlType, d.CodeField, d.LookupSource),
                 GroupCode = d.GroupCode,
                 DefaultSpanSlots = d.DefaultSpanSlots <= 0 ? 1 : d.DefaultSpanSlots,
                 DefaultWidthPx = d.DefaultWidthPx,
@@ -81,6 +81,7 @@ public class HrUiFieldDefService : IDynamicApiController, ITransient
                 Locked = d.Locked,
                 TableName = d.TableName,
                 CodeField = d.CodeField,
+                LookupSource = d.LookupSource,
                 Origin = d.Origin,
                 DataType = d.DataType
             };
@@ -140,10 +141,16 @@ public class HrUiFieldDefService : IDynamicApiController, ITransient
         if (input.Locked && !input.IsInPool)
             throw Oops.Oh("HR_UI_FIELD_NOT_IN_POOL");
 
+        var codeField = string.IsNullOrWhiteSpace(input.CodeField) ? null : input.CodeField.Trim();
+        var lookupSource = string.IsNullOrWhiteSpace(input.LookupSource) ? null : input.LookupSource.Trim();
+        if (codeField != null && lookupSource != null)
+            throw Oops.Oh("代码类与查找数据源不能同时设置");
+
         row.Label = label;
         row.DataType = input.DataType?.Trim();
-        row.CodeField = string.IsNullOrWhiteSpace(input.CodeField) ? null : input.CodeField.Trim();
-        row.ControlType = HrUiControlGuess.Resolve(control, row.CodeField);
+        row.CodeField = codeField;
+        row.LookupSource = lookupSource;
+        row.ControlType = HrUiControlGuess.Resolve(control, row.CodeField, row.LookupSource);
         row.Origin = origin;
         row.DefaultWidthPx = input.DefaultWidthPx;
         row.DefaultSpanSlots = input.DefaultSpanSlots;

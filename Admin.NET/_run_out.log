@@ -1,0 +1,23 @@
+从 Admin.NET.Web.Entry\Properties\launchSettings.json 使用启动设置...
+正在生成...
+E:\ehr2026\ehr\Admin.NET\Admin.NET.Application\Service\Hr\Wf\Dto\HrWfLevelDto.cs(5,20): warning CS0108: “HrWfLevelPageInput.Keyword”隐藏继承的成员“BaseFilter.Keyword”。如果是有意隐藏，请使用关键字 new。 [E:\ehr2026\ehr\Admin.NET\Admin.NET.Application\Admin.NET.Application.csproj::TargetFramework=net10.0]
+E:\ehr2026\ehr\Admin.NET\Admin.NET.Application\Service\Hr\Wf\Dto\HrWfRuntimeDto.cs(111,20): warning CS0108: “HrWfTodoPageInput.Keyword”隐藏继承的成员“BaseFilter.Keyword”。如果是有意隐藏，请使用关键字 new。 [E:\ehr2026\ehr\Admin.NET\Admin.NET.Application\Admin.NET.Application.csproj::TargetFramework=net10.0]
+E:\ehr2026\ehr\Admin.NET\Admin.NET.Application\Service\Hr\Wf\Dto\HrWfDefDto.cs(6,20): warning CS0108: “HrWfDefPageInput.Keyword”隐藏继承的成员“BaseFilter.Keyword”。如果是有意隐藏，请使用关键字 new。 [E:\ehr2026\ehr\Admin.NET\Admin.NET.Application\Admin.NET.Application.csproj::TargetFramework=net10.0]
+E:\ehr2026\ehr\Admin.NET\Admin.NET.Application\Service\Hr\Post\Dto\HrPostDto.cs(5,20): warning CS0108: “HrPostPageInput.Keyword”隐藏继承的成员“BaseFilter.Keyword”。如果是有意隐藏，请使用关键字 new。 [E:\ehr2026\ehr\Admin.NET\Admin.NET.Application\Admin.NET.Application.csproj::TargetFramework=net10.0]
+E:\ehr2026\ehr\Admin.NET\Admin.NET.Application\Service\Hr\Wf\Dto\HrWfFormDto.cs(6,20): warning CS0108: “HrWfFormPageInput.Keyword”隐藏继承的成员“BaseFilter.Keyword”。如果是有意隐藏，请使用关键字 new。 [E:\ehr2026\ehr\Admin.NET\Admin.NET.Application\Admin.NET.Application.csproj::TargetFramework=net10.0]
+############ 当前应用雪花WorkId:【1】############
+安全警告:协商的 TLS 1.0 是非安全协议，只有在为了实现向后兼容性才受支持。建议的协议版本为 TLS 1.2 及更高版本。
+
+              _           _         _   _ ______ _______
+     /\      | |         (_)       | \ | |  ____|__   __|
+    /  \   __| |_ __ ___  _ _ __   |  \| | |__     | |
+   / /\ \ / _` | '_ ` _ \| | '_ \  | . ` |  __|    | |
+  / ____ \ (_| | | | | | | | | | |_| |\  | |____   | |
+ /_/    \_\__,_|_| |_| |_|_|_| |_(_)_| \_|______|  |_| 
+让 .NET 开发更简单、更通用、更流行！
+https://gitee.com/zuohuaijun/Admin.NET
+安全警告:协商的 TLS 1.0 是非安全协议，只有在为了实现向后兼容性才受支持。建议的协议版本为 TLS 1.2 及更高版本。
+安全警告:协商的 TLS 1.0 是非安全协议，只有在为了实现向后兼容性才受支持。建议的协议版本为 TLS 1.2 及更高版本。
+【启动任务】系统枚举转换字典 2026/10/29 14:04:46
+【启动任务】缓存系统租户列表  2026/10/29 14:04:47
+【启动任务】清理系统在线用户 2026/10/29 14:04:47

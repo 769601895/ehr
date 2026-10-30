@@ -285,12 +285,13 @@ public class HrUiLayoutService : IDynamicApiController, ITransient
             WidthPx = f.WidthPx,
             SpanSlots = f.SpanSlots,
             GroupCode = f.GroupCode ?? meta?.GroupCode,
-            ControlType = HrUiControlGuess.Resolve(meta?.ControlType ?? f.ControlType, meta?.CodeField),
+            ControlType = HrUiControlGuess.Resolve(meta?.ControlType ?? f.ControlType, meta?.CodeField, meta?.LookupSource),
             Required = f.Required,
             Readonly = f.Readonly,
             Sortable = meta?.Sortable ?? false,
             Locked = meta?.Locked ?? false,
             CodeField = meta?.CodeField,
+            LookupSource = meta?.LookupSource,
             Origin = meta?.Origin,
             DataType = meta?.DataType,
             IsStale = meta == null
@@ -428,6 +429,7 @@ public class HrUiLayoutService : IDynamicApiController, ITransient
                 Sortable = p.Sortable,
                 Locked = p.Locked,
                 CodeField = p.CodeField,
+                LookupSource = p.LookupSource,
                 Origin = p.Origin,
                 DataType = p.DataType,
                 IsStale = false

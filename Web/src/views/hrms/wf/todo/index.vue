@@ -18,16 +18,20 @@
 			</vxe-grid>
 		</el-card>
 
-		<el-drawer v-model="state.detailVisible" title="审批详情" size="640px" destroy-on-close>
+		<el-drawer v-model="state.detailVisible" title="审批详情" size="720px" destroy-on-close>
 			<template v-if="state.detail">
 				<p><b>标题：</b>{{ state.detail.title || '—' }}</p>
 				<p><b>状态：</b>{{ state.detail.status }} · <b>节点：</b>{{ state.detail.currentNodeKey || '—' }}</p>
+				<el-divider content-position="left">表单内容</el-divider>
 				<wf-form-renderer
+					v-if="state.detailFields.length"
 					v-model="state.detailForm"
 					:fields="state.detailFields"
 					:readonly="!state.detail.canEditForm"
 				/>
+				<el-empty v-else description="无表单字段快照" :image-size="80" />
 				<div v-if="state.detail.canApprove" class="actions">
+					<el-divider content-position="left">审批操作</el-divider>
 					<el-input v-model="state.opinion" type="textarea" :rows="2" placeholder="审批意见（驳回必填）" class="mb8" />
 					<el-button type="success" :loading="state.acting" @click="doApprove">同意</el-button>
 					<el-button type="danger" :loading="state.acting" @click="doReject">驳回</el-button>
@@ -103,12 +107,33 @@ const handleQuery = async (reset = false) => {
 	reset ? await xGrid.value?.commitProxy('reload') : await xGrid.value?.commitProxy('query');
 };
 
+const parseMaybeJson = (v: any) => {
+	if (v == null) return null;
+	if (typeof v === 'string') {
+		try {
+			return JSON.parse(v);
+		} catch {
+			return null;
+		}
+	}
+	return v;
+};
+
 const openDetail = async (row: any) => {
 	const res = await getHrWfDetail(row.instId);
 	const d = res.data?.result ?? res.data;
 	state.detail = d;
-	state.detailFields = d.formSchema?.fields || [];
-	state.detailForm = { ...(d.formData || {}) };
+	const schema = parseMaybeJson(d.formSchema ?? d.FormSchema) || {};
+	const fields = schema.fields || schema.Fields || [];
+	state.detailFields = Array.isArray(fields) ? fields : [];
+	const rawData = parseMaybeJson(d.formData ?? d.FormData) || {};
+	// 兼容历史接口把 JsonElement 错序列化成 { ValueKind: n }
+	const form: Record<string, any> = {};
+	for (const [k, v] of Object.entries(rawData)) {
+		if (v != null && typeof v === 'object' && ('ValueKind' in (v as any) || 'valueKind' in (v as any))) continue;
+		form[k] = v;
+	}
+	state.detailForm = form;
 	state.opinion = '';
 	state.detailVisible = true;
 };

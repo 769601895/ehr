@@ -99,15 +99,22 @@ public class HrWfTodoService : IDynamicApiController, ITransient
         var uid = _userManager.UserId;
         var keyword = input.Keyword?.Trim();
 
+        NormalizeSort(input);
+        if (string.IsNullOrWhiteSpace(input.Field))
+            input.Field = nameof(HrWfInst.StartedTime);
+        // 先在实体上排序（SugarColumn→started_time），再投影 DTO，避免 OrderBuilder 用 StartedTime 打到库表
+        MapAppliedSortField(input);
+
         var query = _instRep.AsQueryable()
             .Where(i => i.ApplicantUserId == uid)
             .WhereIF(!string.IsNullOrWhiteSpace(input.BizType), i => i.BizType == input.BizType)
             .WhereIF(!string.IsNullOrWhiteSpace(keyword), i =>
                 (i.Title != null && i.Title.Contains(keyword!)) || i.BizId.Contains(keyword!))
+            .OrderBuilder(input, defaultSortField: nameof(HrWfInst.StartedTime), descSort: true)
+            // 勿写 TaskId = null：SqlSugar 会译成字符串常量，触发 TaskId can't convert string to int64
             .Select(i => new HrWfTodoOutput
             {
                 InstId = i.Id,
-                TaskId = null,
                 BizType = i.BizType,
                 BizId = i.BizId,
                 Title = i.Title,
@@ -118,10 +125,7 @@ public class HrWfTodoService : IDynamicApiController, ITransient
                 FinishedTime = i.FinishedTime
             });
 
-        NormalizeSort(input);
-        return await query
-            .OrderBuilder(input, defaultSortField: nameof(HrWfTodoOutput.StartedTime), descSort: true)
-            .ToPagedListAsync(input.Page, input.PageSize);
+        return await query.ToPagedListAsync(input.Page, input.PageSize);
     }
 
     private static void NormalizeSort(BasePageInput input)
@@ -130,5 +134,23 @@ public class HrWfTodoService : IDynamicApiController, ITransient
             input.Field = char.ToUpperInvariant(input.Field[0]) + input.Field[1..];
         if (string.IsNullOrWhiteSpace(input.DescStr))
             input.DescStr = "desc";
+    }
+
+    /// <summary>前端 DTO 字段 → 实例实体可排序字段</summary>
+    private static void MapAppliedSortField(BasePageInput input)
+    {
+        if (string.IsNullOrWhiteSpace(input.Field)) return;
+        input.Field = input.Field switch
+        {
+            "InstId" or "Id" => nameof(HrWfInst.Id),
+            "BizType" => nameof(HrWfInst.BizType),
+            "BizId" => nameof(HrWfInst.BizId),
+            "Title" => nameof(HrWfInst.Title),
+            "Status" => nameof(HrWfInst.Status),
+            "CurrentNodeKey" or "NodeKey" => nameof(HrWfInst.CurrentNodeKey),
+            "StartedTime" => nameof(HrWfInst.StartedTime),
+            "FinishedTime" => nameof(HrWfInst.FinishedTime),
+            _ => nameof(HrWfInst.StartedTime)
+        };
     }
 }

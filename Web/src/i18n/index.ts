@@ -188,7 +188,7 @@ export const iso_3166_1_CountryList = {
 	pt: 'pt',
 	ru: 'ru',
 	'zh-CN': 'cn',
-	'zh-TW': 'tw',
+	'zh-TW': 'cn',
 	'zh-HK': 'hk',
 	th: 'th',
 	id: 'id',

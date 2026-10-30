@@ -40,6 +40,9 @@ public class HrWfFormFieldItem
     [MaxLength(50)]
     public string? CodeField { get; set; }
 
+    [MaxLength(64)]
+    public string? LookupSource { get; set; }
+
     [MaxLength(256)]
     public string? DefaultValue { get; set; }
 

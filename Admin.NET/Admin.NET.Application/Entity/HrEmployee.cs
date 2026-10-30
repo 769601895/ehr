@@ -87,6 +87,9 @@ public partial class HrEmployee
     [SugarColumn(ColumnName = "emp_longmon", ColumnDescription = "入司前工龄(月)", IsNullable = true)]
     public int? EmpLongmon { get; set; }
 
+    [SugarColumn(ColumnName = "emp_lea_date", ColumnDescription = "离职日", IsNullable = true)]
+    public DateTime? EmpLeaDate { get; set; }
+
     [SugarColumn(ColumnName = "emp_kq_lea_date", ColumnDescription = "考勤结束日", IsNullable = true)]
     public DateTime? EmpKqLeaDate { get; set; }
 

@@ -20,11 +20,8 @@
 						/>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="单据部门" required>
-					<el-input v-model="state.subjectCcCode" placeholder="SubjectCcCode 部门内码" style="width: 280px" />
-				</el-form-item>
 				<el-form-item label="当事人工号" required>
-					<el-input v-model="state.subjectEmpId" placeholder="SubjectEmpId，用于定位汇报路径" style="width: 280px" />
+					<el-input v-model="state.subjectEmpId" placeholder="按工号自动定位汇报路径与单据部门" style="width: 280px" />
 				</el-form-item>
 			</el-form>
 			<wf-form-renderer v-if="state.fields.length" v-model="state.formData" :fields="state.fields" />
@@ -52,7 +49,6 @@ const state = reactive({
 	bizType: '' as string,
 	bizOptions: [] as BizOption[],
 	loadingBiz: false,
-	subjectCcCode: '',
 	subjectEmpId: '',
 	fields: [] as any[],
 	formData: {} as Record<string, any>,
@@ -124,19 +120,14 @@ const submit = async () => {
 		ElMessage.warning('请选择业务类型');
 		return;
 	}
-	if (!state.subjectCcCode?.trim()) {
-		ElMessage.warning('请填写单据部门内码');
-		return;
-	}
 	if (!state.subjectEmpId?.trim()) {
-		ElMessage.warning('请填写当事人（单据主体）工号');
+		ElMessage.warning('请填写当事人工号');
 		return;
 	}
 	state.saving = true;
 	try {
 		const res = await startHrWf({
 			bizType: state.bizType,
-			subjectCcCode: state.subjectCcCode.trim(),
 			subjectEmpId: state.subjectEmpId.trim(),
 			formData: state.formData,
 			title: state.formData.subject,

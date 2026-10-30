@@ -1,6 +1,6 @@
 <template>
-	<!-- 栅格：无照片一行 6 列；有照片一行 5 列，保证日期 YYYY-MM-DD 完整显示 -->
-	<el-dialog v-model="state.isShowDialog" draggable :close-on-click-modal="false" width="94%" top="4vh" destroy-on-close class="hr-emp-edit-dialog">
+	<!-- 栅格与自定义布局一致：无照片 6 列 / 有照片 5 列 -->
+	<el-dialog v-model="state.isShowDialog" draggable :close-on-click-modal="false" width="98%" top="1vh" destroy-on-close class="hr-emp-edit-dialog">
 		<template #header>
 			<div style="color: #fff">
 				<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"><ele-Edit /></el-icon>
@@ -15,7 +15,7 @@
 				</button>
 			</nav>
 			<div class="hr-emp-pane">
-		<el-form v-show="!isChildSection" :model="state.ruleForm" ref="ruleFormRef" label-width="88px" size="small" class="hr-emp-edit-form">
+		<el-form v-show="!isChildSection" :model="state.ruleForm" ref="ruleFormRef" label-width="70px" size="small" class="hr-emp-edit-form">
 			<EmpDynamicForm v-if="state.useDynamic" :rule-form="state.ruleForm" :fields="state.dynFields" :code-options="state.codeOptions" :tree-data="props.treeData" :is-edit="state.isEdit" />
 			<template v-else>
 			<el-divider content-position="left" class="hr-emp-section-divider">{{ t('message.hrms.common.groupBasic') }}</el-divider>
@@ -225,6 +225,7 @@ import { useI18n } from 'vue-i18n';
 import { addHrEmp, updateHrEmp } from '/@/api/hrms/hrEmp';
 import { countHrEmpChild } from '/@/api/hrms/hrEmpChild';
 import { getHrCodeList } from '/@/api/hrms/hrOrg';
+import { getHrLookupOptions } from '/@/api/hrms/hrLookupDef';
 import { getHrUiLayoutEffective } from '/@/api/hrms/hrUiLayout';
 import EmpDynamicForm from '/@/views/hrms/emp/component/empDynamicForm.vue';
 import EmpChildGrid from '/@/views/hrms/emp/component/empChildGrid.vue';
@@ -298,9 +299,13 @@ const loadDynamic = async () => {
 			state.useDynamic = false;
 			return;
 		}
-		const codes = [...new Set(fields.filter((f: any) => f.codeField && !registered.has(f.fieldKey)).map((f: any) => f.codeField as string))];
-		const entries = await Promise.all(codes.map(async (c) => [c, (await getHrCodeList(c)).data.result ?? []] as const));
-		state.codeOptions = Object.fromEntries(entries);
+		const codes = [...new Set(fields.filter((f: any) => f.codeField && !f.lookupSource && !registered.has(f.fieldKey)).map((f: any) => f.codeField as string))];
+		const lookups = [...new Set(fields.filter((f: any) => f.lookupSource && !registered.has(f.fieldKey)).map((f: any) => String(f.lookupSource)))];
+		const codeEntries = await Promise.all(codes.map(async (c) => [c, (await getHrCodeList(c)).data.result ?? []] as const));
+		const lookupEntries = await Promise.all(
+			lookups.map(async (s) => [`lookup:${s}`, (await getHrLookupOptions(s)).data?.result ?? []] as const)
+		);
+		state.codeOptions = Object.fromEntries([...codeEntries, ...lookupEntries]);
 		state.dynFields = fields;
 		state.useDynamic = true;
 	} catch {
@@ -404,10 +409,10 @@ defineExpose({ openDialog });
 }
 .hr-emp-shell {
 	display: flex;
-	min-height: 460px;
+	min-height: calc(100vh - 140px);
 }
 .hr-emp-nav {
-	width: 148px;
+	width: 88px;
 	flex-shrink: 0;
 	border-right: 1px solid var(--el-border-color-lighter);
 	padding: 4px 0;
@@ -417,18 +422,26 @@ defineExpose({ openDialog });
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	gap: 2px;
 	border: 0;
 	border-left: 3px solid transparent;
 	background: transparent;
-	padding: 9px 12px;
+	padding: 7px 4px 7px 6px;
 	cursor: pointer;
 	color: var(--el-text-color-primary);
-	font-size: 13px;
+	font-size: 12px;
+	line-height: 1.2;
+	text-align: left;
+}
+.hr-emp-nav-item span {
+	flex: 1;
+	min-width: 0;
 }
 .hr-emp-nav-item em {
 	font-style: normal;
 	color: var(--el-color-primary);
 	font-size: 12px;
+	flex-shrink: 0;
 }
 .hr-emp-nav-item.active {
 	color: var(--el-color-primary);
@@ -439,17 +452,20 @@ defineExpose({ openDialog });
 	flex: 1;
 	min-width: 0;
 	padding-left: 12px;
-	max-height: calc(100vh - 220px);
+	max-height: calc(100vh - 110px);
 	overflow: auto;
 }
 </style>
 
 <style>
-/* dialog 非 scoped：限制最大宽度，小屏仍用 94% */
+/* dialog 非 scoped */
 .hr-emp-edit-dialog {
-	max-width: 1760px;
+	max-width: 1880px;
+	margin-top: 1vh !important;
 }
 .hr-emp-edit-dialog .el-dialog__body {
 	padding: 6px 12px 4px;
+	max-height: calc(100vh - 90px);
+	overflow: hidden;
 }
 </style>

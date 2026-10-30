@@ -1,0 +1,13 @@
+SELECT
+    Id,
+    biz_type,
+    subject_emp_id,
+    status,
+    JSON_VALUE(form_data_json, '$.subject')  AS subject,
+    JSON_VALUE(form_data_json, '$.amount')   AS amount,
+    JSON_VALUE(form_data_json, '$.needDate') AS needDate,
+    JSON_VALUE(form_data_json, '$.reason')   AS reason
+FROM dbo.hr_wf_inst
+WHERE biz_type = N'hrWfGeneral'
+  AND IsDelete = 0
+  AND TRY_CAST(JSON_VALUE(form_data_json, '$.amount') AS decimal(18,2)) > 1000;

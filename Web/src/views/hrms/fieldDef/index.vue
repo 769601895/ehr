@@ -68,7 +68,13 @@
 				</el-form-item>
 				<el-form-item :label="t('message.hrms.fieldDef.codeField')">
 					<div class="code-field-row">
-						<el-input v-model="state.edit.codeField" :placeholder="t('message.hrms.fieldDef.codeFieldPh')" clearable />
+						<el-input
+							v-model="state.edit.codeField"
+							:placeholder="t('message.hrms.fieldDef.codeFieldPh')"
+							clearable
+							:disabled="!!state.edit.lookupSource?.trim()"
+							@change="onCodeFieldChange"
+						/>
 						<el-button
 							type="primary"
 							plain
@@ -77,7 +83,26 @@
 						>{{ t('message.hrms.fieldDef.codeSetting') }}</el-button>
 					</div>
 					<div class="hint">{{ t('message.hrms.fieldDef.codeFieldHint') }}</div>
-					<div v-if="state.edit.controlType === 'select' && !state.edit.codeField" class="hint">{{ t('message.hrms.fieldDef.selectNoCode') }}</div>
+				</el-form-item>
+				<el-form-item :label="t('message.hrms.fieldDef.lookupSource')">
+					<div class="code-field-row">
+						<el-select
+							v-model="state.edit.lookupSource"
+							clearable
+							filterable
+							class="w100"
+							:placeholder="t('message.hrms.fieldDef.lookupSourcePh')"
+							:disabled="!!state.edit.codeField?.trim()"
+							@change="onLookupSourceChange"
+						>
+							<el-option v-for="s in state.lookupSources" :key="s.code" :label="`${s.code} · ${s.name}`" :value="s.code" />
+						</el-select>
+						<el-button type="primary" plain :disabled="!currentLookupMaintainPath" @click="openLookupMaintain">
+							{{ t('message.hrms.fieldDef.lookupMaintain') }}
+						</el-button>
+					</div>
+					<div class="hint">{{ t('message.hrms.fieldDef.lookupSourceHint') }}</div>
+					<div v-if="state.edit.controlType === 'select' && !state.edit.codeField && !state.edit.lookupSource" class="hint">{{ t('message.hrms.fieldDef.selectNoCode') }}</div>
 				</el-form-item>
 				<el-form-item :label="t('message.hrms.fieldDef.width')"><el-input-number v-model="state.edit.defaultWidthPx" :min="40" :max="600" /></el-form-item>
 				<el-form-item :label="t('message.hrms.fieldDef.span')"><el-input-number v-model="state.edit.defaultSpanSlots" :min="1" :max="6" /></el-form-item>
@@ -113,17 +138,20 @@
 </template>
 
 <script lang="ts" setup name="hrUiFieldDef">
-import { onMounted, reactive, ref, watch } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ElMessage } from 'element-plus';
 import { VxeGridInstance, VxeGridListeners, VxeGridPropTypes } from 'vxe-table';
 import { useVxeTable } from '/@/hooks/useVxeTableOptionsHook';
 import { Local } from '/@/utils/storage';
+import { useRouter } from 'vue-router';
 import { langListHrUiFieldDef, pageHrUiFieldDef, saveLangHrUiFieldDef, syncHrUiFieldDef, updateHrUiFieldDef } from '/@/api/hrms/hrUiFieldDef';
+import { listEnabledHrLookupDef } from '/@/api/hrms/hrLookupDef';
 import { hrUiCultures } from '/@/views/hrms/composables/hrUiCulture';
 import CodeSettingDrawer from '/@/views/hrms/reportDef/component/codeSettingDrawer.vue';
 
 const { t, locale } = useI18n();
+const router = useRouter();
 const controls = ['text', 'number', 'date', 'select', 'photo', 'cascader', 'computed'];
 const xGrid = ref<VxeGridInstance>();
 const codeDrawerRef = ref<InstanceType<typeof CodeSettingDrawer>>();
@@ -138,6 +166,13 @@ const state = reactive({
 	edit: {} as any,
 	langs: [] as { culture: string; label: string }[],
 	langFieldKey: '',
+	lookupSources: [] as { code: string; name: string; maintainPath?: string }[],
+});
+
+const currentLookupMaintainPath = computed(() => {
+	const code = String(state.edit.lookupSource || '').trim();
+	if (!code) return '';
+	return state.lookupSources.find((s) => s.code === code)?.maintainPath || '';
 });
 
 const buildColumns = () => [
@@ -148,7 +183,8 @@ const buildColumns = () => [
 	{ field: 'origin', title: t('message.hrms.fieldDef.origin'), width: 100, sortable: true },
 	{ field: 'dbColumn', title: t('message.hrms.fieldDef.dbColumn'), minWidth: 140, sortable: true },
 	{ field: 'controlType', title: t('message.hrms.fieldDef.control'), width: 100, sortable: true },
-	{ field: 'codeField', title: t('message.hrms.fieldDef.codeField'), minWidth: 160, slots: { default: 'row_codeField' } },
+	{ field: 'codeField', title: t('message.hrms.fieldDef.codeField'), minWidth: 120, slots: { default: 'row_codeField' } },
+	{ field: 'lookupSource', title: t('message.hrms.fieldDef.lookupSource'), minWidth: 120 },
 	{ field: 'enabled', title: t('message.hrms.fieldDef.enabled'), width: 80, sortable: true },
 	{ field: 'buttons', title: t('message.list.operation'), width: 110, fixed: 'right', slots: { default: 'row_buttons' } },
 ];
@@ -220,8 +256,34 @@ const openCodeSetting = (codeField?: string) => {
 	codeDrawerRef.value?.open(cf);
 };
 
-const openEdit = (row: any) => {
-	state.edit = { ...row, defaultSpanSlots: row.defaultSpanSlots || 1 };
+const loadLookupSources = async () => {
+	if (state.lookupSources.length) return;
+	try {
+		const res = await listEnabledHrLookupDef();
+		state.lookupSources = res.data?.result ?? res.data ?? [];
+	} catch {
+		state.lookupSources = [];
+	}
+};
+
+const onCodeFieldChange = () => {
+	if (String(state.edit.codeField || '').trim()) state.edit.lookupSource = '';
+};
+const onLookupSourceChange = () => {
+	if (String(state.edit.lookupSource || '').trim()) state.edit.codeField = '';
+};
+const openLookupMaintain = () => {
+	const path = currentLookupMaintainPath.value;
+	if (!path) {
+		ElMessage.warning(t('message.hrms.fieldDef.lookupRequired'));
+		return;
+	}
+	router.push(path);
+};
+
+const openEdit = async (row: any) => {
+	await loadLookupSources();
+	state.edit = { ...row, defaultSpanSlots: row.defaultSpanSlots || 1, lookupSource: row.lookupSource || '' };
 	state.editVisible = true;
 };
 const saveEdit = async () => {
@@ -229,8 +291,16 @@ const saveEdit = async () => {
 		ElMessage.warning(t('message.hrms.fieldDef.labelRequired'));
 		return;
 	}
-	// 绑了代码类一律按下拉，避免库里仍是 text 时业务表单只能手输
-	if (String(state.edit.codeField || '').trim()) state.edit.controlType = 'select';
+	const code = String(state.edit.codeField || '').trim();
+	const lookup = String(state.edit.lookupSource || '').trim();
+	if (code && lookup) {
+		ElMessage.warning(t('message.hrms.fieldDef.codeLookupMutex'));
+		return;
+	}
+	// 绑了代码类或数据源一律按下拉
+	if (code || lookup) state.edit.controlType = 'select';
+	state.edit.codeField = code || null;
+	state.edit.lookupSource = lookup || null;
 	state.saving = true;
 	try {
 		await updateHrUiFieldDef(state.edit);

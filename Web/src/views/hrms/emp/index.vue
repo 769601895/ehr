@@ -61,6 +61,7 @@ import OrgTree from '/@/views/hrms/org/component/orgTree.vue';
 import EditEmp from '/@/views/hrms/emp/component/editEmp.vue';
 import { deleteHrEmp, pageHrEmp } from '/@/api/hrms/hrEmp';
 import { getHrCodeList, getHrOrgList } from '/@/api/hrms/hrOrg';
+import { getHrLookupOptions } from '/@/api/hrms/hrLookupDef';
 import { getHrUiLayoutEffective } from '/@/api/hrms/hrUiLayout';
 
 const { t, locale } = useI18n();
@@ -70,7 +71,7 @@ const xGrid = ref<VxeGridInstance>();
 
 const localPageParamKey = 'localPageParam:hrEmp';
 
-/** codeField → (codeValue → 仅显示值/描述) */
+/** codeField 或 lookup:source → (codeValue → 仅显示值/描述) */
 const codeTextMaps = reactive<Record<string, Record<string, string>>>({});
 
 const state = reactive({
@@ -100,19 +101,26 @@ const pickCodeText = (o: { value: string; label?: string; text?: string }) => {
 	return label || value;
 };
 
-const resolveCodeText = (codeField: string, cellValue: unknown) => {
+const resolveCodeText = (mapKey: string, cellValue: unknown) => {
 	if (cellValue == null || cellValue === '') return '';
 	const raw = String(cellValue);
-	const map = codeTextMaps[codeField];
+	const map = codeTextMaps[mapKey];
 	if (!map) return raw;
 	return map[raw] ?? map[raw.trim()] ?? raw;
 };
 
+const optionMapKey = (f: any) => {
+	const lookup = String(f?.lookupSource || '').trim();
+	if (lookup) return `lookup:${lookup}`;
+	return String(f?.codeField || '');
+};
+
 const loadCodeTextMaps = async (fields: any[]) => {
-	const codes = [...new Set(fields.filter((f) => f.codeField).map((f) => String(f.codeField)))];
+	const codes = [...new Set(fields.filter((f) => f.codeField && !f.lookupSource).map((f) => String(f.codeField)))];
+	const lookups = [...new Set(fields.filter((f) => f.lookupSource).map((f) => String(f.lookupSource)))];
 	for (const k of Object.keys(codeTextMaps)) delete codeTextMaps[k];
-	if (!codes.length) return;
-	const entries = await Promise.all(
+	if (!codes.length && !lookups.length) return;
+	const codeEntries = await Promise.all(
 		codes.map(async (c) => {
 			const list = ((await getHrCodeList(c)).data.result ?? []) as { value: string; label?: string; text?: string }[];
 			const map: Record<string, string> = {};
@@ -120,7 +128,15 @@ const loadCodeTextMaps = async (fields: any[]) => {
 			return [c, map] as const;
 		})
 	);
-	for (const [c, map] of entries) codeTextMaps[c] = map;
+	const lookupEntries = await Promise.all(
+		lookups.map(async (s) => {
+			const list = ((await getHrLookupOptions(s)).data?.result ?? []) as { value: string; label?: string; text?: string }[];
+			const map: Record<string, string> = {};
+			for (const o of list) map[String(o.value)] = pickCodeText(o);
+			return [`lookup:${s}`, map] as const;
+		})
+	);
+	for (const [c, map] of [...codeEntries, ...lookupEntries]) codeTextMaps[c] = map;
 };
 
 const resolveSort = (sort?: VxeGridPropTypes.ProxyAjaxQuerySortCheckedParams | null, fallback?: { field: string; order: string; descStr: string }) => {
@@ -170,9 +186,9 @@ const buildColumnsFromLayout = (fields: any[]) => {
 		if (f.fieldKey === 'empState') {
 			col.align = 'center';
 			col.slots = { default: 'row_empState' };
-		} else if (f.codeField) {
-			const codeField = String(f.codeField);
-			col.formatter = ({ cellValue }: { cellValue: unknown }) => resolveCodeText(codeField, cellValue);
+		} else if (f.lookupSource || f.codeField) {
+			const mapKey = optionMapKey(f);
+			col.formatter = ({ cellValue }: { cellValue: unknown }) => resolveCodeText(mapKey, cellValue);
 		}
 		cols.push(col);
 	}

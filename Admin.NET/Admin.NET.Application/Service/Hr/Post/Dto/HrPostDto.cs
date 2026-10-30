@@ -52,3 +52,11 @@ public class HrPostDeleteInput
     [Required]
     public long Id { get; set; }
 }
+
+public class HrPostLangSaveInput
+{
+    [Required(ErrorMessage = "岗位代码不能为空")]
+    public string PostCode { get; set; }
+
+    public List<HrUiLangItemInput> Labels { get; set; } = [];
+}

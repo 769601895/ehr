@@ -30,7 +30,7 @@
 			</vxe-grid>
 		</el-card>
 
-		<el-dialog v-model="state.editVisible" :title="state.edit.id ? '编辑表单方案' : '新增表单方案'" width="900px" destroy-on-close top="5vh">
+		<el-dialog v-model="state.editVisible" :title="state.edit.id ? '编辑表单方案' : '新增表单方案'" width="1100px" destroy-on-close top="5vh">
 			<el-form :model="state.edit" label-width="100px">
 				<el-row :gutter="12">
 					<el-col :span="8">
@@ -62,7 +62,31 @@
 				<el-table-column label="必填" width="70" align="center"><template #default="{ row }"><el-checkbox v-model="row.required" /></template></el-table-column>
 				<el-table-column label="排序" width="90"><template #default="{ row }"><el-input-number v-model="row.sortNo" :controls="false" /></template></el-table-column>
 				<el-table-column label="占位" width="80"><template #default="{ row }"><el-input-number v-model="row.spanSlots" :controls="false" :min="1" :max="24" /></template></el-table-column>
-				<el-table-column label="代码类" width="100"><template #default="{ row }"><el-input v-model="row.codeField" /></template></el-table-column>
+				<el-table-column label="代码类" width="120">
+					<template #default="{ row }">
+						<el-input
+							v-model="row.codeField"
+							placeholder="code_mstr"
+							clearable
+							:disabled="!!row.lookupSource"
+							@change="() => onCodeFieldChange(row)"
+						/>
+					</template>
+				</el-table-column>
+				<el-table-column label="查找数据源" width="150">
+					<template #default="{ row }">
+						<el-select
+							v-model="row.lookupSource"
+							clearable
+							filterable
+							placeholder="如 hrPost"
+							:disabled="!!row.codeField"
+							@change="() => onLookupChange(row)"
+						>
+							<el-option v-for="s in state.lookupSources" :key="s.code" :label="`${s.code} · ${s.name}`" :value="s.code" />
+						</el-select>
+					</template>
+				</el-table-column>
 				<el-table-column label="" width="60" align="center">
 					<template #default="{ $index }"><el-button text type="danger" @click="state.edit.fields.splice($index, 1)">删</el-button></template>
 				</el-table-column>
@@ -82,6 +106,7 @@ import { VxeGridInstance, VxeGridListeners, VxeGridPropTypes } from 'vxe-table';
 import { useVxeTable } from '/@/hooks/useVxeTableOptionsHook';
 import { Local } from '/@/utils/storage';
 import { deleteHrWfForm, getHrWfForm, pageHrWfForm, saveHrWfForm } from '/@/api/hrms/hrWfForm';
+import { listEnabledHrLookupDef } from '/@/api/hrms/hrLookupDef';
 import { bizTypeLabel, loadHrWfBizTypeOptions, type HrWfBizCodeItem } from '/@/views/hrms/wf/wfBizType';
 
 const controls = ['text', 'textarea', 'number', 'date', 'select', 'dept', 'user', 'attachment'];
@@ -90,6 +115,7 @@ const localPageParamKey = 'localPageParam:hrWfForm';
 const state = reactive({
 	queryParams: { bizType: '', keyword: '' },
 	bizTypeOptions: [] as HrWfBizCodeItem[],
+	lookupSources: [] as { code: string; name: string }[],
 	localPageParam: { pageSize: 50 as number, defaultSort: { field: 'id', order: 'desc', descStr: 'desc' } },
 	editVisible: false,
 	saving: false,
@@ -109,8 +135,31 @@ function addField() {
 		readonly: false,
 		sortNo: (state.edit.fields.length + 1) * 10,
 		spanSlots: 12,
+		codeField: '',
+		lookupSource: '',
 	});
 }
+const onCodeFieldChange = (row: any) => {
+	if (String(row.codeField || '').trim()) {
+		row.lookupSource = '';
+		row.controlType = 'select';
+	}
+};
+const onLookupChange = (row: any) => {
+	if (String(row.lookupSource || '').trim()) {
+		row.codeField = '';
+		row.controlType = 'select';
+	}
+};
+const loadLookupSources = async () => {
+	if (state.lookupSources.length) return;
+	try {
+		const res = await listEnabledHrLookupDef();
+		state.lookupSources = res.data?.result ?? res.data ?? [];
+	} catch {
+		state.lookupSources = [];
+	}
+};
 
 const options = useVxeTable(
 	{
@@ -154,10 +203,18 @@ const resetQuery = () => {
 };
 
 const openEdit = async (row?: any) => {
+	await loadLookupSources();
 	if (row?.id) {
 		const res = await getHrWfForm(row.id);
 		const d = res.data?.result ?? res.data;
-		state.edit = { ...d, fields: d.fields || [] };
+		state.edit = {
+			...d,
+			fields: (d.fields || []).map((f: any) => ({
+				...f,
+				codeField: f.codeField || '',
+				lookupSource: f.lookupSource || '',
+			})),
+		};
 	} else state.edit = blank(state.bizTypeOptions[0]?.value || 'hrWfGeneral');
 	state.editVisible = true;
 };
@@ -167,9 +224,23 @@ const saveEdit = async () => {
 		ElMessage.warning('请填写业务类型、编码、名称');
 		return;
 	}
+	for (const f of state.edit.fields || []) {
+		if (String(f.codeField || '').trim() && String(f.lookupSource || '').trim()) {
+			ElMessage.warning(`字段「${f.label || f.fieldKey}」不能同时设置代码类与查找数据源`);
+			return;
+		}
+	}
 	state.saving = true;
 	try {
-		await saveHrWfForm(state.edit);
+		const payload = {
+			...state.edit,
+			fields: (state.edit.fields || []).map((f: any) => ({
+				...f,
+				codeField: String(f.codeField || '').trim() || null,
+				lookupSource: String(f.lookupSource || '').trim() || null,
+			})),
+		};
+		await saveHrWfForm(payload);
 		ElMessage.success('保存成功');
 		state.editVisible = false;
 		await handleQuery(true);

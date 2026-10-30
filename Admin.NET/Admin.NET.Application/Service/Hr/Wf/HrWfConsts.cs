@@ -46,4 +46,31 @@ public static class HrWfConsts
     public const string ActionSkipNotOnPath = "SkipNotOnPath";
     public const string ActionSkipScope = "SkipScope";
     public const string ActionPatchForm = "PatchForm";
+
+    /// <summary>生效基准日来自 FormData</summary>
+    public const string EffectBaseFromForm = "Form";
+    /// <summary>生效基准日来自业务单</summary>
+    public const string EffectBaseFromBiz = "Biz";
+
+    public const string EffectModeImmediateIfDue = "ImmediateIfDue";
+    public const string EffectModeJobOnly = "JobOnly";
+
+    public const string EffectRoleSubject = "Subject";
+    public const string EffectRoleBaseDate = "EffectBaseDate";
+    public const string EffectRoleBefore = "Before";
+    public const string EffectRoleAfter = "After";
+    public const string EffectRoleContext = "Context";
+
+    public const string EffectPending = "Pending";
+    public const string EffectApplied = "Applied";
+    public const string EffectCancelled = "Cancelled";
+    public const string EffectVoided = "Voided";
+
+    public const string BizTypeEmh = "hrEmh";
+    public const string BizTypeLeave = "hrEmpLeave";
+
+    /// <summary>异动历史类型：调动</summary>
+    public const string EmhTypeTransfer = "YD";
+    /// <summary>异动历史类型：离职</summary>
+    public const string EmhTypeLeave = "LZ";
 }

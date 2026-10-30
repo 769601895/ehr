@@ -23,6 +23,7 @@ public class HrUiFieldDefOutput
     public bool IsNullable { get; set; }
     public string ControlType { get; set; }
     public string CodeField { get; set; }
+    public string? LookupSource { get; set; }
     public int? DefaultWidthPx { get; set; }
     public int DefaultSpanSlots { get; set; }
     public string GroupCode { get; set; }
@@ -47,6 +48,7 @@ public class HrUiFieldDefUpdateInput
     public string DataType { get; set; }
     public string ControlType { get; set; }
     public string CodeField { get; set; }
+    public string? LookupSource { get; set; }
     public string Origin { get; set; }
     public int? DefaultWidthPx { get; set; }
     public int DefaultSpanSlots { get; set; } = 1;

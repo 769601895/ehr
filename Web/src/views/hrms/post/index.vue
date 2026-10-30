@@ -34,10 +34,23 @@
 				</template>
 				<template #row_buttons="{ row }">
 					<el-button icon="ele-Edit" text type="primary" v-auth="'hrPost/save'" @click="openEdit(row)" />
+					<el-button icon="ele-ChatLineSquare" text type="primary" v-auth="'hrPost/saveLang'" @click="openLang(row)" />
 					<el-button icon="ele-Delete" text type="danger" v-auth="'hrPost/delete'" @click="handleDelete(row)" />
 				</template>
 			</vxe-grid>
 		</el-card>
+
+		<el-dialog v-model="state.langVisible" title="岗位译文" width="520px" destroy-on-close>
+			<el-form label-width="88px">
+				<el-form-item v-for="item in state.langs" :key="item.culture" :label="item.culture">
+					<el-input v-model="item.label" maxlength="100" />
+				</el-form-item>
+			</el-form>
+			<template #footer>
+				<el-button @click="state.langVisible = false">取消</el-button>
+				<el-button type="primary" :loading="state.saving" @click="saveLang">保存</el-button>
+			</template>
+		</el-dialog>
 
 		<el-dialog v-model="state.editVisible" :title="state.edit.id ? '编辑岗位' : '新增岗位'" width="520px" destroy-on-close>
 			<el-form :model="state.edit" label-width="110px">
@@ -92,7 +105,8 @@ import { VxeGridInstance, VxeGridListeners, VxeGridPropTypes } from 'vxe-table';
 import { useVxeTable } from '/@/hooks/useVxeTableOptionsHook';
 import { Local } from '/@/utils/storage';
 import { getHrOrgList } from '/@/api/hrms/hrOrg';
-import { deleteHrPost, getHrPost, pageHrPost, saveHrPost } from '/@/api/hrms/hrPost';
+import { deleteHrPost, getHrPost, langListHrPost, pageHrPost, saveHrPost, saveLangHrPost } from '/@/api/hrms/hrPost';
+import { hrUiCultures } from '/@/views/hrms/composables/hrUiCulture';
 import OrgPickDialog from '/@/components/selector/orgPickDialog.vue';
 
 const xGrid = ref<VxeGridInstance>();
@@ -101,8 +115,11 @@ const state = reactive({
 	queryParams: { keyword: '', status: '' as string },
 	localPageParam: { pageSize: 50 as number, defaultSort: { field: 'postCode', order: 'asc', descStr: 'desc' } },
 	editVisible: false,
+	langVisible: false,
 	saving: false,
 	edit: blank(),
+	langs: [] as { culture: string; label: string }[],
+	langPostCode: '',
 	orgPickVisible: false,
 	orgPickData: [] as any[],
 });
@@ -133,7 +150,7 @@ const options = useVxeTable(
 			{ field: 'status', title: '状态', width: 90, sortable: true, slots: { default: 'row_status' } },
 			{ field: 'ccName', title: '所属部门', minWidth: 140, showOverflow: 'tooltip' },
 			{ field: 'needAudit', title: '岗位是否审核', width: 120, slots: { default: 'row_need_audit' } },
-			{ field: 'buttons', title: '操作', width: 100, fixed: 'right', slots: { default: 'row_buttons' } },
+			{ field: 'buttons', title: '操作', width: 130, fixed: 'right', slots: { default: 'row_buttons' } },
 		],
 	},
 	{
@@ -238,6 +255,24 @@ const handleDelete = async (row: any) => {
 	await deleteHrPost({ id: row.id });
 	ElMessage.success('已删除');
 	await handleQuery(true);
+};
+
+const openLang = async (row: any) => {
+	state.langPostCode = row.postCode;
+	const res = await langListHrPost(row.postCode);
+	const map = new Map((res.data?.result ?? []).map((x: any) => [x.culture, x.label]));
+	state.langs = hrUiCultures.map((c) => ({ culture: c.value, label: (map.get(c.value) as string) || '' }));
+	state.langVisible = true;
+};
+const saveLang = async () => {
+	state.saving = true;
+	try {
+		await saveLangHrPost({ postCode: state.langPostCode, labels: state.langs });
+		ElMessage.success('译文已保存');
+		state.langVisible = false;
+	} finally {
+		state.saving = false;
+	}
 };
 
 const gridEvents: VxeGridListeners = {

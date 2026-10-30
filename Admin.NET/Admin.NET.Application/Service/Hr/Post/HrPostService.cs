@@ -10,11 +10,16 @@ public class HrPostService : IDynamicApiController, ITransient
 {
     private readonly SqlSugarRepository<HrPost> _rep;
     private readonly SqlSugarRepository<CcMstr> _ccRep;
+    private readonly SqlSugarRepository<HrPostLang> _langRep;
 
-    public HrPostService(SqlSugarRepository<HrPost> rep, SqlSugarRepository<CcMstr> ccRep)
+    public HrPostService(
+        SqlSugarRepository<HrPost> rep,
+        SqlSugarRepository<CcMstr> ccRep,
+        SqlSugarRepository<HrPostLang> langRep)
     {
         _rep = rep;
         _ccRep = ccRep;
+        _langRep = langRep;
     }
 
     [ApiDescriptionSettings(Name = "Page"), HttpPost]
@@ -101,6 +106,7 @@ public class HrPostService : IDynamicApiController, ITransient
             if (await _rep.IsAnyAsync(u => u.PostCode == code && u.Id != entity.Id))
                 throw Oops.Oh("岗位代码已存在");
 
+            var oldCode = entity.PostCode;
             entity.PostCode = code;
             entity.PostName = name;
             entity.Grade = input.Grade;
@@ -109,6 +115,13 @@ public class HrPostService : IDynamicApiController, ITransient
             entity.NeedAudit = input.NeedAudit;
             entity.Remark = input.Remark?.Trim();
             await _rep.UpdateAsync(entity);
+            if (!string.Equals(oldCode, code, StringComparison.OrdinalIgnoreCase))
+            {
+                await _langRep.AsUpdateable()
+                    .SetColumns(u => u.PostCode == code)
+                    .Where(u => u.PostCode == oldCode)
+                    .ExecuteCommandAsync();
+            }
             return entity.Id;
         }
 
@@ -133,9 +146,46 @@ public class HrPostService : IDynamicApiController, ITransient
     [DisplayName("删除岗位代码")]
     public async Task Delete(HrPostDeleteInput input)
     {
-        if (!await _rep.IsAnyAsync(u => u.Id == input.Id))
-            throw Oops.Oh("岗位不存在");
+        var entity = await _rep.GetFirstAsync(u => u.Id == input.Id) ?? throw Oops.Oh("岗位不存在");
+        await _langRep.DeleteAsync(u => u.PostCode == entity.PostCode);
         await _rep.FakeDeleteAsync(input.Id);
+    }
+
+    [ApiDescriptionSettings(Name = "LangList"), HttpGet]
+    [DisplayName("岗位代码译文")]
+    public async Task<List<HrCodeLangOutput>> LangList([FromQuery] string postCode)
+    {
+        var code = postCode?.Trim();
+        if (string.IsNullOrWhiteSpace(code)) return [];
+        var rows = await _langRep.AsQueryable().Where(u => u.PostCode == code).ToListAsync();
+        return rows.Select(u => new HrCodeLangOutput { Culture = u.Culture, Label = u.PostName }).ToList();
+    }
+
+    [UnitOfWork]
+    [ApiDescriptionSettings(Name = "SaveLang"), HttpPost]
+    [DisplayName("保存岗位代码译文")]
+    public async Task SaveLang(HrPostLangSaveInput input)
+    {
+        var code = input.PostCode?.Trim();
+        if (string.IsNullOrWhiteSpace(code))
+            throw Oops.Oh("岗位代码不能为空");
+        if (!await _rep.IsAnyAsync(u => u.PostCode == code))
+            throw Oops.Oh("岗位不存在");
+
+        await _langRep.DeleteAsync(u => u.PostCode == code);
+        var rows = (input.Labels ?? [])
+            .Select(u => new HrPostLang
+            {
+                PostCode = code,
+                Culture = HrUiCulture.Normalize(u.Culture),
+                PostName = u.Label?.Trim()
+            })
+            .Where(u => !string.IsNullOrWhiteSpace(u.PostName))
+            .GroupBy(u => u.Culture, StringComparer.OrdinalIgnoreCase)
+            .Select(g => g.Last())
+            .ToList();
+        if (rows.Count > 0)
+            await _langRep.InsertRangeAsync(rows);
     }
 
     private async Task FillCcNamesAsync(IEnumerable<HrPostOutput>? items)
