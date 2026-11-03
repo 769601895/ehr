@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>动态字段赋值规则引擎 · 交互原型</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            success: '#00B42A',
+            danger: '#F53F3F',
+            panel: '#F5F7FA',
+            ink: '#333333',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; color: #333; }
+    .layout { display: flex; height: 100vh; overflow: hidden; }
+    .main-pane { width: 82%; overflow: auto; background: #f5f7fa; }
+    .side-pane { width: 18%; overflow: auto; background: #fff7ed; border-left: 1px solid #fdba74; z-index: 2; }
+    #connector-svg { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
+    .connector-line { fill: none; stroke: #fb923c; stroke-width: 2; opacity: 0.75; transition: 0.15s; }
+    .connector-line.active { stroke: #165DFF; stroke-width: 3; opacity: 1; }
+    .connector-badge { font-size: 11px; font-weight: 700; fill: #fff; }
+    .hot-active, .doc-active { outline: 2px solid #165DFF; outline-offset: 2px; border-radius: 8px; }
+    .mobile-hint { display: none; font-size: 12px; color: #9a3412; margin-top: 4px; }
+    .view-toggle { display: none; gap: 8px; padding: 8px 16px; background: #fff; border-bottom: 1px solid #e5e7eb; }
+    @media (max-width: 900px) {
+      .layout { flex-direction: column; height: auto; min-height: 100vh; }
+      .main-pane, .side-pane { width: 100%; }
+      .side-pane { border-left: none; border-top: 1px solid #fdba74; max-height: 42vh; }
+      #connector-svg { display: none !important; }
+      .mobile-hint { display: block !important; }
+      .view-toggle { display: flex !important; }
+      .main-pane.view-ui-only ~ .side-pane { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!--
+    通用动态赋值原型：同一引擎覆盖工号拼装、试用到期日等。
+    打开本 HTML 即可演示；正式发号/落库仍由后端执行。
+  -->
+  <div class="view-toggle">
+    <button type="button" id="btn-view-ui" class="px-3 py-1 rounded bg-primary text-white text-sm">仅界面</button>
+    <button type="button" id="btn-view-both" class="px-3 py-1 rounded bg-white border text-sm">界面+说明</button>
+  </div>
+
+  <div class="layout">
+    <div class="main-pane" id="main-pane">
+      <header class="bg-white border-b px-6 py-4 sticky top-0 z-10 shadow-sm">
+        <div class="flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <div class="text-xs text-gray-400 mb-1">人事配置 · 通用方案原型</div>
+            <h1 class="text-xl font-semibold"><i class="fa-solid fa-bolt text-primary mr-2"></i>动态字段赋值规则</h1>
+          </div>
+          <div class="flex items-center gap-2 text-sm">
+            <span class="text-gray-500">触发点</span>
+            <select id="triggerSel" class="border rounded-lg px-3 py-1.5">
+              <option value="hire.create">入职保存 hire.create</option>
+              <option value="empChg.apply">异动生效 empChg.apply</option>
+            </select>
+            <button type="button" class="px-3 py-1.5 rounded bg-success text-white" onclick="alert('原型：保存 RuleSet 到后端，业务事件触发 Evaluate')">保存</button>
+          </div>
+        </div>
+        <p class="text-xs text-gray-400 mt-2">公司参数提供旋钮（试用期限、是否含当天、工号模式…）；本页配置「字段如何被赋值」。</p>
+      </header>
+
+      <div class="p-6 max-w-5xl mx-auto space-y-5">
+        <!-- 旋钮只读引用 -->
+        <section class="bg-white rounded-xl border shadow-sm p-5" id="hot-1" data-hotspot="1">
+          <h2 class="font-semibold mb-3"><i class="fa-solid fa-sliders text-primary mr-2"></i>引用的公司参数（旋钮）</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+            <label>新进试用否
+              <select id="pOnHire" class="mt-1 w-full border rounded-lg px-2 py-1.5">
+                <option value="1" selected>试用</option>
+                <option value="0">不试用</option>
+              </select>
+            </label>
+            <label>新进试用期限
+              <div class="mt-1 flex gap-1">
+                <input id="pDays" type="number" class="w-full border rounded-lg px-2 py-1.5" value="3" min="0" />
+                <select id="pUnit" class="border rounded-lg px-2 py-1.5">
+                  <option value="month" selected>月</option>
+                  <option value="day">天</option>
+                </select>
+              </div>
+            </label>
+            <label>试用当天是否有效
+              <select id="pInclusive" class="mt-1 w-full border rounded-lg px-2 py-1.5">
+                <option value="1" selected>是</option>
+                <option value="0">否</option>
+              </select>
+            </label>
+            <label>固定号 / 流水位
+              <div class="mt-1 flex gap-1">
+                <input id="pPrefix" class="w-20 border rounded-lg px-2 py-1.5" value="XM" />
+                <input id="pSeqLen" type="number" class="w-full border rounded-lg px-2 py-1.5" value="4" min="1" />
+              </div>
+            </label>
+          </div>
+          <p class="mobile-hint">① 旋钮来自公司参数，规则引擎引用而非取代。</p>
+        </section>
+
+        <!-- 规则列表 -->
+        <section class="bg-white rounded-xl border shadow-sm p-5" id="hot-2" data-hotspot="2">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="font-semibold"><i class="fa-solid fa-list-check text-primary mr-2"></i>本触发点下的赋值规则（有序）</h2>
+            <button type="button" class="text-sm px-3 py-1.5 rounded bg-primary text-white" onclick="alert('原型：新增一条规则（选目标字段 + 算子）')"><i class="fa-solid fa-plus mr-1"></i>新增规则</button>
+          </div>
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-gray-500 border-b">
+                <th class="py-2 w-10">序</th>
+                <th class="py-2">目标字段</th>
+                <th class="py-2">算子</th>
+                <th class="py-2">规则摘要</th>
+                <th class="py-2 w-16">启用</th>
+              </tr>
+            </thead>
+            <tbody id="ruleBody"></tbody>
+          </table>
+          <p class="text-xs text-gray-400 mt-2">顺序重要：先生成工号，再「IC=工号」复制。</p>
+          <p class="mobile-hint">② 规则列表：一字段一算子，过程可见可配。</p>
+        </section>
+
+        <!-- 算子编辑示意 -->
+        <section class="bg-white rounded-xl border shadow-sm p-5" id="hot-3" data-hotspot="3">
+          <h2 class="font-semibold mb-3"><i class="fa-solid fa-wrench text-primary mr-2"></i>选中规则编辑</h2>
+          <div class="flex gap-2 mb-4 text-sm" id="ruleTabs"></div>
+          <div id="editorPane" class="border rounded-xl p-4 bg-panel text-sm"></div>
+          <p class="mobile-hint">③ 不同算子不同编辑器：dateOffset / compose / copyField / fromParam。</p>
+        </section>
+
+        <!-- 预览 -->
+        <section class="bg-white rounded-xl border shadow-sm p-5" id="hot-4" data-hotspot="4">
+          <h2 class="font-semibold mb-3"><i class="fa-solid fa-flask text-primary mr-2"></i>模拟上下文 → 赋值预览</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm mb-4">
+            <label>模拟入职日
+              <input id="mockInDate" type="date" class="mt-1 w-full border rounded-lg px-2 py-1.5" />
+            </label>
+            <label>模拟流水
+              <input id="mockSeq" type="number" class="mt-1 w-full border rounded-lg px-2 py-1.5" value="7" min="1" />
+            </label>
+            <div class="col-span-2 flex items-end">
+              <button type="button" class="px-4 py-2 rounded-lg bg-primary text-white" onclick="runPreview()"><i class="fa-solid fa-play mr-1"></i>执行预览</button>
+            </div>
+          </div>
+          <div id="previewCards" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+          <p class="text-xs text-amber-800 mt-3 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">
+            预览不写库；正式在 <code>hire.create</code> 时由后端引擎求值（工号占号段）。
+          </p>
+          <p class="mobile-hint">④ 一次预览看出工号、试用到期日、IC 等多字段结果。</p>
+        </section>
+
+        <p class="text-xs text-gray-400 pb-8">
+          文档：<code>05-动态字段赋值规则引擎方案.md</code> · 工号专项：<code>04-工号规则可配置生成方案.md</code>
+          · <a class="text-primary underline" href="./原型-工号规则配置.html">打开工号段编辑专项原型</a>
+        </p>
+      </div>
+    </div>
+
+    <aside class="side-pane p-4" id="side-pane">
+      <h3 class="font-bold text-amber-900 mb-3 text-sm">方案要点</h3>
+      <ol class="space-y-4 text-sm text-amber-900">
+        <li class="doc-item p-2 rounded" data-doc="1" id="doc-1">
+          <span class="inline-flex w-5 h-5 items-center justify-center rounded-full bg-orange-500 text-white text-xs font-bold mr-1">1</span>
+          <strong>参数 ≠ 赋值过程</strong>
+          <p class="mt-1 text-xs opacity-90">期限、是否含当天是旋钮；「到期日怎么算」是规则。</p>
+        </li>
+        <li class="doc-item p-2 rounded" data-doc="2" id="doc-2">
+          <span class="inline-flex w-5 h-5 items-center justify-center rounded-full bg-orange-500 text-white text-xs font-bold mr-1">2</span>
+          <strong>统一规则表</strong>
+          <p class="mt-1 text-xs opacity-90">工号、试用到期、IC、默认考勤…同一 RuleSet，按触发点执行。</p>
+        </li>
+        <li class="doc-item p-2 rounded" data-doc="3" id="doc-3">
+          <span class="inline-flex w-5 h-5 items-center justify-center rounded-full bg-orange-500 text-white text-xs font-bold mr-1">3</span>
+          <strong>有限算子</strong>
+          <p class="mt-1 text-xs opacity-90">dateOffset / compose / copyField / fromParam / constant，避免任意脚本。</p>
+        </li>
+        <li class="doc-item p-2 rounded" data-doc="4" id="doc-4">
+          <span class="inline-flex w-5 h-5 items-center justify-center rounded-full bg-orange-500 text-white text-xs font-bold mr-1">4</span>
+          <strong>预览与执行分离</strong>
+          <p class="mt-1 text-xs opacity-90">前端看见过程；后端保证并发与一致。</p>
+        </li>
+      </ol>
+    </aside>
+  </div>
+  <svg id="connector-svg"></svg>
+
+  <script>
+    const rules = [
+      {
+        id: 'r1',
+        order: 1,
+        target: 'emp_id',
+        targetLabel: '工号',
+        kind: 'compose',
+        kindLabel: '段拼装 compose',
+        summary: '固定号 + yyyy + MM + "-" + 流水',
+        enabled: true,
+        segs: ['fixed', 'yyyy', 'MM', 'lit:-', 'seq'],
+      },
+      {
+        id: 'r2',
+        order: 2,
+        target: 'emp_try_date',
+        targetLabel: '试用到期日',
+        kind: 'dateOffset',
+        kindLabel: '日期偏移 dateOffset',
+        summary: '入职日 + 试用期限；受「当天是否有效」影响',
+        enabled: true,
+      },
+      {
+        id: 'r3',
+        order: 3,
+        target: 'emp_card',
+        targetLabel: 'IC卡号',
+        kind: 'copyField',
+        kindLabel: '复制字段 copyField',
+        summary: '来源 = 工号 emp_id',
+        enabled: true,
+      },
+      {
+        id: 'r4',
+        order: 4,
+        target: 'emp_kq_type',
+        targetLabel: '考勤方式',
+        kind: 'fromParam',
+        kindLabel: '取公司参数 fromParam',
+        summary: 'AttMethodDefault',
+        enabled: true,
+      },
+    ];
+
+    let selectedId = 'r2';
+
+    function pad(n, len) {
+      const s = String(n);
+      return s.length >= len ? s.slice(-len) : '0'.repeat(len - s.length) + s;
+    }
+
+    function addMonths(date, months) {
+      const d = new Date(date.getTime());
+      const day = d.getDate();
+      d.setMonth(d.getMonth() + months);
+      if (d.getDate() !== day) d.setDate(0);
+      return d;
+    }
+
+    function fmt(d) {
+      const y = d.getFullYear();
+      const m = pad(d.getMonth() + 1, 2);
+      const day = pad(d.getDate(), 2);
+      return `${y}-${m}-${day}`;
+    }
+
+    /** 原型算法示意：含当天有效时，到期日 = 基准+N月(或天) - 1 天；否则 = 基准+N */
+    function calcTryEnd(inDate, n, unit, inclusive) {
+      let end;
+      if (unit === 'day') {
+        end = new Date(inDate.getTime());
+        end.setDate(end.getDate() + n);
+      } else {
+        end = addMonths(inDate, n);
+      }
+      if (inclusive === '1') end.setDate(end.getDate() - 1);
+      return end;
+    }
+
+    function renderRules() {
+      document.getElementById('ruleBody').innerHTML = rules.map((r) => `
+        <tr class="border-b hover:bg-blue-50 cursor-pointer ${r.id === selectedId ? 'bg-blue-50' : ''}" onclick="selectRule('${r.id}')">
+          <td class="py-2 text-gray-400">${r.order}</td>
+          <td class="py-2 font-medium">${r.targetLabel}<div class="text-xs text-gray-400 font-mono">${r.target}</div></td>
+          <td class="py-2"><span class="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 text-xs">${r.kind}</span></td>
+          <td class="py-2 text-gray-600">${r.summary}</td>
+          <td class="py-2">${r.enabled ? '<i class="fa-solid fa-check text-success"></i>' : '—'}</td>
+        </tr>
+      `).join('');
+      document.getElementById('ruleTabs').innerHTML = rules.map((r) => `
+        <button type="button" class="px-3 py-1 rounded border ${r.id === selectedId ? 'bg-primary text-white border-primary' : 'bg-white'}" onclick="selectRule('${r.id}')">${r.targetLabel}</button>
+      `).join('');
+      renderEditor();
+    }
+
+    function selectRule(id) {
+      selectedId = id;
+      renderRules();
+      requestAnimationFrame(drawConnectors);
+    }
+
+    function renderEditor() {
+      const r = rules.find((x) => x.id === selectedId);
+      const pane = document.getElementById('editorPane');
+      if (!r) return;
+      if (r.kind === 'dateOffset') {
+        pane.innerHTML = `
+          <div class="font-medium mb-2 text-ink">算子 dateOffset · ${r.targetLabel}</div>
+          <div class="grid md:grid-cols-2 gap-3">
+            <div>基准字段 <code class="bg-white px-1 rounded border">emp_in_date</code>（入职日）</div>
+            <div>偏移来源 <code class="bg-white px-1 rounded border">param.ProbationHireDays</code> + 单位</div>
+            <div>条件 when <code class="bg-white px-1 rounded border">ProbationOnHire = 试用</code></div>
+            <div>含首日 <code class="bg-white px-1 rounded border">param.ProbationDayInclusive</code></div>
+          </div>
+          <p class="text-xs text-gray-500 mt-3">正式环境需与旧系统对拍「+N 月是否减一天」；本原型可切换「当天是否有效」看差异。</p>
+        `;
+      } else if (r.kind === 'compose') {
+        pane.innerHTML = `
+          <div class="font-medium mb-2">算子 compose · 工号段</div>
+          <div class="flex flex-wrap gap-2">${r.segs.map((s) => `<span class="px-2 py-1 bg-white border rounded text-xs font-mono">${s}</span>`).join('<span class="text-gray-300">+</span>')}</div>
+          <p class="text-xs text-gray-500 mt-3">完整段编辑器见 <a class="text-primary underline" href="./原型-工号规则配置.html">工号规则原型</a>；本引擎只把它当作一种 kind。</p>
+        `;
+      } else if (r.kind === 'copyField') {
+        pane.innerHTML = `<div class="font-medium mb-2">算子 copyField</div><p>目标 IC卡号 ← 源字段 <code class="bg-white border px-1 rounded">emp_id</code>（依赖上一条 compose 结果）</p>`;
+      } else {
+        pane.innerHTML = `<div class="font-medium mb-2">算子 fromParam</div><p>目标考勤方式 ← 公司参数 <code class="bg-white border px-1 rounded">AttMethodDefault</code>（演示固定为「正常考勤」）</p>`;
+      }
+    }
+
+    function runPreview() {
+      const inStr = document.getElementById('mockInDate').value;
+      const inDate = new Date(inStr + 'T00:00:00');
+      const onHire = document.getElementById('pOnHire').value;
+      const n = +document.getElementById('pDays').value || 0;
+      const unit = document.getElementById('pUnit').value;
+      const inclusive = document.getElementById('pInclusive').value;
+      const prefix = document.getElementById('pPrefix').value || '';
+      const seqLen = +document.getElementById('pSeqLen').value || 4;
+      const seq = +document.getElementById('mockSeq').value || 1;
+
+      const y = String(inDate.getFullYear());
+      const m = pad(inDate.getMonth() + 1, 2);
+      const empId = prefix + y + m + '-' + pad(seq, seqLen);
+
+      let tryDate = '—（条件不满足，不赋值）';
+      if (onHire === '1') tryDate = fmt(calcTryEnd(inDate, n, unit, inclusive));
+
+      const cards = [
+        { title: '工号 emp_id', value: empId, sub: 'compose' },
+        { title: '试用到期日 emp_try_date', value: tryDate, sub: 'dateOffset' },
+        { title: 'IC卡号 emp_card', value: onHire ? empId : empId, sub: 'copyField ← emp_id' },
+        { title: '考勤方式', value: '正常考勤', sub: 'fromParam' },
+      ];
+      document.getElementById('previewCards').innerHTML = cards.map((c) => `
+        <div class="rounded-xl border bg-panel p-4">
+          <div class="text-xs text-gray-400">${c.title}</div>
+          <div class="text-lg font-semibold font-mono text-primary mt-1 break-all">${c.value}</div>
+          <div class="text-xs text-gray-400 mt-1">${c.sub}</div>
+        </div>
+      `).join('');
+      requestAnimationFrame(drawConnectors);
+    }
+
+    function bindHover() {
+      document.querySelectorAll('[data-hotspot]').forEach((el) => {
+        el.addEventListener('mouseenter', () => setActive(el.getAttribute('data-hotspot')));
+        el.addEventListener('mouseleave', () => setActive(null));
+      });
+      document.querySelectorAll('[data-doc]').forEach((el) => {
+        el.addEventListener('mouseenter', () => setActive(el.getAttribute('data-doc')));
+        el.addEventListener('mouseleave', () => setActive(null));
+      });
+    }
+
+    function setActive(id) {
+      document.querySelectorAll('[data-hotspot]').forEach((el) => el.classList.toggle('hot-active', id && el.getAttribute('data-hotspot') === id));
+      document.querySelectorAll('.doc-item').forEach((el) => el.classList.toggle('doc-active', id && el.getAttribute('data-doc') === id));
+      document.querySelectorAll('.connector-line').forEach((line) => line.classList.toggle('active', id && line.getAttribute('data-id') === id));
+    }
+
+    function drawConnectors() {
+      const svg = document.getElementById('connector-svg');
+      if (window.matchMedia('(max-width: 900px)').matches) { svg.innerHTML = ''; return; }
+      const paths = [];
+      ['1', '2', '3', '4'].forEach((id) => {
+        const left = document.getElementById('hot-' + id);
+        const right = document.getElementById('doc-' + id);
+        if (!left || !right) return;
+        const lr = left.getBoundingClientRect();
+        const rr = right.getBoundingClientRect();
+        const x1 = lr.right, y1 = lr.top + lr.height / 2;
+        const x2 = rr.left, y2 = rr.top + rr.height / 2;
+        const cx = (x1 + x2) / 2;
+        const d = `M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}`;
+        const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+        paths.push(`<path class="connector-line" data-id="${id}" d="${d}" /><circle cx="${mx}" cy="${my}" r="9" fill="#f97316" /><text x="${mx}" y="${my + 3.5}" text-anchor="middle" class="connector-badge">${id}</text>`);
+      });
+      svg.innerHTML = paths.join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const d = new Date();
+      document.getElementById('mockInDate').value = d.toISOString().slice(0, 10);
+      ['pOnHire', 'pDays', 'pUnit', 'pInclusive', 'pPrefix', 'pSeqLen', 'mockInDate', 'mockSeq'].forEach((id) => {
+        document.getElementById(id).addEventListener('change', runPreview);
+        document.getElementById(id).addEventListener('input', runPreview);
+      });
+      document.getElementById('btn-view-ui')?.addEventListener('click', () => document.getElementById('main-pane').classList.add('view-ui-only'));
+      document.getElementById('btn-view-both')?.addEventListener('click', () => {
+        document.getElementById('main-pane').classList.remove('view-ui-only');
+        requestAnimationFrame(drawConnectors);
+      });
+      bindHover();
+      renderRules();
+      runPreview();
+      window.addEventListener('resize', () => requestAnimationFrame(drawConnectors));
+      window.addEventListener('scroll', () => requestAnimationFrame(drawConnectors), true);
+      setTimeout(drawConnectors, 50);
+    });
+  </script>
+</body>
+</html>
