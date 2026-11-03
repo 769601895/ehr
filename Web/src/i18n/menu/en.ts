@@ -57,6 +57,7 @@ export default {
 		设置状态: 'Set Status',
 		访问日志: 'Access Log',
 		详情: 'Details',
+		公司参数设置: 'Company Parameters',
 		账号管理: 'Account Management',
 		通知公告: 'Announcements',
 		配置参数: 'Configuration Parameters',

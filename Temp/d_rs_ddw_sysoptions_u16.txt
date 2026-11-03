@@ -1,0 +1,1828 @@
+teger x = 5
+integer y = 12䅄⩔ Ƕ
+integer width = 2802
+integer height = 1808
+string dataobject = "d_rs_ddw_sysoptions"
+boolean hsplitscroll = true
+boolean ib_rowcolor = false
+end type
+
+event dw_list::itemchanged;call super::itemchanged;integer li_null
+setnull(li_null)
+if dw䅄⩔ Ƕo.name='sys_emp_kquser' then
+	if integer(data)=1 then
+		this.object.sys_emp_ovini[row]=li_null
+		this.object.sys_emp_freeini[row]=li_null
+		this.accepttext()
+		
+	end if
+end if
+end event
+
+event dw_list::doubleclicked;call super::doubleclicked䅄⩔切 Ƕ;string ls_site
+if row>0 then
+   ls_site=this.object.sys_site[row]
+	tab_1.tabpage_2.dw_1.retrieve(ls_site)
+	tab_1.selecttab(2)
+end if
+end event
+
+type tabpage_2 from userobject within tab_1
+integer x = 18
+integer y = 112
+integer width = 2825䅄⩔ﰀ Ƕ
+integer height = 1836
+long backcolor = 79741120
+string text = "参数明细设置"
+long tabtextcolor = 33554432
+long tabbackcolor = 79741120
+string picturename = "AddWatch5!"
+long picturemaskcolor = 536870912
+dw_1 dw_1
+end type
+
+on tabpage_2.create
+t䅄⩔︀ Ƕhis.dw_1=create dw_1
+this.Control[]={this.dw_1}
+end on
+
+on tabpage_2.destroy
+destroy(this.dw_1)
+end on
+
+type dw_1 from u_dw within tabpage_2
+integer width = 2811
+integer height = 1836
+integer taborder = 11
+string dataobject = "d_rs_sys_edi䅄⩔  Ƕt"
+boolean hscrollbar = true
+boolean livescroll = false
+end type
+
+event pfc_retrieve;return 0
+end event
+
+event constructor;call super::constructor;this.settransobject(sqlca)
+end event
+
+event itemchanged;call super::itemchanged;if dwo.name =䅄⩔Ȁ Ƕ 'sys_emp_workdate' then
+	long ll_date
+	ll_date = long(data)
+	if ll_date < 0 or ll_date >31 then
+		messagebox('提示信息','工作日的时间范围在:0-31号！')
+		this.object.sys_emp_workdate[row] = 0
+		this.setfocus( )
+		this.setcolumn("sys_emp_workdate")
+		return 1䅄⩔Ѐ Ƕ		
+	end if
+end if
+
+if dwo.name = 'sys_emp_try_type' then
+	if long(data) <> 0 then 
+		openwithparm(w_emp_try_set,data)
+	end if
+end if
+
+if dwo.name='sys_emp_id' then
+	if data='1' then
+	   messagebox('提示','注意手工维护员工编号如果是以字母开头不允许以W、X、Y、Z四个字母开头'䅄⩔؀ Ƕ)
+	end if
+end if
+if dwo.name='sys_emp_long' then
+	if integer(data)>12 then
+		messagebox('提示','系统工号长度最长只支持12位长度!')
+		this.object.sys_emp_long[row]=12
+		this.accepttext()
+		return 1
+	end if
+   if this.object.sys_emp_id[row]=0 and data='0' then䅄⩔ࠀ Ƕ
+		messagebox('提示','工号为流水号时，工号长度必须设置为固定长度!')
+		this.object.sys_emp_long[row]=12
+		this.accepttext()
+		return 1
+	end if
+end if
+end event
+
+event clicked;call super::clicked;if dwo.name = 'b_1' then
+	long ll_type
+	ll_type = this.object.sys_emp䅄⩔਀ Ƕ_try_type[row]
+	openwithparm(w_emp_try_set,string(ll_type))
+end if
+if dwo.name='site_regiser' then
+	string ls_site
+	ls_site=this.object.sys_site[row]
+	openwithparm(w_create_register,ls_site)
+end if
+end event
+
+event itemerror;return 1
+end ev䅄⩔ఀ Ƕent
+
+type tabpage_4 from userobject within tab_1
+integer x = 18
+integer y = 112
+integer width = 2825
+integer height = 1836
+long backcolor = 79741120
+string text = "预警参数设置"
+long tabtextcolor = 33554432
+long tabbackcolor = 79741120
+string pic䅄⩔฀ Ƕturename = "Custom015!"
+long picturemaskcolor = 536870912
+st_2 st_2
+cb_2 cb_2
+dw_3 dw_3
+st_3 st_3
+mle_1 mle_1
+end type
+
+on tabpage_4.create
+this.st_2=create st_2
+this.cb_2=create cb_2
+this.dw_3=create dw_3
+this.st_3=create st_3
+this.mle_䅄⩔က Ƕ1=create mle_1
+this.Control[]={this.st_2,&
+this.cb_2,&
+this.dw_3,&
+this.st_3,&
+this.mle_1}
+end on
+
+on tabpage_4.destroy
+destroy(this.st_2)
+destroy(this.cb_2)
+destroy(this.dw_3)
+destroy(this.st_3)
+destroy(this.mle_1)
+end on
+
+type st_2 f䅄⩔ሀ Ƕrom statictext within tabpage_4
+integer x = 1285
+integer y = 576
+integer width = 1504
+integer height = 60
+integer textsize = -9
+integer weight = 700
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss䅄⩔᐀ Ƕ!
+string facename = "Arial"
+long textcolor = 33554432
+long backcolor = 67108864
+string text = "备注：@ll_day代表预警范围,@ldt_datetime代表当前时间"
+boolean focusrectangle = false
+end type
+
+type cb_2 from commandbutton within tabpage_4
+integer x = 960
+integ䅄⩔ᘀ Ƕer y = 564
+integer width = 274
+integer height = 84
+integer taborder = 30
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = gb2312charset!
+fontpitch fontpitch = variable!
+string facename = "宋体"
+string text = "执行"
+end type
+䅄⩔᠀ Ƕ
+event clicked;uf_msn_open()
+tab_1.tabpage_4.dw_3.retrieve(gstr_userinfo.userid)
+
+
+end event
+
+type dw_3 from u_dw within tabpage_4
+integer y = 4
+integer width = 2779
+integer height = 548
+integer taborder = 11
+string dataobject = "d_ht_msn_䅄⩔ᨀ Ƕini"
+end type
+
+event rowfocuschanged;call super::rowfocuschanged;if currentrow <=0 then 	return 0
+string ls_name,ls_sql,ls_code
+
+	ls_code = this.object.hint_code[currentrow]
+	ls_name = this.object.hint_name[currentrow]
+	ls_sql = this.object.hi䅄⩔ᰀ Ƕnt_sql[currentrow]
+	st_3.text = ls_name + '的语法:'
+	mle_1.text = ls_sql
+
+return 1 
+
+end event
+
+event constructor;call super::constructor;this.retrieve(gstr_userinfo.userid)
+end event
+
+event pfc_retrieve;return this.retrieve(gstr_userinfo.user䅄⩔Ḁ Ƕid)
+end event
+
+type st_3 from statictext within tabpage_4
+integer y = 572
+integer width = 910
+integer height = 72
+integer textsize = -9
+integer weight = 700
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfami䅄⩔  Ƕly = swiss!
+string facename = "Arial"
+long textcolor = 33554432
+long backcolor = 67108864
+boolean border = true
+boolean focusrectangle = false
+end type
+
+type mle_1 from multilineedit within tabpage_4
+integer x = 9
+integer y = 684
+integer wi䅄⩔∀ Ƕdth = 2793
+integer height = 960
+integer taborder = 30
+integer textsize = -9
+integer weight = 700
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "Arial"
+long textcolor = 3355443䅄⩔  Ǭ2
+boolean hscrollbar = true
+boolean vscrollbar = true
+boolean autohscroll = true
+boolean autovscroll = true
+borderstyle borderstyle = stylelowered!
+end type
+
+event modified;tab_1.tabpage_4.dw_3.of_setmenu ("itemchanged")	
+
+end event
+
+     䅄⩔☀ Ƕforward
+global type w_msn_ini from window
+end type
+type r_1 from rectangle within w_msn_ini
+end type
+type dw_1 from datawindow within w_msn_ini
+end type
+type st_1 from statictext within w_msn_ini
+end type
+type p_1 from picture within w_msn_in䅄⩔⠀ Ƕi
+end type
+type cb_1 from uo_button_flat within w_msn_ini
+end type
+end forward
+
+global type w_msn_ini from window
+integer x = 823
+integer y = 360
+integer width = 1385
+integer height = 820
+boolean titlebar = true
+boolean controlmenu = true䅄⩔⨀ Ƕ
+boolean minbox = true
+windowtype windowtype = popup!
+long backcolor = 15780518
+boolean center = true
+r_1 r_1
+dw_1 dw_1
+st_1 st_1
+p_1 p_1
+cb_1 cb_1
+end type
+global w_msn_ini w_msn_ini
+
+type variables
+private:
+long in_lg_dest_y,in_lg_scrw䅄⩔Ⰰ Ƕidth
+string in_st_direction
+integer in_in_movepbu = 20
+end variables
+
+forward prototypes
+public subroutine wf_calcpos ()
+public subroutine wf_down ()
+end prototypes
+
+public subroutine wf_calcpos ();ENVIRONMENT	env_lc
+INTEGER	in_rtn
+in_rtn	䅄⩔⸀ Ƕ=	GETENVIRONMENT(env_lc)
+IF	in_rtn	<>	1	THEN
+	RETURN	
+END	IF
+this.setredraw(FALSE)
+INTEGER	in_s_height_pix	,in_s_width_pix	,in_s_height_pbu ,in_s_width_pbu
+
+//取当前屏幕分辩率
+
+in_s_height_pix		=	env_lc.screenheight
+in_s_width_pix			=	env_lc.screenw䅄⩔　 Ƕidth
+in_s_height_pbu		=	pixelstounits(in_s_height_pix,ypixelstounits!)
+in_s_width_pbu			=	pixelstounits(in_s_width_pix,xpixelstounits!)
+
+in_lg_dest_y	=	in_s_height_pbu	-	this.height		//计算窗口应到达位置
+in_lg_scrwidth	=	in_s_height_pbu	//屏幕高度
+this.y	=	i䅄⩔㈀ Ƕn_s_height_pbu
+this.x	=	in_s_width_pbu	-	this.width	-	5
+in_st_direction	=	"UP"
+this.setredraw(TRUE)
+end subroutine
+
+public subroutine wf_down ();in_st_direction	=	'DOWN'
+timer(0.01)
+end subroutine
+
+on w_msn_ini.create
+this.r_1=create r_1
+t䅄⩔㐀 Ƕhis.dw_1=create dw_1
+this.st_1=create st_1
+this.p_1=create p_1
+this.cb_1=create cb_1
+this.Control[]={this.r_1,&
+this.dw_1,&
+this.st_1,&
+this.p_1,&
+this.cb_1}
+end on
+
+on w_msn_ini.destroy
+destroy(this.r_1)
+destroy(this.dw_1)
+destroy(this.䅄⩔㘀 Ƕst_1)
+destroy(this.p_1)
+destroy(this.cb_1)
+end on
+
+event open;long ll_temp
+select count(*) into :ll_temp from sys_hint_ini ;
+		if ll_temp = 0 then
+			INSERT INTO sys_hint_ini
+         ( hint_name,   
+           hint_num )  
+    select hint_䅄⩔㠀 Ƕtype,hint_day
+	 from sys_hint_mstr;
+				  
+		if sqlca.sqlcode = 0 then
+			commit;	
+		end if
+	end if
+end event
+
+type r_1 from rectangle within w_msn_ini
+long linecolor = 134217729
+integer linethickness = 4
+long fillcolor = 33554431
+integer䅄⩔㨀 Ƕ width = 1367
+integer height = 156
+end type
+
+type dw_1 from datawindow within w_msn_ini
+integer y = 164
+integer width = 1367
+integer height = 556
+integer taborder = 10
+string title = "none"
+string dataobject = "d_ht_msn_ini"
+boolean hscroll䅄⩔㰀 Ƕbar = true
+boolean vscrollbar = true
+boolean hsplitscroll = true
+boolean livescroll = true
+borderstyle borderstyle = stylelowered!
+end type
+
+event constructor;//string ls_filter
+//string ls_userid,ls_dept,ls_type,ls_level
+//datetime ldt_1
+th䅄⩔㸀 Ƕis.settransobject(sqlca)
+//ls_userid = gstr_userinfo.userid
+//ls_dept = gstr_userinfo.mdept
+//ldt_1 =   datetime(RelativeDate (date(uf_get_datetime()), 15 ))
+//select cc_level into :ls_level from cc_mstr where cc_dept = :ls_dept ;
+this.retrieve()䅄⩔䀀 Ƕ
+//
+end event
+
+event doubleclicked;//string ls_win
+//window lw_win
+//if row <= 0  then return
+//if dwo.name = 'sys_mess_det_messd_desc' then
+//	ls_win = this.object.sys_mess_mstr_mess_win[row]
+//	if ls_win <> '' or not isnull(ls_win) then
+//䅄⩔䈀 Ƕ		open(lw_win,ls_win)
+//	end if
+//end if
+end event
+
+type st_1 from statictext within w_msn_ini
+integer x = 197
+integer y = 44
+integer width = 384
+integer height = 60
+integer textsize = -9
+integer weight = 700
+fontcharset fontcharset = ansi䅄⩔䐀 Ƕ!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "Arial"
+long textcolor = 33554432
+long backcolor = 33554431
+string text = " 预警时间设置"
+boolean focusrectangle = false
+end type
+
+type p_1 from picture within w_ms䅄⩔䘀 Ƕn_ini
+integer x = 18
+integer y = 12
+integer width = 146
+integer height = 128
+boolean bringtotop = true
+boolean enabled = false
+string picturename = "res\info-i.bmp"
+boolean focusrectangle = false
+end type
+
+type cb_1 from uo_button_flat with䅄⩔䠀 Ƕin w_msn_ini
+integer x = 1097
+integer y = 40
+integer width = 206
+integer taborder = 10
+boolean bringtotop = true
+string text = "保存"
+end type
+
+event clicked;call super::clicked;if dw_1.update() = 1 then
+	commit;
+	messagebox('提示信息','保存成功！')
+䅄⩔  else
+	rollback;
+	messagebox('提示信息','保存失败！')
+end if
+end event
+
+                                                                                                                                                                                       䅄⩔䰀 ǶԀ   Ԃ聆  Ԁ   Ԁ   Ԁ  ȀԂ耣 䀀Ԁ   Ԁ   ഀ   2               2 ø           x width height taborder bringtotop textsize weight fontcharset fontpitch facename textcolor item   ഀ    borderstyle Ô   Ą      ǒ Ԁ       ࠲ Ԁ       Ĥ Ԁ     . 
+ Ԁ     @   Ԁ     V ￷ Ԁ     䅄⩔一 Ƕh Ɛ Ԁ     v  Ԃ耛       Ԃ耜    ¢ ܰ耀ᄀ     ´  Ȁᴀ   Ô È ഀ耀㄀     à   Ԃ耣  崀
+  ഀ   Ԁ   ഀ   ഀ   Ԃ考ǒ Ԁ   Ԁ ࠲ Ԁ Ĥ Ԁ 
+ Ԁ   ഀ   Ԁ   Ԁ   Ԁ   䔀 ￷ Ԁ Ɛ Ԁ  Ԃ耛  Ԃ耜  Ԃ耝ܰ耀ᄀ   Ԁ   Ԁ   ഀ  Ȁᴀ  䀀ᴀ  䀀Ԁ   ഀ   Ԁ   Ԁ  䀀Ԁ  䀀Ԁ   Ԁ   Ԁ   Ԁ   Ԁ ೀ耀㄀   Ԁ   Ԃ耣  Ԁ   2               2 Ć䅄⩔倀 Ƕ           y width height bringtotop textsize weight fontcharset fontpitch facename textcolor backcolor text alignment focusrectangle Ę      ń Ԁ       Ē Ԁ       0 Ԁ     .   Ԁ     D ￷ Ԁ     V Ɛ Ԁ     d  Ԃ耛    |   Ԃ耜     ܰ耀ᄀ     ¢  Ȁᴀ     ¶  Ѐᴀ     Ê 䅄⩔刀 Ƕീ耀ᄀ     Ô  ᶩԂ耟    è  ᶩԀ   崀
+  ഀ   Ԁ   ഀ   ഀ   Ԃ考  Ԁ ń Ԁ Ē Ԁ 0 Ԁ   Ԁ   ഀ   Ԁ   Ԁ   Ԁ ￷ Ԁ Ɛ Ԁ  Ԃ耛  Ԃ耜  Ԃ耝ܰ耀ᄀ   Ԁ   Ԁ   ഀ  Ȁᴀ  Ѐᴀ  䀀Ԁ ീ耀ᄀ  ᶩԂ耟  Ԁ   ᴀ   Ԃ聁 䀀Ԃ耣 ᶩԀ   Ԁ   Ԁ    ȸ  ĝ ;  ĳ Ʃ Ʃ ;& ĳ ;. ĳ Ƽ`䃕ƽ`  ƶ ƶ Ļ  = 䁕Ƽť䃕ƽť  Ļ  ĝ   Ĺ Ƽ:䃕ƽ:  Ļ  ĝ   Ĺ = 䀙= 䅄⩔吀 Ƕ䀗= 䀘Ƽ@䃕ƽ@  Ļ    4翽 È Ĩ  4翽 Ǔ4  ¨ Āĝ   8p L n   Ĥĝ   8x L n8 Y   ĺĝ 4    ĝ 4   ĝ 4     Ũĝ ö      Þ Ƹĝ   Ʃ	ƼC䃕ƽC  ƶ Ļ ?  ĝ
+ 
+ 	~Ĩ  Ş  Ƽ4䃕ƽ4  Ļ  "  '  ¨ Ģ  
+ĺ Ƽƃ䃕ƽƃ  Ļ  /FƘ Ƞ4     ȶ Ȯ/F ° '    ȶ    H	b
+ ¸ Èà ü Ā Ĥ Ĩ ĺ ň Ŷ Ơ ƴ Ƹ ǐ Ȅ d È  䅄⩔嘀 Ƕ         li_var ls_pathname ls_filename li_filenum loops i flen bytes_read new_pos b tot_b ::message ð        Ԁ         ഀ     6   ഀ     N   Ԁ     d   Ԁ     p   Ԁ     t   ᴀ     ~   ᴀ        ᴀ     ¤   ᴀ     ¨   ᴀ     ´ F ᙀ肀¸ 0         选择要导入的数据文件 txt 文本䅄⩔堀 Ƕ文件 (*.txt),*.txt,所有文件(*.*),*.*   ｀䃟  ｀䃟   㿰mle_1  .聎text '       p   x         ¨   °   " 职 " 2 "           +clicked          ᔀ쀀 2 Â           x y width height taborder bringtotop textsize weight fontcharset fontpitch facename text ð      ě Ԁ      䅄⩔娀 Ƕ Ĵ Ԁ       ® Ԁ     $ T Ԁ     2   Ԁ     D   Ԁ     Z ￷ Ԁ     l Ɛ Ԁ     z  Ԃ耛       Ԃ耜    ¦ ܰ耀ᄀ     ¸ ൌ耀ᄀ   崀
+  ഀ   Ԁ   ഀ   ഀ   Ԃ考ě Ԁ Ĵ Ԁ ® Ԁ T Ԁ   Ԁ   ഀ   Ԁ   Ԁ   Ԁ ￷ Ԁ Ɛ Ԁ  Ԃ耛  Ԃ耜  Ԃ耝ܰ耀ᄀ   Ԁ   Ԁ   ഀ  䀀Ԁ ൌ耀ᄀ   Ԁ   Ԁ   Ԁ Ů ¬     * " 耀  脀          2   䅄⩔尀 Ƕ            2 Č           y width height taborder bringtotop textsize weight fontcharset fontpitch facename textcolor hscrollbar vscrollbar borderstyle Ę      Ɛ Ԁ       ઠ Ԁ       ȼ Ԁ     .   Ԁ     @   Ԁ     V ￷ Ԁ     h Ɛ Ԁ     v  Ԃ耛       Ԃ耜    ¢ ܰ耀䅄⩔帀 Ƕᄀ     ´  Ȁᴀ     È  ȀԀ     Þ  ȀԀ     ô  ȀԂ耣  崀
+  ഀ   Ԁ   ഀ   ഀ   Ԃ考  Ԁ Ɛ Ԁ ઠ Ԁ ȼ Ԁ   Ԁ   ഀ   Ԁ   Ԁ   Ԁ   䔀 ￷ Ԁ Ɛ Ԁ  Ԃ耛  Ԃ耜  Ԃ耝ܰ耀ᄀ   Ԁ   Ԁ   ഀ  Ȁᴀ  䀀ᴀ  䀀Ԁ   ഀ  䀀Ԁ  ȀԀ  ȀԀ   Ԁ   Ԁ   Ԃ耟  Ԃ聆  Ԁ ൔ耀㄀   Ԁ   Ԁ  ȀԂ耣 䀀Ԁ   Ԁ   Ԁ   2               2 ö           x䅄⩔怀 Ƕ y width height bringtotop textsize weight fontcharset fontpitch facename textcolor backcolor text focusrectangle Ę        Ԁ       Ϥ Ԁ       ƒ Ԁ     $ 0 Ԁ     2   Ԁ     H ￷ Ԁ     Z Ɛ Ԁ     h  Ԃ耛       Ԃ耜     ܰ耀ᄀ     ¦  Ȁᴀ     º  Ѐᴀ     Î ർ耀ᄀ     Ø 䅄⩔戀 Ƕ ᶩԀ   崀
+  ഀ   Ԁ   ഀ   ഀ   Ԃ考  Ԁ Ϥ Ԁ ƒ Ԁ 0 Ԁ   Ԁ   ഀ   Ԁ   Ԁ   Ԁ ￷ Ԁ Ɛ Ԁ  Ԃ耛  Ԃ耜  Ԃ耝ܰ耀ᄀ   Ԁ   Ԁ   ഀ  Ȁᴀ  Ѐᴀ  䀀Ԁ ർ耀ᄀ   Ԃ耟  Ԁ   ᴀ   Ԃ聁 䀀Ԃ耣 ᶩԀ   Ԁ   Ԁ    ٤, ĝ "   '  4 ' Ĺ  ;<   ­   r;B ĳ " d '  l Ģ Ƽs䃕ƽs  ƶ Ļ   ذ;t   ­   ذ"  '   ' ; ½   Ĉĝ "  '  ¤ 䅄⩔搀 Ƕ' Ƽƙ䃕ƽƙ  Ļ  ǒ   Ĺ " ¼ ' ,ì   Ļ   ž;ô ĳ ;ú ĳ Ƽ°䃕ƽ°  Ļ  " Ę ' ,Ĵ   Ļ  /FƘ Ũ4     ٢ Ŷ/F ļ '    ٢ĝ ;ń ĳ Ʃ Ʃ ;Ś ĳ ;Ţ ĳ Ƽ`䃕ƽ`  ƶ ƶ Ļ  " Ǥ '  Ǭ Ģ   Ĺ    4  ? ¨ ذĝ " Ǵ '   ,Ȕ   Ļ   ĝ    4    ? ¨ ʤ;Ȝ ĳ ;Ȧ ĳ Ƽ°䃕ƽ°  Ļ  /FƘ ʊ4     ٢ ʘ/F Ȱ '    ٢ ذ4    ? ¨ ̖䅄⩔昀 Ƕ;Ȝ ĳ ;ȸ ĳ Ƽ°䃕ƽ°  Ļ  /FƘ ˼4     ٢ ̊/F Ʉ '    ٢ ذ4�   ? ¨ Έ;Ȝ ĳ ;Ɍ ĳ Ƽ°䃕ƽ°  Ļ  /FƘ ͮ4     ٢ ͼ/F ɘ '    ٢ ذ4￼   ? ¨ Ϻ;Ȝ ĳ ;ɠ ĳ Ƽ°䃕ƽ°  Ļ  /FƘ Ϡ4     ٢ Ϯ/F ɰ '    ٢ ذ4￻   ? ¨ Ѭ;Ȝ ĳ ;ɸ ĳ Ƽ°䃕ƽ°  Ļ  /FƘ ђ4     ٢ Ѡ/F ʈ '    ٢ ذ4￺   ? ¨ Ӟ;Ȝ ĳ ;ʐ ĳ Ƽ°䃕ƽ°  Ļ  /FƘ䅄⩔栀 Ƕ ӄ4     ٢ Ӓ/F ʠ '    ٢ ذ4￹   ? ¨ Ր;Ȝ ĳ ;ʨ ĳ Ƽ°䃕ƽ°  Ļ  /FƘ Զ4     ٢ Մ/F ʸ '    ٢ ذ4￸   ? ¨ ׂ;Ȝ ĳ ;ˀ ĳ Ƽ°䃕ƽ°  Ļ  /FƘ ֨4     ٢ ֶ/F ː '    ٢ ذ4￷   ? ¨ ذ;Ȝ ĳ ;˘ ĳ Ƽ°䃕ƽ°  Ļ  /FƘ ؚ4     ٢ ب/F ˨ '    ٢/FƘ ٌ4     ٢ ٚ/F ˰ '    ٢    " 6 n  ¬	Ü
+Ą Ĉ İŌ ž ǆ Ǩ Ǽ Ȧ䅄⩔樀 Ƕ Ȳ Ɇ ɮ ʠ ʸ ˠ ̒ ̪ ͒ ΄ Μ τ!϶"Ў#ж$Ѩ%Ҁ&Ҩ'Ӛ(Ӳ)Ԛ*Ռ+դ,֌-־.ז/׾4ذ d ¢           ls_pathname ls_filename ls_sql li_var li_return  case3 ::message  case20          ഀ     (   ഀ     @   ഀ     N   Ԁ     \   Ԁ     p   ഀ     ~ F ᙀ肀       Ԁ ˸ Ø         ddlb_2 l  +聉te䅄⩔氀 Ƕxt e(   导出 选择数据文件存放目录 sle_1 X )聅(   导入 mle_1  z .聎(    =z .聎(   dw_list ¬ %耣wf_build_dw_syntax  Ø쀀Ä 提示 请先输入导出表的数据库语句  z .聎setfocus   쀀Ġ     选择要导入的数据文件 TXT 文本文件 (*.TXT),*.TXT,EXCEL文件 (*.XLS),*.XLS,HTML文件 (*.HTML),*.HTML  X )聅(   ¬ %耣importfile  Ľ쀀Ǽ 提示信䅄⩔渀 Ƕ息 没有行!     空的文件!     无效文件!     无效的输入!      不能打开文件!     不能关闭文件!     读取文件错误!     不是文件文件!     输入被取消!              4   d   l            ¤   ¼   ì  Ę   Ĵ  ļ   Ǥ   Ǭ   Ǵ   Ȕ  Ȱ   Ʉ   ɘ   ɰ   ʈ   ʠ   ʸ   ː   ˨   ˰   " 聐 " 2 "           +clicked        䅄⩔瀀 Ƕ  ᔀ쀀 2 Â           x y width height taborder bringtotop textsize weight fontcharset fontpitch facename text ð      ਛ Ԁ       l Ԁ       w Ԁ     $ T Ԁ     2   Ԁ     D   Ԁ     Z ￷ Ԁ     l Ɛ Ԁ     z  Ԃ耛       Ԃ耜    ¦ ܰ耀ᄀ     ¸ ඈ耀ᄀ   崀
+  ഀ   Ԁ   ഀ   ഀ   䅄⩔爀 ǶԂ考ਛ Ԁ l Ԁ w Ԁ T Ԁ   Ԁ   ഀ   Ԁ   Ԁ   Ԁ ￷ Ԁ Ɛ Ԁ  Ԃ耛  Ԃ耜  Ԃ耝ܰ耀ᄀ   Ԁ   Ԁ   ഀ  䀀Ԁ ඈ耀ᄀ   Ԁ   Ԁ   Ԁ Ů ¬     * " 耀  脀           Ƣ	 ǒ    '  8 '  L '  ` ' ;h ½   Àĝ ǒ  l '  t '  | '   ' Ƽƙ䃕ƽƙ  Ļ  ǒ   Ĺ ǒ   '   '  ¬ ' ,Ü   Ļ  ĝ ǒ  ä '  ì '  Ą '  Č ' Ĺ  ;Ĕ 䅄⩔琀 Ƕ  ­   łǒ  Ĝ '  Ĥ '  Ĭ ' ,ň   Ļ   Ů;Ő   ­   Ś Ů;Ŝ   ­   Ů/FƘ Ɗ4     Ơ Ƙ/F Ť '    Ơ    < 	À
+ø Č ľŖ Ů d X           ls_sql ls_filepath  case9 ::message P        ഀ         ഀ     6   ഀ     D F ᙀ肀Ŭ ¨         tab_1   w耙tabpage_1 $ )耠mle_1 @ .聎text 䃕T      䅄⩔瘀 Ƕ w耙$ )耠@ .聎T     w耙$ )耠dw_list  %耣wf_build_dw_syntax  Ø쀀´   w耙$ )耠ddlb_2  ô +聉T   导出 ú  w耙$ )耠 %耣retrieve  Ō쀀Ĵ 修改数据库 导入 a        8   L   `   l   t   |            ¬   Ü  ä   ì   Ą   Č   Ĝ   Ĥ   Ĭ   ň  Ť   " 聑 " 2 "           +clicked          ᔀ쀀䅄⩔᠀ Ƕ 2 Â           x y width height taborder bringtotop textsize weight fontcharset fontpitch facename text ð      ߎ Ԁ       ݘ Ԁ       Š Ԁ     $ ` Ԁ     2 < Ԁ     D   Ԁ     Z ￷ Ԁ     l Ɛ Ԁ     z  Ԃ耛       Ԃ耜    ¦ ܰ耀ᄀ     ¸ ඒ耀ᄀ   崀
+  ഀ   Ԁ   ഀ   ഀ   Ԃ考ߎ 䅄⩔稀 Ƕ共享数据窗口祖先(有TAB)forward
+global type w_pattern_hr_det from w_sheet
+end type
+type uo_2 from uo_pattern_hr within w_pattern_hr_det
+end type
+type st_2 from u_st_splitbar within w_pattern_hr_det
+end type
+type uo_1 from uo_comctl_statusbar within w_pat䅄⩔簀 Ƕtern_hr_det
+end type
+type tab_1 from tab within w_pattern_hr_det
+end type
+type tabpage_1 from userobject within tab_1
+end type
+type dw_1 from u_dw within tabpage_1
+end type
+type tabpage_1 from userobject within tab_1
+dw_1 dw_1
+end type
+type䅄⩔縀 Ƕ tabpage_2 from userobject within tab_1
+end type
+type dw_2 from datawindow within tabpage_2
+end type
+type tabpage_2 from userobject within tab_1
+dw_2 dw_2
+end type
+type tab_1 from tab within w_pattern_hr_det
+tabpage_1 tabpage_1
+tabpage_2 tabp䅄⩔耀 Ƕage_2
+end type
+end forward
+
+global type w_pattern_hr_det from w_sheet
+integer x = 9
+integer y = 212
+integer width = 3653
+integer height = 2060
+string menuname = "m_pattern_main"
+windowstate windowstate = maximized!
+long backcolor = 80269524䅄⩔舀 Ƕ
+event type integer ue_saveadd ( )
+event ue_modify ( )
+event type integer pfc_delsave ( )
+uo_2 uo_2
+st_2 st_2
+uo_1 uo_1
+tab_1 tab_1
+end type
+global w_pattern_hr_det w_pattern_hr_det
+
+type variables
+string  is_ddw
+string is_item,is_level,i䅄⩔萀 Ƕs_empid
+integer ii_state=1
+DataStore	ids_Source
+uo_toolbar iu_toolbar
+uo_xpmenu iu_xpmenu
+window iw_parent
+long il_rowcount
+treeview itv_data
+boolean ib_add=false,ib_del=false,ib_modify=false,ib_retrieve=false
+string is_key
+
+
+
+
+end varia䅄⩔蘀 Ƕbles
+
+forward prototypes
+public subroutine of_navigation (boolean ab_visibled)
+public function integer of_setmenu (string as_event)
+end prototypes
+
+event type integer ue_saveadd();if this.event pfc_save()=1 then
+	tab_1.tabpage_1.dw_1.post even䅄⩔蠀 Ƕt pfc_addrow()
+end if
+return 1
+end event
+
+event ue_modify();ib_modify=true
+tab_1.selecttab(2)
+tab_1.tabpage_2.dw_2.object.datawindow.readonly=false
+tab_1.tabpage_2.dw_2.setfocus()
+tab_1.tabpage_2.dw_2.setcolumn(1)
+end event
+
+event pfc_dels䅄⩔言 Ƕave;return 0
+end event
+
+public subroutine of_navigation (boolean ab_visibled);if ab_visibled then
+	uo_2.width=uo_2.of_returnwidth()
+   st_2.x = uo_2.x + uo_2.width
+	tab_1.x = st_2.x + st_2.width
+	tab_1.width  =this.width - uo_2.x - uo_2.width -䅄⩔谀 Ƕ st_2.width - 50
+	tab_1.tabpage_1.dw_1.width=tab_1.tabpage_1.width - 10
+	tab_1.tabpage_2.dw_2.width=tab_1.tabpage_2.width - 10
+	if isvalid(iu_toolbar) then
+		iu_toolbar.of_setchecked("导航",true)
+	end if
+else
+	uo_2.width = 0
+	st_2.x = 7
+	tab_1.䅄⩔踀 Ƕx = st_2.x + st_2.width
+	tab_1.width  =this.width - st_2.width - st_2.x - 50
+	tab_1.tabpage_1.dw_1.width=tab_1.tabpage_1.width - 10
+	tab_1.tabpage_2.dw_2.width=tab_1.tabpage_2.width - 10
+	if isvalid(iu_toolbar) then
+		iu_toolbar.of_setchecked("导航䅄⩔退 Ƕ",false)
+	end if
+end if
+
+end subroutine
+
+public function integer of_setmenu (string as_event);if isvalid(iu_toolbar) then
+	choose case as_event
+		case 'open'
+			iu_toolbar.of_setenabled("保存",false)
+			iu_toolbar.of_setenabled("存增",false)
+		䅄⩔鈀 Ƕcase 'ue_refurbish'
+			iu_toolbar.of_setenabled("新增",true)
+			iu_toolbar.of_setenabled("删除",true)
+			iu_toolbar.of_setenabled("修改",true)
+			iu_toolbar.of_setenabled("保存",false)
+			iu_toolbar.of_setenabled("存增",false)		
+		case 'pfc_save'			
+			i䅄⩔鐀 Ƕu_toolbar.of_setenabled("新增",true)
+			iu_toolbar.of_setenabled("删除",true)
+			iu_toolbar.of_setenabled("修改",true)
+			iu_toolbar.of_setenabled("保存",false)
+			iu_toolbar.of_setenabled("存增",false)
+		case 'pfc_addrow'			
+			iu_toolbar.of_setenabled("䅄⩔阀 Ƕ保存",true)
+			iu_toolbar.of_setenabled("存增",true)
+			iu_toolbar.of_setenabled("新增",false)
+			iu_toolbar.of_setenabled("删除",false)
+			iu_toolbar.of_setenabled("修改",false)
+			iu_toolbar.of_setenabled("首页",false)
+			iu_toolbar.of_setenabled("上页",fal䅄⩔頀 Ƕse)
+			iu_toolbar.of_setenabled("下页",false)
+			iu_toolbar.of_setenabled("末页",false)
+		case 'clicked'
+			if tab_1.tabpage_1.dw_1.getrow() = tab_1.tabpage_1.dw_1.il_rowcount and tab_1.tabpage_1.dw_1.getrow()=1 then
+				iu_toolbar.of_setenabled("下页"䅄⩔騀 Ƕ,false)	
+				iu_toolbar.of_setenabled("上页",false)
+				iu_toolbar.of_setenabled("末页",false)
+				iu_toolbar.of_setenabled("首页",false)
+			elseif tab_1.tabpage_1.dw_1.getrow() = tab_1.tabpage_1.dw_1.il_rowcount then
+				iu_toolbar.of_setenabled("下页",䅄⩔鰀 Ƕfalse)	
+				iu_toolbar.of_setenabled("上页",true)
+				iu_toolbar.of_setenabled("末页",false)
+				iu_toolbar.of_setenabled("首页",true)
+			elseif tab_1.tabpage_1.dw_1.getrow() = 1 then
+				iu_toolbar.of_setenabled("下页",true)	
+				iu_toolbar.of_setenabl䅄⩔鸀 Ƕed("上页",false)
+				iu_toolbar.of_setenabled("末页",true)
+				iu_toolbar.of_setenabled("首页",false)	
+			else				
+				iu_toolbar.of_setenabled("下页",true)	
+				iu_toolbar.of_setenabled("上页",true)
+				iu_toolbar.of_setenabled("末页",true)
+				iu_toolbar䅄⩔ꀀ Ƕ.of_setenabled("首页",true)		
+			end if
+		case 'rowfocuschanged'
+			if tab_1.tabpage_1.dw_1.getrow() = tab_1.tabpage_1.dw_1.il_rowcount and tab_1.tabpage_1.dw_1.getrow() = 1 then				
+				iu_toolbar.of_setenabled("下页",false)	
+				iu_toolbar.of_seten䅄⩔ꈀ Ƕabled("上页",false)
+				iu_toolbar.of_setenabled("末页",false)
+				iu_toolbar.of_setenabled("首页",false)				
+			elseif tab_1.tabpage_1.dw_1.getrow() = tab_1.tabpage_1.dw_1.il_rowcount then				
+				iu_toolbar.of_setenabled("下页",false)	
+				iu_toolbar.o䅄⩔ꐀ Ƕf_setenabled("上页",true)
+				iu_toolbar.of_setenabled("末页",false)
+				iu_toolbar.of_setenabled("首页",true)				
+			elseif tab_1.tabpage_1.dw_1.getrow() = 1 then				
+				iu_toolbar.of_setenabled("下页",true)	
+				iu_toolbar.of_setenabled("上页",false)
+	䅄⩔ꘀ Ƕ			iu_toolbar.of_setenabled("末页",true)
+				iu_toolbar.of_setenabled("首页",false)				
+			else					
+				iu_toolbar.of_setenabled("下页",true)	
+				iu_toolbar.of_setenabled("上页",true)
+				iu_toolbar.of_setenabled("末页",true)
+				iu_toolbar.of_setenable䅄⩔ꠀ Ƕd("首页",true)				
+			end if
+		case 'itemchanged'
+			iu_toolbar.of_setenabled("保存",true)
+			iu_toolbar.of_setenabled("存增",true)
+			iu_toolbar.of_setenabled("新增",false)
+			iu_toolbar.of_setenabled("删除",false)
+			iu_toolbar.of_setenabled("修改",false䅄⩔ꨀ Ƕ)
+		case 'editchanged'
+			iu_toolbar.of_setenabled("保存",true)
+			iu_toolbar.of_setenabled("存增",true)
+			iu_toolbar.of_setenabled("新增",false)
+			iu_toolbar.of_setenabled("删除",false)
+			iu_toolbar.of_setenabled("修改",false)	
+		case 'pfc_firstpage'䅄⩔가 Ƕ			
+			iu_toolbar.of_setenabled("下页",true)	
+			iu_toolbar.of_setenabled("上页",false)
+			iu_toolbar.of_setenabled("末页",true)
+			iu_toolbar.of_setenabled("首页",false)
+		case 'pfc_lastpage'			
+			iu_toolbar.of_setenabled("下页",false)	
+			iu_toolbar.o䅄⩔글 Ƕf_setenabled("上页",true)
+			iu_toolbar.of_setenabled("末页",false)
+			iu_toolbar.of_setenabled("首页",true)
+		case 'pfc_previouspage'
+			if tab_1.tabpage_1.dw_1.getrow()=1 then	
+				iu_toolbar.of_setenabled("下页",true)	
+				iu_toolbar.of_setenabled("上䅄⩔뀀 Ƕ页",false)
+				iu_toolbar.of_setenabled("末页",true)
+				iu_toolbar.of_setenabled("首页",false)	
+			else	
+				iu_toolbar.of_setenabled("下页",true)	
+				iu_toolbar.of_setenabled("上页",true)
+				iu_toolbar.of_setenabled("末页",true)
+				iu_toolbar.of_sete䅄⩔눀 Ƕnabled("首页",true)
+			end if
+		case 'pfc_nextpage'	
+			if tab_1.tabpage_1.dw_1.getrow() = tab_1.tabpage_1.dw_1.rowcount() then		
+				iu_toolbar.of_setenabled("下页",false)	
+				iu_toolbar.of_setenabled("上页",true)
+				iu_toolbar.of_setenabled("末页",f䅄⩔됀 Ƕalse)
+				iu_toolbar.of_setenabled("首页",true)	
+			elseif tab_1.tabpage_1.dw_1.getrow() = 1 then			
+				iu_toolbar.of_setenabled("下页",true)	
+				iu_toolbar.of_setenabled("上页",false)
+				iu_toolbar.of_setenabled("末页",true)
+				iu_toolbar.of_setena䅄⩔똀 Ƕbled("首页",false)			
+			else		
+				iu_toolbar.of_setenabled("下页",true)	
+				iu_toolbar.of_setenabled("上页",true)
+				iu_toolbar.of_setenabled("末页",true)
+				iu_toolbar.of_setenabled("首页",true)				
+			end if
+	end choose
+else
+	return 0
+end if
+r䅄⩔렀 Ƕeturn 1
+end function
+
+event open;istr_wininfo=message.PowerObjectparm
+this.title = istr_wininfo.wintitle
+this.tag = istr_wininfo.winhelp
+is_key = istr_wininfo.key
+
+uf_menu_visible(this,"打印",false,false)
+uf_menu_visible(this,"预览",false,false)䅄⩔먀 Ƕ
+uf_menu_visible(this,"输出",false,false)
+uf_menu_visible(this,"查看",false,false)
+uf_menu_visible(this,"刷新",true,false)
+
+openuserobject ( iu_toolbar, 0, 0)
+//openuserobject (iu_xpmenu)
+if isvalid(iu_toolbar) then
+	iu_toolbar.of_setenabled("保存",fal䅄⩔밀 Ƕse)
+	iu_toolbar.of_setenabled("存增",false)
+end if
+
+//必要的事件
+this.event ue_postopen()
+end event
+
+event close;//uf_setlog(is_menukey,'离开','')
+Destroy ids_Source
+if isvalid(iu_xpmenu) then closeuserobject(iu_xpmenu)
+
+
+end event
+
+on w_pattern䅄⩔븀 Ƕ_hr_det.create
+int iCurrent
+call super::create
+if this.MenuName = "m_pattern_main" then this.MenuID = create m_pattern_main
+this.uo_2=create uo_2
+this.st_2=create st_2
+this.uo_1=create uo_1
+this.tab_1=create tab_1
+iCurrent=UpperBound(this.Cont䅄⩔쀀 Ƕrol)
+this.Control[iCurrent+1]=this.uo_2
+this.Control[iCurrent+2]=this.st_2
+this.Control[iCurrent+3]=this.uo_1
+this.Control[iCurrent+4]=this.tab_1
+end on
+
+on w_pattern_hr_det.destroy
+call super::destroy
+if IsValid(MenuID) then destroy(MenuID)䅄⩔숀 Ƕ
+destroy(this.uo_2)
+destroy(this.st_2)
+destroy(this.uo_1)
+destroy(this.tab_1)
+end on
+
+event resize;call super::resize;uo_1.Resize(-1, -1)
+uo_2.event ue_resize()
+if isvalid (iu_toolbar)  then
+   iu_toolbar.of_resize( newwidth, iu_toolbar.heigh䅄⩔쐀 Ƕt )
+end if
+
+
+end event
+
+event pfc_save;Integer		li_rc
+Integer		li_save_rc
+Integer		li_endtran_rc
+powerobject lpo_updatearray[]
+
+tab_1.tabpage_2.dw_2.accepttext()
+
+If This.Event pfc_PreUpdate() <> 1 Then Return -4
+
+If Not ib_closestatus 䅄⩔였 ǶThen
+	If UpperBound(ipo_tempupdateobjects) > 0 Then
+		lpo_updatearray = ipo_tempupdateobjects
+	ElseIf UpperBound(ipo_updateobjects) > 0 Then
+		lpo_updatearray = ipo_updateobjects
+	Else
+		lpo_updatearray = This.Control		
+	End If
+	li_rc=uf_pub_f䅄⩔저 Ƕindnotnull(tab_1.tabpage_2.dw_2,tab_1.tabpage_2.dw_2.getrow())
+	if li_rc<>0 then return -3
+End If
+
+
+blob lblb_changes
+long ll_rv
+
+ll_rv = tab_1.tabpage_1.dw_1.update()
+IF ll_rv <> 1 THEN
+	rollback;
+	if ib_del=false then
+		uf_msg_pop(2,'')䅄⩔쨀 Ƕ
+	end if
+ELSE
+   ib_savestatus = False
+	tab_1.tabpage_1.dw_1.resetUpdate()
+	commit;	
+	if ib_del=false then
+		uf_msg_pop(1,'')
+	end if
+	ib_add=false
+	ib_del=false
+	ib_modify=false
+	if isvalid(iu_toolbar) then
+		iu_toolbar.of_setenabled("新增"䅄⩔찀 Ƕ,true)
+		iu_toolbar.of_setenabled("删除",true)
+		iu_toolbar.of_setenabled("修改",true)
+		iu_toolbar.of_setenabled("保存",false)
+		iu_toolbar.of_setenabled("存增",false)
+	end if
+	this.event ue_postsave()
+END IF
+//iw_parent.triggerevent('ue_reload')
+ta䅄⩔츀 Ƕb_1.selecttab(1)
+tab_1.tabpage_2.visible = false
+return 1
+end event
+
+event pfc_messagerouter;graphicobject lgo_focus
+
+// Check argument
+If IsNull (as_message) or Len (Trim (as_message)) = 0 Then
+	Return -1
+End If
+
+// Try sending the messag䅄⩔퀀 Ƕe to this window, if successful exit event.
+If This.TriggerEvent (as_message) = 1 Then Return 1
+
+// Try sending the message to the current control, if successful exit event.
+//lgo_focus = GetFocus()
+//If IsValid (lgo_focus) Then
+//	If lgo_focus.䅄⩔툀 ǶTriggerEvent (as_message) = 1 Then Return 1
+//End If
+
+// Try sending the message to the last active datawindow, if successful exit event.
+If IsValid (idw_active) Then
+	If idw_active.TriggerEvent (as_message) = 1 Then Return 1
+End If
+
+// No obj䅄⩔퐀 Ƕects recognized the message
+Return 0
+end event
+
+event help;call super::help;of_help(handle(this),this.tag)
+end event
+
+event ue_resizetool;call super::ue_resizetool;long ll_y
+if isvalid(iu_toolbar) then
+	this.setredraw(false)
+	ll_y = uo_2.y
+䅄⩔혀 Ƕ	uo_2.y  = iu_toolbar.height + 5
+	uo_2.height = uo_2.height - (uo_2.y - ll_y)
+	tab_1.y = uo_2.y
+	tab_1.height = uo_2.height
+	st_2.y = uo_2.y
+	st_2.height = uo_2.height
+	tab_1.tabpage_1.dw_1.height = tab_1.tabpage_1.dw_1.height - (uo_2.y - ll_y)䅄⩔ Ƕ
+	tab_1.tabpage_2.dw_2.height = tab_1.tabpage_2.dw_2.height - (uo_2.y - ll_y)
+	this.setredraw(true)
+end if
+end event
+
+event ue_refurbish;call super::ue_refurbish;//tab_1.tabpage_1.dw_1.settransobject(sqlca)
+//tab_1.tabpage_1.dw_1.retrieve(is_ite䅄⩔ Ƕm)
+//tab_1.selecttab(1)
+//if tab_1.tabpage_2.dw_2.modifiedcount()>0 or tab_1.tabpage_2.dw_2.deletedcount()>0 then
+//	if messagebox("提示信息","是否进行保存?",question!,yesno!,1)=1 then
+//		this.event pfc_save()
+//	end if
+//end if	
+//if tab_1.tabpage_2.vi䅄⩔ Ƕsible = true then
+//	tab_1.tabpage_2.dw_2.object.datawindow.readonly=true
+//	tab_1.tabpage_2.visible = false	
+//end if
+If IsValid (idw_active) Then
+	idw_active.TriggerEvent("pfc_retrieve")
+End If
+ib_add=false
+ib_del=false
+ib_modify=false
+if 䅄⩔ Ƕisvalid(iu_toolbar) then
+	iu_toolbar.of_setenabled("新增",true)
+	iu_toolbar.of_setenabled("删除",true)
+	iu_toolbar.of_setenabled("修改",true)
+	iu_toolbar.of_setenabled("保存",false)
+	iu_toolbar.of_setenabled("存增",false)
+end if
+
+end event
+
+event ue_p䅄⩔ Ƕostopen;call super::ue_postopen;//uf_setlog(is_menukey,'进入','')
+//uf_setmenu(this,is_menukey)
+this.of_setresize(true)
+this.inv_resize.of_register(uo_2,"scaletobottom")
+this.inv_resize.of_register(st_2,"scaletobottom")
+this.inv_Resize.of_register(䅄⩔ Ƕtab_1,"scaletoright&bottom")
+this.inv_resize.of_register(tab_1.tabpage_1.dw_1,"scaletoright&bottom")//FixedToRight&ScaleToBottom
+this.inv_resize.of_register(tab_1.tabpage_2.dw_2,"scaletoright&bottom")
+uf_center(this)
+iw_parent=this
+tab_1.tabpage_䅄⩔ Ƕ1.dw_1.settransobject(sqlca)
+tab_1.tabpage_2.dw_2.settransobject(sqlca)
+tab_1.tabpage_1.dw_1.sharedata(tab_1.tabpage_2.dw_2)
+uf_pub_sharedddw(tab_1.tabpage_1.dw_1,tab_1.tabpage_2.dw_2)
+//uf_set_dwrowcolor(tab_1.tabpage_1.dw_1)
+tab_1.tabpage_2.vis䅄⩔ Ƕible = false
+tab_1.tabpage_1.dw_1.setfocus()
+post event ue_resizetool()
+
+end event
+
+type uo_2 from uo_pattern_hr within w_pattern_hr_det
+integer x = 5
+integer y = 112
+integer height = 1752
+integer taborder = 40
+end type
+
+on uo_2.destroy
+䅄⩔ Ƕcall uo_pattern_hr::destroy
+end on
+
+event ue_selectionchange;call super::ue_selectionchange;is_item = label
+end event
+
+event uf_tv_selechange;call super::uf_tv_selechange;is_level=uo_2.tv.is_level
+is_empid=uo_2.tv.is_userid
+ii_state=uo_2.tv.ii䅄⩔ Ƕ_state
+
+if isnull(is_level) then is_level=''
+if isnull(is_empid) then is_empid=''
+if isnull(ii_state) or ii_state=0 then ii_state=1
+
+end event
+
+type st_2 from u_st_splitbar within w_pattern_hr_det
+integer x = 855
+integer y = 112
+integer wid䅄⩔ Ƕth = 18
+integer height = 1752
+boolean bringtotop = true
+end type
+
+event constructor;call super::constructor;of_Register(uo_2, LEFT)
+of_Register(tab_1, RIGHT)
+//of_Register(tab_1.tabpage_1.dw_1, RIGHT)
+//of_Register(tab_1.tabpage_2.dw_2, RIGHT)䅄⩔ Ƕ
+
+end event
+
+event lbuttonup;call super::lbuttonup;tab_1.tabpage_1.dw_1.width=tab_1.tabpage_1.width - 10
+tab_1.tabpage_2.dw_2.width=tab_1.tabpage_2.width - 10
+end event
+
+event mousemove;if uo_2.width = 0 then
+	return
+else
+	if Not KeyDown(ke䅄⩔ ǶyLeftButton!) Then
+		Return
+	End If
+	
+	of_MouseMove(flags, xpos, ypos)
+end if
+end event
+
+type uo_1 from uo_comctl_statusbar within w_pattern_hr_det
+integer x = 178
+integer y = 1888
+boolean bringtotop = true
+end type
+
+type tab_1 from tab 䅄⩔ Ƕwithin w_pattern_hr_det
+event create ( )
+event destroy ( )
+integer x = 878
+integer y = 108
+integer width = 2725
+integer height = 1760
+integer taborder = 30
+boolean bringtotop = true
+integer textsize = -9
+integer weight = 400
+fontcharset fon䅄⩔ Ƕtcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "Arial"
+long backcolor = 80269524
+boolean raggedright = true
+boolean powertips = true
+boolean boldselectedtext = true
+integer selectedtab = 1
+ta䅄⩔ Ƕbpage_1 tabpage_1
+tabpage_2 tabpage_2
+end type
+
+on tab_1.create
+this.tabpage_1=create tabpage_1
+this.tabpage_2=create tabpage_2
+this.Control[]={this.tabpage_1,&
+this.tabpage_2}
+end on
+
+on tab_1.destroy
+destroy(this.tabpage_1)
+destroy(this䅄⩔ Ƕ.tabpage_2)
+end on
+
+event selectionchanging;if newindex=1 then
+	if tab_1.tabpage_2.dw_2.modifiedcount()>0 or tab_1.tabpage_2.dw_2.deletedcount()>0 then
+		if messagebox("提示信息","是否进行保存?",question!,yesno!,1)=1 then
+			parent.event pfc_save()
+		els䅄⩔切 Ƕe
+			parent.event ue_refurbish()
+		end if	
+	end if	
+end if
+end event
+
+event constructor;if tabpage_1.text = '' then tabpage_1.text = fill(" ",2)+tabpage_1.dw_1.title
+if tabpage_2.text = '' then tabpage_2.text = fill(" ",2)+tabpage_2.dw_2.title䅄⩔ﰀ Ƕ
+end event
+
+type tabpage_1 from userobject within tab_1
+event create ( )
+event destroy ( )
+integer x = 18
+integer y = 112
+integer width = 2688
+integer height = 1632
+long backcolor = 80269524
+long tabtextcolor = 33554432
+long tabbackcolor =䅄⩔︀ Ƕ 80269524
+string picturename = "res\列表.gif"
+long picturemaskcolor = 16777215
+string powertiptext = "查看列表"
+dw_1 dw_1
+end type
+
+on tabpage_1.create
+this.dw_1=create dw_1
+this.Control[]={this.dw_1}
+end on
+
+on tabpage_1.destroy
+destroy(this.d䅄⩔  Ƕw_1)
+end on
+
+type dw_1 from u_dw within tabpage_1
+integer y = 12
+integer width = 2683
+integer height = 1620
+integer taborder = 10
+boolean bringtotop = true
+boolean ib_dropdownsearch = true
+end type
+
+event pfc_deleterow;integer	li_rc,li_ret䅄⩔Ȁ Ƕurn
+long		ll_row
+
+li_return=messagebox("提示信息","确定要删除吗?",question!,yesno!,1)
+if li_return=2 then
+	return 0
+else
+	If this.Event pfc_predeleterow() <= PREVENT_ACTION Then
+	   Return NO_ACTION
+   End If
+   if IsValid (inv_rowmanager) then
+	   l䅄⩔Ѐ Ƕi_rc = inv_rowmanager.event pfc_deleterow () 
+   else	
+	   li_rc = this.DeleteRow (0) 
+   end if
+
+   If li_rc > 0 Then ll_row = 0 Else ll_row = -1   
+   if IsValid ( inv_Linkage ) then
+   	inv_Linkage.Event pfc_deleterow (ll_row) 
+   end If
+	䅄⩔؀ Ƕib_del=true
+	if iw_parent.triggerevent('pfc_save')=1 then
+		return 1
+	else
+		return 0
+	end if
+end if
+	
+end event
+
+event pfc_addrow;call super::pfc_addrow;ib_add=true
+tab_1.selecttab(2)
+tab_1.tabpage_2.visible =true
+tab_1.tabpage_2.dw_2.ob䅄⩔ࠀ Ƕject.datawindow.readonly=false
+tab_1.tabpage_2.dw_2.setfocus()
+tab_1.tabpage_2.dw_2.setcolumn(1)
+return 1
+
+
+end event
+
+event rowfocuschanged;tab_1.tabpage_2.dw_2.scrolltorow(currentrow)
+end event
+
+event doubleclicked;call super::doubleclick䅄⩔਀ Ƕed;tab_1.selecttab(2)
+tab_1.tabpage_2.visible = true
+tab_1.tabpage_2.dw_2.setfocus()
+tab_1.tabpage_2.dw_2.setcolumn(1)
+end event
+
+event rowfocuschanging;if ib_add then
+	return
+else
+	If IsValid(inv_linkage) Then
+	If inv_linkage.Event pfc_RowF䅄⩔ఀ ǶocusChanging (currentrow, newrow) <>  &
+		inv_linkage.CONTINUE_ACTION Then
+		Return 1
+		End If	
+	End If
+end if
+end event
+
+event ue_key;choose case key
+	case keyenter!
+//		send(handle(this),256,9,long(0,0))
+		tab_1.selecttab(2)
+		tab_1.tabp䅄⩔฀ Ƕage_2.dw_2.setfocus()
+		tab_1.tabpage_2.dw_2.setcolumn(1)
+		return 1	
+end choose
+
+end event
+
+type tabpage_2 from userobject within tab_1
+integer x = 18
+integer y = 112
+integer width = 2688
+integer height = 1632
+long backcolor = 80269524
+l䅄⩔က Ƕong tabtextcolor = 33554432
+long tabbackcolor = 80269524
+string picturename = "res\明细.gif"
+long picturemaskcolor = 16777215
+string powertiptext = "查看明细"
+dw_2 dw_2
+end type
+
+on tabpage_2.create
+this.dw_2=create dw_2
+this.Control[]={this.dw_2}䅄⩔ሀ Ƕ
+end on
+
+on tabpage_2.destroy
+destroy(this.dw_2)
+end on
+
+type dw_2 from datawindow within tabpage_2
+event drodown pbm_dwndropdown
+event ue_key pbm_dwnkey
+integer y = 12
+integer width = 2683
+integer height = 1680
+integer taborder = 20
+boo䅄⩔᐀ Ƕlean bringtotop = true
+boolean livescroll = true
+borderstyle borderstyle = stylelowered!
+end type
+
+event drodown;is_ddw=this.gettext()
+end event
+
+event ue_key;choose case key
+	case keyenter!
+		send(handle(this),256,9,long(0,0))
+		return 1
+䅄⩔ᘀ Ƕ	case KeyPageUp!,KeyPageDown!,KeyUpArrow!,KeyDownArrow!
+		return 1
+end choose
+end event
+
+event editchanged;if row>0 and data<>'' then
+	of_setmenu('editchanged')
+end if
+end event
+
+event itemchanged;if data<>is_ddw then
+   of_setmenu('itemcha䅄⩔  Ĵnged')
+end if
+end event
+
+event itemerror;return 1
+end event
+
+event rowfocuschanging;//if ib_add then
+//	return currentrow
+//end if
+end event
+
+                                                                                                 䅄⩔됀!ǶԀ ݘ Ԁ Š Ԁ ` Ԁ < Ԁ   ഀ   Ԁ   Ԁ   Ԁ ￷ Ԁ Ɛ Ԁ  Ԃ耛  Ԃ耜  Ԃ耝ܰ耀ᄀ   Ԁ   Ԁ   ഀ  䀀Ԁ ඒ耀ᄀ   Ԁ   Ԁ   Ԁ Ů ¬     * " 耀  脀           ߎ2 ĝ ǒ    '  8 '  P '  d ' Ĺ  ;l   ­   Ҡǒ  t '  | '   '   ' ;  ½   Đĝ ǒ  ¤ '  ¬ '  ´ '  ¼ ' Ƽƙ䃕ƽƙ  Ļ  ǒ   Ĺ ǒ  Ä '  Ì '  ä ' ,Ĕ   䅄⩔ᰀ Ƕœ 䂊   ฿桷  棵    :8 Ŧ䂊耂萁  Ũ䂊耂膉X  䀀䀀脁v  䂴䂴脁  䁯䁯脁  䁮䁮脁®  䂁䂁脁È  䁥䁥脁ê  䁭䁭脁Ĕ  䁷䁷脁ĸ  䁻䁻āŘ  䁹䁹āž  䁺䁺āư  䁿耂āǊ  䁿耂āǺ  䁿耂āȔ !䁿耂āȶ  䂏耂āɀ  䁿耂ᄁɨ  䁼䁼ᄁʀ #䁿耂āʔ  䂀䂀āʰ  䁾老ˈ  䀝䀝āˠ  䀟䀟ā˴  䀞䀞ā̊  䀁䀁ā̞  䀚䀚ā̶  䀆䀆āͺ  䂅䂅䄁ΐ  䁢䁢Ψ  䁩䁩āπ  䀪䀪āԬ  䀾䀾āՀ %䂅耂āՔ  䂊䂊脁բ  䂐䂐āն  䃄䃄ᄁٔ  䂢䂢ခ䅄⩔Ḁ Ƕ٪ 䃁耂ခٶ  䁣䁣ᄁڤ  䂤耂   蜀耂  ݨ ŧ䂴耂ঢ  쀀  ০ &䂉耂ৰ _耻  ໜ t쀀  ᄠ Ť䂊耂ँᄠ 耇耼  ᅌ  䂕䂕āᅌ r耽  ᅜ  䁾老ᅶ b耾  ጄ  䁕䁕ᄁጔ  䀸䀸āጤ  䂂䂂ᄁጺ 鬐쀀  ᥀ Ũ         w_sys_roleuser_m_ls w_pattern_onetv accessiblerole menu windowtype windowstate windowobject toolbaralignment windowanimations䅄⩔  Ƕtyle windowdockoptions windowdockstate windowdocktabshape windowdocktabclosebutton n_cst_winsrv n_cst_winsrv_preference n_cst_resize n_cst_dwsrv_sort u_dw n_cst_dberrorattrib powerobject n_cst_luw graphicobject str_wininfo fontcharset fontpitch fontfa䅄⩔∀ Ƕmily alignment fillpattern borderstyle Arial res\company.bmp userobject tabposition userobjects grsorttype AddWatch5! AlignBottom! ApplicationIcon! ArrangeTables5!    ഀ      ␒        ϖ耀ᄀ Ϭ耀ᄀ І耀ᄀ Ш耀ᄀ    ഀ      曨∾        列表 ScriptYes! Ũ耇 ഀ      䈨∾     䅄⩔␀ Ƕ   宋体  Ũ耤 ഀ      曨∾        linestyle uo_xpmenu window datastore treeviewitem Untitled AppIcon! Ũ耇 ഀ      典∾        Ũ耔 輀      典∾        Ũ耔 輀      典∾        Ũ耔 輀      典∾        statictext u_sle textcase MS Sans Serif uo_button_flat 确定 Ũ耇 ഀ      曨∾      䅄⩔☀ Ƕ  Ũ耔 輀      曨∾        Ũ耔 輀      曨∾        Ũ耔 輀      曨∾        m_sys_roleuser_m eŨ耇 ഀ      典∾        Ũ耔 輀      典∾        Ũ耔 輀      典∾        Ũ耔 輀      典∾        Ũ耤 ഀ      䄐∾        Ũ耇 ഀ      典∾        Custom026! Custom076! Custom038! res\man.gif 퇬Ũ  ഀ 䅄⩔⠀ Ƕ     ᶿ        ࡼ耀ᄀ ࢒耀ᄀ ࢨ耀ᄀ ࢾ耀ᄀ    ഀ      䄐∾        Ũ  ഀ      ᶿ        ࡼ耀ᄀ ࢒耀ᄀ ࢨ耀ᄀ ࢾ耀ᄀ 用户/用色 查询 uf_tree_expandall_collapseitemall n_tr sqlca cloud;sqlHandle_04_B36C4C4D;MZx9yVTmGVKQm+eHeLjdMC6EmVQmmUu8M2oeCmAkXwa3QjTvY4LhsNv/o1s/9FjHro9/J/JQRs+ilDlFTI䅄⩔⨀ ǶMIgdvqgJ56pURvji7GPPqARdajztEi1r4MQhSDrUQebIU8Ddde+s+JWOLfYL47H7wRfA== eh         ୦耀  ৼ耀          棵      cloud;sqlHandle_04_A48A783E;t2NQDe/ow399f5MjmY/c+KzXitxYeOUVRELl8dLh+Q8n+kYlSpQ6IZHIm4Ku/Wl0 &)         ౦耀  ஬耀          棵      cloud;sqlHandle_0䅄⩔Ⰰ Ƕ4_EC11E8A4;cSBAHx+Jo8wGCieacODHw1fEzenxD8SPBeCXFheF8lFo7FbXvQ7k8fy6m+qDTN0CSzNAT2+uUVquQN2HWIvI3w== .1⏱        ඖ耀  ಬ耀          棵      cloud;sqlHandle_04_34C84A16;4/4DvDyunSvZohJgU6SuSUoRX620Rg6EaoafTbjbHy2uLsW4rBoF5Y1+bpQyjnge $'         ຖ耀  ො耀      䅄⩔⸀ Ƕ    棵      uf_msg_pop cloud;sqlHandle_04_64C77C7C;MZx9yVTmGVKQm+eHeLjdMC6EmVQmmUu8M2oeCmAkXwZlYxZkR32w5dS8kHJyMpSoljrEs9q47WBeuMGxeM90bQ== .1        ࿜耀  ໲耀          棵      cloud;sqlHandle_04_888F213F;t2NQDe/ow399f5MjmY/c+KzXitxYeOUVRELl8dLh+Q8ZKsKOy䅄⩔　 Ƕ0bgOJ+1x78f4tkb $'        ლ耀  ဠ耀          棵      w_sys_roleuser_pop_ls message str_userinfo gstr_userinfo cloud;sqlHandle_01_2A615B86;SnS8wl2pJ7bSjL+/guFcX5jxdOMP3lBMvWimrv9Jewjm+LFoIWestZIqgzDHgzyaE+P5I0jjipatvPpHVYOyLw== 36        ቼ耀  ᆒ耀          䅄⩔㈀ Ƕ棵          ዀ耀ኀ耀                  棵      pointer keycode dragobject uf_get_datetime cloud;sqlHandle_04_A5B172F9;bKgnuKb4ypJhTCG8ccy/coBC2hhkkmTVb8fvAivA3XXLi+bOHR+SO6REGpUA6MnRJSV/psiUtjEr5GB6UIZPIw== 36        ᑄ耀  ፚ耀          棵      cloud;sqlHandle䅄⩔㐀 Ƕ_02_862A87AC;XajqRUuU3nUwkHwgQ5gfjqjIQ5lmAOHH/Ha0AI4rC0o/bo22+IWeh5/wd5qdbPKr121bQBPj9JgT5zbIagMXxpCLJIQm4qynWTCl9mMuvmvDEY1BfYQQ8bKJ0kr365sjQ8pHKGzzWA1w1quDBIYpqO7RYVDTAE9Tc3ks1olCqPFoecShNLpxJDDsWUTQQfmu/SNPQfQnBR15ZJvuDhQbflVs4Z0Ewz9eWsWO1TCSNcJmHk䅄⩔㘀 ǶPTivknTl4AWlqMT2w+NFqPbukPtFV76LppP1WPOLmAdD5RM/1/IRPQC1yPmebodb6+w5eXqz2jep5iTjOaCHcxzkr0ClqJ93NxDm470w== $'¦¿ÂÅòõ!        ᝲ耀  ᒈ耀          棵      cloud;sqlHandle_03_3316AABA;W9q996zScSkTv7qUTAMigrmq9A/kUe9LnoGRFLWb3szKhKw4Toq32e4p1oiZoZ42HMrYwgQCYuw䅄⩔㠀 ǶmVctLW22WvQ== $'7:         ᢮耀  ោ耀          棵      $'7:        ᣸耀  ោ耀          棵      ш   Ґ   Ӕ   Ԅ   ִ   ל   ؄   ج   ۈ   ۰   ܘ   ݀   ތ   ޴   ߜ   ࠄ   ࠬ   ࡔ   ࣘ   ठ   ै   ୦   ୬ 	 ౦   ౬ 	 ඖ   ග 	 ຖ   ຜ 	 ࿜   ࿠ 	 ლ   რ 	 ቼ   ኀ 	 ዀ 
+ ዄ 	 ᑄ   ᑈ 	 ᝲ   ង 	 䅄⩔㨀 Ƕ᢮   ᢸ 	 ᣸   ᤀ 	  2 8           w_sys_roleuser_m_ls          ഀ耂 
+Ȕ           of_resettv as_type of_del al_oldhandle al_newhandle of_checkhandle of_modify of_new of_ini as_text of_search +create +destroy +open handle +rightclicked +itempopulate key keyf䅄⩔㰀 Ƕlags +key +doubleclicked +begindrag source +dragwithin +dragdrop +keydown +clicked ň h         Q &     QS  D     ^     ILL &     &     Æ     LS L ഀĘ     LL aĘ     Ş   聀 Ŧ   
+ LCkeycode.U Ę     Ę     ƶ   聁 Ę     LCdragobject.L  ƶ   聁 Ę     Ş   聀 Ŧ   
+ 䅄⩔㸀 Ƕ    (   H   T   `   x         È   Ô   à   Ę   İ   
+x ڢ           _initsrc w_pattern_onetv w_sys_roleuser_m_ls accessiblerole menu windowtype windowstate windowobject toolbaralignment windowanimationstyle windowdockoptions windowdockstate windowdockt䅄⩔䀀 Ƕabshape windowdocktabclosebutton n_cst_winsrv n_cst_winsrv_preference n_cst_resize n_cst_dwsrv_sort u_dw n_cst_dberrorattrib powerobject n_cst_luw graphicobject str_wininfo w_pattern_onetv`st_title st_title fontcharset fontpitch fontfamily alignment f䅄⩔　1Ƕillpattern borderstyle w_pattern_onetv`p_1 p_1 w_pattern_onetv`tab_1 tab_1 userobject tabposition w_pattern_onetv`tabpage_1 tabpage_1 userobjects w_pattern_onetv`tv_1 tv_1 grsorttype w_pattern_onetv`r_1 r_1 linestyle uo_xpmenu window datastore treevie䅄⩔䐀 Ƕœ 䂊   ฿桷  璚棎     *  䂊䂊Ё  ſ䂊耂ǩ8  䀀䀀āV  䂴䂴ā`  䁯䁯āv  䁮䁮ā  䂁䂁ā¨  䁥䁥āÊ  䁭䁭āô  䁷䁷āĘ  䁻䁻āĸ  䁹䁹āŞ  䁺䁺āƐ  䁼䁼āǐ :䂤耂 Ǯ  䀝䀝āȆ  䀟䀟āȚ  䀞䀞āȼ  䂶䂶 ɘ  䀁䀁āɬ  䁣䁣āɾ  䀆䀆ā   耂  ̤  䂂䂂䄁̺  䂕䂕ā̺  耚 䂀͊           w_messagebox window accessiblerole menu windowtype windowstate win䅄⩔䘀 Ƕdowobject toolbaralignment windowanimationstyle windowdockoptions windowdockstate windowdocktabshape windowdocktabclosebutton powerobject ſ耇 ഀ      Ợ        uo_button_flat fontcharset fontpitch fontfamily 宋体 确定 multilineedit alignment textcase border䅄⩔稀 Ƕstyle     Ԁ      ἂ        AppIcon!  ſ耇 ഀ      膈ᨌ           Ԁ      눸ḇ        dragobject message ƨ   ʘ   ˔   ˼    2 *           w_messagebox   ગ      ഀ耂  P           +create +destroy +open +clicked             Q L 
+x ʰ           _initsrc window w_messa䅄⩔䨀 Ƕœ 䂊   ฿桷  棵    N* ō䂊耂萁  ŗ䂊耂膉J  䀀䀀脁h  䂴䂴脁r  䁯䁯脁  䁮䁮脁   䂁䂁脁º  䁥䁥脁Ü  䁭䁭脁Ć  䁷䁷āĪ  䁻䁻āŊ  䁹䁹āŰ  䁺䁺āƢ  䁿耂āƼ  䁿耂āǬ  䁿耂Ȇ !䁿耂āȨ  䂏耂 Ȳ  䁿耂āɚ  䁼䁼āɲ #䁿耂āʆ  䂀䂀āʢ  䁾老āʺ  䂅䂅 ː  䀝䀝ā˨  䀟䀟ā˼  䀞䀞ā̒  䁢䁢ā̪  䀁䀁ā̾  䁩䁩ā͖  䀆䀆āͮ  䁴䁴脁΢  䂥䂥āδ &䂉耂ξ "䁿耂āϖ '䁿耂āЄ (䁿耂āЬ )䁿耂āђ *䁿耂섁䅄⩔䰀 ǶҀ +䁿耂脁Ҳ ,䁿耂āӘ -䁿耂āԄ .䁿耂āԺ /䁿耂ā՜ 0䁿耂ā֎ 1䁿耂āֲ 2䁿耂āט 3䂅耂ā׮ 5䂅耂ā؈  䁿耂āؤ  䂊䂊āز 6䂊耂āو :䂊耂āݐ  䂴耂āݮ $䂏耂āބ %䂅耂āࣔ  䂢䂢 ࣪  䀚䀚āं  䂤䂤 ञ  䂶䂶 ऺ  䁣䁣ā   耂  ಼ 6耨  䳤 1쀀  䴄  䂕䂕ā䴄  职  予  䂊耂亚  쀀 ຂ什  䂏䂏ā他  쀀  们 Ř䂊耂ँ们  聏  伈 ř䂊耂ँ伈 ̈́聐  伬  䂂䂂ā佂 r쀀  佚  䁾老佴 b聒  侐 Ǩ         w_hrs䅄⩔一 Ƕys_edit w_pattern_onedw accessiblerole menu windowtype windowstate windowobject toolbaralignment windowanimationstyle windowdockoptions windowdockstate windowdocktabshape windowdocktabclosebutton n_cst_winsrv n_cst_winsrv_preference n_cst_resize n_cst䅄⩔倀 Ƕ_dwsrv_sort u_dw n_cst_dberrorattrib powerobject n_cst_luw graphicobject str_wininfo userobject fontcharset fontpitch fontfamily tabposition alignment userobjects borderstyle richtexttoolbaractivation dwobject n_tr n_cst_dwsrv n_cst_dwsrv_rowmanager n䅄⩔刀 Ƕ_cst_dwsrv_linkage n_cst_dwsrv_report n_cst_dwsrv_multitable n_cst_dwsrv_rowselection n_cst_dwsrv_filter n_cst_dwsrv_reqcolumn n_cst_dwsrv_dropdownsearch n_cst_dwsrv_find n_cst_dwsrv_selectcolumn n_cst_dwsrv_group n_cst_dwsrv_resize u_calendar u_calcu䅄⩔吀 Ƕlator n_cst_showtip window w_dw_tools w_sys_dwsyntax_hist 注意:pfc_retrieve中将is_empid+'w'改为is_empid+'zz' IUD Eway 列表 ScriptYes! ŗ耇 ഀ      ䷀∾        宋体 Īŗ耚 ഀ      䑘∾        m_pattern_main uo_toolbar uo_xpmenu Untitled AppIcon! ŗ耇 ഀ      䈨∾        ŗ耔 輀   䅄⩔嘀 Ƕ   䈨∾        ŗ耔 輀      䈨∾        ŗ耔 輀      䈨∾        ŗ耇 ഀ      䄐∾        ŗ耇 ഀ      䈨∾        ŗ耇 ഀ      䄐∾        statictext fillpattern commandbutton multilineedit textcase    Ԁ      䈨∾        ŗ耇 ഀ      䄐∾         tŗ耇 ഀ      䑘∾        ŗ耔 輀      䑘∾    䅄⩔堀 Ƕ    ŗ耔 輀      䑘∾        ŗ耔 輀      䑘∾        ŗ耇 ഀ      䄐∾        ŗ耔 輀      䄐∾        ŗ耔 輀      䄐∾        ŗ耔 輀      䄐∾        ŗ耚 ഀ      䈨∾        系统选项设置 ഀŗ耇 ഀ      䄐∾        d_rs_ddw_sysoptions 参数明细设置 AddWatch5! ŗ耇 ഀ      䈨∾        d_rs_sys_edit 预警参数设置 䅄⩔娀 ǶCustom015! ŗ耇 ഀ      䄐∾        Arial 备注：@ll_day代表预警范围,@ldt_datetime代表当前时间 执行 d_ht_msn_ini     Ԁ      䈨∾        sqlca cloud;sqlHandle_03_5E6C99F0;/SQYPBGsh/QZOW74DtcDgizAGORCw5muKb6cq4aXj55EMHchxD0XlbE7GAYZ4qE6pzCRcaAzYMQh1UiuqzXBk7QUjpeFqt+Pipxlpvy+fs䅄⩔尀 Ƕ7kIlwv/10dvRbkUxShGBvCRbURgDPBi3ZYhee9rMnLFHNQGyQ/Pd9Olk15YGc4YrRTqcEQL1b58YOAUVVB7kri Ʈ            ೈ耀          棵      cloud;sqlHandle_03_4AA6FDA;/SQYPBGsh/QZOW74DtcDgizAGORCw5muKb6cq4aXj55EMHchxD0XlbE7GAYZ4qE6z3E0MEQoszXHkAdL7IzhmUEE26Dtw59jX0dvsFWi䅄⩔帀 ǶZ8t5Hdt+M+idpcxJopVci3bzvr+8OSCoH4ALADmj6LCp4lxjfn+M4YRK469yq58+kf5Br6OEv+b1Y9lfY8KK6gL0             ໄ耀          棵      cloud;sqlHandle_03_D9BD9221;/SQYPBGsh/QZOW74DtcDgizAGORCw5muKb6cq4aXj55EMHchxD0XlbE7GAYZ4qE67Uk+9JpOuvroNYSffGSlynJwcEYiIeQT7WL8Xl䅄⩔怀 ǶLX7h3ZwV1f3ckUBSfCK85xJlTxjJX7Om+l7eAgTUytyqfEr152urOaEw+vMIJw+z/SnOx4ye1cPeDCg9s5swm5h2aV              Ⴜ耀          棵      cloud;sqlHandle_03_C181AE99;/SQYPBGsh/QZOW74DtcDgizAGORCw5muKb6cq4aXj55EMHchxD0XlbE7GAYZ4qE6ByWwEnGhUyPKuRrPdX9z96DEYcGfgxy6Y9V䅄⩔戀 ǶYYYHzkf4ZxYtCQI3LOOv8zkSsM2lyrl00/nb6L85ZXfeQFzB8tKt4hei92balbWmvDnb6bsI05yvzF9jLvN2X78ak/khd ŗ            ኸ耀          棵      cloud;sqlHandle_03_EA0F6A51;/SQYPBGsh/QZOW74DtcDgizAGORCw5muKb6cq4aXj55EMHchxD0XlbE7GAYZ4qE6rLK76Ip2iChEtP3RPAbjASQPx8fr/64F䅄⩔搀 Ƕ24engwrclMvn0wulRYJQN6CtghtbuuJryCTLV4WLJphZJssa7fmuU9pUsTApKh85pvHUiqhCSEmJr2DNvcv2YsoV5O4weNbJ 菔            ᒴ耀          棵      cloud;sqlHandle_03_CC841A1;/SQYPBGsh/QZOW74DtcDgizAGORCw5muKb6cq4aXj55EMHchxD0XlbE7GAYZ4qE6dMJrynMeoL0Flr6F5anqZF328iPt1i䅄⩔昀 Ƕq6F3BKusAJ1uLPMOrXvPc+8Msi1APRnCP5YeVD9WImVZJh6ml3e7am9FOKOPjS+ZvUtgjG0Jk8A8k3ytX9pYhugjQwzEtATFNZ             ᚰ耀          棵      cloud;sqlHandle_03_B5F56861;/SQYPBGsh/QZOW74DtcDgizAGORCw5muKb6cq4aXj57r/IfZpG5EitjR1XeaJSLHdBeNlrKOK+PXCV+mqFv46oYf5SpY䅄⩔栀 ǶqdoYfwgfqj8GuVl5HQXuwGtbWwuGsmzw5LXI              ᢨ耀          棵      cloud;sqlHandle_03_4B6ED3CE;/SQYPBGsh/QZOW74DtcDgizAGORCw5muKb6cq4aXj57r/IfZpG5EitjR1XeaJSLHqnQQr6QXvrHaobR17svTmdKhS33V2SafR1CI+poGQskooCus/+i+CnFZaWq4NWq/              ᨤ耀         䅄⩔樀 Ƕ 棵      cloud;sqlHandle_03_4BA83319;/SQYPBGsh/QZOW74DtcDgizAGORCw5muKb6cq4aXj57r/IfZpG5EitjR1XeaJSLHk+VEDG7Mc8ZvuVPTPnxNyCXjFUVHUtoQNhzbZFycrgEE4/M43YJRgjVNl4k3aaF3              ᮠ耀          棵      cloud;sqlHandle_03_CC29F4E9;/SQYPBGsh/QZOW74DtcDgizA䅄⩔氀 ǶGORCw5muKb6cq4aXj57r/IfZpG5EitjR1XeaJSLH4ZQ0LLO6FBvHiUD56KI9BCeugcXaHZcH8qlKBVloBOJsNNkIpgZgDiYqMyye/04D              ᴜ耀          棵      cloud;sqlHandle_03_8001EB5B;/SQYPBGsh/QZOW74DtcDgizAGORCw5muKb6cq4aXj57r/IfZpG5EitjR1XeaJSLHLTEOEkoaSSE3ZFndXxyD7䅄⩔渀 Ƕy4cCjMuH4JYkC5UB2km9tQ0jlO6pqZjkCT7QSA3j5JjW2YpK9KcJ6d+LSlrZNa7WCcDqL+IZOYLB6CUniiPuPL9yFXMlWNq5FUrRo/mW5cv              ẘ耀          棵      cloud;sqlHandle_03_CAA481B3;/SQYPBGsh/QZOW74DtcDgizAGORCw5muKb6cq4aXj57r/IfZpG5EitjR1XeaJSLH91NK18L/KjHClqQNT+䅄⩔瀀 ǶprArWxsK85OenFzEruizuEiboOYjQa8GF2BhIKXBmUeN4s5oGee+1ew09Ruhx8sqs3KXfr9lJoV2A4a5WMsPG2dCQ=              ₔ耀          棵      cloud;sqlHandle_03_2ACE2D0;7BquMPAJ7v14XApy96aHppiujYG4NXxypdbggE/VsawbJt++6pHKQN434QKmHBe1OEWqx6/uioXNlOnd+G13b+s5A6OAf375WNlB䅄⩔爀 ǶIRQQdDH8x3f8nPyPf3eRv1NMK+nDWMnLesKmROJ1knZc6eiLefATMUo96YKuYn+oj8M0EhbVfAspGVzrDXrhIO7KCyw2QHogjXncLQCcHW8tWzkGhCevnOTHhESjn1LVX5t6hDz7LudAdoO3F1ykM3yqOcrzbSMu1H/Dy1Pf3HR9qyKfYyY7Hwryn/A35jN+FoGbbm72t9ljR+vOrJKwziSuiJiy65O0rPV9Yn2g4E92xHBllA== ¿Â    䅄⩔琀 Ƕ    ═耀  ≨耀          棵      cloud;sqlHandle_03_5A5FF2D4;7BquMPAJ7v14XApy96aHppiujYG4NXxypdbggE/Vsawrfzr59/4yeduouC57ROs8P3Angf2zFZmnB4rmT5Ia3epuvNvdH1jAp3yE1pH1n7PuMEalHkQbkQS8OFwm8DCoHfOUgNUiA2sM/KtVFNonki3Pdo09R8DKIYiXM3orD0j+kGZh0qapZ/rhhqrkdJDKkRc䅄⩔瘀 ǶFIeJVwY7FuSAksaW9T8jsr640EUy+b9nrP+9kNvobp3c4SI4Y6vOTcjDhHEPA2OIrJVVNzErVrOUkRjr6wNNMGq4Gd9+P1j9uNOsweXz5u5k9RKQoErTEK0uhTwz9ghbzpPdyWt1lBLCCXbiu0MYPYyhL4e/iMGGGS0lrJvui6aHBxBjqohuXYCZdvAS5o7ktj1Y12/GpVyKhif5OCw== ëî         ⣾耀  ▔耀          棵      cl䅄⩔砀 Ƕoud;sqlHandle_03_47BAD901;7BquMPAJ7v14XApy96aHppiujYG4NXxypdbggE/Vsawrfzr59/4yeduouC57ROs8vJL+HPrcm5/Kh1bmHeXOSJmVyC+AuIpT2qqNTzgepn0N5O7zLo5zbgisfXFh44obpUMMH7EnX0P8cgvvxFvSZxR/47AoAgpuNVeEy4T+vLbaPHjsHoX/yGSHsUKHsDAJKh1U6gG00T7Gax7CWqk9+IRFoRludpPDY䅄⩔蠀 ǶEcXV02qlGG1laWl+9v40lF7JWuMiByClmM+csjoydMngiJLNcbbEMsld1gDhQ9sPziwXEBSLB9SY5yEGWaAVrm2ZXQV5E+x6oKMRiX/VU+z7HmPB6D3WA== ÄÇ         Ⱞ耀  ⥄耀          棵      cloud;sqlHandle_04_EF73ABFD;kkocWOSaspbYWBKcoq0JbGsRvuuBD0I4x7HRhdbDgqeYTR0ZkogoFfAkebqaGSC2uROL䅄⩔簀 Ƕgebox accessiblerole menu windowtype windowstate windowobject toolbaralignment windowanimationstyle windowdockoptions windowdockstate windowdocktabshape windowdocktabclosebutton powerobject uo_button_flat cb_1 fontcharset fontpitch fontfamily multilin䅄⩔縀 Ƕeedit mle_1 alignment textcase borderstyle dragobject message Ȝ        ᔀ     "   ᕀ     0   ᔀ     J   ᕀ     h   ᕀ     r   ᕀ        ᕀ         ᕀ     º   ᕀ     Ü   ᕀ     Ć 	 ᕀ     Ī 
+ ᕀ     Ŋ   ᕀ     Ű   ᕀ     Ƣ  ᕀ     ƺ   ᕀ     ǘ   ᔀ     Ǣ   ᕀ     Ǻ   䅄⩔耀 Ƕᕀ     Ȏ   ᕀ     Ȥ   ᕀ     ɀ   ᔀ     Ɍ   ᕀ     ɠ   ᕀ     ɲ   ᕀ     ʊ   ᕀ     ʠ   ᕀ  ð              耀      耂      耐      耕      老쀀      b    ca耏耂      -       耔耂      @2    ,,       ^  !   Ģ -$  ! 8 Ģ -@  ! X Ģ ! ` ' ! h ' Ʋ耇ഀ        , \ d      䅄⩔舀 Ƕ        p 8         cb_1 t  a耐  耐Emle_1 , b耕, 耕Econtrol H  䂁  a耐, b耕    $   8   @   X   `   h      !   '  ! 0 '          d              8           cb_1 t  a耐mle_1 $ b耕    0   p  ĝ /    ' Ĺ  ! $ '  8 Ģ   Ĺ  / Ƙ X4     n f/  @ '    n      < d B      䅄⩔萀 Ƕ     ls_err message ::message <        ഀ         ᙀ耚    .   ᙀ耚H               mle_1   b耕text  ,           $   8   @     耂  耂& 耂ǅ& 2 >           +create +destroy +open <        ᔀ쀀        ᔀ쀀    2   ᔀ쀀 2            width height titlebar windowtype backco䅄⩔蘀 Ƕlor icon center cb_1 mle_1 ´      ৅ Ԁ       Ҩ Ԁ     *   Ԁ     <   Ԃ者    R  Ѐᴀ     f ˀ耀ᄀ     p  ⊴Ԁ     ~   ഀ耐       ഀ耕  崀
+  ഀ   Ԁ   ഀ   ഀ   Ԃ考  Ԁ   Ԁ ৅ Ԁ Ҩ Ԁ  ƀԀ   Ԁ   ഀ   ഀ   ഀ耄  Ԁ   Ԁ   Ԁ   Ԁ   Ԁ   Ԁ  ƀԀ   Ԃ者  Ԃ耆˔耀㄀耇 Ѐᴀ ˀ耀ᄀ   ഀ   Ԁ   Ԁ   Ԁ   Ԁ   Ԁ  䅄⩔縀(Ƕ䀀Ԁ  䀀Ԃ耈  Ԁ   Ԁ   Ԁ   Ԁ   Ԁ  䀀Ԁ   Ԁ   Ԁ   Ԁ  ⊴Ԁ   Ԁ   Ԃ耉  Ԃ耉È Ԁ   Ԃ耊  Ԃ耋 䀀ᴀ  䀀ᴀ   Ԁ  䀀ᴀ  䀀ᴀ   Ԁ  ࠀᴀ  ࠀᴀ   Ԁ   ᴀ  ࠀᴀ  ࠀᴀ   Ԁ   ᴀ   Ԃ而 ࠀԂ耍 ࠀԀ   Ԁ   Ԃ而  Ԃ耍 ࠀԀ   Ԁ  ࠀԀ  䀀ᴀ  䀀ᴀ   ᴀ  Ѐᴀ  Ѐᴀ   ᴀ  Ѐᴀ  Ѐᴀ   ᴀ  ЀԀ  䀀ᴀ  䀀ᴀ   ᴀ  Ѐᴀ  Ѐᴀ   ᴀ  Ѐᴀ  Ѐᴀ   ᴀ   Ԁ   䔀   䔀 䅄⩔言 ǶT7ZrIy6BqgbPFAMNSj4PRuPDDPmDjrNebxx5s3EUw9ES5jXuO6+WZtb5wAFhhtToDieHsfprHNjLLogIbA==              ⱴ耀          棵      cloud;sqlHandle_04_13FF684A;kkocWOSaspbYWBKcoq0JbGsRvuuBD0I4x7HRhdbDgqeYTR0ZkogoFfAkebqaGSC2uROLT7ZrIy6BqgbPFAMNSj4PRuPDDPmDjrNebxx5s䅄⩔가(Ƕ3HGSPhV5ty3qAqbVqkILTd96lHSOUjFbvoDT3gmVJafmg==              ⸠耀          棵      cloud;sqlHandle_03_38D1D008;7BquMPAJ7v14XApy96aHppiujYG4NXxypdbggE/VsazhevrrOowPImSc3eFNm40WtvB5qyrjE0qkVgZefV4mKqGQjy911WTuB2hUpa3X7Uz3zbjAekXAufZM7Tnrjlqd93kslzl3+G2EPU䅄⩔退 ǶȌ   ᕀ     Ȣ   ᕀ     ɀ   ᔀ     Ɍ   ᕀ     ɞ   ᕀ     ɶ   ᕀ     ʌ   ᔀ     ʖ   ᕀ     ʪ   ᕀ     ˂   ᔀ     ˔   ᕀ     ˪   ᕀ     ˺   ᕀ  ð              耀      á耂      耐      耕      耙      耜      老쀀      e    ea耏耂      -       耔耂      ;-    ((耘耂      .    䅄⩔ Ƕᴀ  䀀ᴀ   Ԁ  䀀ᴀ  䀀ᴀ   Ԁ  ࠀᴀ  ࠀᴀ   Ԁ   ᴀ  ࠀᴀ  ࠀᴀ   Ԁ   ᴀ   Ԃ而 ࠀԂ耍 ࠀԀ   Ԁ   Ԃ而  Ԃ耍 ࠀԀ   Ԁ  ࠀԀ  䀀ᴀ  䀀ᴀ   ᴀ  Ѐᴀ  Ѐᴀ   ᴀ  Ѐᴀ  Ѐᴀ   ᴀ  ЀԀ  䀀ᴀ  䀀ᴀ   ᴀ  Ѐᴀ  Ѐᴀ   ᴀ  Ѐᴀ  Ѐᴀ   ᴀ   Ԁ   䔀   䔀   ഀ   ഀ耐  ഀ耕  ഀ耞  ഀ耡  ഀ耢  ഀ耣  ഀ耤  ༀ   ܀ B p      & 耀  脀ǅ       N t     䅄⩔鈀 Ƕ $$             (      ƹ  4  UƯģ  Ĺ      & d (           as_moduleid          ഀ               ĝ   Ƽƙ䃕ƽƙ  Ļ  ĝ 4    :ĝ ø    ƹ    à |    Ưŀ  ­   x       04            N h x |
+ d 2           as_moduleid ll_i (        ഀ     (   ᴀ                Ğ䅄⩔퐀 Ƕ   Ʈ        d 8           ls_module_id   ഀ    ,      ,     ⴀ               !   Ģ -$  ! 8 Ģ -@  ! T Ģ -\  ! t Ģ ! | ' !  ' !  ' Ʋ耇ഀ        , B ~ d               P         cb_1    a耐  耐6sle_1 , b耕, 耕6st_1  H c耙H 耙6control d  䂁  a耐, b耕H c耙    $ 䅄⩔阀 Ƕœ 䂊   ฿桷  璚棎     ,  䂊䂊Ё  Ǎ䂊耂ǉ:  䀀䀀āX  䂴䂴āb  䁯䁯脁x  䁮䁮ā  䂁䂁āª  䁥䁥āÌ  䁭䁭ö  䁷䁷Ě  䁻䁻āĺ  䁹䁹āŠ  䁺䁺āƒ  䁼䁼āǔ ǎ䂅耂 Ǫ  䁩䁩āȂ  䀆䀆ā  g耂  ʴ ǃ䁾老ˆ  䂕䂕āˆ  耛  ˖           w_sys_capture window accessiblerole menu windowtype windowstate windowobject toolbaralignment wi䅄⩔頀 Ƕndowanimationstyle windowdockoptions windowdockstate windowdocktabshape windowdocktabclosebutton powerobject eǍ耇 ഀ      㲈ᨎ        uo_capture userobjects borderstyle none Ǎ耇 ഀ      䵠ọ        摄像 AppIcon! Ǎ耇 ഀ      磤ἅ        Ǎ耇 ഀ      斔Ἅ        str_blob 䅄⩔騀 Ƕmessage Ƭ   Ȥ   ɤ   ʌ    2 ,           w_sys_capture   ᨕ      ഀ耂
+ @           +create +destroy +close             Q L 
+x Ͳ           _initsrc window w_sys_capture accessiblerole menu windowtype windowstate windowobject toolbaralignment windowanimation䅄⩔鰀 Ƕstyle windowdockoptions windowdockstate windowdocktabshape windowdocktabclosebutton powerobject uo_capture uo_1 userobjects borderstyle uo_capture`p_1 uo_capture`cb_setsource uo_capture`cb_setformat uo_capture`cb_capturepic uo_capture`cb_closecapture 䅄⩔鸀 Ƕuo_capture`cb_opencapture uo_capture`p_capture str_blob message Ȱ        ᔀ     "   ᕀ     0   ᔀ     L   ᕀ     j   ᕀ     t   ᕀ        ᕀ     ¢   ᕀ     ¼   ᕀ     Þ   ᕀ     Ĉ 	 ᕀ     Ĭ 
+ ᕀ     Ō   ᕀ     Ų   ᕀ     Ƥ  ᕀ     Ƽ   ᕀ     ǒ   ᔀ     ǜ   ᕀ     Ǵ 䅄⩔ꀀ Ƕ  ᕀ     Ȍ   ᖀ     Ȫ   ᖀ     ɚ   ᖀ     ʊ   ᖀ     ʼ   ᖀ     ˲   ᖀ     ̦ 	 ᖀ     ͐   ᕀ     ͢   ᕀ  ð              耀      耂      耐       耓耉耏     耔耋耏     耕耏耏     耖耐耏     耗耑耏     耘耒耏     耙耓耏    老쀀      b    ba耏耂      OD    H%       <  !   Ģ -$  ! < Ģ ! 䅄⩔ꈀ ǶD ' Ʋ耇ഀ        : d              L           uo_1 s  a耐  耐Econtrol ,  䂁  a耐    $   <   D      !   '        d              $           uo_1 p  a耐      !   ' ,H   Ļ     d Ģ ! l '   ' ĺ  /   Ģ   ĭ  / Ƙ ~4      /   '          H b d F           ls䅄⩔蘀(Ƕt_blob message ::message <        ഄ耚    "   ᙀ耛    2   ᙀ耛¤ 8         uo_1    a耐of_close_capture  J쀀$ blob_data P     a耐iblb_bitmap t ,   	䁼        H  d   l              耂  耂  耂F  2 @           +create +destroy +close <        ᔀ쀀        ᔀ쀀    2   ᔀ쀀䅄⩔ꘀ Ƕœ 䂊   ฿桷  棵    J2 ĥ䂊耂Ё  Ő䂊耂ƉR  䀀䀀āp  䂴䂴āz  䁯䁯ā  䁮䁮ā¨  䂁䂁āÂ  䁥䁥āä  䁭䁭āĎ  䁷䁷āĲ  䁻䁻āŒ  䁹䁹āŸ  䁺䁺āƪ  䁿耂āǄ  䁿耂āǴ  䁿耂āȎ !䁿耂āȰ  䂏耂Ⱥ  䁿耂āɢ  䁼䁼āɺ #䁿耂āʎ  䂀䂀āʪ  䁾老˂  䀝䀝ā˚  䀟䀟āˮ  䀞䀞ā̖  䀁䀁ā̪  䀚䀚ā͂  䀆䀆āͦ  䁴䁴āΚ  䂥䂥āά &䂉耂ζ "䁿耂āώ '䁿耂āϼ (䁿耂āФ )䁿耂āъ *䁿耂āѸ +䁿耂āҪ ,䁿耂ā䅄⩔ꠀ ǶӐ -䁿耂āӼ .䁿耂āԲ /䁿耂āՔ 0䁿耂āֆ 1䁿耂ā֪ 2䁿耂āא 3䂅耂āצ 5䂅耂ā؀  䁿耂ā؜  䂊䂊ँت 6䂊耂āـ :䂊耂ā۴  䀾䀾ā܈ $䂏耂āܞ %䂅耂脁ܲ  䂐䂐ā݆  䂴耂脁ࠨ  䂏䂏 ࠾  䂢耂老࡚  䂂䂂āࡰ  䂅䂅脁ࢆ  䃃䃃  y耂  ൬  䂊耂ർ  䂕䂕āർ  聍  ඌ  耨  ༌  䁾老༦ i聎 ຀ག Ԁ쀀  ཛྷ  䂊耂཮  쀀  ྔ  쀀  ྪ ő䂊耂ँྪ  聐  Ꮘ Š         w_sys_module_pop w_response_e䅄⩔ꨀ Ƕdit accessiblerole menu windowtype windowstate windowobject toolbaralignment windowanimationstyle windowdockoptions windowdockstate windowdocktabshape windowdocktabclosebutton n_cst_winsrv n_cst_winsrv_preference n_cst_resize n_cst_dwsrv_sort u_dw n_c䅄⩔가 Ƕst_dberrorattrib powerobject n_cst_luw graphicobject str_wininfo fontcharset fontpitch fontfamily 宋体 取消 确定 alignment fillpattern borderstyle Arial richtexttoolbaractivation dwobject n_tr n_cst_dwsrv n_cst_dwsrv_rowmanager n_cst_dwsrv_linkage n_cst_dws䅄⩔글 Ƕrv_report n_cst_dwsrv_multitable n_cst_dwsrv_rowselection n_cst_dwsrv_filter n_cst_dwsrv_reqcolumn n_cst_dwsrv_dropdownsearch n_cst_dwsrv_find n_cst_dwsrv_selectcolumn n_cst_dwsrv_group n_cst_dwsrv_resize u_calendar u_calculator n_cst_showtip window w䅄⩔뀀 Ƕ_dw_tools w_sys_dwsyntax_hist 注意:pfc_retrieve中将is_empid+'w'改为is_empid+'zz' IUD Eway res\company.bmp linestyle uo_toolbar uo_xpmenu datastore m_pattern_main Untitled AppIcon! Ő耇 ഀ      ䷀∾        Ő耔 輀      ䷀∾        Ő耔 輀      ䷀∾        Ő耔 輀      ䷀∾     䅄⩔눀 Ƕ   datawindow u_st_splitbar dragobject userobject tab MS Sans Serif  SizeWE! SizeNS! Ő聉 輀      幠∾           謀      幠∾           謀      幠∾           謀      幠∾           謀      幠∾        Ő聉 輀      幠∾           謀      幠∾           謀      幠∾           謀  䅄⩔찀 Ƕ    幠∾           謀      幠∾        Ő耇 ഀ      䛸∾        Ő耔 輀      䛸∾        Ő耔 輀      䛸∾        Ő耔 輀      䛸∾        Ő耇 ഀ      幠∾        Ő耔 輀      幠∾        Ő耔 輀      幠∾        Ő耔 輀      幠∾        none d_sys_module_pvother_edit eŐ聉 輀      ䷀∾           謀 䅄⩔똀 Ƕœ 䂊   ฿桷  璚棎     :  䂊䂊Ё  Ŭ䂊耂ǩH  䀀䀀āf  䂴䂴āp  䁯䁯ā  䁮䁮ā  䂁䂁ā¸  䁥䁥āÚ  䁭䁭āĄ  䁷䁷āĨ  䁻䁻āň  䁹䁹āŮ  䁺䁺āƠ  䁼䁼āǠ :䂤耂 Ǿ  䀝䀝āȖ  䀟䀟āȪ  䀞䀞āɌ  䂢䂢 ɢ  䀁䀁脁ɶ  䀚䀚āʎ  䀆䀆āʦ  䃁䃁 ˄  䁣䁣ā   耂 ƈ̢  䂂䂂ā̸  䂕䂕ā̸ '耝 Ā͈           w_input_syntaxremark window accessiblerole menu window䅄⩔렀 Ƕtype windowstate windowobject toolbaralignment windowanimationstyle windowdockoptions windowdockstate windowdocktabshape windowdocktabclosebutton powerobject Ŭ耇 ഀ      첰Ở        uo_button_flat fontcharset fontpitch fontfamily 宋体 确定 statictext alignmen䅄⩔먀 Ƕt fillpattern borderstyle singlelineedit textcase AppIcon! Ŭ耇 ഀ      筐ᨔ        请输入修改备注: dragobject message Ƹ   ˨    2 :           w_input_syntaxremark          ഀ耂  D           +create +destroy +clicked             Q L 
+x ˺           _initsrc window w_䅄⩔밀 Ƕinput_syntaxremark accessiblerole menu windowtype windowstate windowobject toolbaralignment windowanimationstyle windowdockoptions windowdockstate windowdocktabshape windowdocktabclosebutton powerobject uo_button_flat cb_1 fontcharset fontpitch fontfa䅄⩔븀 Ƕmily statictext st_1 alignment fillpattern borderstyle singlelineedit sle_1 textcase dragobject message ɘ        ᔀ     "   ᕀ     0   ᔀ     Z   ᕀ     x   ᕀ        ᕀ        ᕀ     °   ᕀ     Ê   ᕀ     ì   ᕀ     Ė 	 ᕀ     ĺ 
+ ᕀ     Ś   ᕀ     ƀ   ᕀ     Ʋ 䅄⩔쀀 Ƕ ᕀ     Ǌ   ᕀ     Ǩ   ᔀ     ǲ   ᕀ     Ȋ   ᕀ     Ȟ   ᕀ     ȴ   ᕀ     Ɋ   ᔀ     ɔ   ᕀ     ɨ   ᕀ     ʀ   ᕀ     ʘ   ᕀ     ʶ   ᔀ     ˂   ᕀ     ˔   ᕀ     ˪   ᕀ  ð              耀      耂      耐      耕      耚      老쀀      b    da耏耂      -       耔耂      .䅄⩔숀 Ƕ     $$耙耂      ;-    ((       !   Ģ -$  ! 8 Ģ -@  ! T Ģ -\  ! t Ģ ! | ' !  ' !  ' Ʋ耇ഀ        , B ~ d               P         cb_1 i  a耐  耐Est_1 b, b耕, 耕Esle_1 H c耚H 耚Econtrol d  䂁  a耐, b耕H c耚    $   8   @   T   \   t   |         ,  !   '  ! 䅄⩔쐀 Ƕ0 '  ! D '          * d              L           cb_1 y  a耐st_1  $ b耕sle_1 8 c耚    0   D     耂  耂 2 2           +create +destroy (        ᔀ쀀        ᔀ쀀 2            width height windowtype backcolor icon center cb_1 st_1 sle_1 ´      Վ Ԁ       İ Ԁ    䅄⩔였 Ƕ *   Ԃ者    @  Ѐᴀ     T ˖耀ᄀ     ^  ⋕Ԁ     l   ഀ耐    v   ഀ耕       ഀ耚  崀
+  ഀ   Ԁ   ഀ   ഀ   Ԃ考  Ԁ   Ԁ Վ Ԁ İ Ԁ  ƀԀ   Ԁ   ഀ   ഀ   ഀ耄  Ԁ   Ԁ   Ԁ   Ԁ   Ԁ   Ԁ  ƀԀ   Ԃ者  Ԃ耆˨耀㄀耇 Ѐᴀ ˖耀ᄀ   ഀ   Ԁ   Ԁ   Ԁ   Ԁ   Ԁ  䀀Ԁ  䀀Ԃ耈  Ԁ   Ԁ   Ԁ   Ԁ   Ԁ  䀀Ԁ   Ԁ   Ԁ   Ԁ  ⋕Ԁ   Ԁ 䅄⩔저 Ƕ  Ԃ耉  Ԃ耉È Ԁ   Ԃ耊  Ԃ耋 䀀ᴀ  䀀ᴀ   Ԁ  䀀ᴀ  䀀ᴀ   Ԁ  ࠀᴀ  ࠀᴀ   Ԁ   ᴀ  ࠀᴀ  ࠀᴀ   Ԁ   ᴀ   Ԃ而 ࠀԂ耍 ࠀԀ   Ԁ   Ԃ而  Ԃ耍 ࠀԀ   Ԁ  ࠀԀ  䀀ᴀ  䀀ᴀ   ᴀ  Ѐᴀ  Ѐᴀ   ᴀ  Ѐᴀ  Ѐᴀ   ᴀ  ЀԀ  䀀ᴀ  䀀ᴀ   ᴀ  Ѐᴀ  Ѐᴀ   ᴀ  Ѐᴀ  Ѐᴀ   ᴀ   Ԁ   䔀   䔀   ഀ   ഀ耐  ഀ耕  ഀ耚        *   耀  脀                *  䅄⩔쨀 Ƕ 老  脀           |  ĝ  " 耏  Ļ  "" , '  @ ' Ĺ Ƽ 䃕ƽ   Ļ  / Ƙ d4     z r/  H '    z    H d L           ancestorreturnvalue ::message (        ᴀ     8   ᙀ耝P           clicked sle_1   c耚text _4       ,   @   H   " 耐 " 2 "           +clicked          ᔀ쀀 2 *䅄⩔萀(Ƕ           x y taborder <      ω Ԁ       À Ԁ         Ԁ   崀
+  ഀ   Ԁ   ഀ   ഀ   Ԃ考ω Ԁ À Ԁ Š Ԁ \ Ԁ   Ԁ   ഀ   Ԁ   Ԁ   Ԁ ￷ Ԁ Ɛ Ԁ  Ԃ耑  Ԃ耒  Ԃ耓ɀ耀ᄀ   Ԁ   Ԁ   ഀ  䀀Ԁ Ɇ耀ᄀ   Ԁ   Ԁ   Ԁ 2       * " 耀  脀          2               2 à           x y width height textsiz䅄⩔츀 Ƕ     ䷀∾           謀      ䷀∾           謀      ䷀∾           謀      ䷀∾        Ő聉 輀      ䷀∾           謀      ䷀∾           謀      ䷀∾           謀      ䷀∾           謀      ䷀∾        w_sheet message sqlca cloud;sqlHandle_01_F3054549;J63l29lQPjtsVugSQ1642mOKSc䅄⩔퀀 ǶiSdqDTEe61QnD92boN6A6nKDrQuolmAsIpeNueFgBfeks7FPlybdiTH7Q60Q== 9<䂏        ຂ耀  ඘耀          棵       Ʒ  ່耀ຈ耀                  棵      str_userinfo gstr_userinfo uf_pub_ecode w_master uf_pub_findnotnull uf_msg_pop w_sys_module_windowquery cloud;sqlHandle䅄⩔툀 Ƕ_01_41FBAEE8;HJ7M+FWKDLvnyNBM9UdNM4dRpYJ8aME+Xo3Q/FJyZBYYm92LBdD7oPkTuJSglNTq8JuRALOSzF46hoRYlLsDCkEkSRHmbaO7ZOppMfp0yuJ6oWLn2B+clfgjMR5TUGwAkr8DtCrMwGBsNDyjvNNEvPeQ1SYJ8BUIzUlHdeN5sjtbscQzrGH4Qii7+Up+k/U1Ic+Tb4i9xWxrqpHW2fyusg== gj'        ᇆ耀  ࿜耀  䅄⩔ Ƕ        棵       Ģ  ሐ耀ᇐ耀                  棵      cloud;sqlHandle_01_611A8732;kx5y6UEVT1qJjhBllFSWjUVrFFUNsmPBfzlL7/yJ9VzSSAZ4G5qT9+YHOyNavUb20YQsPtFVBt5WbHzJt8sFYw== 69         ጾ耀  ቔ耀          棵       ࣔ  ᎄ耀ፄ耀                  棵      ވ   ް   ߘ   ࠀ  䅄⩔혀 Ƕ  8   @   T   \   t   |         ,  !   '  ! 0 '  ! D '          * d              L           cb_1    a耐sle_1 $ b耕st_1  8 c耙    0   D   V  ! , Ģ /  4 ' Ĺ  / Ƙ >4     T L/  < '    T    " d 4           message ::message (        ᙀ耞        ᙀ耞D         䅄⩔ Ƕ  is_module_id Į  d         ,   4   <     耂  耂& 耂 耂 耂 耂ǅ& 2 ²           of_insert_validmodule of_find_moduleid of_init_modulelist +create +destroy +open x        ᔀ쀀    <   ᔀ쀀    ^   ᔀ쀀       ᔀ쀀       ᔀ쀀    ¦   ᔀ쀀 2 Ð           width height titleb䅄⩔耀(Ƕar controlmenu windowtype backcolor icon center cb_1 sle_1 st_1 is_module_id ð      ѩ Ԁ       ü Ԁ     *   Ԁ     <   Ԁ     T   Ԃ者    j  Ѐᴀ     ~ ˆ耀ᄀ       ᨪԀ        ഀ耐        ഀ耕    ¬   ഀ耙    ¶   ༀ   崀
+  ഀ   Ԁ   ഀ   ഀ   Ԃ考  Ԁ   Ԁ ѩ Ԁ ü Ԁ  ƀԀ   Ԁ   ഀ  䅄⩔ Ƕ ࣌   ࣴ   ज   ॄ   ६   ঔ   ়   ৤   ਌   ਴   ੜ   ઄   બ   ૔   ૼ   ତ   ୌ   ୴   ௜   ఄ   బ   ౔   ౼   ತ   ೌ   ೴   ജ   ൄ   ຂ   ຈ 	 ່ 
+ ໌ 	 ᇆ   ᇐ 	 ሐ 
+ ሔ 	 ጾ   ፄ 	 ᎄ 
+ ᎈ 	  2 2           w_sys_module_pop   ᭟      ഀ耂 	ž           +ue_save as_moduleid +ue_retrieve䅄⩔ Ƕ +ue_enter +create +destroy +open +pfc_preupdate +pfc_save +clicked row actionreturncode dwo +buttonclicked data +itemerror +itemchanged +constructor Ġ 0         B "     QS L Q I ￼Ú     â     Ą   耧 LLLCdwobject. Ú     Ą   耧 Ī     LLCdwobject.S Ú     Ą䅄⩔ Ƕ   耧 Ī     Ú     â     Ą   耧 Ú     Ą   耧 Ī         4   t   ´   Ø   ü   
+x ऄ           _initsrc w_response_edit w_sys_module_pop accessiblerole menu windowtype windowstate windowobject toolbaralignment windowanimationstyle windowdockoptions windowdocks䅄⩔琀 Ƕ   老  脀        ^ t     Ú   耂  脀           ۈ. ĝ  " 耏  Ļ  " , '  @ '  T ' ;\ ­   È;^ ĳ ;d ĳ Ƽ°䃕ƽ°  Ļ  " x '   ' ,   Ļ  / Ƙ ²4     ۆ À/  ¤ '    ۆ" ¸ '  À '  È ' ;\ ­   Ÿ;^ ĳ ;Ð ĳ Ƽ°䃕ƽ°  Ļ  " ä '  ì ' ,ô   Ļ  / Ƙ Ţ4     ۆ Ű/  ü '    ۆ" Ą '  Č '  Ĕ ' " 䅄⩔ Ƕtate windowdocktabshape windowdocktabclosebutton n_cst_winsrv n_cst_winsrv_preference n_cst_resize n_cst_dwsrv_sort u_dw n_cst_dberrorattrib powerobject n_cst_luw graphicobject str_wininfo w_response_edit`cb_2 cb_2 fontcharset fontpitch fontfamily w_r䅄⩔ Ƕesponse_edit`cb_1 cb_1 w_response_edit`st_title st_title alignment fillpattern borderstyle w_response_edit`dw_1 dw_1 richtexttoolbaractivation dwobject n_tr n_cst_dwsrv n_cst_dwsrv_rowmanager n_cst_dwsrv_linkage n_cst_dwsrv_report n_cst_dwsrv_multitab䅄⩔똀!Ƕle n_cst_dwsrv_rowselection n_cst_dwsrv_filter n_cst_dwsrv_reqcolumn n_cst_dwsrv_dropdownsearch n_cst_dwsrv_find n_cst_dwsrv_selectcolumn n_cst_dwsrv_group n_cst_dwsrv_resize u_calendar u_calculator n_cst_showtip window w_dw_tools w_sys_dwsyntax_hist 䅄⩔ Ƕœ 䂊   ฿桷  棵    '@  䂊耂Ё  Œ䂊耂ǩV  䀀䀀āt  䂴䂴ā~  䁯䁯ā  䁮䁮섁¬  䂁䂁āÆ  䁥䁥āè  䁭䁭āĒ  䁷䁷āĶ  䁻䁻āŖ  䁹䁹āż  䁺䁺āƮ  䁼䁼āȔ  䂤耂 Ȳ  䀝䀝āɊ  䀟䀟āɞ  䀞䀞āʀ  䂽䂽 ʘ  䀆䀆ʰ  䂡䂡 ˀ  䂢䂢 ˖  䀁䀁ā˪  䀚䀚ā̂  䂏䂏 ̘  䁴䁴ā͌  䂥䂥ā͞  䂯䂯 π  䂾䂾 ϔ  䀾䀾ā   耂  Ԅ  䂆䂆āԜ    ƀԲ &䂉耂āԼ ƞ耩  Ո  쀀  լ  䂕䂕āլ  耪 Āռ  쀀  䅄⩔ Ƕ֖ 8         w_sys_module_pop_select w_language accessiblerole menu windowtype windowstate windowobject toolbaralignment windowanimationstyle windowdockoptions windowdockstate windowdocktabshape windowdocktabclosebutton powerobject Untitled AppIcon!  Œ䅄⩔蘀 Ƕ耇 ഀ      䑘∾        uo_button_flat fontcharset fontpitch fontfamily 宋体 确定 radiobutton borderstyle picture statictext alignment fillpattern datawindow richtexttoolbaractivation dwobject listbox 쀀   Ԁ      율Ḕ           ഀ      율Ḕ        rectangle linestyl䅄⩔ Ƕœ 䂊   ฿桷  棵    !B  䂊䂊Ё  ő䂊耂ǩP  䀀䀀ān  䂴䂴āx  䁯䁯ā  䁮䁮ā¦  䂁䂁āÀ  䁥䁥āâ  䁭䁭āČ  䁷䁷āİ  䁻䁻āŐ  䁹䁹āŶ  䁺䁺āƨ  䁼䁼āǨ  䂤耂 Ȇ  䀝䀝āȞ  䀟䀟āȲ  䀞䀞āɔ  䂢䂢 ɪ  䀁䀁āɾ  䀚䀚āʖ  䀆䀆āʮ  䃁䃁 ˌ  䁣䁣脁˞  䂏䂏 ˴  䁴䁴ą̄  䂥䂥ā  !耂  Ϣ  䂂䂂āϸ  䂕䂕āϸ  耢  Ј &䂉耂āВ ƪ耣 О           w_sys_module_windowquery䅄⩔ Ƕ window accessiblerole menu windowtype windowstate windowobject toolbaralignment windowanimationstyle windowdockoptions windowdockstate windowdocktabshape windowdocktabclosebutton powerobject ő耇 ഀ      䑘∾        uo_button_flat fontcharset fontpitch fo䅄⩔ Ƕntfamily 宋体 确定 statictext alignment fillpattern borderstyle singlelineedit textcase datawindow richtexttoolbaractivation dwobject 按window名查询模块 AppIcon!  ő耇 ഀ      典∾        退出 查询 window名: none d_module_window_find dragobject message n_tr sqlca ǀ   ͨ  䅄⩔ Ƕ  2 B           w_sys_module_windowquery   ᬢ      ഀ耂  ^           +create +destroy +clicked +constructor             Q L 
+x ͼ           _initsrc window w_sys_module_windowquery accessiblerole menu windowtype windowstate windowobject toolbaralignment w䅄⩔ Ƕindowanimationstyle windowdockoptions windowdockstate windowdocktabshape windowdocktabclosebutton powerobject uo_button_flat cb_2 fontcharset fontpitch fontfamily cb_1 statictext st_1 alignment fillpattern borderstyle singlelineedit sle_1 textcase dat䅄⩔切 Ƕawindow dw_1 richtexttoolbaractivation dwobject dragobject message n_tr ː        ᔀ     "   ᕀ     0   ᔀ     b   ᕀ        ᕀ        ᕀ         ᕀ     ¸   ᕀ     Ò   ᕀ     ô   ᕀ     Ğ 	 ᕀ     ł 
+ ᕀ     Ţ   ᕀ     ƈ   ᕀ     ƺ  ᕀ     ǒ   ᕀ     ǰ   ᔀ     Ǻ   䅄⩔ﰀ Ƕᕀ     Ȓ   ᕀ     Ȧ   ᕀ     ȼ   ᔀ     Ɇ   ᕀ     ɜ   ᔀ     ɦ   ᕀ     ɺ   ᕀ     ʒ   ᕀ     ʪ   ᕀ     ˈ   ᔀ     ˔   ᕀ     ˦   ᕀ     ˼   ᔀ     ̆   ᕀ     ̺   ᕀ     ͌   ᕀ     ͢   ᕀ     Ͳ   ᕀ  ð              耀      耂      耐      耔      耖      耛      耞   䅄⩔︀ Ƕ   老쀀      b    fa耏耂      -       耏耂      -       耕耂      .     $$耚耂      ;-    ((耝耂      ǿǐ/   !!     Ä  !   Ģ -$  ! 8 Ģ -@  ! T Ģ -\  ! p Ģ -x  !  Ģ -  ! ¬ Ģ ! ´ ' ! ¼ ' ! Ä ' ! Ì ' ! Ô ' Ʋ耇ഀ        , B X n Â d              Ü          cb_2䅄⩔尀 Ƕ i  a耐  耐8cb_1 b, b耔, 耔8st_1 eH c耖H 耖8sle_1 d d耛d 耛8dw_1  e耞 耞8control   䂁  a耐, b耔H c耖d d耛 e耞    $   8   @   T   \   p   x         ¬   ´   ¼   Ä   Ì   Ô   H  !   '  ! 0 '  ! D '  ! X '  ! l '          * 8 F d              t (         cb_2 c  a耐䅄⩔Ȁ Ƕ共享数据窗口祖先(有TAB)forward
+global type w_pattern_hr_report2 from w_sheet
+end type
+type uo_3 from uo_comctl_statusbar within w_pattern_hr_report2
+end type
+type uo_2 from uo_pattern_hr within w_pattern_hr_report2
+end type
+type st_2 from u_st_splitbar 䅄⩔Ѐ Ƕwithin w_pattern_hr_report2
+end type
+type tab_1 from tab within w_pattern_hr_report2
+end type
+type tabpage_1 from userobject within tab_1
+end type
+type dw_1 from u_dw within tabpage_1
+end type
+type tabpage_1 from userobject within tab_1
+dw_1 䅄⩔؀ Ƕdw_1
+end type
+type tab_1 from tab within w_pattern_hr_report2
+tabpage_1 tabpage_1
+end type
+end forward
+
+global type w_pattern_hr_report2 from w_sheet
+integer x = 9
+integer y = 212
+integer width = 3653
+integer height = 2128
+string menuname 䅄⩔ࠀ Ƕ= "m_pattern_main"
+windowstate windowstate = maximized!
+long backcolor = 80269524
+event type integer ue_saveadd ( )
+event ue_modify ( )
+event type integer pfc_delsave ( )
+uo_3 uo_3
+uo_2 uo_2
+st_2 st_2
+tab_1 tab_1
+end type
+global w_pattern_h䅄⩔਀ Ƕr_report2 w_pattern_hr_report2
+
+type variables
+uo_toolbar iu_toolbar
+uo_xpmenu iu_xpmenu
+window iw_parent
+long il_rowcount
+string is_key,is_item
+string is_level,is_empid
+integer ii_state
+
+end variables
+
+forward prototypes
+public function䅄⩔ఀ Ƕ integer of_setmenu (string as_event)
+public subroutine of_settab ()
+public subroutine of_navigation (boolean ab_visibled)
+end prototypes
+
+event pfc_delsave;return 0
+end event
+
+public function integer of_setmenu (string as_event);if isvalid(iu䅄⩔฀ Ƕ_toolbar) then
+	choose case as_event		
+		case 'pfc_firstpage'			
+			iu_toolbar.of_setenabled("下页",true)	
+			iu_toolbar.of_setenabled("上页",false)
+			iu_toolbar.of_setenabled("末页",true)
+			iu_toolbar.of_setenabled("首页",false)
+		case 'pfc_lastpage䅄⩔က Ƕ'			
+			iu_toolbar.of_setenabled("下页",false)	
+			iu_toolbar.of_setenabled("上页",true)
+			iu_toolbar.of_setenabled("末页",false)
+			iu_toolbar.of_setenabled("首页",true)
+		case 'pfc_previouspage'
+			if tab_1.tabpage_1.dw_1.getrow()=1 then	
+				iu_too䅄⩔ሀ Ƕlbar.of_setenabled("下页",true)	
+				iu_toolbar.of_setenabled("上页",false)
+				iu_toolbar.of_setenabled("末页",true)
+				iu_toolbar.of_setenabled("首页",false)	
+			else	
+				iu_toolbar.of_setenabled("下页",true)	
+				iu_toolbar.of_setenabled("上页",true)
+䅄⩔᐀ Ƕ				iu_toolbar.of_setenabled("末页",true)
+				iu_toolbar.of_setenabled("首页",true)
+			end if
+		case 'pfc_nextpage'	
+			if tab_1.tabpage_1.dw_1.getrow() = tab_1.tabpage_1.dw_1.rowcount() then		
+				iu_toolbar.of_setenabled("下页",false)	
+				iu_toolba䅄⩔ᘀ Ƕr.of_setenabled("上页",true)
+				iu_toolbar.of_setenabled("末页",false)
+				iu_toolbar.of_setenabled("首页",true)	
+			elseif tab_1.tabpage_1.dw_1.getrow() = 1 then			
+				iu_toolbar.of_setenabled("下页",true)	
+				iu_toolbar.of_setenabled("上页",false)
+		䅄⩔᠀ Ƕ		iu_toolbar.of_setenabled("末页",true)
+				iu_toolbar.of_setenabled("首页",false)			
+			else		
+				iu_toolbar.of_setenabled("下页",true)	
+				iu_toolbar.of_setenabled("上页",true)
+				iu_toolbar.of_setenabled("末页",true)
+				iu_toolbar.of_setenabled("首页䅄⩔ᨀ Ƕ",true)				
+			end if
+	end choose
+else
+	return 0
+end if
+return 1
+end function
+
+public subroutine of_settab ();userobject luo_tabpage
+dragobject ldo_object
+ClassDefinition    lcd_parent
+string ls_ancestor
+long j,k
+for j=1 to upperbound(ta䅄⩔ᰀ Ƕb_1.control)
+	luo_tabpage = tab_1.control[j]
+	for k=1 to upperbound(luo_tabpage.control)
+		ldo_object = luo_tabpage.control[k]
+		if typeof(ldo_object) = datawindow! then
+			datawindow mytabdatawindow
+			mytabdatawindow = ldo_object
+			lcd_paren䅄⩔Ḁ Ƕt = ldo_object.ClassDefinition//取对象的继承父类
+			ls_Ancestor = lcd_parent.ancestor.name//父类名
+			if ls_ancestor = 'u_dw' or pos(ls_ancestor,'`')>0 then
+				if isvalid(mytabdatawindow) and mytabdatawindow.visible = true and mytabdatawindow.enabled = true 䅄⩔  Ƕthen
+					mytabdatawindow.width = luo_tabpage.width - 20
+				end if
+			end if
+		end if
+	next
+next
+end subroutine
+
+public subroutine of_navigation (boolean ab_visibled);this.post event ue_navigation(ab_visibled)
+end subroutine
+
+event open;i䅄⩔∀ Ƕstr_wininfo=message.PowerObjectparm
+this.title = istr_wininfo.wintitle
+this.tag = istr_wininfo.winhelp
+is_key = istr_wininfo.key
+
+uf_menu_visible(this,"操作[&A]",false,false)
+
+openuserobject ( iu_toolbar, 0, 0)
+//openuserobject (iu_xpmenu)
+
+th䅄⩔␀ Ƕis.of_setresize(true)
+this.inv_resize.of_register(tab_1,"scaletoright&bottom")
+if isvalid(iu_toolbar) then
+	iu_toolbar.of_setenabled("上页",false)
+	iu_toolbar.of_setenabled("首页",false)
+	iu_toolbar.of_setenabled("末页",true)
+	iu_toolbar.of_setenabled䅄⩔☀ Ƕ("下页",true)
+end if
+this.event ue_postopen()
+
+
+
+
+
+end event
+
+event close;//uf_setlog(is_menukey,'离开','')
+if isvalid(iu_xpmenu) then closeuserobject(iu_xpmenu)
+
+
+end event
+
+on w_pattern_hr_report2.create
+int iCurrent
+call super::create䅄⩔⠀ Ƕ
+if this.MenuName = "m_pattern_main" then this.MenuID = create m_pattern_main
+this.uo_3=create uo_3
+this.uo_2=create uo_2
+this.st_2=create st_2
+this.tab_1=create tab_1
+iCurrent=UpperBound(this.Control)
+this.Control[iCurrent+1]=this.uo_3
+this.C䅄⩔⨀ Ƕontrol[iCurrent+2]=this.uo_2
+this.Control[iCurrent+3]=this.st_2
+this.Control[iCurrent+4]=this.tab_1
+end on
+
+on w_pattern_hr_report2.destroy
+call super::destroy
+if IsValid(MenuID) then destroy(MenuID)
+destroy(this.uo_3)
+destroy(this.uo_2)
+des䅄⩔Ⰰ Ƕtroy(this.st_2)
+destroy(this.tab_1)
+end on
+
+event resize;call super::resize;uo_3.Resize(-1, -1)
+uo_2.event ue_resize()
+if isvalid (iu_toolbar)  then
+   iu_toolbar.of_resize( newwidth, iu_toolbar.height )
+end if
+
+
+end event
+
+event pfc_mess䅄⩔⸀ Ƕagerouter;graphicobject lgo_focus
+
+// Check argument
+If IsNull (as_message) or Len (Trim (as_message)) = 0 Then
+	Return -1
+End If
+
+// Try sending the message to this window, if successful exit event.
+If This.TriggerEvent (as_message) = 1 Then 䅄⩔　 ǶReturn 1
+
+// Try sending the message to the current control, if successful exit event.
+//lgo_focus = GetFocus()
+//If IsValid (lgo_focus) Then
+//	If lgo_focus.TriggerEvent (as_message) = 1 Then Return 1
+//End If
+
+// Try sending the message to t䅄⩔㈀ Ƕhe last active datawindow, if successful exit event.
+If IsValid (idw_active) Then
+	If idw_active.TriggerEvent (as_message) = 1 Then Return 1
+End If
+
+// No objects recognized the message
+Return 0
+end event
+
+event help;call super::help;of_help(䅄⩔㐀 Ƕhandle(this),this.tag)
+end event
+
+event ue_resizetool;call super::ue_resizetool;long ll_y
+if isvalid(iu_toolbar) then
+	this.setredraw(false)
+	ll_y = uo_2.y
+	uo_2.y  = iu_toolbar.height + 5
+	uo_2.height = uo_2.height - (uo_2.y - ll_y)
+	tab_1.y䅄⩔㘀 Ƕ = uo_2.y
+	tab_1.height = uo_2.height
+	st_2.y = uo_2.y
+	st_2.height = uo_2.height
+	tab_1.tabpage_1.dw_1.height = tab_1.tabpage_1.dw_1.height - (uo_2.y - ll_y)
+	this.setredraw(true)
+end if
+end event
+
+event ue_refurbish;call super::ue_refurbish䅄⩔㠀 Ƕ;If IsValid (idw_active) Then
+	idw_active.TriggerEvent("pfc_retrieve")
+End If
+
+end event
+
+event ue_postopen;call super::ue_postopen;//uf_setlog(is_menukey,'进入','')
+//uf_setmenu(this,is_menukey)
+this.of_setresize(true)
+this.inv_resize.of_regis䅄⩔㨀 Ƕter(uo_2,"scaletobottom")
+this.inv_resize.of_register(st_2,"scaletobottom")
+this.inv_Resize.of_register(tab_1,"scaletoright&bottom")
+this.inv_resize.of_register(tab_1.tabpage_1.dw_1,"scaletoright&bottom")
+//this.inv_resize.of_register(uo_1,"fixtob䅄⩔㰀 Ƕottom")
+uf_center(this)
+iw_parent=this
+tab_1.tabpage_1.dw_1.settransobject(sqlca)
+//uf_set_dwrowcolor(tab_1.tabpage_1.dw_1)
+tab_1.tabpage_1.dw_1.setfocus()
+//uf_set_dwrowcolor(tab_1.tabpage_1.dw_1)
+post event ue_resizetool()
+
+end event
+
+eve䅄⩔㸀 Ƕnt ue_navigation;call super::ue_navigation;if ab_visibled then
+	uo_2.x = 1
+	uo_2.width = uo_2.of_returnwidth() - 50
+   st_2.x = uo_2.x + uo_2.width
+	tab_1.x = st_2.x + st_2.width
+	tab_1.width  =this.width - uo_2.x - uo_2.width - st_2.width
+   
+䅄⩔䀀 Ƕ//	tab_1.tabpage_1.dw_1.width=tab_1.tabpage_1.width - 10
+	if isvalid(iu_toolbar) then
+		iu_toolbar.of_setchecked("导航",true)
+	end if
+else
+	uo_2.width = 0
+	st_2.x = 7
+	tab_1.x = st_2.x + st_2.width
+	tab_1.width  =this.width - st_2.width - st_2.x䅄⩔䈀 Ƕ 
+//	tab_1.tabpage_1.dw_1.width=tab_1.tabpage_1.width - 10
+	if isvalid(iu_toolbar) then
+		iu_toolbar.of_setchecked("导航",false)
+	end if
+end if
+of_settab()
+end event
+
+type uo_3 from uo_comctl_statusbar within w_pattern_hr_report2
+integer x = 4䅄⩔䐀 Ƕ1
+integer y = 1864
+integer taborder = 40
+end type
+
+type uo_2 from uo_pattern_hr within w_pattern_hr_report2
+event destroy ( )
+integer y = 112
+integer height = 1752
+integer taborder = 50
+end type
+
+on uo_2.destroy
+call uo_pattern_hr::destro䅄⩔䘀 Ƕy
+end on
+
+event ue_selectionchange;call super::ue_selectionchange;is_item = label
+end event
+
+event uf_tv_selechange;call super::uf_tv_selechange;is_level=uo_2.tv.is_level
+is_empid=uo_2.tv.is_userid
+ii_state=uo_2.tv.ii_state
+
+if isnull(is_lev䅄⩔䠀 Ƕel) then is_level=''
+if isnull(is_empid) then is_empid=''
+if isnull(ii_state) or ii_state=0 then ii_state=1
+
+gs_empid=is_empid
+
+end event
+
+type st_2 from u_st_splitbar within w_pattern_hr_report2
+integer x = 855
+integer y = 112
+integer widt䅄⩔䨀 Ƕh = 18
+integer height = 1752
+boolean bringtotop = true
+end type
+
+event constructor;call super::constructor;of_Register(uo_2, LEFT)
+of_Register(tab_1, RIGHT)
+
+
+end event
+
+event lbuttonup;call super::lbuttonup;of_settab()
+
+end event
+
+even䅄⩔䰀 Ƕt mousemove;if uo_2.width = 0 then
+	return
+else
+	if Not KeyDown(keyLeftButton!) Then
+		Return
+	End If
+	
+	of_MouseMove(flags, xpos, ypos)
+end if
+end event
+
+type tab_1 from tab within w_pattern_hr_report2
+event create ( )
+event destroy ( )䅄⩔一 Ƕ
+integer x = 878
+integer y = 108
+integer width = 2725
+integer height = 1760
+integer taborder = 30
+boolean bringtotop = true
+integer textsize = -9
+integer weight = 400
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily䅄⩔倀 Ƕ fontfamily = swiss!
+string facename = "Arial"
+long backcolor = 80269524
+boolean raggedright = true
+boolean powertips = true
+integer selectedtab = 1
+tabpage_1 tabpage_1
+end type
+
+on tab_1.create
+this.tabpage_1=create tabpage_1
+this.Control[䅄⩔刀 Ƕ]={this.tabpage_1}
+end on
+
+on tab_1.destroy
+destroy(this.tabpage_1)
+end on
+
+event constructor;//if tabpage_1.text = '' then tabpage_1.text = fill(" ",2)+tabpage_1.dw_1.title
+//if tabpage_2.text = '' then tabpage_2.text = fill(" ",2)+tabpage_2.䅄⩔吀 Ƕdw_2.title
+end event
+
+event clicked;userobject luo_tabpage
+dragobject ldo_object
+if index > 0 then
+	long j,k
+	luo_tabpage = this.control[index]
+	for k=1 to upperbound(luo_tabpage.control)
+		ldo_object = luo_tabpage.control[k]
+		if typeof(ldo䅄⩔嘀 Ƕ_object) = datawindow! then
+			datawindow mytabdatawindow
+			mytabdatawindow = ldo_object
+			if isvalid(mytabdatawindow) and mytabdatawindow.visible = true and mytabdatawindow.enabled = true then
+				mytabdatawindow.setfocus()
+			end if
+		end if䅄⩔堀 Ƕ
+	next
+end if
+end event
+
+type tabpage_1 from userobject within tab_1
+event create ( )
+event destroy ( )
+integer x = 18
+integer y = 112
+integer width = 2688
+integer height = 1632
+long backcolor = 80269524
+long tabtextcolor = 33554432
+long䅄⩔娀 Ƕ tabbackcolor = 80269524
+string picturename = "res\列表.gif"
+long picturemaskcolor = 16777215
+string powertiptext = "查看列表"
+dw_1 dw_1
+end type
+
+on tabpage_1.create
+this.dw_1=create dw_1
+this.Control[]={this.dw_1}
+end on
+
+on tabpage_1.destroy䅄⩔  Ǯ
+destroy(this.dw_1)
+end on
+
+type dw_1 from u_dw within tabpage_1
+integer y = 12
+integer width = 2683
+integer height = 1616
+integer taborder = 20
+boolean bringtotop = true
+boolean ib_update = false
+boolean ib_rmbmenu = false
+end type
+
+    䅄⩔帀 Ƕcb_1 e$ b耔st_1 _8 c耖sle_1 L d耛dw_1  ` e耞    0   D   X   l     耂  耂 2 2           +create +destroy (        ᔀ쀀        ᔀ쀀 2 Ö           width height titlebar title controlmenu windowtype backcolor icon center cb_2 cb_1 st_1 sle_1 dw_1 Ę      ୥ Ԁ       ִ䅄⩔怀 Ƕ Ԁ     *   Ԁ     < ̺耀ᄀ     H  ∹Ԁ     `  ∹Ԃ者    v  Ѐᴀ      ͔耀ᄀ       ␓Ԁ     ¢   ഀ耐    ¬   ഀ耔    ¶   ഀ耖    À   ഀ耛    Ì   ഀ耞  崀
+  ഀ   Ԁ   ഀ   ഀ   Ԃ考  Ԁ   Ԁ ୥ Ԁ ִ Ԁ  ƀԀ   Ԁ ̺耀ᄀ   ഀ   ഀ耄 ∹Ԁ   Ԁ   Ԁ   Ԁ   Ԁ   Ԁ  ƀԀ  ∹Ԃ者  Ԃ耆ͨ耀㄀耇 Ѐᴀ ͔耀ᄀ   ഀ   Ԁ   Ԁ   Ԁ   Ԁ 䅄⩔戀 Ƕ  Ԁ  䀀Ԁ  䀀Ԃ耈  Ԁ   Ԁ   Ԁ   Ԁ   Ԁ  䀀Ԁ   Ԁ   Ԁ   Ԁ  ␓Ԁ   Ԁ   Ԃ耉  Ԃ耉È Ԁ   Ԃ耊  Ԃ耋 䀀ᴀ  䀀ᴀ   Ԁ  䀀ᴀ  䀀ᴀ   Ԁ  ࠀᴀ  ࠀᴀ   Ԁ   ᴀ  ࠀᴀ  ࠀᴀ   Ԁ   ᴀ   Ԃ而 ࠀԂ耍 ࠀԀ   Ԁ   Ԃ而  Ԃ耍 ࠀԀ   Ԁ  ࠀԀ  䀀ᴀ  䀀ᴀ   ᴀ  Ѐᴀ  Ѐᴀ   ᴀ  Ѐᴀ  Ѐᴀ   ᴀ  ЀԀ  䀀ᴀ  䀀ᴀ   ᴀ  Ѐᴀ  Ѐᴀ   ᴀ  Ѐᴀ  Ѐᴀ   ᴀ   Ԁ   䔀䅄⩔搀 Ƕ   䔀   ഀ   ഀ耐  ഀ耔  ഀ耖  ഀ耛  ഀ耞        2   耀  脀                Ĉ   老  脀           b  ĝ  " 耏  Ļ  "Ƽ 䃕ƽ   Ļ  / Ƙ J4     ` X/    '    `    . d L           ancestorreturnvalue ::message (        ᴀ     8   ᙀ耢(           clicked         " 耐 " 2 "           +䅄⩔昀 Ƕclicked          ᔀ쀀 2 4           x y taborder text P      ߠ Ԁ         Ԁ       
+ Ԁ     * ΐ耀ᄀ   崀
+  ഀ   Ԁ   ഀ   ഀ   Ԃ考ߠ Ԁ   Ԁ Š Ԁ \ Ԁ 
+ Ԁ   ഀ   Ԁ   Ԁ   Ԁ ￷ Ԁ Ɛ Ԁ  Ԃ耑  Ԃ耒  Ԃ耓Ɉ耀ᄀ   Ԁ   Ԁ   ഀ  䀀Ԁ ΐ耀ᄀ   Ԁ   Ԁ   Ԁ 2       2 " 耀  脀           Þ  ĝ  " 耏  Ļ  䅄⩔栀 Ƕ" , ' " @ '  T ' Ƽƙ䃕ƽƙ  Ļ ,p   Ļ  " x ' ,   Ļ 4  Ô ª; ĳ ;¢ ĳ Ƽ°䃕ƽ°  Ļ  / Ƙ Æ4     Ü Ô/  ´ '    Ü    \  ª d L           ancestorreturnvalue ::message (        ᴀ     8   ᙀ耢¼ 8         clicked dw_1    e耞sle_1 4 d耛text  H   retrieve  ō쀀\   e耞rowcount 耞䅄⩔鈀=Ƕŏ쀀 提示 没有要查询的数据     ,   @   T   p  x     ´   " 耔 " 2 "           +clicked          ᔀ쀀 2 4           x y taborder text P      ٲ Ԁ         Ԁ         Ԁ     * Ζ耀ᄀ   崀
+  ഀ   Ԁ   ഀ   ഀ   Ԃ考ٲ Ԁ   Ԁ Š Ԁ \ Ԁ   Ԁ   ഀ   Ԁ   Ԁ   Ԁ ￷ Ԁ Ɛ Ԁ  Ԃ耑  Ԃ耒  Ԃ耓Ɉ耀ᄀ   Ԁ  䅄⩔氀 Ƕœ 䂊   ฿桷  棵    $2  䂊耂Ё  Ŕ䂊耂ƩH  䀀䀀āf  䂴䂴āp  䁯䁯ā  䁮䁮ā  䂁䂁ā¸  䁥䁥āÚ  䁭䁭āĄ  䁷䁷āĨ  䁻䁻āň  䁹䁹āŮ  䁺䁺āƠ  䁼䁼āȄ  䂤耂 Ȣ  䀝䀝āȺ  䀟䀟āɎ  䀞䀞āɰ  䂢䂢 ʆ  䀁䀁āʚ  䀚䀚āʲ  䀆䀆āˊ  䃅耂 ˚  䀪䀪ā˰  䂐䂐ā   耂  Ј  耂 
+Ф  䂊䂊āќ  䃅䃅ā֐  䃄䃄ā֪ &䂉耂āִ  耡  ޸  䂕䂕ā޸  耢  ߈  䁾老ߢ  耣  ॰          w_rs_c䅄⩔渀 Ƕcsele_pop2 w_language accessiblerole menu windowtype windowstate windowobject toolbaralignment windowanimationstyle windowdockoptions windowdockstate windowdocktabshape windowdocktabclosebutton powerobject Untitled AppIcon! Ŕ耇 ഀ      ䷀∾        uo_butt䅄⩔瀀 Ƕon_flat fontcharset fontpitch fontfamily 宋体 确定 statictext alignment fillpattern borderstyle uo_tree grsorttype datastore  Custom039! Custom076! Custom038! AddWatch!    ഀ      縉␒        ̆耀ᄀ ̜耀ᄀ ̲耀ᄀ ͈耀ᄀ ̄耀ᄀ    ഀ      ䷀∾        部门选择 dŔ耇 ഀ      䑘∾        䅄⩔爀 Ƕshellexecutea window  Ŕ耇 ഀ      ䷀∾        treeview 取消 选定 Query! 宋   选择部门.... Custom080! Ŕ  ഀ      ␒        ̆耀ᄀ ̜耀ᄀ ̲耀ᄀ ̲耀ᄀ Ѻ耀ᄀ Ң耀ᄀ    ഀ      ䷀∾        Ŕ  ഀ      ␒        ̆耀ᄀ ̜耀ᄀ ̲耀ᄀ ̲耀ᄀ Ѻ耀ᄀ Ң耀ᄀ treeviewitem n_tr sqlca cloud;sqlHandle_01_B037C5B4;vlH䅄⩔琀 ǶJo8KawD6pJj3Badf8gHHqhi+D1fBFwIXe6TWbOZiIOlR1GamoCNgjHQJN676qLy/mEokg3bBpXxO5KS8F46G6IiHjlV79E5ivpZNpxT/lYlyMuadZa6QUXqlbVjTKnJX6iJbiKaFdlf4oPqgN0A== ?B]`         ܪ耀  ׀耀          棵       ;  ݴ耀ܴ耀                  棵      message str_userinfo gstr_user䅄⩔瘀 Ƕinfo cloud;sqlHandle_01_D930A5AB;aCPT/n8ltsqxkHuk40XeV/48pWOOdWIAM0Opp/3sNqoGX00aatoYNJi3mX5ki4ot+5h3q3o2SIZMuSMCQ3BG9Q== ,/        ࣨ耀  ߾耀          棵          ब耀࣬耀                  棵      ǜ   ͜   ά   Ϡ   д   Ҹ   Ԑ   Ը   ܪ   ܴ 	 ݴ 
+ ݸ 	 ࣨ   ࣬ 	 ब 
+ र䅄⩔砀 Ƕ 	  2 2           w_rs_ccsele_pop2   ᭞      ഀ耂  Ş           hwnd lpoperation lpfile lpparameters lpdirectory nshowcmd shellexecutea shell32.dll ShellExecuteA;Ansi tv_parm handle uf_expand +create +destroy +close +open +clicked ¢               
+       䅄⩔稀 Ƕ2     @     Z     r     LUSSSSL Þ   耟 î     QCtreeview.L Q L     h   
+x ͔           _initsrc w_language w_rs_ccsele_pop2 accessiblerole menu windowtype windowstate windowobject toolbaralignment windowanimationstyle windowdockoptions windowdockstate wi䅄⩔簀 Ƕndowdocktabshape windowdocktabclosebutton powerobject uo_button_flat cb_2 fontcharset fontpitch fontfamily cb_1 statictext st_1 alignment fillpattern borderstyle uo_tree tv_1 grsorttype datastore window treeview treeviewitem n_tr message str_userinfo 䅄⩔縀 Ƕː        ᔀ     "   ᕀ     8   ᔀ     Z   ᕀ     x   ᕀ        ᕀ        ᕀ     °   ᕀ     Ê   ᕀ     ì   ᕀ     Ė 	 ᕀ     ĺ 
+ ᕀ     Ś   ᕀ     ƀ   ᕀ     Ʋ  ᕀ     Ǌ   ᕀ     Ǩ   ᔀ     ǲ   ᕀ     Ȋ   ᕀ     Ȟ   ᕀ     ȴ   ᔀ     Ⱦ   ᕀ     ɔ   ᔀ     ɞ   ᕀ     ɲ   ᕀ 䅄⩔耀 Ƕ    ʊ   ᕀ     ʢ   ᕀ     ʲ   ᔀ     ʼ   ᕀ     ˒   ᕀ     ˦   ᕀ     ˴   ᕀ     ̆   ᕀ     ̠   ᕀ     ̪   ᕀ     ̺ " ᕀ  ð              耀      ñ耂      耐      耔      耖      耛      老쀀      d    ka耏耂      -       耏耂      -       耕耂      .     $$耚耂      fD"  䅄⩔舀 Ƕ F7           ˠ      Ʃ ,    ƶ Ļ  ! 4 Ģ    < Ɔ Ƽƃ䃕ƽƃ  Ļ ř  ! T ' ! \ Ɔ Ƽƃ䃕ƽƃ  Ļ ! d Ɔ Ƽƃ䃕ƽƃ  Ļ ;l }ĩ,   Ļ  ĝ !  ' ,¨   Ļ     ° Ģ 4       ¸ Ģ 4      4  È ˞ĝ 4    ĺĝ ø      à ˞ĝ ! À '  È ' ;Ð 3   Ʋ ᴀ < űČ   ļ Ļ š Ƽƙ䃕ƽƙ  ļ Ļ    ƙ ! Ĕ Ɔ š Ƽƙ䃕ƽƙ  ļ䅄⩔萀 Ƕ Ļ ƙ 4  U¨ ˚   Ĝ Ģ ! Ĥ '  Ĭ ' ;Ĵ 3   Ʋ ᴀ < űń   ļ Ļ š     Ō Ģ   Ĺ ř  Ʃ     /  ݸ耀    4  ¨ ʤ   Ŕ Ģ <   ʺ   Ŝ Ģ <        ĭ ,Ƅ   Ļ   İ     
+R ´ Öò Ď Ğ ň Ƭ Ǭ Ʉ ɠ ɤ ɺ ʊ ʠ ʤ ʺ ˚#˞ d            tv_parm handle tvim i ls_depttmp ld_tmp ll_rowcount l_handle䅄⩔砀"Ƕ sqlca ´        ഀ耟        ᴀ     .   ഄ耠    8   ᴀ     <   ഀ     R   ᴀ     `   ᴀ     x   ᴀ        ᙀ耡ƌ ¸         getitem M쀀  deco e( f     ids_ds eD j耝( f ( f zz retrieve Ç쀀r D j耝rowcount sÉ쀀         D j耝   䂥cc_level __get_attribute_item  쀀â ( f   
+ D j䅄⩔눀 Ƕœ 䂊   ฿桷  棵    &0  䂊耂Ё  ŕ䂊耂ƉF  䀀䀀ād  䂴䂴ān  䁯䁯ā  䁮䁮ā  䂁䂁ā¶  䁥䁥āØ  䁭䁭āĂ  䁷䁷脁Ħ  䁻䁻āņ  䁹䁹āŬ  䁺䁺āƞ  䁼䁼āȄ 䃁耂 Ȑ  䀝䀝āȨ  䀟䀟āȼ  䀞䀞āɒ  䁣䁣āɤ  䀆䀆ᄁʘ  䂤耂 ˂  䂢䂢 ˘  䀁䀁āˬ  䀚䀚ā̄  䃅耂 ̔  䀪䀪ā̪  䂐䂐ā  ľ耂  ф  耂 
+Ѡ  䂊䂊脁Ҙ  䃅䃅׌  䃄䃄脁צ &䂉耂āװ t耤  ߴ  䂕䂕āߴ  耥 耀ࠄ  䀸䀸āཬ  쀀  ჴ À   䅄⩔言 Ƕœ 䂊   ฿桷  棵    L2  䂊耂萁  Ŝ䂊耂膉B  䀀䀀脁`  䂴䂴脁j  䁯䁯脁  䁮䁮脁  䂁䂁脁²  䁥䁥脁Ô  䁭䁭脁þ  䁷䁷脁Ģ  䁻䁻āł  䁹䁹āŨ  䁺䁺āƚ  䁿耂āƴ  䁿耂āǤ  䁿耂Ǿ !䁿耂āȠ  䂏耂 Ȫ  䁿耂āɒ  䁼䁼āɪ #䁿耂āɾ  䂀䂀āʚ  䁾老͸  䂤耂 Ζ  䀝䀝āή  䀟䀟āς  䀞䀞āϤ  䃅䃅 ϶  䀆䀆āЎ  䀪䀪섁ӄ  䁴䁴āӸ  䂥䂥āԊ &䂉耂섁Ԕ "䁿耂āԬ '䁿耂ā՚ (䁿耂āւ )䁿耂ā֨ *䁿耂āז +䁿耂섁䅄⩔谀 Ƕ؈ ,䁿耂خ -䁿耂ٚ .䁿耂āڐ /䁿耂āڲ 0䁿耂āۤ 1䁿耂ā܈ 2䁿耂āܮ 3䂅耂ā݄ 5䂅耂āݞ  䁿耂āݺ  䂊䂊脁ވ 6䂊耂āޞ :䂊耂ā࠲  䂢耂 ࡎ  䀁䀁āࡢ  䀚䀚āࡺ  䂂䂂ā࢐  䂅䂅āࢦ  䃃䃃ā੼  䂢䂢 ઒  䂡䂡 ఴ  䂾䂾 ై  䀾䀾ā  6耂  ೼  䂐䂐āഐ ĺ䁾老മ  䃄䃄āᎌ  耦  ᔴ o쀀 ຂᕔ  䁾老ᕮ  职  ᜤ  䂕䂕āᜤ  聍  ᜴  䂊耂ᝆ t쀀  ᣐ  䁾老ᣨ  聏  ᤂ ɘ         w_hr_deptpv_p_yr 䅄⩔踀 Ƕw_sheet accessiblerole menu windowtype windowstate windowobject toolbaralignment windowanimationstyle windowdockoptions windowdockstate windowdocktabshape windowdocktabclosebutton n_cst_winsrv n_cst_winsrv_preference n_cst_resize n_cst_dwsrv_sort u_dw䅄⩔退 Ƕ n_cst_dberrorattrib powerobject n_cst_luw graphicobject str_wininfo Untitled AppIcon!  Ŝ耇 ഀ      율Ḕ        Ŝ耔 輀      율Ḕ        Ŝ耔 輀      율Ḕ        Ŝ耔 輀      율Ḕ        uo_button_flat fontcharset fontpitch fontfamily 宋体 确定 treeview borderstyle grsortty䅄⩔鈀 Ƕpe    ഀ      䄐∾           ഀ      䄐∾           ഀ      율Ḕ           ഀ      율Ḕ        richtexttoolbaractivation dwobject n_tr n_cst_dwsrv n_cst_dwsrv_rowmanager n_cst_dwsrv_linkage n_cst_dwsrv_report n_cst_dwsrv_multitable n_cst_dwsrv_rowselection n_cst_䅄⩔鐀 Ƕdwsrv_filter n_cst_dwsrv_reqcolumn n_cst_dwsrv_dropdownsearch n_cst_dwsrv_find n_cst_dwsrv_selectcolumn n_cst_dwsrv_group n_cst_dwsrv_resize u_calendar u_calculator n_cst_showtip window w_dw_tools w_sys_dwsyntax_hist 注意:pfc_retrieve中将is_empid+'w'改为is_䅄⩔阀 Ƕempid+'zz' IUD Eway u_st_splitbar alignment fillpattern dragobject userobject tab MS Sans Serif  SizeWE! SizeNS! Ŝ耾 輀      幠∾           謀      幠∾           謀      幠∾           謀      幠∾           謀      幠∾        Ŝ耾 輀      幠∾           謀      幠∾      䅄⩔頀 Ƕ     謀      幠∾           謀      幠∾           謀      幠∾        statictext picture  Ŝ耾 輀      율Ḕ           謀      율Ḕ           謀      율Ḕ           謀      율Ḕ           謀      율Ḕ        Ŝ耾 輀      율Ḕ           謀      율Ḕ           謀      율Ḕ           謀     䅄⩔騀 Ƕ 율Ḕ           謀      율Ḕ        rectangle linestyle Ŝ耇 ഀ      曨∾        Ŝ耔 輀      曨∾        Ŝ耔 輀      曨∾        Ŝ耔 輀      曨∾        datastore str_multi_tree treeviewitem Ŝ耇 ഀ      典∾        Ŝ耔 輀      典∾        Ŝ耔 輀      典∾        Ŝ耔 輀      典∾        Ŝ聊䅄⩔鰀 Ƕ ༄      典∾        退出 保存 Custom026! Custom076! Custom038! res\man.gif  Ŝ  ഀ      ᶿ        ผ耀ᄀ า耀ᄀ ่耀ᄀ ๞耀ᄀ    ഀ      율Ḕ        Ŝ  ഀ      ᶿ        ผ耀ᄀ า耀ᄀ ่耀ᄀ ๞耀ᄀ res\no.jpg res\yes.jpg res\root.bmp Ŝ  ഀ      ␒        ༰耀ᄀ ཆ耀ᄀ ཞ耀ᄀ ࣊耀ᄀ    ഀ      율Ḕ     䅄⩔鸀 Ƕ   Ŝ  ഀ      ␒        ༰耀ᄀ ཆ耀ᄀ ཞ耀ᄀ ࣊耀ᄀ d_sys_usercc 
+Ŝ耾 輀      幠∾           謀      幠∾           謀      幠∾           謀      幠∾           謀      幠∾        Ŝ耾 輀      幠∾           謀      幠∾           謀      幠∾           謀      幠∾           謀      幠∾      䅄⩔ꀀ Ƕ  res\company.bmp Ŝ耾 輀      典∾           謀      典∾           謀      典∾           謀      典∾           謀      典∾        Ŝ耾 輀      典∾           謀      典∾           謀      典∾           謀      典∾           謀      典∾        sqlca cloud;sqlHandle_01_A8C70ED0䅄⩔ꈀ Ƕ;aCPT/n8ltsqxkHuk40XeV/48pWOOdWIAM0Opp/3sNqoGX00aatoYNJi3mX5ki4ot74Py7q2pvw240nxPlIg46TsQYjVbXGGLpcW0E7wIpnw= ,/耂        ᒪ耀  ᎘耀          棵         ᓰ耀ᒰ耀                  棵      uf_get_datetime str_userinfo gstr_userinfo cloud;sqlHandle_01_925ADE5C;L䅄⩔ꐀ Ƕ9qp0qbmwK4hOiSGEBy6Jb8J3rcPPcVCBPqFxys8Ykuwy+T5GtVIuHj7gi22+KIGr7saFuG5ewUeMZa6f/NZAs7ykquNcNjryugh8tutMJ8= ,/        ᚜耀  ᖊ耀          棵       㐒  ᛠ耀ᚠ耀                  棵      message w_master uf_msg_pop cloud;sqlHandle_01_2A615B86;SnS8wl2pJ7bSjL+/guF䅄⩔ꘀ ǶcX5jxdOMP3lBMvWimrv9Jewjm+LFoIWestZIqgzDHgzyaE+P5I0jjipatvPpHVYOyLw== 36         ᡆ耀  ᝜耀          棵          ᢌ耀ᡌ耀                  棵      str_sysinfo gstr_sysinfo ˘   ̀   ̨   ͐   Ф   ь   Ѵ   Ҝ   ࣬   औ   ़   ।   ঌ   ঴   ড়   ਄   ਬ   ੔   ત   ૌ   ૴   ଜ  䅄⩔ꠀ Ƕ ୄ   ୬   ஔ   ஼   ௤   ఌ   ౜   ಄   ಬ   ೔   ൈ   ൰   ඘   ව   ෨   ๸   ເ   ໨   ླྀ   ࿀   ࿨   ၌   ၴ   ႜ   Ⴤ   წ   ᄔ   ᄼ   ᅤ   ᆌ   ᆴ   ᇼ   ሤ   ቌ   ቴ   ኜ   ዄ   ዬ   ጔ   ጼ   ፤   ᒪ   ᒰ 	 ᓰ 
+ ᓴ 	 ᚜   ᚠ 	 ᛠ 
+ ᛤ 	 ᡆ   ᡌ 	 ᢌ 
+ ᢐ 	  2 2           w_hr_deptpv_p_yr   ᮘ   䅄⩔ꨀ Ƕ   ഀ耂  Ƅ           as_cccode ai_index wf_setdw as_user wf_initv +create +destroy +open +pfc_save +clicked +constructor +destructor handle +doubleclicked +itempopulate oldhandle newhandle +selectionchanged Ì H               $     LSI H     QS Q L I fð 䅄⩔가 Ƕ    LL  ð     ĸ     Ō     LLL ð     ð     ð     ĸ     Ō         0   P   d   p         ¨   ´   
+x ࠸           _initsrc w_sheet w_hr_deptpv_p_yr accessiblerole menu windowtype windowstate windowobject toolbaralignment windowanimationstyle windowdockop䅄⩔글 Ƕtions windowdockstate windowdocktabshape windowdocktabclosebutton n_cst_winsrv n_cst_winsrv_preference n_cst_resize n_cst_dwsrv_sort u_dw n_cst_dberrorattrib powerobject n_cst_luw graphicobject str_wininfo uo_button_flat cb_2 fontcharset fontpitch fon䅄⩔뀀 Ƕtfamily cb_1 treeview tv_1 borderstyle grsorttype tv_2 dw_1 richtexttoolbaractivation dwobject n_tr n_cst_dwsrv n_cst_dwsrv_rowmanager n_cst_dwsrv_linkage n_cst_dwsrv_report n_cst_dwsrv_multitable n_cst_dwsrv_rowselection n_cst_dwsrv_filter n_cst_dwsr䅄⩔눀 Ƕv_reqcolumn n_cst_dwsrv_dropdownsearch n_cst_dwsrv_find n_cst_dwsrv_selectcolumn n_cst_dwsrv_group n_cst_dwsrv_resize u_calendar u_calculator n_cst_showtip window w_dw_tools w_sys_dwsyntax_hist u_st_splitbar st_1 alignment fillpattern dragobject usero䅄⩔됀 Ƕbject tab statictext st_title picture p_1 st_2 rectangle r_1 linestyle datastore str_multi_tree treeviewitem str_userinfo message w_master str_sysinfo ـ        ᔀ     "   ᕀ     2   ᔀ     T   ᕀ     r   ᕀ     |   ᕀ        ᕀ     ª   ᕀ     Ä   ᕀ     æ   ᕀ䅄⩔똀 Ƕ     Đ 	 ᕀ     Ĵ 
+ ᕀ     Ŕ   ᕀ     ź   ᕀ     Ƭ  ᕀ     ǆ   ᕀ     Ƕ   ᕀ     Ȑ   ᕀ     Ȳ   ᕀ     ȼ   ᕀ     ɤ   ᕀ     ɼ   ᕀ     ʐ   ᕀ     ʬ   ᕀ     ˄   ᕀ     ˢ   ᔀ     ˬ   ᕀ     ̄   ᕀ     ̘   ᕀ     ̮   ᔀ     ̸   ᕀ     ͊   ᔀ     ͔   ᕀ     ͬ   ᕀ     ΂   ᔀ 䅄⩔렀 Ƕ    Ό   ᔀ     Ζ   ᕀ     ϊ   ᕀ     Ϝ   ᕀ     Ϧ ! ᕀ     Ͼ " ᕀ     Ь # ᕀ     є $ ᕀ     Ѻ % ᕀ     Ҩ & ᕀ     Ӛ ' ᕀ     Ԁ ( ᕀ     Ԭ ) ᕀ     բ * ᕀ     ք + ᕀ     ֶ , ᕀ     ך - ᕀ     ؀ . ᕀ     ؖ / ᕀ     ذ 0 ᕀ     ٌ 1 ᕀ     ٚ 2 ᕀ     ٰ 3 ᕀ     ژ 4 ᕀ     ڴ   ᔀ  䅄⩔騀"Ƕ   ھ 5 ᕀ     ے 6 ᕀ     ۪ 7 ᕀ     ܀ 8 ᕀ     ܖ 9 ᕀ     ܞ : ᕀ     ܴ   ᔀ     ݆ ; ᕀ     ݖ 	 ᔀ     ݞ 
+ ᔀ     ݨ < ᕀ     ݼ   ᔀ     ބ = ᕀ     ޘ ? ᕀ     ެ @ ᕀ     ߊ A ᕀ     ߤ D ᕀ     ߾ F ᕀ     ࠎ H ᕀ     ࠠ J ᕀ  ð              耀      á耂      耙      耝      耟  䅄⩔밀 Ƕœ 䂊   ฿桷  棵    L,  䂊耂萁  ś䂊耂膉<  䀀䀀脁Z  䂴䂴脁d  䁯䁯脁z  䁮䁮脁  䂁䂁脁¬  䁥䁥脁Î  䁭䁭脁ø  䁷䁷脁Ĝ  䁻䁻āļ  䁹䁹āŢ  䁺䁺āƔ  䁿耂āƮ  䁿耂āǞ  䁿耂Ǹ !䁿耂āȚ  䂏耂 Ȥ  䁿耂āɌ  䁼䁼āɤ #䁿耂āɸ  䂀䂀āʔ  䁾老Ͱ  䂤耂 Ύ  䀝䀝āΦ  䀟䀟āκ  䀞䀞āϜ  䃅䃅 Ϯ  䀆䀆āІ  䀪䀪䄁Ҽ  䁴䁴āӰ  䂥䂥āԂ &䂉耂āԌ "䁿耂āԤ '䁿耂āՒ (䁿耂섁պ )䁿耂ā֠ *䁿耂ā׎ +䁿耂ā䅄⩔븀 Ƕ؀ ,䁿耂āئ -䁿耂āْ .䁿耂āڈ /䁿耂āڪ 0䁿耂āۜ 1䁿耂ā܀ 2䁿耂āܦ 3䂅耂āܼ 5䂅耂āݖ  䁿耂āݲ  䂊䂊脁ހ 6䂊耂āޖ :䂊耂āࠪ  䂢耂 ࡆ  䀁䀁ā࡚  䀚䀚āࡲ  䂂䂂ā࢈  䂅䂅ā࢞  䃃䃃āੴ  䂢䂢 ઊ  䂡䂡老బ  䂾䂾ခీ  䀾䀾ā  	耂  ೴  䂐䂐āഈ ĺ䁾老ദ  䃄䃄āᎌ  耦  ᔴ d쀀 ຂᕔ  䁾老ᕮ  职  ᜤ  䂕䂕āᜤ  聍  ᜴  䂊耂ᝆ Ĥ쀀  ᝜  䁾老᝴ ü聏  ᤀ ɘ         w_hr_deptpv_p w_s䅄⩔쀀 Ƕheet accessiblerole menu windowtype windowstate windowobject toolbaralignment windowanimationstyle windowdockoptions windowdockstate windowdocktabshape windowdocktabclosebutton n_cst_winsrv n_cst_winsrv_preference n_cst_resize n_cst_dwsrv_sort u_dw n_䅄⩔숀 Ƕcst_dberrorattrib powerobject n_cst_luw graphicobject str_wininfo Untitled AppIcon! ś耇 ഀ      䈨∾        ś耔 輀      䈨∾        ś耔 輀      䈨∾        ś耔 輀      䈨∾        uo_button_flat fontcharset fontpitch fontfamily 宋体 确定 treeview borderstyle grsorttype  䅄⩔쐀 Ƕ  ഀ      䑘∾           ഀ      䑘∾           ഀ      䈨∾           ഀ      䈨∾        richtexttoolbaractivation dwobject n_tr n_cst_dwsrv n_cst_dwsrv_rowmanager n_cst_dwsrv_linkage n_cst_dwsrv_report n_cst_dwsrv_multitable n_cst_dwsrv_rowselection n_cst_dwsr䅄⩔였 Ƕv_filter n_cst_dwsrv_reqcolumn n_cst_dwsrv_dropdownsearch n_cst_dwsrv_find n_cst_dwsrv_selectcolumn n_cst_dwsrv_group n_cst_dwsrv_resize u_calendar u_calculator n_cst_showtip window w_dw_tools w_sys_dwsyntax_hist 注意:pfc_retrieve中将is_empid+'w'改为is_empi䅄⩔저 Ƕd+'zz' IUD Eway u_st_splitbar alignment fillpattern dragobject userobject tab MS Sans Serif  SizeWE! SizeNS! ś耾 輀      幠∾           謀      幠∾           謀      幠∾           謀      幠∾           謀      幠∾        ś耾 輀      幠∾           謀      幠∾          䅄⩔쨀 Ƕ 謀      幠∾           謀      幠∾           謀      幠∾        statictext picture tś耾 輀      䈨∾           謀      䈨∾           謀      䈨∾           謀      䈨∾           謀      䈨∾        ś耾 輀      䈨∾           謀      䈨∾           謀      䈨∾           謀      䈨∾ 䅄⩔찀 Ƕ          謀      䈨∾        rectangle linestyle ś耇 ഀ      典∾        ś耔 輀      典∾        ś耔 輀      典∾        ś耔 輀      典∾        datastore str_multi_tree treeviewitem ś耇 ഀ      曨∾        ś耔 輀      曨∾        ś耔 輀      曨∾        ś耔 輀      曨∾        ś聊 ༄  䅄⩔츀 Ƕ    曨∾        保存 退出 宋   res\no.jpg res\yes.jpg res\root.bmp ś  ഀ      ␒        ผ耀ᄀ า耀ᄀ ๊耀ᄀ ࣂ耀ᄀ    ഀ      䈨∾        ś  ഀ      ␒        ผ耀ᄀ า耀ᄀ ๊耀ᄀ ࣂ耀ᄀ Custom026! Custom076! Custom038! res\man.gif 䂏ś  ഀ      縉␒        ༜耀ᄀ ༲耀ᄀ ཈耀ᄀ ཞ耀ᄀ    ഀ      䈨∾     䅄⩔퀀 Ƕ   ś  ഀ      縉␒        ༜耀ᄀ ༲耀ᄀ ཈耀ᄀ ཞ耀ᄀ d_sys_usercc 
+ś耾 輀      幠∾           謀      幠∾           謀      幠∾           謀      幠∾           謀      幠∾        ś耾 輀      幠∾           謀      幠∾           謀      幠∾           謀      幠∾           謀      幠∾      䅄⩔툀 Ƕ  res\company.bmp ś耾 輀      曨∾           謀      曨∾           謀      曨∾           謀      曨∾           謀      曨∾        ś耾 輀      曨∾           謀      曨∾           謀      曨∾           謀      曨∾           謀      曨∾        sqlca cloud;sqlHandle_01_A8C70ED0䅄⩔퐀 Ƕ;aCPT/n8ltsqxkHuk40XeV/48pWOOdWIAM0Opp/3sNqoGX00aatoYNJi3mX5ki4ot74Py7q2pvw240nxPlIg46TsQYjVbXGGLpcW0E7wIpnw= ,/耂        ᒪ耀  ᎘耀          棵         ᓰ耀ᒰ耀                  棵      uf_get_datetime str_userinfo gstr_userinfo cloud;sqlHandle_01_925ADE5C;L䅄⩔혀 Ƕ9qp0qbmwK4hOiSGEBy6Jb8J3rcPPcVCBPqFxys8Ykuwy+T5GtVIuHj7gi22+KIGr7saFuG5ewUeMZa6f/NZAs7ykquNcNjryugh8tutMJ8= ,/        ᚜耀  ᖊ耀          棵       ਌  ᛠ耀ᚠ耀                  棵      message w_master uf_msg_pop str_sysinfo gstr_sysinfo cloud;sqlHandle_01_2A6䅄⩔ Ƕ15B86;SnS8wl2pJ7bSjL+/guFcX5jxdOMP3lBMvWimrv9Jewjm+LFoIWestZIqgzDHgzyaE+P5I0jjipatvPpHVYOyLw== 36        ᡸ耀  ណ耀          棵          ᢼ耀᡼耀                  棵      ː   ˸   ̠   ͈   М   ф   Ѭ   Ҕ   ࣤ   ऌ   ऴ   ड़   ঄   ব   ৔   ৼ   ਤ   ੌ   જ   ૄ   ૬   ଔ   䅄⩔ Ƕ଼   ୤   ஌   ழ   ௜   ఄ   ౔   ౼   ತ   ೌ   ീ   ൨   ඐ   ම   ෠   ๤   ຬ   ໔   ླྀ   ࿀   ࿨   ၌   ၴ   ႜ   Ⴤ   წ   ᄔ   ᄼ   ᅤ   ᆌ   ᆴ   ᇼ   ሤ   ቌ   ቴ   ኜ   ዄ   ዬ   ጔ   ጼ   ፤   ᒪ   ᒰ 	 ᓰ 
+ ᓴ 	 ᚜   ᚠ 	 ᛠ 
+ ᛤ 	 ᡸ   ᡼ 	 ᢼ 
+ ᣀ 	  2 ,           w_hr_deptpv_p   ᭞      ഀ䅄⩔ Ƕ耂  Ƅ           as_cccode ai_index wf_setdw as_user wf_initv +create +destroy +open +pfc_save +clicked handle +constructor +destructor +doubleclicked +itempopulate oldhandle newhandle +selectionchanged Ì H               $     LSI H     QS Q L I )¾     䅄⩔ ǶLL 
+¾     ¾     ĸ     Ō     LLL ¾     ¾     ĸ     Ō         0   P   d   p   |      ¨   ´   
+x ࠲           _initsrc w_sheet w_hr_deptpv_p accessiblerole menu windowtype windowstate windowobject toolbaralignment windowanimationstyle windowdockoptions w䅄⩔ Ƕindowdockstate windowdocktabshape windowdocktabclosebutton n_cst_winsrv n_cst_winsrv_preference n_cst_resize n_cst_dwsrv_sort u_dw n_cst_dberrorattrib powerobject n_cst_luw graphicobject str_wininfo uo_button_flat cb_2 fontcharset fontpitch fontfamily䅄⩔ Ƕ cb_1 treeview tv_2 borderstyle grsorttype tv_1 dw_1 richtexttoolbaractivation dwobject n_tr n_cst_dwsrv n_cst_dwsrv_rowmanager n_cst_dwsrv_linkage n_cst_dwsrv_report n_cst_dwsrv_multitable n_cst_dwsrv_rowselection n_cst_dwsrv_filter n_cst_dwsrv_reqco䅄⩔ Ƕlumn n_cst_dwsrv_dropdownsearch n_cst_dwsrv_find n_cst_dwsrv_selectcolumn n_cst_dwsrv_group n_cst_dwsrv_resize u_calendar u_calculator n_cst_showtip window w_dw_tools w_sys_dwsyntax_hist u_st_splitbar st_1 alignment fillpattern dragobject userobject t䅄⩔ Ƕab statictext st_title picture p_1 st_2 rectangle r_1 linestyle datastore str_multi_tree treeviewitem str_userinfo message w_master str_sysinfo ـ        ᔀ     "   ᕀ     2   ᔀ     N   ᕀ     l   ᕀ     v   ᕀ        ᕀ     ¤   ᕀ     ¾   ᕀ     à   ᕀ     Ċ 䅄⩔먀 Ƕ	 ᕀ     Į 
+ ᕀ     Ŏ   ᕀ     Ŵ   ᕀ     Ʀ  ᕀ     ǀ   ᕀ     ǰ   ᕀ     Ȋ   ᕀ     Ȭ   ᕀ     ȶ   ᕀ     ɞ   ᕀ     ɶ   ᕀ     ʊ   ᕀ     ʦ   ᕀ     ʾ   ᕀ     ˜   ᔀ     ˦   ᕀ     ˾   ᕀ     ̒   ᕀ     ̨   ᔀ     ̲   ᕀ     ̈́   ᔀ     ͎   ᕀ     ͦ   ᕀ     ͼ   ᔀ     Ά  䅄⩔ Ƕ31.3   部门选择forward
+global type w_rs_ccsele_pop from w_language
+end type
+type sle_1 from u_sle within w_rs_ccsele_pop
+end type
+type cb_2 from uo_button_flat within w_rs_ccsele_pop
+end type
+type cb_1 from uo_button_flat within w_rs_ccsele_pop
+en䅄⩔ Ƕd type
+type st_1 from statictext within w_rs_ccsele_pop
+end type
+type tv_1 from uo_tree within w_rs_ccsele_pop
+end type
+end forward
+
+global type w_rs_ccsele_pop from w_language
+integer x = 1134
+integer y = 500
+integer width = 1015
+integer h䅄⩔ Ƕeight = 1584
+string title = "部门选择"
+windowtype windowtype = response!
+sle_1 sle_1
+cb_2 cb_2
+cb_1 cb_1
+st_1 st_1
+tv_1 tv_1
+end type
+global w_rs_ccsele_pop w_rs_ccsele_pop
+
+type prototypes
+Function long ShellExecuteA (ulong hwnd, string lpOpe䅄⩔ Ƕration, string lpFile, string lpParameters, string lpDirectory, long nShowCmd) library "shell32.dll" alias for "ShellExecuteA;Ansi"
+end prototypes
+
+type variables
+any deco
+window iw_this
+string ls_tmp
+datastore ids_ds
+end variables
+
+forward 䅄⩔ Ƕprototypes
+public subroutine uf_expand (treeview tv_parm, long handle)
+public function boolean of_loop (integer handle, string as_data)
+public function integer of_find (long handle, string as_data)
+end prototypes
+
+public subroutine uf_expand (tr䅄⩔ Ƕeeview tv_parm, long handle);treeviewitem tvim
+long i
+string ls_depttmp
+long ld_tmp,ll_rowcount
+long l_handle
+
+tv_parm.GetItem(handle, tvim)
+deco = string(tvim.data)
+
+ids_ds.Retrieve(string(deco),string(deco) + 'zz')
+ll_rowcount=ids_ds.rowco䅄⩔ Ƕunt()
+tvim.pictureindex = 1
+tvim.selectedpictureindex = 2
+if ll_rowcount>0 then
+	for i = 1 to ll_rowcount
+		 ls_depttmp = trim(ids_ds.object.cc_level[i])
+		 if len(ls_depttmp) = len(trim(deco)) + 2 then
+			tvim.label= ids_ds.object.cc_desc[i]
+䅄⩔ Ƕ			tvim.data= ls_depttmp
+			select count(cc_level)
+			into :ld_tmp
+			from cc_mstr
+			where (cc_level like (:ls_depttmp+"%")) and cc_level<>:ls_depttmp;				
+			if ld_tmp=0 then
+				tvim.children=false
+			else
+				tvim.children=true
+			end if䅄⩔切 Ƕ
+			tv_parm.insertitemLast(handle,tvim)
+		 end if 
+	next
+end if
+
+
+end subroutine
+
+public function boolean of_loop (integer handle, string as_data);treeviewitem ltvi
+long ll_handle
+boolean lb_find
+
+if tv_1.getitem(handle,ltvi)<0 then return䅄⩔ﰀ Ƕ false
+if tv_1.finditem(ChildTreeItem!,handle) <0 then
+	tv_1.expanditem(handle)
+end if
+ll_handle=tv_1.finditem(ChildTreeItem!,handle)
+
+do while ll_handle>0 
+	choose case of_find(ll_handle,as_data) 
+		case 0	//false
+			ll_handle=tv_1.finditem(䅄⩔︀ ǶnextTreeItem!,ll_handle)
+		case 1	//ok
+			lb_find=true
+			tv_1.SelectItem ( ll_handle )
+			exit
+		case 2	//contiue;
+//			tv.expanditem(ll_handle)
+			if of_loop(ll_handle,as_data) then
+				lb_find=true
+				exit
+			end if
+	end choose
+loop
+䅄⩔  Ƕ
+return lb_find
+end function
+
+public function integer of_find (long handle, string as_data);//====================================================================
+// 事件: uo_pattern_hr.of_find()
+//--------------------------------------------------䅄⩔Ȁ Ƕ------------------
+// 描述: 判断传进的handle是否正确
+//--------------------------------------------------------------------
+// 参数:  value	long  	handle 	
+// 参数:  value	string	as_data	
+//------------------------------------------------
