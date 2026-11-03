@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>工号规则可配置生成 · 交互原型</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            success: '#00B42A',
+            danger: '#F53F3F',
+            panel: '#F5F7FA',
+            ink: '#333333',
+            amberSide: '#FFF7ED',
+            amberBorder: '#FDBA74',
+            amberText: '#9A3412',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; color: #333; }
+    .layout { display: flex; height: 100vh; overflow: hidden; }
+    .main-pane { width: 82%; overflow: auto; background: #f5f7fa; }
+    .side-pane { width: 18%; overflow: auto; background: #fff7ed; border-left: 1px solid #fdba74; position: relative; z-index: 2; }
+    #connector-svg { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
+    .connector-line { fill: none; stroke: #fb923c; stroke-width: 2; opacity: 0.75; transition: stroke-width 0.15s, opacity 0.15s, stroke 0.15s; }
+    .connector-line.active { stroke: #165DFF; stroke-width: 3; opacity: 1; }
+    .connector-badge {
+      font-size: 11px; font-weight: 700; fill: #fff;
+    }
+    .hotspot.hot-active, .doc-item.doc-active {
+      outline: 2px solid #165DFF; outline-offset: 2px; border-radius: 8px;
+    }
+    .seg-row:hover { background: #eff6ff; }
+    @media (max-width: 900px) {
+      .layout { flex-direction: column; height: auto; min-height: 100vh; }
+      .main-pane, .side-pane { width: 100%; }
+      .side-pane { border-left: none; border-top: 1px solid #fdba74; max-height: 40vh; }
+      #connector-svg, .mobile-hide-lines { display: none !important; }
+      .mobile-hint { display: block !important; }
+      .view-toggle { display: flex !important; }
+      .main-pane.view-ui-only ~ .side-pane { display: none; }
+      .main-pane.view-ui-only { width: 100%; }
+    }
+    .mobile-hint { display: none; font-size: 12px; color: #9a3412; margin-top: 4px; }
+    .view-toggle { display: none; gap: 8px; padding: 8px 16px; background: #fff; border-bottom: 1px solid #e5e7eb; }
+  </style>
+</head>
+<body>
+  <!--
+    原型说明：演示「工号规则前端可配、过程可见」。
+    - 左侧：选模板 → 编辑段 → 即时预览样例号（纯前端模拟，不占真实号段）。
+    - 右侧：方案要点；SVG 连线对应关键控件。
+    - 用法：用浏览器直接打开本文件即可。
+  -->
+  <div class="view-toggle">
+    <button type="button" id="btn-view-ui" class="px-3 py-1 rounded bg-primary text-white text-sm">仅界面</button>
+    <button type="button" id="btn-view-both" class="px-3 py-1 rounded bg-white border text-sm">界面+说明</button>
+  </div>
+
+  <div class="layout">
+    <div class="main-pane" id="main-pane">
+      <header class="bg-white border-b px-6 py-4 sticky top-0 z-10 shadow-sm">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-xs text-gray-400 mb-1">公司参数设置 · 原型</div>
+            <h1 class="text-xl font-semibold text-ink"><i class="fa-solid fa-hashtag text-primary mr-2"></i>工号规则配置</h1>
+          </div>
+          <div class="flex gap-2">
+            <button type="button" class="px-3 py-1.5 text-sm rounded border bg-white hover:bg-gray-50" onclick="resetDemo()"><i class="fa-solid fa-rotate-left mr-1"></i>重置</button>
+            <button type="button" class="px-3 py-1.5 text-sm rounded bg-success text-white hover:opacity-90" onclick="alert('原型：保存将写入规则 JSON / 段表（后端解释发号）')"><i class="fa-solid fa-floppy-disk mr-1"></i>保存规则</button>
+          </div>
+        </div>
+      </header>
+
+      <div class="p-6 max-w-5xl mx-auto space-y-5">
+        <!-- 厂别与基础 -->
+        <section class="bg-white rounded-xl shadow-sm border p-5" data-hotspot="1" id="hot-1">
+          <h2 class="font-semibold mb-3 text-ink"><i class="fa-solid fa-building text-primary mr-2"></i>基础参数</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <label class="block text-sm">
+              <span class="text-gray-500">厂别</span>
+              <input id="siteName" class="mt-1 w-full border rounded-lg px-3 py-2" value="厦门易维" readonly />
+            </label>
+            <label class="block text-sm">
+              <span class="text-gray-500">固定号前缀</span>
+              <input id="fixedPrefix" class="mt-1 w-full border rounded-lg px-3 py-2" value="XM" maxlength="8" />
+            </label>
+            <label class="block text-sm">
+              <span class="text-gray-500">流水位数</span>
+              <input id="seqLen" type="number" min="1" max="12" class="mt-1 w-full border rounded-lg px-3 py-2" value="4" />
+            </label>
+          </div>
+          <p class="mobile-hint">① 基础参数：固定号与流水长度参与预览与正式发号。</p>
+        </section>
+
+        <!-- 模板 -->
+        <section class="bg-white rounded-xl shadow-sm border p-5" data-hotspot="2" id="hot-2">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="font-semibold text-ink"><i class="fa-solid fa-layer-group text-primary mr-2"></i>预置模板</h2>
+            <label class="text-sm flex items-center gap-2 text-gray-600">
+              <input type="checkbox" id="customToggle" class="rounded border-gray-300" />
+              基于模板自定义（改段后不改码表）
+            </label>
+          </div>
+          <select id="templateSelect" class="w-full border rounded-lg px-3 py-2.5 text-sm"></select>
+          <p class="text-xs text-gray-400 mt-2">对应现有 EmpIdMode 码值；切换模板会重置下方段列表。</p>
+          <p class="mobile-hint">② 预置模板：一键载入段组合，避免后端写死每种模式。</p>
+        </section>
+
+        <!-- 段编辑 -->
+        <section class="bg-white rounded-xl shadow-sm border p-5" data-hotspot="3" id="hot-3">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="font-semibold text-ink"><i class="fa-solid fa-puzzle-piece text-primary mr-2"></i>规则段（从左到右拼接）</h2>
+            <button type="button" id="btnAddSeg" class="text-sm px-3 py-1.5 rounded bg-primary text-white"><i class="fa-solid fa-plus mr-1"></i>添加段</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="text-left text-gray-500 border-b">
+                  <th class="py-2 w-10">#</th>
+                  <th class="py-2">类型</th>
+                  <th class="py-2">参数</th>
+                  <th class="py-2 w-36">操作</th>
+                </tr>
+              </thead>
+              <tbody id="segBody"></tbody>
+            </table>
+          </div>
+          <p class="mobile-hint">③ 规则段：前端可见的生成过程；后端按同序解释执行。</p>
+        </section>
+
+        <!-- 预览 -->
+        <section class="bg-white rounded-xl shadow-sm border p-5" data-hotspot="4" id="hot-4">
+          <h2 class="font-semibold mb-3 text-ink"><i class="fa-solid fa-eye text-primary mr-2"></i>样例预览（不占号）</h2>
+          <div class="flex flex-wrap items-end gap-4">
+            <label class="block text-sm">
+              <span class="text-gray-500">模拟日期</span>
+              <input id="mockDate" type="date" class="mt-1 border rounded-lg px-3 py-2" />
+            </label>
+            <label class="block text-sm">
+              <span class="text-gray-500">模拟下一流水</span>
+              <input id="mockSeq" type="number" min="1" class="mt-1 border rounded-lg px-3 py-2 w-28" value="7" />
+            </label>
+            <button type="button" class="px-4 py-2 rounded-lg bg-primary text-white text-sm" onclick="renderPreview()"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>刷新预览</button>
+          </div>
+          <div class="mt-4 p-4 rounded-lg bg-panel border flex items-center justify-between gap-4">
+            <div>
+              <div class="text-xs text-gray-400 mb-1">生成结果</div>
+              <div id="previewOut" class="text-2xl font-mono font-semibold tracking-wide text-primary">—</div>
+            </div>
+            <div id="previewParts" class="text-xs text-gray-500 text-right space-y-0.5"></div>
+          </div>
+          <p class="text-xs text-amber-700 mt-3 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">
+            <i class="fa-solid fa-shield-halved mr-1"></i>
+            正式入职发号由后端 Generator + 号段表完成；本预览仅演示拼接逻辑。
+          </p>
+          <p class="mobile-hint">④ 样例预览：配置即时可见；正式占号在服务端。</p>
+        </section>
+
+        <section class="text-xs text-gray-400 pb-8">
+          方案文档：<code>doc/分析文档/公司参数设置/04-工号规则可配置生成方案.md</code>
+        </section>
+      </div>
+    </div>
+
+    <aside class="side-pane p-4" id="side-pane">
+      <h3 class="font-bold text-amberText mb-3 text-sm tracking-wide">功能说明</h3>
+      <ol class="space-y-4 text-sm text-amberText">
+        <li class="doc-item p-2 rounded" data-doc="1" id="doc-1">
+          <span class="inline-flex w-5 h-5 items-center justify-center rounded-full bg-orange-500 text-white text-xs font-bold mr-1">1</span>
+          <strong>基础参数</strong>
+          <p class="mt-1 text-xs leading-relaxed opacity-90">厂别级固定号、流水位数。与公司参数中的固定号/工号长度对齐，参与段渲染。</p>
+        </li>
+        <li class="doc-item p-2 rounded" data-doc="2" id="doc-2">
+          <span class="inline-flex w-5 h-5 items-center justify-center rounded-full bg-orange-500 text-white text-xs font-bold mr-1">2</span>
+          <strong>预置模板</strong>
+          <p class="mt-1 text-xs leading-relaxed opacity-90">映射现有 EmpIdMode（0/1/4/5/8/9）。选模板载入段；「自定义」后可改段而不改码表选项。</p>
+        </li>
+        <li class="doc-item p-2 rounded" data-doc="3" id="doc-3">
+          <span class="inline-flex w-5 h-5 items-center justify-center rounded-full bg-orange-500 text-white text-xs font-bold mr-1">3</span>
+          <strong>规则段编排</strong>
+          <p class="mt-1 text-xs leading-relaxed opacity-90">生成过程在前端可见：fixed / date / literal / seq / manual。后端用同一段列表解释执行。</p>
+        </li>
+        <li class="doc-item p-2 rounded" data-doc="4" id="doc-4">
+          <span class="inline-flex w-5 h-5 items-center justify-center rounded-full bg-orange-500 text-white text-xs font-bold mr-1">4</span>
+          <strong>预览 ≠ 发号</strong>
+          <p class="mt-1 text-xs leading-relaxed opacity-90">预览不递增号段；入职 API 走锁与 HrEmpIdSeq，保证并发唯一。</p>
+        </li>
+      </ol>
+    </aside>
+  </div>
+
+  <svg id="connector-svg" class="mobile-hide-lines"></svg>
+
+  <script>
+    const TEMPLATES = [
+      { code: '0', name: '自动流水号', segs: [{ type: 'seq' }] },
+      { code: '1', name: '手工维护', segs: [{ type: 'manual' }] },
+      { code: '4', name: '固定号+流水号', segs: [{ type: 'fixed' }, { type: 'seq' }] },
+      { code: '5', name: '4位年+月+流水号', segs: [{ type: 'date', format: 'yyyy' }, { type: 'date', format: 'MM' }, { type: 'seq' }] },
+      { code: '8', name: '固定号+4位年+2位月+特殊符号+流水号', segs: [{ type: 'fixed' }, { type: 'date', format: 'yyyy' }, { type: 'date', format: 'MM' }, { type: 'literal', value: '-' }, { type: 'seq' }] },
+      { code: '9', name: '固定号+4位年+2位月+流水号', segs: [{ type: 'fixed' }, { type: 'date', format: 'yyyy' }, { type: 'date', format: 'MM' }, { type: 'seq' }] },
+    ];
+
+    const SEG_TYPES = [
+      { value: 'fixed', label: '固定号' },
+      { value: 'date', label: '日期' },
+      { value: 'literal', label: '特殊符号' },
+      { value: 'seq', label: '流水号' },
+      { value: 'manual', label: '手工（不生成）' },
+    ];
+
+    let segments = [];
+
+    function deepClone(o) { return JSON.parse(JSON.stringify(o)); }
+
+    function init() {
+      const sel = document.getElementById('templateSelect');
+      sel.innerHTML = TEMPLATES.map((t) => `<option value="${t.code}">[${t.code}] ${t.name}</option>`).join('');
+      const d = new Date();
+      document.getElementById('mockDate').value = d.toISOString().slice(0, 10);
+      sel.value = '8';
+      applyTemplate('8');
+      sel.addEventListener('change', () => {
+        applyTemplate(sel.value);
+        document.getElementById('customToggle').checked = false;
+      });
+      document.getElementById('btnAddSeg').addEventListener('click', () => {
+        document.getElementById('customToggle').checked = true;
+        segments.push({ type: 'literal', value: '-' });
+        renderSegTable();
+        renderPreview();
+      });
+      ['fixedPrefix', 'seqLen', 'mockDate', 'mockSeq'].forEach((id) => {
+        document.getElementById(id).addEventListener('input', renderPreview);
+      });
+      document.getElementById('btn-view-ui')?.addEventListener('click', () => {
+        document.getElementById('main-pane').classList.add('view-ui-only');
+      });
+      document.getElementById('btn-view-both')?.addEventListener('click', () => {
+        document.getElementById('main-pane').classList.remove('view-ui-only');
+        requestAnimationFrame(drawConnectors);
+      });
+      bindHover();
+      window.addEventListener('resize', () => requestAnimationFrame(drawConnectors));
+      window.addEventListener('scroll', () => requestAnimationFrame(drawConnectors), true);
+    }
+
+    function applyTemplate(code) {
+      const t = TEMPLATES.find((x) => x.code === code) || TEMPLATES[0];
+      segments = deepClone(t.segs);
+      renderSegTable();
+      renderPreview();
+      requestAnimationFrame(drawConnectors);
+    }
+
+    function resetDemo() {
+      document.getElementById('templateSelect').value = '8';
+      document.getElementById('fixedPrefix').value = 'XM';
+      document.getElementById('seqLen').value = '4';
+      document.getElementById('mockSeq').value = '7';
+      document.getElementById('customToggle').checked = false;
+      applyTemplate('8');
+    }
+
+    function renderSegTable() {
+      const body = document.getElementById('segBody');
+      body.innerHTML = segments.map((seg, i) => {
+        const typeOpts = SEG_TYPES.map((t) => `<option value="${t.value}" ${seg.type === t.value ? 'selected' : ''}>${t.label}</option>`).join('');
+        let param = '';
+        if (seg.type === 'date') {
+          param = `<select data-i="${i}" data-f="format" class="border rounded px-2 py-1">
+            <option value="yy" ${seg.format === 'yy' ? 'selected' : ''}>2位年 yy</option>
+            <option value="yyyy" ${seg.format === 'yyyy' ? 'selected' : ''}>4位年 yyyy</option>
+            <option value="MM" ${seg.format === 'MM' ? 'selected' : ''}>2位月 MM</option>
+            <option value="dd" ${seg.format === 'dd' ? 'selected' : ''}>日 dd</option>
+          </select>`;
+        } else if (seg.type === 'literal') {
+          param = `<input data-i="${i}" data-f="value" class="border rounded px-2 py-1 w-20" maxlength="3" value="${seg.value || '-'}" /> <span class="text-xs text-gray-400">白名单</span>`;
+        } else if (seg.type === 'fixed') {
+          param = `<span class="text-gray-400">取「固定号前缀」</span>`;
+        } else if (seg.type === 'seq') {
+          param = `<span class="text-gray-400">位数=流水位数，补零</span>`;
+        } else {
+          param = `<span class="text-gray-400">入职时手工录入</span>`;
+        }
+        return `<tr class="seg-row border-b">
+          <td class="py-2 text-gray-400">${i + 1}</td>
+          <td class="py-2"><select data-i="${i}" data-f="type" class="border rounded px-2 py-1">${typeOpts}</select></td>
+          <td class="py-2">${param}</td>
+          <td class="py-2 space-x-1">
+            <button type="button" class="text-primary px-1" title="上移" onclick="moveSeg(${i},-1)" ${i === 0 ? 'disabled' : ''}><i class="fa-solid fa-arrow-up"></i></button>
+            <button type="button" class="text-primary px-1" title="下移" onclick="moveSeg(${i},1)" ${i === segments.length - 1 ? 'disabled' : ''}><i class="fa-solid fa-arrow-down"></i></button>
+            <button type="button" class="text-danger px-1" title="删除" onclick="removeSeg(${i})"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`;
+      }).join('');
+
+      body.querySelectorAll('select[data-f], input[data-f]').forEach((el) => {
+        el.addEventListener('change', onSegField);
+        el.addEventListener('input', onSegField);
+      });
+    }
+
+    function onSegField(e) {
+      const i = +e.target.getAttribute('data-i');
+      const f = e.target.getAttribute('data-f');
+      document.getElementById('customToggle').checked = true;
+      if (f === 'type') {
+        const type = e.target.value;
+        const next = { type };
+        if (type === 'date') next.format = 'yyyy';
+        if (type === 'literal') next.value = '-';
+        segments[i] = next;
+        renderSegTable();
+      } else {
+        segments[i][f] = e.target.value;
+      }
+      renderPreview();
+    }
+
+    function moveSeg(i, dir) {
+      const j = i + dir;
+      if (j < 0 || j >= segments.length) return;
+      document.getElementById('customToggle').checked = true;
+      const t = segments[i];
+      segments[i] = segments[j];
+      segments[j] = t;
+      renderSegTable();
+      renderPreview();
+    }
+
+    function removeSeg(i) {
+      document.getElementById('customToggle').checked = true;
+      segments.splice(i, 1);
+      renderSegTable();
+      renderPreview();
+    }
+
+    function pad(n, len) {
+      const s = String(n);
+      return s.length >= len ? s.slice(-len) : '0'.repeat(len - s.length) + s;
+    }
+
+    function renderPreview() {
+      const prefix = document.getElementById('fixedPrefix').value || '';
+      const len = Math.max(1, +document.getElementById('seqLen').value || 4);
+      const seq = Math.max(1, +document.getElementById('mockSeq').value || 1);
+      const dateStr = document.getElementById('mockDate').value || new Date().toISOString().slice(0, 10);
+      const [y, m, d] = dateStr.split('-');
+      const parts = [];
+      let out = '';
+
+      if (segments.some((s) => s.type === 'manual') && segments.length === 1) {
+        document.getElementById('previewOut').textContent = '（手工录入，不自动生成）';
+        document.getElementById('previewParts').innerHTML = '';
+        return;
+      }
+
+      for (const seg of segments) {
+        let piece = '';
+        if (seg.type === 'fixed') piece = prefix;
+        else if (seg.type === 'literal') piece = (seg.value || '').replace(/[^A-Za-z0-9\-_]/g, '').slice(0, 3);
+        else if (seg.type === 'date') {
+          if (seg.format === 'yy') piece = y.slice(2);
+          else if (seg.format === 'yyyy') piece = y;
+          else if (seg.format === 'MM') piece = m;
+          else if (seg.format === 'dd') piece = d;
+        } else if (seg.type === 'seq') piece = pad(seq, len);
+        else if (seg.type === 'manual') piece = '?';
+        out += piece;
+        parts.push(`<div><span class="text-gray-400">${seg.type}</span> → <span class="font-mono text-ink">${piece || '∅'}</span></div>`);
+      }
+
+      document.getElementById('previewOut').textContent = out || '—';
+      document.getElementById('previewParts').innerHTML = parts.join('');
+      requestAnimationFrame(drawConnectors);
+    }
+
+    function bindHover() {
+      document.querySelectorAll('[data-hotspot]').forEach((el) => {
+        el.addEventListener('mouseenter', () => setActive(el.getAttribute('data-hotspot')));
+        el.addEventListener('mouseleave', () => setActive(null));
+      });
+      document.querySelectorAll('[data-doc]').forEach((el) => {
+        el.addEventListener('mouseenter', () => setActive(el.getAttribute('data-doc')));
+        el.addEventListener('mouseleave', () => setActive(null));
+      });
+    }
+
+    function setActive(id) {
+      document.querySelectorAll('.hotspot, [data-hotspot]').forEach((el) => el.classList.toggle('hot-active', id && el.getAttribute('data-hotspot') === id));
+      document.querySelectorAll('.doc-item').forEach((el) => el.classList.toggle('doc-active', id && el.getAttribute('data-doc') === id));
+      document.querySelectorAll('.connector-line').forEach((line) => {
+        line.classList.toggle('active', id && line.getAttribute('data-id') === id);
+      });
+    }
+
+    function drawConnectors() {
+      const svg = document.getElementById('connector-svg');
+      if (window.matchMedia('(max-width: 900px)').matches) {
+        svg.innerHTML = '';
+        return;
+      }
+      const ids = ['1', '2', '3', '4'];
+      const paths = [];
+      ids.forEach((id) => {
+        const left = document.getElementById('hot-' + id);
+        const right = document.getElementById('doc-' + id);
+        if (!left || !right) return;
+        const lr = left.getBoundingClientRect();
+        const rr = right.getBoundingClientRect();
+        const x1 = lr.right;
+        const y1 = lr.top + lr.height / 2;
+        const x2 = rr.left;
+        const y2 = rr.top + rr.height / 2;
+        const cx = (x1 + x2) / 2;
+        const d = `M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}`;
+        const mx = (x1 + x2) / 2;
+        const my = (y1 + y2) / 2;
+        paths.push(`
+          <path class="connector-line" data-id="${id}" d="${d}" />
+          <circle cx="${mx}" cy="${my}" r="9" fill="#f97316" />
+          <text x="${mx}" y="${my + 3.5}" text-anchor="middle" class="connector-badge">${id}</text>
+        `);
+      });
+      svg.innerHTML = paths.join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      init();
+      setTimeout(drawConnectors, 50);
+    });
+  </script>
+</body>
+</html>

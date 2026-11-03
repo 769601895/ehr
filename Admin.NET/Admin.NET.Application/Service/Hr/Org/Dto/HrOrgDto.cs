@@ -53,6 +53,8 @@ public class HrOrgOutput
     public string? CcSite { get; set; }
     public int? CcState { get; set; }
     public string? CcCost { get; set; }
+    /// <summary>组织类型：1部门 / 2公司</summary>
+    public string? OrgType { get; set; }
     public float? CcWageRate { get; set; }
     public string? CcStatBasic { get; set; }
     public int? CcEnable { get; set; }
@@ -100,6 +102,8 @@ public class HrOrgSaveInput
     public string? CcSite { get; set; }
     public int? CcState { get; set; }
     public string? CcCost { get; set; }
+    /// <summary>组织类型：1部门 / 2公司；空则默认部门</summary>
+    public string? OrgType { get; set; }
     public float? CcWageRate { get; set; }
     public string? CcStatBasic { get; set; }
     public string? CcCountGroup { get; set; }

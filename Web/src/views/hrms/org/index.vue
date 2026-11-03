@@ -34,6 +34,9 @@
 								<template #empty>
 									<el-empty :image-size="160" />
 								</template>
+								<template #row_orgType="{ row }">
+									{{ orgTypeLabel(row.orgType) }}
+								</template>
 								<template #row_ccEnable="{ row }">
 									<el-tag v-if="row.ccEnable == null || row.ccEnable === 0" type="success">{{ t('message.hrms.common.enabled') }}</el-tag>
 									<el-tag v-else type="danger">{{ t('message.hrms.common.disabled') }}</el-tag>
@@ -66,6 +69,9 @@
 								<template #empty>
 									<el-empty :image-size="160" />
 								</template>
+								<template #row_orgType="{ row }">
+									{{ orgTypeLabel(row.orgType) }}
+								</template>
 								<template #row_ccEnable="{ row }">
 									{{ row.ccEnable === 1 ? t('message.hrms.common.yes') : t('message.hrms.common.no') }}
 								</template>
@@ -94,10 +100,12 @@ import { auth } from '/@/utils/authFunction';
 import OrgTree from '/@/views/hrms/org/component/orgTree.vue';
 import EditOrg from '/@/views/hrms/org/component/editOrg.vue';
 import ChangeOrg from '/@/views/hrms/org/component/changeOrg.vue';
-import { deleteHrOrg, getHrOrgList, pageHrOrg } from '/@/api/hrms/hrOrg';
+import { deleteHrOrg, getHrCodeList, getHrOrgList, pageHrOrg } from '/@/api/hrms/hrOrg';
 
 const { t, locale } = useI18n();
 const orgTreeRef = ref<InstanceType<typeof OrgTree>>();
+const orgTypeLabelMap = ref<Record<string, string>>({});
+const orgTypeLabel = (v: string | null | undefined) => orgTypeLabelMap.value[String(v ?? '1')] || orgTypeLabelMap.value['1'] || String(v ?? '');
 const editOrgRef = ref<InstanceType<typeof EditOrg>>();
 const maintainGrid = ref<VxeGridInstance>();
 const detailGrid = ref<VxeGridInstance>();
@@ -178,8 +186,8 @@ const buildMaintainColumns = () => [
 	{ field: 'ccCode', title: t('message.hrms.org.ccCode'), minWidth: 110, showOverflow: 'tooltip', sortable: true },
 	{ field: 'ccDept', title: t('message.hrms.org.ccDept'), minWidth: 100, showOverflow: 'tooltip', sortable: true },
 	{ field: 'ccLevel', title: t('message.hrms.org.ccLevel'), minWidth: 110, showOverflow: 'tooltip', sortable: true },
-	{ field: 'ccSite', title: t('message.hrms.org.ccSite'), minWidth: 90, showOverflow: 'tooltip', sortable: true },
 	{ field: 'ccCost', title: t('message.hrms.org.ccCost'), minWidth: 90, showOverflow: 'tooltip', sortable: true },
+	{ field: 'orgType', title: t('message.hrms.org.orgType'), minWidth: 100, align: 'center', sortable: true, slots: { default: 'row_orgType' } },
 	{ field: 'ccEnable', title: t('message.hrms.common.status'), width: 90, align: 'center', sortable: true, slots: { default: 'row_ccEnable' } },
 	{ field: 'ccUser', title: t('message.hrms.org.ccUser'), minWidth: 90, showOverflow: 'tooltip', sortable: true },
 	{ field: 'ccDate', title: t('message.hrms.org.ccDate'), minWidth: 160, showOverflow: 'tooltip', sortable: true },
@@ -193,10 +201,8 @@ const buildDetailColumns = () => [
 	{ field: 'ccDept', title: t('message.hrms.org.alias'), minWidth: 90, sortable: true },
 	{ field: 'ccLevel', title: t('message.hrms.org.ccLevel'), minWidth: 110, sortable: true },
 	{ field: 'ccCodeParent', title: t('message.hrms.org.parentCode'), minWidth: 100, sortable: true },
-	{ field: 'ccSite', title: t('message.hrms.org.ccSite'), minWidth: 80, sortable: true },
 	{ field: 'ccCost', title: t('message.hrms.org.cost'), minWidth: 80, sortable: true },
-	{ field: 'ccWoca', title: t('message.hrms.org.ccWoca'), minWidth: 90, sortable: true },
-	{ field: 'ccXzGroup', title: t('message.hrms.org.ccXzGroup'), minWidth: 90, sortable: true },
+	{ field: 'orgType', title: t('message.hrms.org.orgType'), minWidth: 90, align: 'center', sortable: true, slots: { default: 'row_orgType' } },
 	{ field: 'ccEnable', title: t('message.hrms.org.stopped'), width: 70, align: 'center', sortable: true, slots: { default: 'row_ccEnable' } },
 	{ field: 'ccDeleRemark', title: t('message.hrms.org.ccDeleRemark'), minWidth: 140, showOverflow: 'tooltip' },
 ];
@@ -430,9 +436,23 @@ const detailGridEvents: VxeGridListeners = {
 	},
 };
 
-watch(locale, () => {
+const loadOrgTypeLabels = async () => {
+	try {
+		const res = await getHrCodeList('OrgType');
+		const map: Record<string, string> = {};
+		for (const x of res.data?.result ?? []) {
+			map[String(x.value)] = x.label || x.text || x.value;
+		}
+		orgTypeLabelMap.value = map;
+	} catch {
+		orgTypeLabelMap.value = { '1': t('message.hrms.org.orgTypeDept'), '2': t('message.hrms.org.orgTypeCompany') };
+	}
+};
+
+watch(locale, async () => {
 	maintainOptions.name = t('message.hrms.org.tabMaintain');
 	detailOptions.name = t('message.hrms.org.tabDetail');
+	await loadOrgTypeLabels();
 	const mCols = buildMaintainColumns();
 	const dCols = buildDetailColumns();
 	maintainOptions.columns = mCols;
@@ -444,6 +464,7 @@ watch(locale, () => {
 onMounted(async () => {
 	state.localPageParam = Local.get(localPageParamKey) || state.localPageParam;
 	state.localDetailParam = Local.get(localDetailParamKey) || state.localDetailParam;
+	await loadOrgTypeLabels();
 });
 </script>
 
