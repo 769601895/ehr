@@ -221,8 +221,10 @@ public class HrOrgService : IDynamicApiController, ITransient
         entity.CcCodeParent = parent?.CcCode;
         entity.ParentId = parent?.CcIdentityId ?? 0;
         entity.CcLevel = newLevel;
+        // 勿 Ignore 主键 CcCode：SqlSugar WHERE 仍用 @cc_code，Ignore 后参数未声明会报错
         await _ccRep.AsUpdateable(entity)
-            .IgnoreColumns(u => new { u.CcIdentityId, u.CcCreateDate, u.CcCode })
+            .IgnoreColumns(u => new { u.CcIdentityId, u.CcCreateDate })
+            .WhereColumns(u => u.CcCode)
             .ExecuteCommandAsync();
 
         if (parentChanged && oldLevel != newLevel)
@@ -630,6 +632,7 @@ public class HrOrgService : IDynamicApiController, ITransient
         entity.CcSite = input.CcSite;
         entity.CcState = input.CcState;
         entity.CcCost = input.CcCost;
+        entity.OrgType = string.IsNullOrWhiteSpace(input.OrgType) ? "1" : input.OrgType.Trim();
         entity.CcWageRate = input.CcWageRate;
         entity.CcStatBasic = input.CcStatBasic;
         entity.CcCountGroup = input.CcCountGroup;
@@ -662,6 +665,7 @@ public class HrOrgService : IDynamicApiController, ITransient
             CcSite = cc.CcSite,
             CcState = cc.CcState,
             CcCost = cc.CcCost,
+            OrgType = string.IsNullOrWhiteSpace(cc.OrgType) ? "1" : cc.OrgType,
             CcWageRate = cc.CcWageRate,
             CcStatBasic = cc.CcStatBasic,
             CcEnable = cc.CcEnable,

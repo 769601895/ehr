@@ -42,6 +42,14 @@ public class CcMstr
     [SugarColumn(ColumnName = "cc_cost", ColumnDescription = "成本类型", Length = 50, IsNullable = true)]
     public string? CcCost { get; set; }
 
+    /// <summary>组织类型：1部门 / 2公司（code_mstr.OrgType）</summary>
+    [SugarColumn(ColumnName = "org_type", ColumnDescription = "组织类型", Length = 50, IsNullable = true)]
+    public string? OrgType { get; set; }
+
+    /// <summary>归属公司厂别代码（HrCompanyParam.SiteCode，可空）</summary>
+    [SugarColumn(ColumnName = "belong_site_code", ColumnDescription = "归属公司厂别代码", Length = 32, IsNullable = true)]
+    public string? BelongSiteCode { get; set; }
+
     [SugarColumn(ColumnName = "cc_wage_rate", ColumnDescription = "工资率", IsNullable = true)]
     public float? CcWageRate { get; set; }
 
