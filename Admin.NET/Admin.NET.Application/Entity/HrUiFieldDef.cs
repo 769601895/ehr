@@ -21,7 +21,7 @@ public class HrUiFieldDef : EntityBase
     [SugarColumn(ColumnName = "db_column", ColumnDescription = "库列名", Length = 64, IsNullable = true)]
     public string DbColumn { get; set; }
 
-    [SugarColumn(ColumnName = "table_name", ColumnDescription = "主表", Length = 128, IsNullable = true)]
+    [SugarColumn(ColumnName = "table_name", ColumnDescription = "物理表名", Length = 128, IsNullable = true)]
     public string TableName { get; set; }
 
     [SugarColumn(ColumnName = "label", ColumnDescription = "主语言显示名", Length = 256)]

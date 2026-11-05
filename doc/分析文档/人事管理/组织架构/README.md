@@ -41,6 +41,7 @@
 │   ├── design/
 │   │   └── 01-user-cc-scope.md        # 用户管辖部门（二期）
 │   └── research/
+├── 02-人员模块按管辖过滤改造方案.md   # 账号 ExtOrg 与人员树脱节：落地 Usercc 过滤
 ├── specs/                             # 逆向（只读参考，非实现契约）
 │   ├── yuenan_w_rs_cc_mstr_reverse_spec.md   # 主业务参考
 │   ├── hr12_org_cc_mstr_reverse_spec.md      # 归档对照
@@ -66,5 +67,6 @@
 2. `migration-plan/00-roadmap.md`  
 3. `migration-plan/domains/01-domain-hr-org.md`  
 4. 二期管辖：`migration-plan/design/01-user-cc-scope.md`  
-5. 实施完成后勾 `migration-plan/CHECKLIST.md`  
+5. 人员树/列表按管辖落地：`02-人员模块按管辖过滤改造方案.md`  
+6. 实施完成后勾 `migration-plan/CHECKLIST.md`  
 6. 需要溯源业务细节时再查 `specs/`（勿把对照史实写进代码）

@@ -8,13 +8,7 @@
 				</div>
 				<el-button-group>
 					<template v-if="state.activeTab !== 'companySite'">
-						<el-button icon="ele-ChatLineSquare" v-auth="'hrCompanyParam/langList'" :disabled="!state.currentId" @click="openLang">
-							语种配置
-						</el-button>
 						<el-button type="primary" icon="ele-Plus" v-auth="'hrCompanyParam/add'" @click="openAdd">新增</el-button>
-						<el-button type="danger" icon="ele-Delete" v-auth="'hrCompanyParam/delete'" :disabled="!state.currentId" @click="handleDelete">
-							删除
-						</el-button>
 						<el-button type="success" icon="ele-Check" v-auth="'hrCompanyParam/update'" :disabled="!state.detail" :loading="state.saving" @click="handleSave">
 							保存
 						</el-button>
@@ -32,7 +26,7 @@
 		<el-card class="main-card" shadow="hover">
 			<el-tabs v-model="state.activeTab" class="cp-tabs" @tab-change="onTabChange">
 				<el-tab-pane label="系统选项设置" name="site" class="cp-tab-pane">
-					<SiteList ref="siteListRef" @select="onSelect" @open-detail="openDetail" />
+					<SiteList ref="siteListRef" @select="onSelect" @open-detail="openDetail" @deleted="onDeleted" />
 				</el-tab-pane>
 				<el-tab-pane label="参数明细设置" name="detail" class="cp-tab-pane" :disabled="!state.currentId && !state.detail">
 					<DetailForm v-model:model="state.detail" />
@@ -58,22 +52,19 @@
 			</template>
 		</el-dialog>
 
-		<LangDialog v-model:visible="state.langVisible" :param-id="state.currentId" @saved="onLangSaved" />
 	</div>
 </template>
 
 <script lang="ts" setup name="hrCompanyParam">
 import { nextTick, reactive, ref } from 'vue';
-import { ElMessage, ElMessageBox } from 'element-plus';
+import { ElMessage } from 'element-plus';
 import {
 	addHrCompanyParam,
-	deleteHrCompanyParam,
 	detailHrCompanyParam,
 	updateHrCompanyParam,
 } from '/@/api/hrms/hrCompanyParam';
 import SiteList from './component/siteList.vue';
 import DetailForm from './component/detailForm.vue';
-import LangDialog from './component/langDialog.vue';
 import CompanySiteList from './component/companySiteList.vue';
 
 const siteListRef = ref<InstanceType<typeof SiteList>>();
@@ -87,7 +78,6 @@ const state = reactive({
 	saving: false,
 	addVisible: false,
 	addForm: { siteCode: '', siteName: '' },
-	langVisible: false,
 	dirty: false,
 });
 
@@ -95,6 +85,15 @@ const onSelect = (row: any) => {
 	state.currentId = row?.id ?? null;
 	state.currentSiteCode = row?.siteCode ?? '';
 	state.currentSiteName = row?.siteName ?? '';
+};
+
+const onDeleted = (id: number) => {
+	if (state.currentId !== id) return;
+	state.currentId = null;
+	state.currentSiteCode = '';
+	state.currentSiteName = '';
+	state.detail = null;
+	state.activeTab = 'site';
 };
 
 const loadDetail = async (id: number) => {
@@ -177,36 +176,6 @@ const handleSave = async () => {
 	} finally {
 		state.saving = false;
 	}
-};
-
-const handleDelete = async () => {
-	const row = siteListRef.value?.getCurrent() || (state.currentId ? { id: state.currentId, siteName: state.currentSiteName } : null);
-	if (!row?.id) {
-		ElMessage.warning('请先选择公司');
-		return;
-	}
-	await ElMessageBox.confirm(`确认删除公司「${row.siteName || row.siteCode || row.id}」？`, '提示', { type: 'warning' });
-	await deleteHrCompanyParam({ id: row.id });
-	ElMessage.success('已删除');
-	state.currentId = null;
-	state.currentSiteCode = '';
-	state.currentSiteName = '';
-	state.detail = null;
-	state.activeTab = 'site';
-	await siteListRef.value?.reload(true);
-};
-
-const openLang = () => {
-	if (!state.currentId) {
-		ElMessage.warning('请先选择公司');
-		return;
-	}
-	state.langVisible = true;
-};
-
-const onLangSaved = async () => {
-	await siteListRef.value?.reload();
-	if (state.currentId) await loadDetail(state.currentId);
 };
 
 const refresh = async () => {

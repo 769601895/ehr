@@ -59,6 +59,7 @@
 						<el-option label="lookup" value="lookup" />
 					</el-select>
 				</el-form-item>
+				<el-form-item :label="t('message.hrms.fieldDef.tableName')"><el-input v-model="state.edit.tableName" :placeholder="t('message.hrms.fieldDef.tableNamePh')" clearable /></el-form-item>
 				<el-form-item :label="t('message.hrms.fieldDef.dbColumn')"><el-input v-model="state.edit.dbColumn" /></el-form-item>
 				<el-form-item :label="t('message.hrms.fieldDef.dataType')"><el-input v-model="state.edit.dataType" /></el-form-item>
 				<el-form-item :label="t('message.hrms.fieldDef.control')">
@@ -181,6 +182,7 @@ const buildColumns = () => [
 	{ field: 'fieldKey', title: t('message.hrms.fieldDef.fieldKey'), minWidth: 140, sortable: true },
 	{ field: 'label', title: t('message.hrms.fieldDef.label'), minWidth: 140, sortable: true },
 	{ field: 'origin', title: t('message.hrms.fieldDef.origin'), width: 100, sortable: true },
+	{ field: 'tableName', title: t('message.hrms.fieldDef.tableName'), minWidth: 140, sortable: true },
 	{ field: 'dbColumn', title: t('message.hrms.fieldDef.dbColumn'), minWidth: 140, sortable: true },
 	{ field: 'controlType', title: t('message.hrms.fieldDef.control'), width: 100, sortable: true },
 	{ field: 'codeField', title: t('message.hrms.fieldDef.codeField'), minWidth: 120, slots: { default: 'row_codeField' } },

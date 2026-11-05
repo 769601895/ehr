@@ -6,6 +6,9 @@ enum Api {
 	Add = '/api/hrEmp/add',
 	Update = '/api/hrEmp/update',
 	Delete = '/api/hrEmp/delete',
+	PreviewEmpId = '/api/hrEmp/previewEmpId',
+	ParseIdCard = '/api/hrEmp/parseIdCard',
+	IdCardFeature = '/api/hrEmp/idCardFeature',
 }
 
 /** 人员资料分页（服务端排序） */
@@ -32,6 +35,30 @@ export const getHrEmpDetail = (empId: string) =>
 		url: Api.Detail,
 		method: 'get',
 		params: { empId },
+	});
+
+/** 按部门预览工号（不占号） */
+export const previewHrEmpId = (data?: { ccCode?: string | null }) =>
+	request({
+		url: Api.PreviewEmpId,
+		method: 'post',
+		data: data ?? {},
+	});
+
+/** 解析身份证：中国国籍校验并带出生日/性别/籍贯省市码 */
+export const parseHrEmpIdCard = (data?: { empCard?: string | null; empCountry?: string | null; ccCode?: string | null }) =>
+	request({
+		url: Api.ParseIdCard,
+		method: 'post',
+		data: data ?? {},
+	});
+
+/** 是否启用二代证读卡（公司参数 IdCardV2Enabled，按当前用户管辖部门） */
+export const getHrEmpIdCardFeature = () =>
+	request({
+		url: Api.IdCardFeature,
+		method: 'post',
+		data: {},
 	});
 
 export const addHrEmp = (data?: any) =>

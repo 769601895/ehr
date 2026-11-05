@@ -97,7 +97,7 @@ public class HrUiFieldDefService : IDynamicApiController, ITransient
         var query = _defRep.AsQueryable()
             .Where(u => u.ModuleCode == module.Code)
             .WhereIF(!string.IsNullOrWhiteSpace(keyword), u =>
-                u.FieldKey.Contains(keyword) || u.Label.Contains(keyword) || u.DbColumn.Contains(keyword))
+                u.FieldKey.Contains(keyword) || u.Label.Contains(keyword) || u.DbColumn.Contains(keyword) || u.TableName.Contains(keyword))
             .WhereIF(input.Enabled.HasValue, u => u.Enabled == input.Enabled)
             .WhereIF(input.IsInPool.HasValue, u => u.IsInPool == input.IsInPool)
             .WhereIF(!string.IsNullOrWhiteSpace(input.ControlType), u => u.ControlType == input.ControlType);

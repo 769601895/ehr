@@ -9,7 +9,8 @@ public static class HrUiCulture
 {
     public const string Fallback = "zh-CN";
 
-    public static readonly string[] Supported = ["zh-CN", "zh-TW", "en", "th", "vi"];
+    /// <summary>界面五语 + 业务译文备用「other」（非完整 UI 包，仅主数据名称译文）。</summary>
+    public static readonly string[] Supported = ["zh-CN", "zh-TW", "en", "th", "vi", "other"];
 
     public static string Current()
     {
@@ -61,6 +62,8 @@ public static class HrUiCulture
         if (n.StartsWith("en", StringComparison.OrdinalIgnoreCase)) return true;
         if (n.StartsWith("th", StringComparison.OrdinalIgnoreCase)) return true;
         if (n.StartsWith("vi", StringComparison.OrdinalIgnoreCase)) return true;
+        if (n.Equals("other", StringComparison.OrdinalIgnoreCase) || n.Equals("ot", StringComparison.OrdinalIgnoreCase))
+            return true;
         return false;
     }
 
@@ -75,6 +78,8 @@ public static class HrUiCulture
         if (n.StartsWith("en", StringComparison.OrdinalIgnoreCase)) return "en";
         if (n.StartsWith("th", StringComparison.OrdinalIgnoreCase)) return "th";
         if (n.StartsWith("vi", StringComparison.OrdinalIgnoreCase)) return "vi";
+        if (n.Equals("other", StringComparison.OrdinalIgnoreCase) || n.Equals("ot", StringComparison.OrdinalIgnoreCase))
+            return "other";
         return Fallback;
     }
 }

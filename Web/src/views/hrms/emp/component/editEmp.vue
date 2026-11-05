@@ -16,14 +16,28 @@
 			</nav>
 			<div class="hr-emp-pane">
 		<el-form v-show="!isChildSection" :model="state.ruleForm" ref="ruleFormRef" label-width="70px" size="small" class="hr-emp-edit-form">
-			<EmpDynamicForm v-if="state.useDynamic" :rule-form="state.ruleForm" :fields="state.dynFields" :code-options="state.codeOptions" :tree-data="props.treeData" :is-edit="state.isEdit" />
+			<EmpDynamicForm
+				v-if="state.useDynamic"
+				ref="dynFormRef"
+				:rule-form="state.ruleForm"
+				:fields="state.dynFields"
+				:code-options="state.codeOptions"
+				:tree-data="props.treeData"
+				:is-edit="state.isEdit"
+				:emp-id-locked="!state.isEdit && !state.empIdManual"
+			/>
 			<template v-else>
 			<el-divider content-position="left" class="hr-emp-section-divider">{{ t('message.hrms.common.groupBasic') }}</el-divider>
 			<div class="hr-emp-group">
 			<el-row :gutter="4">
 				<el-col :span="4" class="mb-field">
-					<el-form-item label="工号" prop="empId" :rules="[{ required: true, message: '工号不能为空', trigger: 'blur' }]">
-						<el-input v-model="state.ruleForm.empId" :disabled="state.isEdit" placeholder="工号" clearable />
+					<el-form-item label="工号" prop="empId" :rules="empIdRules">
+						<el-input
+							v-model="state.ruleForm.empId"
+							:disabled="state.isEdit || (!state.empIdManual && !state.isEdit)"
+							:placeholder="state.empIdManual ? '工号' : t('message.hrms.emp.empIdAutoHint')"
+							clearable
+						/>
 					</el-form-item>
 				</el-col>
 				<el-col :span="4" class="mb-field">
@@ -211,6 +225,12 @@
 		</div>
 		<template #footer>
 			<span class="dialog-footer">
+				<el-button
+					v-if="!isChildSection && state.idCardV2Enabled"
+					icon="ele-CreditCard"
+					:loading="state.idCardReading"
+					@click="readIdCard"
+				>{{ t('message.hrms.emp.readIdCard') }}</el-button>
 				<el-button icon="ele-CircleCloseFilled" @click="state.isShowDialog = false">{{ t('message.hrms.emp.cancel') }}</el-button>
 				<el-button v-if="!isChildSection" type="primary" icon="ele-CircleCheckFilled" @click="submit">{{ t('message.hrms.emp.saveMain') }}</el-button>
 			</span>
@@ -222,13 +242,17 @@
 import { computed, reactive, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
-import { addHrEmp, updateHrEmp } from '/@/api/hrms/hrEmp';
+import { addHrEmp, getHrEmpIdCardFeature, parseHrEmpIdCard, previewHrEmpId, updateHrEmp } from '/@/api/hrms/hrEmp';
 import { countHrEmpChild } from '/@/api/hrms/hrEmpChild';
 import { getHrCodeList } from '/@/api/hrms/hrOrg';
 import { getHrLookupOptions } from '/@/api/hrms/hrLookupDef';
 import { getHrUiLayoutEffective } from '/@/api/hrms/hrUiLayout';
 import EmpDynamicForm from '/@/views/hrms/emp/component/empDynamicForm.vue';
 import EmpChildGrid from '/@/views/hrms/emp/component/empChildGrid.vue';
+import { idCardAgentHealth, idCardAgentRead, idCardPhotoToFile, type HrIdCardDeviceResult } from '/@/views/hrms/composables/hrIdCardReader';
+import { getAPI } from '/@/utils/axios-utils';
+import { SysFileApi } from '/@/api-services/system/api';
+import { normalizeEmpPhoto } from '/@/views/hrms/composables/hrEmpPhoto';
 
 const props = defineProps({
 	title: String,
@@ -237,6 +261,57 @@ const props = defineProps({
 const emits = defineEmits(['reload']);
 const { locale, t } = useI18n();
 const ruleFormRef = ref();
+const dynFormRef = ref<{ applyDeviceCardResult?: (dev: HrIdCardDeviceResult) => Promise<void> } | null>(null);
+
+const isChinaNationality = () => {
+	const c = String(state.ruleForm?.empCountry ?? '').trim();
+	return !c || c.toUpperCase() === 'CN' || c === '中国';
+};
+
+const applyDeviceToStaticForm = async (dev: HrIdCardDeviceResult) => {
+	if (!dev.ok || !dev.idNumber) return;
+	state.ruleForm.empCard = String(dev.idNumber).trim();
+	if (dev.name) state.ruleForm.empName = String(dev.name).trim();
+	if (dev.sex) state.ruleForm.empSex = String(dev.sex).trim();
+	if (dev.nation) state.ruleForm.empNation = String(dev.nation).trim();
+	if (dev.birth) state.ruleForm.empBirth = String(dev.birth).slice(0, 10);
+	if (dev.address) {
+		state.ruleForm.empAddr = String(dev.address).trim();
+		state.ruleForm.empResidence = String(dev.address).trim();
+	}
+	if (dev.expireEnd) state.ruleForm.empCardOverdate = String(dev.expireEnd).slice(0, 10);
+	if (dev.expireStart) state.ruleForm.empCardDate = String(dev.expireStart).slice(0, 10);
+	if (dev.photoBase64) {
+		const file = idCardPhotoToFile(dev.photoBase64);
+		if (file) {
+			try {
+				const photo = await normalizeEmpPhoto(file);
+				const res = await getAPI(SysFileApi).apiSysFileUploadFilePostForm(photo, 'hrEmp', undefined, '.jpg,.jpeg,.png,.bmp,.gif');
+				const url = res.data.result?.url;
+				if (url) state.ruleForm.empPic = url;
+			} catch {
+				/* ignore photo */
+			}
+		}
+	}
+	const res = await parseHrEmpIdCard({
+		empCard: state.ruleForm.empCard,
+		empCountry: state.ruleForm.empCountry ?? null,
+		ccCode: state.ruleForm.ccCode ?? null,
+	});
+	const r = res.data?.result ?? res.data ?? {};
+	if (r.needValidate && r.valid) {
+		if (r.empBirth != null) {
+			const v = r.empBirth;
+			state.ruleForm.empBirth = typeof v === 'string' && v.length >= 10 ? v.slice(0, 10) : String(v).slice(0, 10);
+		}
+		if (r.empSex != null) state.ruleForm.empSex = r.empSex;
+		if (r.empProvince) {
+			state.ruleForm.empProvince = r.empProvince;
+			state.ruleForm.empCity = r.empCity ?? '';
+		}
+	}
+};
 const cascaderProps = { checkStrictly: true, emitPath: false, value: 'ccCode', label: 'ccDesc', children: 'children' };
 
 const sections = [
@@ -256,9 +331,50 @@ const state = reactive({
 	dynFields: [] as any[],
 	codeOptions: {} as Record<string, { value: string; label?: string; text?: string }[]>,
 	childCounts: { family: 0, edu: 0, work: 0, title: 0 } as Record<string, number>,
+	/** 公司参数 EmpIdMode=手工维护 */
+	empIdManual: true,
+	empIdPreviewing: false,
+	idCardReading: false,
+	/** 公司参数「启用二代身份证」 */
+	idCardV2Enabled: false,
 });
 
 const isChildSection = computed(() => sections.some((s) => s.child && s.id === state.section));
+
+const empIdRules = computed(() =>
+	state.isEdit || state.empIdManual
+		? [{ required: true, message: '工号不能为空', trigger: 'blur' }]
+		: []
+);
+
+let previewSeq = 0;
+const refreshEmpIdPreview = async () => {
+	if (state.isEdit || !state.isShowDialog) return;
+	const seq = ++previewSeq;
+	state.empIdPreviewing = true;
+	try {
+		const res = await previewHrEmpId({ ccCode: state.ruleForm.ccCode || null });
+		if (seq !== previewSeq) return;
+		const r = res.data?.result ?? res.data ?? {};
+		state.empIdManual = !!r.manual;
+		if (state.empIdManual) {
+			// 切到手工：不清空用户已填
+		} else if (r.empId) {
+			state.ruleForm.empId = r.empId;
+		} else {
+			state.ruleForm.empId = '';
+		}
+	} catch (e: any) {
+		if (seq !== previewSeq) return;
+		// 未选部门或无法解析时保持空，保存时再由后端校验
+		state.empIdManual = false;
+		state.ruleForm.empId = '';
+		const msg = e?.response?.data?.message || e?.message;
+		if (msg && state.ruleForm.ccCode) ElMessage.warning(String(msg));
+	} finally {
+		if (seq === previewSeq) state.empIdPreviewing = false;
+	}
+};
 
 const dialogTitle = computed(() => {
 	const empId = String(state.ruleForm?.empId ?? '').trim();
@@ -289,7 +405,8 @@ const loadChildCounts = async () => {
 	}
 };
 
-const registered = new Set(['ccCode', 'empPic', 'age', 'empState']);
+/** empProvince/empCity 由表单内级联专用加载（随语言刷新），不走通用 lookup 缓存 */
+const registered = new Set(['ccCode', 'empPic', 'age', 'empState', 'empProvince', 'empCity']);
 
 const loadDynamic = async () => {
 	try {
@@ -328,23 +445,90 @@ const ageText = computed(() => {
 const openDialog = (row: any, isEdit = false) => {
 	state.isEdit = isEdit;
 	state.section = 'profile';
+	state.empIdManual = true;
 	state.ruleForm = JSON.parse(JSON.stringify(row ?? {}));
 	if (state.ruleForm.empState == null) state.ruleForm.empState = 1;
 	if (!isEdit && row?.ccCode) state.ruleForm.ccCode = row.ccCode;
 	state.isShowDialog = true;
+	state.idCardV2Enabled = false;
 	ruleFormRef.value?.resetFields();
 	loadDynamic();
 	loadChildCounts();
+	refreshIdCardFeature();
+	if (!isEdit) refreshEmpIdPreview();
 };
 
 watch(locale, () => {
 	if (state.isShowDialog) loadDynamic();
 });
 
+const refreshIdCardFeature = async () => {
+	if (!state.isShowDialog) return;
+	try {
+		const res = await getHrEmpIdCardFeature();
+		const r = res.data?.result ?? res.data ?? {};
+		state.idCardV2Enabled = !!r.enabled;
+	} catch {
+		state.idCardV2Enabled = false;
+	}
+};
+
+watch(
+	() => state.ruleForm.ccCode,
+	() => {
+		if (!state.isEdit && state.isShowDialog) refreshEmpIdPreview();
+	}
+);
+
+/** 底部「读取身份证」：公司参数启用二代证后，本机读卡器回填 */
+const readIdCard = async () => {
+	if (!isChinaNationality()) {
+		ElMessage.info(t('message.hrms.emp.idCardSkipNonChina'));
+		return;
+	}
+	state.idCardReading = true;
+	try {
+		const featRes = await getHrEmpIdCardFeature();
+		const feat = featRes.data?.result ?? featRes.data ?? {};
+		state.idCardV2Enabled = !!feat.enabled;
+		if (!feat.enabled) {
+			ElMessage.warning(feat.message || t('message.hrms.emp.idCardV2Disabled'));
+			return;
+		}
+		const alive = await idCardAgentHealth();
+		if (!alive) {
+			ElMessage.warning(t('message.hrms.emp.idCardAgentDown'));
+			return;
+		}
+		const dev = await idCardAgentRead();
+		if (!dev.ok) {
+			ElMessage.warning(dev.message || t('message.hrms.emp.idCardReadFail'));
+			return;
+		}
+		if (state.useDynamic) {
+			await dynFormRef.value?.applyDeviceCardResult?.(dev);
+		} else {
+			await applyDeviceToStaticForm(dev);
+		}
+		ElMessage.success(t('message.hrms.emp.idCardReadOk'));
+	} catch (e: any) {
+		const msg = e?.response?.data?.message || e?.message;
+		if (msg) ElMessage.warning(String(msg));
+	} finally {
+		state.idCardReading = false;
+	}
+};
+
 const submit = () => {
-	if (!String(state.ruleForm.empId || '').trim() || !String(state.ruleForm.empName || '').trim()) {
+	const needEmpId = state.isEdit || state.empIdManual;
+	if ((needEmpId && !String(state.ruleForm.empId || '').trim()) || !String(state.ruleForm.empName || '').trim()) {
 		state.section = 'profile';
 		ElMessage.warning(t('message.hrms.emp.mainRequired'));
+		return;
+	}
+	if (!state.isEdit && !state.empIdManual && !String(state.ruleForm.ccCode || '').trim()) {
+		state.section = 'profile';
+		ElMessage.warning(t('message.hrms.emp.needDeptForEmpId'));
 		return;
 	}
 	ruleFormRef.value?.validate(async (valid: boolean) => {
@@ -352,8 +536,11 @@ const submit = () => {
 		if (state.isEdit) {
 			await updateHrEmp(state.ruleForm);
 		} else {
-			await addHrEmp(state.ruleForm);
+			const res = await addHrEmp(state.ruleForm);
+			const newId = res.data?.result ?? res.data;
+			if (newId) state.ruleForm.empId = String(newId);
 			state.isEdit = true;
+			state.empIdManual = true;
 		}
 		ElMessage.success(t('message.hrms.emp.mainSaved'));
 		emits('reload');

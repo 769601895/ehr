@@ -9,6 +9,7 @@
 			<el-button-group>
 				<el-button type="primary" icon="ele-Search" @click="reload(true)">查询</el-button>
 				<el-button icon="ele-Refresh" @click="reset">重置</el-button>
+				<el-button type="danger" icon="ele-Delete" v-auth="'hrCompanyParam/delete'" :loading="deleting" @click="handleDelete">删除</el-button>
 			</el-button-group>
 		</el-card>
 		<el-card class="full-table" shadow="hover" style="margin-top: 5px">
@@ -21,17 +22,20 @@
 
 <script lang="ts" setup name="hrCompanyParamSiteList">
 import { reactive, ref } from 'vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { VxeGridInstance, VxeGridListeners, VxeGridPropTypes } from 'vxe-table';
 import { useVxeTable } from '/@/hooks/useVxeTableOptionsHook';
 import { Local } from '/@/utils/storage';
-import { pageHrCompanyParam } from '/@/api/hrms/hrCompanyParam';
+import { deleteHrCompanyParam, pageHrCompanyParam } from '/@/api/hrms/hrCompanyParam';
 
 const emit = defineEmits<{
 	(e: 'select', row: any): void;
 	(e: 'open-detail', row: any): void;
+	(e: 'deleted', id: number): void;
 }>();
 
 const xGrid = ref<VxeGridInstance>();
+const deleting = ref(false);
 const localPageParamKey = 'localPageParam:hrCompanyParam';
 const queryParams = reactive({ keyword: '' });
 const localPageParam = reactive({
@@ -94,6 +98,24 @@ const reset = () => {
 	reload(true);
 };
 const getCurrent = () => xGrid.value?.getCurrentRecord?.() ?? null;
+
+const handleDelete = async () => {
+	const row = getCurrent();
+	if (!row?.id) {
+		ElMessage.warning('请先选择要删除的公司参数');
+		return;
+	}
+	await ElMessageBox.confirm(`确认删除公司参数「${row.siteCode} ${row.siteName}」？`, '提示', { type: 'warning' });
+	deleting.value = true;
+	try {
+		await deleteHrCompanyParam({ id: row.id });
+		ElMessage.success('删除成功');
+		emit('deleted', row.id);
+		await reload(true);
+	} finally {
+		deleting.value = false;
+	}
+};
 
 defineExpose({ reload, getCurrent });
 </script>

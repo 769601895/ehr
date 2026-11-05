@@ -33,7 +33,9 @@ public class HrCompanyParamService : IDynamicApiController, ITransient
         var keyword = input.Keyword?.Trim();
         var culture = HrUiCulture.Current();
 
+        // 显式过滤软删：超管会跳过全局 IsDelete 过滤器，否则假删除后列表仍可见
         var query = _rep.AsQueryable()
+            .Where(u => !u.IsDelete)
             .WhereIF(!string.IsNullOrWhiteSpace(keyword),
                 u => u.SiteCode.Contains(keyword!) || u.SiteName.Contains(keyword!));
 
@@ -121,8 +123,19 @@ public class HrCompanyParamService : IDynamicApiController, ITransient
     {
         var entity = await _rep.GetFirstAsync(u => u.Id == input.Id)
             ?? throw Oops.Oh(HrCompanyParamConsts.ErrNotFound);
+        var siteCode = entity.SiteCode;
+
         await _langRep.DeleteAsync(u => u.ParamId == entity.Id);
-        await _rep.FakeDeleteAsync(input.Id);
+        // 清理组织上对该厂别的归属引用
+        if (!string.IsNullOrWhiteSpace(siteCode))
+        {
+            await _ccRep.AsUpdateable()
+                .SetColumns(u => new CcMstr { BelongSiteCode = null })
+                .Where(u => u.BelongSiteCode == siteCode)
+                .ExecuteCommandAsync();
+        }
+        // 物理删除：超管跳过软删过滤器，假删除后列表仍会看到该行
+        await _rep.DeleteAsync(entity);
     }
 
     [ApiDescriptionSettings(Name = "LangList"), HttpGet]
@@ -210,7 +223,7 @@ public class HrCompanyParamService : IDynamicApiController, ITransient
     public async Task<List<HrCompanyParamSiteOption>> SiteOptions()
     {
         var culture = HrUiCulture.Current();
-        var rows = await _rep.AsQueryable().OrderBy(u => u.SiteCode).ToListAsync();
+        var rows = await _rep.AsQueryable().Where(u => !u.IsDelete).OrderBy(u => u.SiteCode).ToListAsync();
         var list = rows.Select(u => new HrCompanyParamSiteOption
         {
             SiteCode = u.SiteCode,

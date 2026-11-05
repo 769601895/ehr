@@ -81,6 +81,7 @@ export default {
 		薪酬管理: 'Lương thưởng',
 		组织架构管理: 'Cơ cấu tổ chức',
 		人员资料管理: 'Hồ sơ nhân viên',
+		员工资料导入: 'Nhập hồ sơ nhân viên',
 		人事资料定义: 'Định nghĩa dữ liệu NS',
 		人事资料列表定义: 'Định nghĩa danh sách NV',
 		人事资料表单定义: 'Định nghĩa biểu mẫu NV',

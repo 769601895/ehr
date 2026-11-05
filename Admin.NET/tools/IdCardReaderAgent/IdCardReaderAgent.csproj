@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>IdCardReaderAgent</RootNamespace>
+    <AssemblyName>IdCardReaderAgent</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <!-- 读卡器客户机常用 x86 DLL；优先 AnyCPU，加载时探测 -->
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Description>二代证读卡本机代理（公安部标准 sdtapi）</Description>
+  </PropertyGroup>
+</Project>

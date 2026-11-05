@@ -43,7 +43,12 @@ public partial class HrEmpOutput
     /// <summary>年龄（由出生日期计算，不落库）</summary>
     public int? Age { get; set; }
     public string? EmpRgt { get; set; }
+    /// <summary>籍贯省码</summary>
     public string? EmpProvince { get; set; }
+    /// <summary>籍贯市码</summary>
+    public string? EmpCity { get; set; }
+    /// <summary>国籍码</summary>
+    public string? EmpCountry { get; set; }
     public string? EmpResidence { get; set; }
     public string? EmpNation { get; set; }
     public string? EmpMarry { get; set; }
@@ -69,8 +74,8 @@ public partial class HrEmpOutput
 /// </summary>
 public partial class HrEmpSaveInput
 {
-    [Required(ErrorMessage = "工号不能为空")]
-    public string EmpId { get; set; }
+    /// <summary>手工模式必填；自动模式可空，由服务端按公司参数发号</summary>
+    public string? EmpId { get; set; }
 
     public string? CcCode { get; set; }
     public string? DutyId { get; set; }
@@ -91,7 +96,12 @@ public partial class HrEmpSaveInput
     public string? EmpCard { get; set; }
     public DateTime? EmpBirth { get; set; }
     public string? EmpRgt { get; set; }
+    /// <summary>籍贯省码</summary>
     public string? EmpProvince { get; set; }
+    /// <summary>籍贯市码</summary>
+    public string? EmpCity { get; set; }
+    /// <summary>国籍码</summary>
+    public string? EmpCountry { get; set; }
     public string? EmpResidence { get; set; }
     public string? EmpNation { get; set; }
     public string? EmpMarry { get; set; }

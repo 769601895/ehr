@@ -10,11 +10,19 @@ public class HrEmpService : IDynamicApiController, ITransient
 {
     private readonly SqlSugarRepository<HrEmployee> _empRep;
     private readonly SqlSugarRepository<CcMstr> _ccRep;
+    private readonly HrEmpIdGenerator _empIdGen;
+    private readonly HrEmpIdCardService _idCardSvc;
 
-    public HrEmpService(SqlSugarRepository<HrEmployee> empRep, SqlSugarRepository<CcMstr> ccRep)
+    public HrEmpService(
+        SqlSugarRepository<HrEmployee> empRep,
+        SqlSugarRepository<CcMstr> ccRep,
+        HrEmpIdGenerator empIdGen,
+        HrEmpIdCardService idCardSvc)
     {
         _empRep = empRep;
         _ccRep = ccRep;
+        _empIdGen = empIdGen;
+        _idCardSvc = idCardSvc;
     }
 
     /// <summary>
@@ -59,6 +67,30 @@ public class HrEmpService : IDynamicApiController, ITransient
     }
 
     /// <summary>
+    /// 预览工号（按部门归属公司参数；不占号）
+    /// </summary>
+    [ApiDescriptionSettings(Name = "PreviewEmpId"), HttpPost]
+    [DisplayName("预览工号")]
+    public Task<HrEmpIdPreviewOutput> PreviewEmpId(HrEmpIdPreviewInput input)
+        => _empIdGen.PreviewAsync(input?.CcCode);
+
+    /// <summary>
+    /// 二代证读卡功能开关（公司参数 IdCardV2Enabled，按当前用户管辖部门同属厂别）
+    /// </summary>
+    [ApiDescriptionSettings(Name = "IdCardFeature"), HttpPost]
+    [DisplayName("二代证读卡功能")]
+    public Task<HrEmpIdCardFeatureOutput> IdCardFeature(HrEmpIdCardFeatureInput input)
+        => _idCardSvc.GetFeatureAsync(input);
+
+    /// <summary>
+    /// 解析身份证：校验（中国）并带出生日/性别/籍贯省市码
+    /// </summary>
+    [ApiDescriptionSettings(Name = "ParseIdCard"), HttpPost]
+    [DisplayName("解析身份证")]
+    public Task<HrEmpIdCardParseOutput> ParseIdCard(HrEmpIdCardParseInput input)
+        => _idCardSvc.ParseAsync(input);
+
+    /// <summary>
     /// 新增人员资料
     /// </summary>
     [UnitOfWork]
@@ -66,10 +98,22 @@ public class HrEmpService : IDynamicApiController, ITransient
     [DisplayName("新增人员资料")]
     public async Task<string> Add(HrEmpSaveInput input)
     {
-        var empId = input.EmpId.Trim();
-        if (await _empRep.IsAnyAsync(u => u.EmpId == empId))
-            throw Oops.Oh("工号已存在");
         await EnsureCcValid(input.CcCode);
+        await _idCardSvc.ApplyOnSaveAsync(input);
+
+        // 有填用工号；空则按公司参数自动发号（手工模式必须手填）
+        string empId;
+        if (!string.IsNullOrWhiteSpace(input.EmpId))
+        {
+            empId = input.EmpId.Trim();
+            await _empIdGen.EnsureEmpIdAvailableAsync(empId);
+        }
+        else
+        {
+            empId = await _empIdGen.AllocateAsync(input.CcCode)
+                ?? throw Oops.Oh("工号不能为空");
+        }
+
         await EnsureCardUnique(input.EmpCard, null);
 
         var entity = new HrEmployee
@@ -80,6 +124,7 @@ public class HrEmpService : IDynamicApiController, ITransient
             EmpState = input.EmpState ?? 1
         };
         ApplySaveFields(entity, input);
+        entity.EmpId = empId;
         await _empRep.InsertAsync(entity);
         return empId;
     }
@@ -92,10 +137,13 @@ public class HrEmpService : IDynamicApiController, ITransient
     [DisplayName("更新人员资料")]
     public async Task Update(HrEmpSaveInput input)
     {
+        if (string.IsNullOrWhiteSpace(input.EmpId))
+            throw Oops.Oh("工号不能为空");
         var empId = input.EmpId.Trim();
         var entity = await _empRep.GetFirstAsync(u => u.EmpId == empId)
             ?? throw Oops.Oh("人员不存在");
         await EnsureCcValid(input.CcCode);
+        await _idCardSvc.ApplyOnSaveAsync(input);
         await EnsureCardUnique(input.EmpCard, empId);
 
         ApplySaveFields(entity, input);
@@ -247,6 +295,8 @@ public class HrEmpService : IDynamicApiController, ITransient
         entity.EmpBirth = input.EmpBirth;
         entity.EmpRgt = TrimOrNull(input.EmpRgt);
         entity.EmpProvince = TrimOrNull(input.EmpProvince);
+        entity.EmpCity = TrimOrNull(input.EmpCity);
+        entity.EmpCountry = TrimOrNull(input.EmpCountry);
         entity.EmpResidence = TrimOrNull(input.EmpResidence);
         entity.EmpNation = TrimOrNull(input.EmpNation);
         entity.EmpMarry = TrimOrNull(input.EmpMarry);
@@ -291,6 +341,8 @@ public class HrEmpService : IDynamicApiController, ITransient
             EmpBirth = u.EmpBirth,
             EmpRgt = u.EmpRgt,
             EmpProvince = u.EmpProvince,
+            EmpCity = u.EmpCity,
+            EmpCountry = u.EmpCountry,
             EmpResidence = u.EmpResidence,
             EmpNation = u.EmpNation,
             EmpMarry = u.EmpMarry,

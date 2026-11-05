@@ -63,8 +63,17 @@ public partial class HrEmployee
     [SugarColumn(ColumnName = "emp_rgt", ColumnDescription = "户籍类型", Length = 4, IsNullable = true)]
     public string? EmpRgt { get; set; }
 
-    [SugarColumn(ColumnName = "emp_province", ColumnDescription = "省份", Length = 50, IsNullable = true)]
+    /// <summary>籍贯省码（hr_province.province_code）</summary>
+    [SugarColumn(ColumnName = "emp_province", ColumnDescription = "籍贯省码", Length = 50, IsNullable = true)]
     public string? EmpProvince { get; set; }
+
+    /// <summary>籍贯市码（hr_city.city_code）</summary>
+    [SugarColumn(ColumnName = "emp_city", ColumnDescription = "籍贯市码", Length = 12, IsNullable = true)]
+    public string? EmpCity { get; set; }
+
+    /// <summary>国籍码（code_mstr emp_country；空/CN=中国）</summary>
+    [SugarColumn(ColumnName = "emp_country", ColumnDescription = "国籍", Length = 20, IsNullable = true)]
+    public string? EmpCountry { get; set; }
 
     [SugarColumn(ColumnName = "emp_residence", ColumnDescription = "户口所在地", Length = 80, IsNullable = true)]
     public string? EmpResidence { get; set; }
