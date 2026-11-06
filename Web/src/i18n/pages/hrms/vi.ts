@@ -39,9 +39,10 @@ export default {
 			"includeDisabled": "Gồm đã tắt",
 			"filterNameCode": "Lọc theo tên/mã",
 			"rootNode": "Gốc",
-			"activeDepts": "Phòng ban hiệu lực",
-			"allHistoryDepts": "Tất cả lịch sử phòng ban",
-			"queryDept": "Tìm phòng ban"
+			"activeDepts": "Hiệu lực",
+			"allHistoryDepts": "Lịch sử",
+			"queryDept": "Tìm phòng ban",
+			"noUserCcScope": "Chưa cấu hình phạm vi phòng ban HR. Hãy nhờ quản trị viên gán phòng ban quản lý trên tài khoản."
 		},
 		"emp": {
 			"moduleName": "Hồ sơ nhân viên",

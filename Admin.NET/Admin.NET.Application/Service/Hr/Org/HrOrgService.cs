@@ -14,6 +14,7 @@ public class HrOrgService : IDynamicApiController, ITransient
     private readonly SqlSugarRepository<HrEmployee> _empRep;
     private readonly SqlSugarRepository<HCost> _costRep;
     private readonly SqlSugarRepository<HShiftSet> _shiftRep;
+    private readonly HrUserCcScopeService _userCcScope;
 
     public HrOrgService(
         UserManager userManager,
@@ -21,7 +22,8 @@ public class HrOrgService : IDynamicApiController, ITransient
         HrCodeMstrService codeMstrService,
         SqlSugarRepository<HrEmployee> empRep,
         SqlSugarRepository<HCost> costRep,
-        SqlSugarRepository<HShiftSet> shiftRep)
+        SqlSugarRepository<HShiftSet> shiftRep,
+        HrUserCcScopeService userCcScope)
     {
         _userManager = userManager;
         _ccRep = ccRep;
@@ -29,10 +31,11 @@ public class HrOrgService : IDynamicApiController, ITransient
         _empRep = empRep;
         _costRep = costRep;
         _shiftRep = shiftRep;
+        _userCcScope = userCcScope;
     }
 
     /// <summary>
-    /// 获取部门树（默认仅启用；支持 Field/Order/DescStr 列排序）
+    /// 获取部门树（默认仅启用；按 Usercc 管辖裁剪，并补齐共同祖先路径；支持 Field/Order/DescStr 列排序）
     /// </summary>
     [DisplayName("获取人事机构列表")]
     public async Task<List<HrOrgOutput>> GetList([FromQuery] HrOrgListInput input)
@@ -42,15 +45,79 @@ public class HrOrgService : IDynamicApiController, ITransient
         if (!input.IncludeDisabled)
             q = q.Where(u => u.CcEnable == null || u.CcEnable == 0);
 
+        q = await _userCcScope.ApplyOrgScopeAsync(q);
+
         // 树节点同级顺序由扁平查询排序决定；有 Field 时走 OrderBuilder，否则默认层级码+编码
         var list = await ApplyOrgSort(q, input).ToListAsync();
+        var scopedCodes = new HashSet<string>(list.Select(u => u.CcCode), StringComparer.OrdinalIgnoreCase);
+
+        // 补齐管辖节点的祖先，便于展示共同父级（不引入无关兄弟部门）
+        list = await AppendAncestorDeptsAsync(list, input.IncludeDisabled);
 
         var outputs = list.Select(ToOutput).ToList();
         await FillDirectEmpCounts(outputs, input.EmpStateAll ? null : input.EmpState);
+        // 路径祖先人数只汇总可见子树，不计入管辖外本节点编制
+        foreach (var node in outputs)
+        {
+            if (!scopedCodes.Contains(node.CcCode))
+                node.EmpCount = 0;
+        }
         var tree = BuildTree(outputs, input.ParentCcCode);
         foreach (var root in tree)
             RollupEmpCount(root);
         return tree;
+    }
+
+    /// <summary>
+    /// 只补齐到「所有管辖部门的最近共同父级」及其到各管辖根之间的中间节点，不上溯到集团顶级。
+    /// </summary>
+    private async Task<List<CcMstr>> AppendAncestorDeptsAsync(List<CcMstr> scoped, bool includeDisabled)
+    {
+        if (scoped.Count == 0) return scoped;
+
+        var lca = ComputeCommonAncestorLevel(scoped.Select(u => u.CcLevel));
+        if (string.IsNullOrEmpty(lca)) return scoped;
+
+        var levelSet = new HashSet<string>(StringComparer.Ordinal) { lca };
+        foreach (var d in scoped)
+        {
+            var level = d.CcLevel ?? "";
+            // 从共同父级（含）到本节点（不含）的中间层
+            for (var len = lca.Length; len < level.Length; len += 2)
+                levelSet.Add(level[..len]);
+        }
+        if (levelSet.Count == 0) return scoped;
+
+        var existing = new HashSet<string>(scoped.Select(u => u.CcCode), StringComparer.OrdinalIgnoreCase);
+        var aq = _ccRep.AsQueryable().Where(u => u.CcLevel != null && levelSet.Contains(u.CcLevel));
+        if (!includeDisabled)
+            aq = aq.Where(u => u.CcEnable == null || u.CcEnable == 0);
+        var ancestors = await aq.ToListAsync();
+        foreach (var a in ancestors)
+        {
+            if (existing.Add(a.CcCode))
+                scoped.Add(a);
+        }
+        return scoped.OrderBy(u => u.CcLevel).ThenBy(u => u.CcCode).ToList();
+    }
+
+    /// <summary>多个 cc_level 的最近共同祖先层级码（2 位一层）；不足 2 个管辖根或无共同前缀则返回 null</summary>
+    private static string? ComputeCommonAncestorLevel(IEnumerable<string?> levels)
+    {
+        var list = levels.Where(u => !string.IsNullOrWhiteSpace(u)).Select(u => u!).Distinct(StringComparer.Ordinal).ToList();
+        if (list.Count < 2) return null;
+
+        var lcp = list[0];
+        foreach (var lv in list.Skip(1))
+        {
+            var i = 0;
+            var max = Math.Min(lcp.Length, lv.Length);
+            while (i < max && lcp[i] == lv[i]) i++;
+            i -= i % 2; // 对齐到层级边界
+            if (i < 2) return null;
+            lcp = lcp[..i];
+        }
+        return lcp.Length >= 2 ? lcp : null;
     }
 
     /// <summary>

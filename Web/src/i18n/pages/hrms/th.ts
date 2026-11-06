@@ -39,9 +39,10 @@ export default {
 			"includeDisabled": "รวมที่ปิดใช้",
 			"filterNameCode": "กรองตามชื่อ/รหัส",
 			"rootNode": "ราก",
-			"activeDepts": "แผนกที่ใช้งาน",
-			"allHistoryDepts": "แผนกทั้งหมดในประวัติ",
-			"queryDept": "ค้นหาแผนก"
+			"activeDepts": "ใช้งาน",
+			"allHistoryDepts": "ประวัติ",
+			"queryDept": "ค้นหาแผนก",
+			"noUserCcScope": "ยังไม่ได้ตั้งค่าขอบเขตแผนก HR กรุณาให้ผู้ดูแลตั้งค่าแผนกที่รับผิดชอบในบัญชี"
 		},
 		"emp": {
 			"moduleName": "ข้อมูลพนักงาน",

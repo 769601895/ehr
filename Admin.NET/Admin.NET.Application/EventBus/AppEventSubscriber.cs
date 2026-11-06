@@ -4,8 +4,6 @@
 //
 // 不得利用本项目从事危害国家安全、扰乱社会秩序、侵犯他人合法权益等法律法规禁止的活动！任何基于本项目二次开发而产生的一切法律纠纷和责任，我们不承担任何责任！
 
-using Furion.JsonSerialization;
-
 namespace Admin.NET.Application;
 
 /// <summary>
@@ -20,21 +18,34 @@ public class AppEventSubscriber : IEventSubscriber, ISingleton, IDisposable
         _serviceScope = scopeFactory.CreateScope();
     }
 
-    /// <summary>
-    /// 修改用户
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
-    [EventSubscribe(UserEventTypeEnum.Update)]
-    public async Task CreateExLog(EventHandlerExecutingContext context)
+    /// <summary>新增用户后：主机构+ExtOrg → Usercc</summary>
+    [EventSubscribe(UserEventTypeEnum.Add)]
+    public async Task OnUserAdd(EventHandlerExecutingContext context)
     {
-        var addUserInput = context.GetPayload<AddUserInput>();
-        Console.WriteLine(JSON.Serialize(addUserInput));
+        var user = context.GetPayload<SysUser>();
+        if (user == null || user.Id <= 0) return;
+        var scope = _serviceScope.ServiceProvider.GetRequiredService<HrUserCcScopeService>();
+        await scope.SyncFromExtOrgAsync(user.Id);
+    }
 
-        await Task.CompletedTask;
+    /// <summary>更新用户后：同步人事管辖 Usercc</summary>
+    [EventSubscribe(UserEventTypeEnum.Update)]
+    public async Task OnUserUpdate(EventHandlerExecutingContext context)
+    {
+        var input = context.GetPayload<AddUserInput>();
+        if (input == null || input.Id <= 0) return;
+        var scope = _serviceScope.ServiceProvider.GetRequiredService<HrUserCcScopeService>();
+        await scope.SyncFromExtOrgAsync(input.Id);
+    }
 
-        //var db = _serviceScope.ServiceProvider.GetRequiredService<ISqlSugarClient>();
-        //await db.CopyNew().Insertable(context.GetPayload<AddUserInput>()).ExecuteCommandAsync();
+    /// <summary>删除用户后：清理 Usercc</summary>
+    [EventSubscribe(UserEventTypeEnum.Delete)]
+    public async Task OnUserDelete(EventHandlerExecutingContext context)
+    {
+        var input = context.GetPayload<DeleteUserInput>();
+        if (input == null || input.Id <= 0) return;
+        var scope = _serviceScope.ServiceProvider.GetRequiredService<HrUserCcScopeService>();
+        await scope.ClearUserAsync(input.Id);
     }
 
     /// <summary>

@@ -12,17 +12,20 @@ public class HrEmpService : IDynamicApiController, ITransient
     private readonly SqlSugarRepository<CcMstr> _ccRep;
     private readonly HrEmpIdGenerator _empIdGen;
     private readonly HrEmpIdCardService _idCardSvc;
+    private readonly HrUserCcScopeService _userCcScope;
 
     public HrEmpService(
         SqlSugarRepository<HrEmployee> empRep,
         SqlSugarRepository<CcMstr> ccRep,
         HrEmpIdGenerator empIdGen,
-        HrEmpIdCardService idCardSvc)
+        HrEmpIdCardService idCardSvc,
+        HrUserCcScopeService userCcScope)
     {
         _empRep = empRep;
         _ccRep = ccRep;
         _empIdGen = empIdGen;
         _idCardSvc = idCardSvc;
+        _userCcScope = userCcScope;
     }
 
     /// <summary>
@@ -99,6 +102,7 @@ public class HrEmpService : IDynamicApiController, ITransient
     public async Task<string> Add(HrEmpSaveInput input)
     {
         await EnsureCcValid(input.CcCode);
+        await _userCcScope.EnsureCcInScopeAsync(input.CcCode);
         await _idCardSvc.ApplyOnSaveAsync(input);
 
         // 有填用工号；空则按公司参数自动发号（手工模式必须手填）
@@ -143,6 +147,7 @@ public class HrEmpService : IDynamicApiController, ITransient
         var entity = await _empRep.GetFirstAsync(u => u.EmpId == empId)
             ?? throw Oops.Oh("人员不存在");
         await EnsureCcValid(input.CcCode);
+        await _userCcScope.EnsureCcInScopeAsync(input.CcCode);
         await _idCardSvc.ApplyOnSaveAsync(input);
         await EnsureCardUnique(input.EmpCard, empId);
 
@@ -181,6 +186,7 @@ public class HrEmpService : IDynamicApiController, ITransient
     private async Task<ISugarQueryable<HrEmployee>> BuildQuery(HrEmpPageInput input)
     {
         var q = _empRep.AsQueryable();
+        q = await _userCcScope.ApplyEmpScopeAsync(q);
 
         if (input.EmpState.HasValue)
             q = q.Where(u => u.EmpState == input.EmpState.Value);
@@ -202,6 +208,8 @@ public class HrEmpService : IDynamicApiController, ITransient
 
         if (!string.IsNullOrWhiteSpace(input.CcCode))
         {
+            // 允许点选共同父级；结果仍被 ApplyEmpScope 限制在管辖内
+            await _userCcScope.EnsureCcNavigableAsync(input.CcCode);
             var cc = await _ccRep.GetFirstAsync(u => u.CcCode == input.CcCode.Trim())
                 ?? throw Oops.Oh("部门不存在");
             var level = cc.CcLevel ?? "";

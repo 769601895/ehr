@@ -38,7 +38,10 @@
 			</div>
 		</template>
 		<div class="tree-body" v-loading="state.loading">
-			<el-scrollbar>
+			<div v-if="!state.loading && state.treeData.length === 0" class="tree-empty-tip">
+				{{ t('message.hrms.common.noUserCcScope') }}
+			</div>
+			<el-scrollbar v-else>
 				<el-tree
 					ref="treeRef"
 					class="filter-tree hr-org-tree"
@@ -189,6 +192,13 @@ defineExpose({ fetchTreeData });
 .tree-body {
 	margin-bottom: 45px;
 	min-height: 120px;
+}
+.tree-empty-tip {
+	padding: 24px 12px;
+	text-align: center;
+	color: var(--el-color-warning);
+	font-size: 13px;
+	line-height: 1.6;
 }
 .tree-node {
 	display: inline-flex;

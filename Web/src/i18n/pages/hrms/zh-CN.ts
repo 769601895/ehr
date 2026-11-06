@@ -39,9 +39,10 @@ export default {
 			"includeDisabled": "含停用",
 			"filterNameCode": "按名称/编码筛选",
 			"rootNode": "根节点",
-			"activeDepts": "现有有效部门",
-			"allHistoryDepts": "所有历史部门",
-			"queryDept": "查询部门"
+			"activeDepts": "有效",
+			"allHistoryDepts": "历史",
+			"queryDept": "查询部门",
+			"noUserCcScope": "未配置人事管辖部门，请联系管理员在账号管理中设置管辖范围"
 		},
 		"emp": {
 			"moduleName": "人员资料",

@@ -39,9 +39,10 @@ export default {
 			"includeDisabled": "含停用",
 			"filterNameCode": "按名稱/編碼篩選",
 			"rootNode": "根節點",
-			"activeDepts": "現有有效部門",
-			"allHistoryDepts": "所有歷史部門",
-			"queryDept": "查詢部門"
+			"activeDepts": "有效",
+			"allHistoryDepts": "歷史",
+			"queryDept": "查詢部門",
+			"noUserCcScope": "未設定人事管轄部門，請聯繫管理員在帳號管理中設定管轄範圍"
 		},
 		"emp": {
 			"moduleName": "人員資料",

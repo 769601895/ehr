@@ -39,9 +39,10 @@ export default {
 			"includeDisabled": "Include disabled",
 			"filterNameCode": "Filter by name/code",
 			"rootNode": "Root",
-			"activeDepts": "Active departments",
-			"allHistoryDepts": "All historical departments",
-			"queryDept": "Search department"
+			"activeDepts": "Active",
+			"allHistoryDepts": "History",
+			"queryDept": "Search department",
+			"noUserCcScope": "No HR org scope configured. Ask an admin to set managed departments on your account."
 		},
 		"emp": {
 			"moduleName": "Employees",
