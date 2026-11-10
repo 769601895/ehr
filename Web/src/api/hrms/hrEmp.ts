@@ -3,6 +3,7 @@ import request from '/@/utils/request';
 enum Api {
 	Page = '/api/hrEmp/page',
 	Detail = '/api/hrEmp/detail',
+	LookupByEmpId = '/api/hrEmp/lookupByEmpId',
 	Add = '/api/hrEmp/add',
 	Update = '/api/hrEmp/update',
 	Delete = '/api/hrEmp/delete',
@@ -35,6 +36,14 @@ export const getHrEmpDetail = (empId: string) =>
 		url: Api.Detail,
 		method: 'get',
 		params: { empId },
+	});
+
+/** 按工号精确查管辖内员工（表单输入回填；不在管辖则失败） */
+export const lookupHrEmpByEmpId = (data: { empId: string; empState?: number | null }) =>
+	request({
+		url: Api.LookupByEmpId,
+		method: 'post',
+		data,
 	});
 
 /** 按部门预览工号（不占号） */

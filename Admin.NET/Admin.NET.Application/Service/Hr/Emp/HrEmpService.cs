@@ -70,6 +70,32 @@ public class HrEmpService : IDynamicApiController, ITransient
     }
 
     /// <summary>
+    /// 按工号精确查询管辖内员工（表单输入工号后回填姓名/部门；不在管辖则失败）
+    /// </summary>
+    [ApiDescriptionSettings(Name = "LookupByEmpId"), HttpPost]
+    [DisplayName("按工号查管辖内员工")]
+    public async Task<HrEmpOutput> LookupByEmpId(HrEmpLookupInput input)
+    {
+        if (input == null || string.IsNullOrWhiteSpace(input.EmpId))
+            throw Oops.Oh("工号不能为空");
+
+        var empId = input.EmpId.Trim();
+        var q = _empRep.AsQueryable().Where(u => u.EmpId == empId);
+        if (input.EmpState.HasValue)
+            q = q.Where(u => u.EmpState == input.EmpState.Value);
+
+        q = await _userCcScope.ApplyEmpScopeAsync(q);
+        var rows = await q.Take(1).ToListAsync();
+        var emp = rows.FirstOrDefault()
+            ?? throw Oops.Oh("人员不存在或不在管辖范围内");
+
+        var output = ToOutput(emp);
+        await FillCcDesc([output]);
+        output.Age = CalcAge(output.EmpBirth);
+        return output;
+    }
+
+    /// <summary>
     /// 预览工号（按部门归属公司参数；不占号）
     /// </summary>
     [ApiDescriptionSettings(Name = "PreviewEmpId"), HttpPost]
@@ -315,9 +341,10 @@ public class HrEmpService : IDynamicApiController, ITransient
         entity.EmpKqLeaDate = input.EmpKqLeaDate;
         entity.EmpKqIndate = input.EmpKqIndate;
         entity.EmpCardDate = input.EmpCardDate;
-        entity.EmpCardLimit = input.EmpCardLimit;
-        entity.EmpType = TrimOrNull(input.EmpType);
         entity.EmpCardOverdate = input.EmpCardOverdate;
+        // 发证日与到期日均有值时按月差生成期限；否则保留入参
+        entity.EmpCardLimit = CalcCardLimitMonths(input.EmpCardDate, input.EmpCardOverdate) ?? input.EmpCardLimit;
+        entity.EmpType = TrimOrNull(input.EmpType);
         entity.EmpWorkDate = input.EmpWorkDate;
         entity.EmpInDateGroup = input.EmpInDateGroup;
         entity.EmpPic = TrimOrNull(input.EmpPic);
@@ -380,5 +407,14 @@ public class HrEmpService : IDynamicApiController, ITransient
         var age = today.Year - birth.Value.Year;
         if (birth.Value.Date > today.AddYears(-age)) age--;
         return age < 0 ? 0 : age;
+    }
+
+    /// <summary>身份证期限（月）= 到期日 − 发证日的日历月差；缺一端则返回 null。</summary>
+    private static int? CalcCardLimitMonths(DateTime? issueDate, DateTime? expireDate)
+    {
+        if (issueDate == null || expireDate == null) return null;
+        var months = (expireDate.Value.Year - issueDate.Value.Year) * 12
+                     + (expireDate.Value.Month - issueDate.Value.Month);
+        return months < 0 ? 0 : months;
     }
 }

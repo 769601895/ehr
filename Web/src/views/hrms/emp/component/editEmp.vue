@@ -253,6 +253,7 @@ import { idCardAgentHealth, idCardAgentRead, idCardPhotoToFile, type HrIdCardDev
 import { getAPI } from '/@/utils/axios-utils';
 import { SysFileApi } from '/@/api-services/system/api';
 import { normalizeEmpPhoto } from '/@/views/hrms/composables/hrEmpPhoto';
+import { calcIdCardLimitMonths } from '/@/views/hrms/composables/hrEmpCardLimit';
 
 const props = defineProps({
 	title: String,
@@ -441,6 +442,15 @@ const ageText = computed(() => {
 	if (m < 0 || (m === 0 && today.getDate() < d.getDate())) age--;
 	return age < 0 ? '0' : String(age);
 });
+
+/** 发证日期 + 到期日齐全时，自动回填身份证期限（月） */
+watch(
+	() => [state.ruleForm.empCardDate, state.ruleForm.empCardOverdate] as const,
+	([issue, expire]) => {
+		const months = calcIdCardLimitMonths(issue, expire);
+		if (months != null) state.ruleForm.empCardLimit = months;
+	}
+);
 
 const openDialog = (row: any, isEdit = false) => {
 	state.isEdit = isEdit;

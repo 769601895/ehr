@@ -283,7 +283,6 @@ export default {
 			dragSortTip: '拖拽手柄可调序',
 			removeField: '移除',
 			empIdLockedTip: '修改模板必须包含工号，且不可移除。',
-			fixedTplTip: '每个账号仅有「新增」「修改」各一份模板，在此调整导入字段即可。',
 			cancel: '取消',
 			confirm: '确定',
 			save: '保存',
@@ -309,6 +308,12 @@ export default {
 			deleted: '已删除',
 			commitOk: '导入成功，共 {n} 行',
 			commitFail: '导入失败',
+		},
+		empLeave: {
+			placeholder: '离职管理功能开发中',
+			codeLeaveReason: '离职原因',
+			codeLeaveType: '离职类型',
+			codeLeaveSalarySettle: '薪资结算',
 		},
 	},
 };

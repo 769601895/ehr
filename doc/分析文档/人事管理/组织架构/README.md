@@ -43,6 +43,7 @@
 │   └── research/
 ├── 02-人员模块按管辖过滤改造方案.md   # 账号 ExtOrg 与人员树脱节：落地 Usercc 过滤
 ├── 03-多维业务管辖权限产品方案.md     # 人事/考勤/薪酬分域管辖与人员分群（产品总览）
+├── 04-市面HR业务域管辖全景对照.md     # 市面 HCM 全域清单与 Domain 收敛（补 03 不漏域）
 ├── specs/                             # 逆向（只读参考，非实现契约）
 │   ├── yuenan_w_rs_cc_mstr_reverse_spec.md   # 主业务参考
 │   ├── hr12_org_cc_mstr_reverse_spec.md      # 归档对照
@@ -70,5 +71,6 @@
 4. 二期管辖：`migration-plan/design/01-user-cc-scope.md`  
 5. 人员树/列表按管辖落地：`02-人员模块按管辖过滤改造方案.md`  
 6. 分域管辖总览（人事≠考勤≠薪酬）：`03-多维业务管辖权限产品方案.md`  
-7. 实施完成后勾 `migration-plan/CHECKLIST.md`  
-8. 需要溯源业务细节时再查 `specs/`（勿把对照史实写进代码）
+7. 市面全景域清单与收敛：`04-市面HR业务域管辖全景对照.md`  
+8. 实施完成后勾 `migration-plan/CHECKLIST.md`  
+9. 需要溯源业务细节时再查 `specs/`（勿把对照史实写进代码）

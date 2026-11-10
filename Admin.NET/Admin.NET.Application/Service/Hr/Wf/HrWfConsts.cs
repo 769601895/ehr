@@ -73,4 +73,8 @@ public static class HrWfConsts
     public const string EmhTypeTransfer = "YD";
     /// <summary>异动历史类型：离职</summary>
     public const string EmhTypeLeave = "LZ";
+    /// <summary>复职（同工号，自停职恢复）</summary>
+    public const string EmhTypeReinstate = "FZ";
+    /// <summary>停职</summary>
+    public const string EmhTypeSuspend = "TZ";
 }

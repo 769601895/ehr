@@ -237,7 +237,6 @@ export default {
 			dragSortTip: 'ลากเพื่อจัดลำดับ',
 			removeField: 'ลบ',
 			empIdLockedTip: 'เทมเพลตแก้ไขต้องมีรหัสพนักงาน และลบไม่ได้',
-			fixedTplTip: 'แต่ละบัญชีมีเทมเพลตเพิ่ม/แก้ไขอย่างละหนึ่ง ปรับฟิลด์ที่นี่',
 			cancel: 'ยกเลิก',
 			confirm: 'ตกลง',
 			save: 'บันทึก',
@@ -263,6 +262,12 @@ export default {
 			deleted: 'ลบแล้ว',
 			commitOk: 'นำเข้าสำเร็จ {n} แถว',
 			commitFail: 'นำเข้าไม่สำเร็จ',
+		},
+		empLeave: {
+			placeholder: 'โมดูลการลาออกกำลังพัฒนา',
+			codeLeaveReason: 'เหตุผลลาออก',
+			codeLeaveType: 'ประเภทการลาออก',
+			codeLeaveSalarySettle: 'การชำระเงินเดือน',
 		},
 	},
 };

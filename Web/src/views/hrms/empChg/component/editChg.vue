@@ -21,10 +21,13 @@
 				</el-col>
 				<el-col :span="12">
 					<el-form-item label="工号" prop="empId">
-						<div class="pick-row">
-							<el-input v-model="state.form.empId" placeholder="工号" readonly />
-							<el-button v-if="canEdit" @click="state.empPickVisible = true">选人</el-button>
-						</div>
+						<EmpIdInput
+							ref="empIdRef"
+							v-model="state.form.empId"
+							:disabled="!canEdit"
+							:emp-state="1"
+							@resolved="onEmpResolved"
+						/>
 					</el-form-item>
 				</el-col>
 				<el-col :span="12">
@@ -103,31 +106,13 @@
 				<el-button v-if="state.form.status === 'Effective'" type="warning" :loading="state.saving" v-auth="'hrEmpChg/void'" @click="doVoid">撤销</el-button>
 			</div>
 		</template>
-
-		<!-- 选人 -->
-		<el-dialog v-model="state.empPickVisible" title="选择员工" width="720px" append-to-body destroy-on-close>
-			<div class="emp-pick-bar">
-				<el-input v-model="state.empKeyword" placeholder="工号/姓名" clearable style="width: 220px" @keyup.enter="loadEmpPage" />
-				<el-button type="primary" @click="loadEmpPage">查询</el-button>
-			</div>
-			<el-table :data="state.empRows" height="360" highlight-current-row @row-dblclick="pickEmp" @current-change="(r: any) => (state.empCurrent = r)">
-				<el-table-column prop="empId" label="工号" width="120" />
-				<el-table-column prop="empName" label="姓名" width="120" />
-				<el-table-column prop="ccDesc" label="部门" min-width="160" />
-				<el-table-column prop="postId" label="岗位" width="120" />
-			</el-table>
-			<template #footer>
-				<el-button @click="state.empPickVisible = false">取消</el-button>
-				<el-button type="primary" @click="confirmPickEmp">选定</el-button>
-			</template>
-		</el-dialog>
 	</el-dialog>
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, ref } from 'vue';
+import { computed, nextTick, reactive, ref } from 'vue';
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from 'element-plus';
-import { pageHrEmp } from '/@/api/hrms/hrEmp';
+import EmpIdInput, { type ScopedEmp } from '/@/components/selector/empIdInput.vue';
 import { getHrOrgList } from '/@/api/hrms/hrOrg';
 import { getHrLookupOptions } from '/@/api/hrms/hrLookupDef';
 import {
@@ -140,12 +125,13 @@ import {
 	voidHrEmpChg,
 } from '/@/api/hrms/hrEmpChg';
 
-const props = defineProps<{
+defineProps<{
 	typeOptions: Array<{ value: string; label?: string; text?: string }>;
 }>();
 const emits = defineEmits<{ saved: [] }>();
 
 const formRef = ref<FormInstance>();
+const empIdRef = ref<InstanceType<typeof EmpIdInput>>();
 const cascaderProps = { checkStrictly: true, emitPath: false, value: 'ccCode', label: 'ccDesc', children: 'children' };
 
 const state = reactive({
@@ -158,16 +144,12 @@ const state = reactive({
 	afterPost: '' as string | undefined,
 	deptTree: [] as any[],
 	postOptions: [] as Array<{ value: string; label?: string; text?: string }>,
-	empPickVisible: false,
-	empKeyword: '',
-	empRows: [] as any[],
-	empCurrent: null as any,
 });
 
 const canEdit = computed(() => !state.form.status || state.form.status === 'Draft');
 
 const rules: FormRules = {
-	empId: [{ required: true, message: '请选择员工', trigger: 'change' }],
+	empId: [{ required: true, message: '请输入工号', trigger: 'blur' }],
 	chgDate: [{ required: true, message: '请填写异动日期', trigger: 'change' }],
 	chgType: [{ required: true, message: '请选择异动类别', trigger: 'change' }],
 };
@@ -197,6 +179,21 @@ const beforeText = (key: string) => {
 	return l?.valueBeforeText || l?.valueBefore || '';
 };
 
+const onEmpResolved = async (emp: ScopedEmp | null) => {
+	if (!emp?.empId) {
+		state.form.empName = '';
+		state.lines = [];
+		state.afterCc = undefined;
+		state.afterPost = undefined;
+		return;
+	}
+	state.form.empName = emp.empName || '';
+	const res = await previewHrEmpChgDefaults(emp.empId);
+	state.lines = res.data?.result ?? res.data ?? [];
+	state.afterCc = lineOf('ccCode')?.valueAfter || undefined;
+	state.afterPost = lineOf('postId')?.valueAfter || undefined;
+};
+
 const open = async (id?: number) => {
 	state.visible = true;
 	state.id = id;
@@ -224,6 +221,8 @@ const open = async (id?: number) => {
 		state.lines = d.lines || [];
 		state.afterCc = lineOf('ccCode')?.valueAfter || undefined;
 		state.afterPost = lineOf('postId')?.valueAfter || undefined;
+		await nextTick();
+		empIdRef.value?.markResolved(d.empId);
 	}
 };
 
@@ -245,40 +244,6 @@ const loadPosts = async () => {
 	}
 };
 
-const loadEmpPage = async () => {
-	const res = await pageHrEmp({
-		page: 1,
-		pageSize: 50,
-		keyword: state.empKeyword || undefined,
-		empState: 1,
-		field: 'empId',
-		order: 'asc',
-		descStr: 'desc',
-	});
-	const page = res.data?.result ?? res.data;
-	state.empRows = page?.items ?? [];
-};
-
-const pickEmp = async (row: any) => {
-	state.empCurrent = row;
-	await confirmPickEmp();
-};
-
-const confirmPickEmp = async () => {
-	const row = state.empCurrent;
-	if (!row?.empId) {
-		ElMessage.warning('请选择员工');
-		return;
-	}
-	state.form.empId = row.empId;
-	state.form.empName = row.empName || '';
-	state.empPickVisible = false;
-	const res = await previewHrEmpChgDefaults(row.empId);
-	state.lines = res.data?.result ?? res.data ?? [];
-	state.afterCc = lineOf('ccCode')?.valueAfter || undefined;
-	state.afterPost = lineOf('postId')?.valueAfter || undefined;
-};
-
 const buildPayload = () => ({
 	id: state.id,
 	empId: state.form.empId,
@@ -295,6 +260,13 @@ const buildPayload = () => ({
 
 const save = async (andSubmit: boolean) => {
 	await formRef.value?.validate();
+	if (!state.form.empName) {
+		await empIdRef.value?.resolve(true);
+		if (!state.form.empName) {
+			ElMessage.warning('请输入管辖范围内的有效工号');
+			return;
+		}
+	}
 	if (!state.afterCc) {
 		ElMessage.warning('新部门不能为空');
 		return;
@@ -386,11 +358,6 @@ defineExpose({ open });
 .w100 {
 	width: 100%;
 }
-.pick-row {
-	display: flex;
-	gap: 8px;
-	width: 100%;
-}
 .compare-title {
 	font-weight: 600;
 	margin-bottom: 8px;
@@ -401,11 +368,6 @@ defineExpose({ open });
 	flex-wrap: wrap;
 	justify-content: flex-end;
 	gap: 8px;
-}
-.emp-pick-bar {
-	display: flex;
-	gap: 8px;
-	margin-bottom: 10px;
 }
 .mb10 {
 	margin-bottom: 10px;

@@ -122,6 +122,18 @@ public partial class HrEmpSaveInput
 }
 
 /// <summary>
+/// 按工号精确查询管辖内员工（表单工号输入回填）
+/// </summary>
+public class HrEmpLookupInput
+{
+    [Required(ErrorMessage = "工号不能为空")]
+    public string EmpId { get; set; }
+
+    /// <summary>人员状态：1在职 2停职 3离职；空=不限</summary>
+    public int? EmpState { get; set; }
+}
+
+/// <summary>
 /// 按工号删除/离职
 /// </summary>
 public class HrEmpDeleteInput

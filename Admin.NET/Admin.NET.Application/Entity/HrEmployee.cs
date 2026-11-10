@@ -99,6 +99,10 @@ public partial class HrEmployee
     [SugarColumn(ColumnName = "emp_lea_date", ColumnDescription = "离职日", IsNullable = true)]
     public DateTime? EmpLeaDate { get; set; }
 
+    /// <summary>黑名单标记：0/1；入职不自动拦截，仅人工参考</summary>
+    [SugarColumn(ColumnName = "emp_black", ColumnDescription = "黑名单", IsNullable = true)]
+    public int? EmpBlack { get; set; }
+
     [SugarColumn(ColumnName = "emp_kq_lea_date", ColumnDescription = "考勤结束日", IsNullable = true)]
     public DateTime? EmpKqLeaDate { get; set; }
 

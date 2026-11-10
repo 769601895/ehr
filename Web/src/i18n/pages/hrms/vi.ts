@@ -237,7 +237,6 @@ export default {
 			dragSortTip: 'Kéo để sắp xếp',
 			removeField: 'Gỡ',
 			empIdLockedTip: 'Mẫu cập nhật phải có mã NV và không được gỡ.',
-			fixedTplTip: 'Mỗi tài khoản chỉ có một mẫu Thêm và một mẫu Sửa. Chỉnh trường tại đây.',
 			cancel: 'Huỷ',
 			confirm: 'Đồng ý',
 			save: 'Lưu',
@@ -263,6 +262,12 @@ export default {
 			deleted: 'Đã xóa',
 			commitOk: 'Đã nhập {n} dòng',
 			commitFail: 'Nhập thất bại',
+		},
+		empLeave: {
+			placeholder: 'Chức năng nghỉ việc đang phát triển',
+			codeLeaveReason: 'Lý do nghỉ việc',
+			codeLeaveType: 'Loại nghỉ việc',
+			codeLeaveSalarySettle: 'Quyết toán lương',
 		},
 	},
 };

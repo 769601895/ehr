@@ -283,7 +283,6 @@ export default {
 			dragSortTip: 'Drag handle to reorder',
 			removeField: 'Remove',
 			empIdLockedTip: 'Update templates must include Employee No. and it cannot be removed.',
-			fixedTplTip: 'Each account has one Add template and one Update template. Adjust fields here.',
 			cancel: 'Cancel',
 			confirm: 'OK',
 			save: 'Save',
@@ -309,6 +308,12 @@ export default {
 			deleted: 'Deleted',
 			commitOk: 'Imported {n} rows',
 			commitFail: 'Import failed',
+		},
+		empLeave: {
+			placeholder: 'Employee leave management is under construction',
+			codeLeaveReason: 'Leave reason',
+			codeLeaveType: 'Leave type',
+			codeLeaveSalarySettle: 'Salary settlement',
 		},
 	},
 };

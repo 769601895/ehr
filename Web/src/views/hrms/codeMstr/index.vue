@@ -2,7 +2,7 @@
 	<div class="hr-code-mstr" :class="{ 'is-embedded': embedded }">
 		<el-card shadow="hover" :body-style="{ padding: '5px 5px 0 5px', display: 'flex', width: '100%', alignItems: 'start' }">
 			<el-form :model="state.queryParams" :inline="true" style="flex: 1">
-				<el-form-item :label="t('message.hrms.codeMstr.codeField')">
+				<el-form-item v-if="!lockedCodeField" :label="t('message.hrms.codeMstr.codeField')">
 					<el-input v-model="state.queryParams.codeField" placeholder="code_field" clearable @keyup.enter="handleQuery(true)" />
 				</el-form-item>
 				<el-form-item :label="t('message.hrms.codeMstr.keyword')">
@@ -30,7 +30,9 @@
 
 		<el-dialog v-model="state.editVisible" :title="state.edit.oldCodeValue ? t('message.hrms.codeMstr.editTitle') : t('message.hrms.codeMstr.addTitle')" width="480px" destroy-on-close>
 			<el-form :model="state.edit" label-width="88px">
-				<el-form-item :label="t('message.hrms.codeMstr.codeField')" required><el-input v-model="state.edit.codeField" :disabled="!!state.edit.oldCodeValue" /></el-form-item>
+				<el-form-item v-if="!lockedCodeField" :label="t('message.hrms.codeMstr.codeField')" required>
+					<el-input v-model="state.edit.codeField" :disabled="!!state.edit.oldCodeValue" />
+				</el-form-item>
 				<el-form-item :label="t('message.hrms.codeMstr.codeValue')" required><el-input v-model="state.edit.codeValue" /></el-form-item>
 				<el-form-item :label="t('message.hrms.codeMstr.codeDesc')"><el-input v-model="state.edit.codeDesc" /></el-form-item>
 				<el-form-item :label="t('message.hrms.codeMstr.codeSort')"><el-input v-model="state.edit.codeSort" /></el-form-item>
@@ -56,7 +58,7 @@
 </template>
 
 <script lang="ts" setup name="hrCodeMstr">
-import { onMounted, reactive, ref, watch } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { VxeGridInstance, VxeGridListeners, VxeGridPropTypes } from 'vxe-table';
@@ -68,8 +70,11 @@ import { hrUiCultures } from '/@/views/hrms/composables/hrUiCulture';
 const { t, locale } = useI18n();
 const props = defineProps<{ presetCodeField?: string; embedded?: boolean }>();
 const embedded = props.embedded;
+const lockedCodeField = computed(() => String(props.presetCodeField || '').trim());
 const xGrid = ref<VxeGridInstance>();
-const localPageParamKey = 'localPageParam:hrCodeMstr';
+const localPageParamKey = computed(() =>
+	lockedCodeField.value ? `localPageParam:hrCodeMstr:${lockedCodeField.value}` : 'localPageParam:hrCodeMstr'
+);
 const state = reactive({
 	queryParams: { codeField: props.presetCodeField || '', keyword: '' },
 	localPageParam: { pageSize: 50 as number, defaultSort: { field: 'codeValue', order: 'asc', descStr: 'desc' } },
@@ -80,14 +85,21 @@ const state = reactive({
 	langRow: null as any,
 });
 
-const buildColumns = () => [
-	{ field: 'seq', type: 'seq', title: t('message.list.seq'), width: 60 },
-	{ field: 'codeField', title: t('message.hrms.codeMstr.codeField'), minWidth: 140, sortable: true },
-	{ field: 'codeValue', title: t('message.hrms.codeMstr.codeValue'), minWidth: 120, sortable: true },
-	{ field: 'codeDesc', title: t('message.hrms.codeMstr.codeDesc'), minWidth: 160, sortable: true },
-	{ field: 'codeSort', title: t('message.hrms.codeMstr.sortCode'), width: 100, sortable: true },
-	{ field: 'buttons', title: t('message.list.operation'), width: 140, fixed: 'right', slots: { default: 'row_buttons' } },
-];
+const buildColumns = () => {
+	const cols: any[] = [
+		{ field: 'seq', type: 'seq', title: t('message.list.seq'), width: 60 },
+	];
+	if (!lockedCodeField.value) {
+		cols.push({ field: 'codeField', title: t('message.hrms.codeMstr.codeField'), minWidth: 140, sortable: true });
+	}
+	cols.push(
+		{ field: 'codeValue', title: t('message.hrms.codeMstr.codeValue'), minWidth: 120, sortable: true },
+		{ field: 'codeDesc', title: t('message.hrms.codeMstr.codeDesc'), minWidth: 160, sortable: true },
+		{ field: 'codeSort', title: t('message.hrms.codeMstr.sortCode'), width: 100, sortable: true },
+		{ field: 'buttons', title: t('message.list.operation'), width: 140, fixed: 'right', slots: { default: 'row_buttons' } }
+	);
+	return cols;
+};
 
 const options = useVxeTable(
 	{
@@ -98,8 +110,8 @@ const options = useVxeTable(
 	{
 		height: embedded ? '100%' : 'auto',
 		proxyConfig: { autoLoad: true, ajax: { query: ({ page, sort }) => handleQueryApi(page, sort) } },
-		sortConfig: { defaultSort: Local.get(localPageParamKey)?.defaultSort || state.localPageParam.defaultSort },
-		pagerConfig: { pageSize: Local.get(localPageParamKey)?.pageSize || state.localPageParam.pageSize },
+		sortConfig: { defaultSort: Local.get(localPageParamKey.value)?.defaultSort || state.localPageParam.defaultSort },
+		pagerConfig: { pageSize: Local.get(localPageParamKey.value)?.pageSize || state.localPageParam.pageSize },
 	}
 );
 
@@ -120,17 +132,19 @@ const handleQuery = async (reset = false) => {
 	reset ? await xGrid.value?.commitProxy('reload') : await xGrid.value?.commitProxy('query');
 };
 const resetQuery = () => {
-	state.queryParams.codeField = props.presetCodeField || '';
+	state.queryParams.codeField = lockedCodeField.value || '';
 	state.queryParams.keyword = '';
 	handleQuery(true);
 };
 const openEdit = (row?: any) => {
+	const field = lockedCodeField.value || state.queryParams.codeField;
 	state.edit = row
 		? { codeField: row.codeField, codeValue: row.codeValue, oldCodeValue: row.codeValue, codeDesc: row.codeDesc, codeSort: row.codeSort }
-		: { codeField: state.queryParams.codeField, codeValue: '', codeDesc: '', codeSort: '' };
+		: { codeField: field, codeValue: '', codeDesc: '', codeSort: '' };
 	state.editVisible = true;
 };
 const saveEdit = async () => {
+	if (lockedCodeField.value) state.edit.codeField = lockedCodeField.value;
 	if (!state.edit.codeField?.trim() || !state.edit.codeValue?.trim()) {
 		ElMessage.warning(t('message.hrms.codeMstr.requiredFields'));
 		return;
@@ -165,12 +179,12 @@ const saveLang = async () => {
 const gridEvents: VxeGridListeners = {
 	async pageChange({ pageSize }) {
 		state.localPageParam.pageSize = pageSize;
-		Local.set(localPageParamKey, state.localPageParam);
+		Local.set(localPageParamKey.value, state.localPageParam);
 	},
 	async sortChange({ field, order }) {
 		if (!field || !order) return;
 		state.localPageParam.defaultSort = { field, order, descStr: 'desc' };
-		Local.set(localPageParamKey, state.localPageParam);
+		Local.set(localPageParamKey.value, state.localPageParam);
 	},
 };
 
@@ -182,8 +196,8 @@ watch(locale, () => {
 });
 
 onMounted(() => {
-	state.localPageParam = Local.get(localPageParamKey) || state.localPageParam;
-	if (props.presetCodeField) state.queryParams.codeField = props.presetCodeField;
+	state.localPageParam = Local.get(localPageParamKey.value) || state.localPageParam;
+	if (lockedCodeField.value) state.queryParams.codeField = lockedCodeField.value;
 });
 </script>
 

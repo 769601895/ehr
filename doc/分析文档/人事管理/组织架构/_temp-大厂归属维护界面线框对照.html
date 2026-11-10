@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>大厂员工归属维护界面线框对照（示意，非官方截图）</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --card: #fff;
+      --line: #d8dee6;
+      --muted: #667085;
+      --ink: #1a1f36;
+      --accent: #0b6bcb;
+      --warn: #b54708;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 14px/1.5 "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    header {
+      padding: 20px 28px;
+      background: #111827;
+      color: #fff;
+    }
+    header h1 { margin: 0 0 8px; font-size: 20px; font-weight: 650; }
+    header p { margin: 0; color: #cbd5e1; max-width: 920px; }
+    .banner {
+      margin: 16px 28px 0;
+      padding: 12px 14px;
+      border: 1px solid #f79009;
+      background: #fff7ed;
+      color: var(--warn);
+      border-radius: 8px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 16px;
+      padding: 16px 28px 40px;
+    }
+    .vendor {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(16,24,40,.04);
+    }
+    .vendor-h {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: baseline;
+    }
+    .vendor-h h2 { margin: 0; font-size: 16px; }
+    .vendor-h span { color: var(--muted); font-size: 12px; }
+    .ui {
+      margin: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fafbfc;
+      min-height: 420px;
+    }
+    .ui-top {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .ui-nav {
+      display: flex;
+      gap: 8px;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+      flex-wrap: wrap;
+    }
+    .chip {
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #eef2f6;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .chip.on { background: #e0efff; color: var(--accent); font-weight: 600; }
+    .form { padding: 12px; display: grid; gap: 10px; }
+    .row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+    .row label { color: var(--muted); font-size: 12px; }
+    .field {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 6px;
+      padding: 7px 10px;
+      color: var(--ink);
+      font-size: 13px;
+    }
+    .section {
+      margin-top: 4px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--line);
+      font-size: 12px;
+      font-weight: 650;
+      color: var(--accent);
+    }
+    .note {
+      padding: 0 14px 14px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .note a { color: var(--accent); }
+    .map {
+      margin: 0 28px 28px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .map h3 { margin: 0 0 10px; font-size: 15px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { border-bottom: 1px solid var(--line); padding: 8px; text-align: left; vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>大厂「员工归属」维护界面线框对照</h1>
+    <p>根据公开帮助/客户培训手册还原的界面结构示意，用于对照字段槽位；不是官方产品截图，也不是登录租户后的真实画面。</p>
+  </header>
+
+  <div class="banner">
+    版权说明：Workday / SAP SF / Oracle / 北森 正式 UI 需客户租户或官方演示账号。本页仅作产品形态对照；文末给出可打开的公开手册链接（多数含真实截图）。
+  </div>
+
+  <div class="grid">
+    <!-- Workday -->
+    <section class="vendor">
+      <div class="vendor-h">
+        <h2>Workday</h2>
+        <span>Change Organization Assignments</span>
+      </div>
+      <div class="ui">
+        <div class="ui-top">Worker → Actions → Organization → Change Organization Assignments</div>
+        <div class="ui-nav">
+          <span class="chip">Supervisory（另任务）</span>
+          <span class="chip on">Organization Assignments</span>
+        </div>
+        <div class="form">
+          <div class="row"><label>Effective Date</label><div class="field">2026-11-01</div></div>
+          <div class="section">Organizations（按类型各一槽）</div>
+          <div class="row"><label>Company *</label><div class="field">A Company ▾</div></div>
+          <div class="row"><label>Cost Center *</label><div class="field">CC-1200 ▾</div></div>
+          <div class="row"><label>Region</label><div class="field">East ▾</div></div>
+          <div class="row"><label>Business Unit</label><div class="field">Manufacturing ▾</div></div>
+          <div class="row"><label>Custom Org…</label><div class="field">（可配置类型）</div></div>
+        </div>
+      </div>
+      <p class="note">
+        特点：财务/成本类归属用「组织分配」专项任务维护；管理树（Supervisory）常与此分开。
+        公开手册：
+        <a href="https://workdaytraining.geisinger.org/PDFContent/J095_ChangeOrganizationAssignments.pdf" target="_blank">Geisinger PDF</a> ·
+        <a href="https://dallascityhall.com/departments/humanresources/workday/Roles%20Resources/Change%20Org%20Assignments_.pdf" target="_blank">Dallas PDF</a>
+      </p>
+    </section>
+
+    <!-- SuccessFactors -->
+    <section class="vendor">
+      <div class="vendor-h">
+        <h2>SAP SuccessFactors</h2>
+        <span>Job Information / Time Information</span>
+      </div>
+      <div class="ui">
+        <div class="ui-top">Employee Profile → Take Action → Change Job and Compensation Info</div>
+        <div class="ui-nav">
+          <span class="chip on">Job Information</span>
+          <span class="chip">Compensation</span>
+          <span class="chip">Job Relationships</span>
+        </div>
+        <div class="form">
+          <div class="row"><label>Event / Date</label><div class="field">Data Change / 2026-11-01</div></div>
+          <div class="section">Organizational Information</div>
+          <div class="row"><label>Legal Entity</label><div class="field">ACE USA ▾</div></div>
+          <div class="row"><label>Business Unit</label><div class="field">Plastics ▾</div></div>
+          <div class="row"><label>Division</label><div class="field">Manufacturing ▾</div></div>
+          <div class="row"><label>Department</label><div class="field">QA ▾</div></div>
+          <div class="row"><label>Location</label><div class="field">Plant B ▾</div></div>
+          <div class="row"><label>Cost Center</label><div class="field">CC-88 ▾</div></div>
+          <div class="section">Time Information（同页或同动作内）</div>
+          <div class="row"><label>Time Recording Profile</label><div class="field">Clock-PlantB ▾</div></div>
+          <div class="row"><label>Pay Group</label><div class="field">Monthly Staff ▾</div></div>
+        </div>
+      </div>
+      <p class="note">
+        特点：界面像「任职卡上多字段」；底层 Job Info 带生效日。考勤方案也挂在任职 Time 段。
+        公开材料：
+        <a href="https://scribehow.com/viewer/Guide_to_Updating_Job_Information__SuccessFactors__4qgGmtwiTJuir1EAlTMkHQ" target="_blank">Scribe 操作引导（含截图）</a> ·
+        <a href="https://help.sap.com/doc/34a39df064384444b57dbc82d688d70c/2405/en-US/Manage_Job_and_Compensation_Information_Test_Script_FJ1.pdf" target="_blank">SAP 测试脚本 PDF</a>
+      </p>
+    </section>
+
+    <!-- Oracle -->
+    <section class="vendor">
+      <div class="vendor-h">
+        <h2>Oracle HCM Cloud</h2>
+        <span>Hire / Employment Assignment</span>
+      </div>
+      <div class="ui">
+        <div class="ui-top">My Client Groups → Hire an Employee / Manage Employment</div>
+        <div class="ui-nav">
+          <span class="chip on">When &amp; Legal Employer</span>
+          <span class="chip">Assignment</span>
+          <span class="chip">Payroll</span>
+        </div>
+        <div class="form">
+          <div class="section">Work Relationship</div>
+          <div class="row"><label>Hire Date</label><div class="field">2026-11-01</div></div>
+          <div class="row"><label>Legal Employer</label><div class="field">US1 Legal Entity ▾</div></div>
+          <div class="row"><label>Business Unit</label><div class="field">US1 BU ▾</div></div>
+          <div class="section">Assignment</div>
+          <div class="row"><label>Department</label><div class="field">Admin Computing ▾</div></div>
+          <div class="row"><label>Position / Job</label><div class="field">Administrator ▾</div></div>
+          <div class="row"><label>Location</label><div class="field">Redwood City ▾</div></div>
+          <div class="section">Payroll details（另步）</div>
+          <div class="row"><label>Payroll</label><div class="field">Biweekly ▾</div></div>
+          <div class="row"><label>Tax Reporting Unit</label><div class="field">US1 Legal Entity ▾</div></div>
+        </div>
+      </div>
+      <p class="note">
+        特点：向导分步；Legal Employer 在用工关系，Department 在 Assignment，算薪另有 Payroll Relationship。
+        公开材料：
+        <a href="https://docs.oracle.com/en/cloud/saas/human-resources/faqah/hire-an-employee.html" target="_blank">Oracle 入职问答（含视频步骤）</a>
+      </p>
+    </section>
+
+    <!-- Beisen-like domestic -->
+    <section class="vendor">
+      <div class="vendor-h">
+        <h2>国内云（北森一类）</h2>
+        <span>员工档案 / 任职信息</span>
+      </div>
+      <div class="ui">
+        <div class="ui-top">员工档案 → 任职信息（主职） / 调动或假勤侧可看考勤组织</div>
+        <div class="ui-nav">
+          <span class="chip on">任职信息</span>
+          <span class="chip">基本信息</span>
+          <span class="chip">假勤相关</span>
+        </div>
+        <div class="form">
+          <div class="row"><label>任职类型</label><div class="field">主职</div></div>
+          <div class="row"><label>部门</label><div class="field">A厂 / 品保部 ▾</div></div>
+          <div class="row"><label>岗位</label><div class="field">品保工程师 ▾</div></div>
+          <div class="row"><label>任职机构/法人</label><div class="field">A公司 ▾</div></div>
+          <div class="section">算薪 / 假勤挂靠（配置而定）</div>
+          <div class="row"><label>发薪主体</label><div class="field">A公司 ▾</div></div>
+          <div class="row"><label>考勤组织</label><div class="field">B厂 / 产线一 ▾</div></div>
+          <div class="row"><label>薪资组</label><div class="field">职员 ▾</div></div>
+        </div>
+      </div>
+      <p class="note">
+        特点：更接近「任职页多字段」；考勤组织常见为独立字段（API 可见 AttendanceOrg）。组织调整可联动假勤/算薪归属。
+        公开材料偏营销/API，完整后台截图较少：
+        <a href="https://www.beisen.com/res/3352.html" target="_blank">北森员工数据统一管理说明</a>
+      </p>
+    </section>
+  </div>
+
+  <div class="map">
+    <h3>和本产品字段的粗映射</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>本产品（建议）</th>
+          <th>Workday</th>
+          <th>SuccessFactors</th>
+          <th>Oracle</th>
+          <th>国内云常见</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>CcCode 行政</td>
+          <td>Supervisory Org / 岗位所在管理组织</td>
+          <td>Department（Job Info）</td>
+          <td>Assignment.Department</td>
+          <td>任职.部门</td>
+        </tr>
+        <tr>
+          <td>PaySiteCode 发薪主体</td>
+          <td>Company（组织分配）+ Payroll 公司</td>
+          <td>Legal Entity / Pay Group 相关</td>
+          <td>Legal Employer / Payroll Relationship</td>
+          <td>任职机构 / 发薪主体</td>
+        </tr>
+        <tr>
+          <td>AttendCcCode 考勤</td>
+          <td>常 Location / 自定义组织 / Time 配置</td>
+          <td>Time Recording Profile 等</td>
+          <td>Time 相关配置（未必=部门）</td>
+          <td>考勤组织 AttendanceOrg</td>
+        </tr>
+        <tr>
+          <td>维护形态</td>
+          <td>专项「组织分配」任务 + 生效日</td>
+          <td>任职卡多字段 + 生效日历史</td>
+          <td>入职/雇佣向导分步实体</td>
+          <td>档案任职多字段（兼岗多任职）</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

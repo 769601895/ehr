@@ -277,7 +277,6 @@ export default {
 			dragSortTip: '拖曳手柄可調序',
 			removeField: '移除',
 			empIdLockedTip: '修改範本必須包含工號，且不可移除。',
-			fixedTplTip: '每個帳號僅有「新增」「修改」各一份範本，在此調整匯入欄位即可。',
 			cancel: '取消',
 			confirm: '確定',
 			save: '保存',
@@ -303,6 +302,12 @@ export default {
 			deleted: '已刪除',
 			commitOk: '匯入成功，共 {n} 行',
 			commitFail: '匯入失敗',
+		},
+		empLeave: {
+			placeholder: '離職管理功能開發中',
+			codeLeaveReason: '離職原因',
+			codeLeaveType: '離職類型',
+			codeLeaveSalarySettle: '薪資結算',
 		},
 	},
 };
