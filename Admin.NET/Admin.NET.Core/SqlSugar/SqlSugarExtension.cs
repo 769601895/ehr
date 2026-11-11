@@ -210,9 +210,10 @@ public static class SqlSugarExtension
             FilterOperatorEnum.LTE => Expression.LessThanOrEqual(memberExpression, constantExpression),
             FilterOperatorEnum.GT => Expression.GreaterThan(memberExpression, constantExpression),
             FilterOperatorEnum.GTE => Expression.GreaterThanOrEqual(memberExpression, constantExpression),
-            FilterOperatorEnum.Contains => Expression.Call(memberExpression, nameof(FilterOperatorEnum.Contains), null, constantExpression),
-            FilterOperatorEnum.StartsWith => Expression.Call(memberExpression, nameof(FilterOperatorEnum.StartsWith), null, constantExpression),
-            FilterOperatorEnum.EndsWith => Expression.Call(memberExpression, nameof(FilterOperatorEnum.EndsWith), null, constantExpression),
+            FilterOperatorEnum.Contains => Expression.Call(memberExpression, nameof(string.Contains), null, constantExpression),
+            FilterOperatorEnum.NotContains => Expression.Not(Expression.Call(memberExpression, nameof(string.Contains), null, constantExpression)),
+            FilterOperatorEnum.StartsWith => Expression.Call(memberExpression, nameof(string.StartsWith), null, constantExpression),
+            FilterOperatorEnum.EndsWith => Expression.Call(memberExpression, nameof(string.EndsWith), null, constantExpression),
             _ => throw new ArgumentException("Filter Operator is not valid."),
         };
     }

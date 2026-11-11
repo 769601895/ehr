@@ -61,12 +61,20 @@
 					:rules="fieldRules(f)"
 				>
 					<el-date-picker
-						v-if="f.controlType === 'date'"
+						v-if="f.controlType === 'date' || f.controlType === 'datetime'"
 						v-model="ruleForm[f.fieldKey]"
-						type="date"
-						format="YYYY-MM-DD"
-						value-format="YYYY-MM-DD"
+						:type="f.controlType === 'datetime' ? 'datetime' : 'date'"
+						:format="f.controlType === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD'"
+						:value-format="f.controlType === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD'"
 						class="w100 hr-emp-date"
+						clearable
+						:disabled="f.readonly"
+					/>
+					<el-input
+						v-else-if="f.controlType === 'textarea'"
+						v-model="ruleForm[f.fieldKey]"
+						type="textarea"
+						:rows="3"
 						clearable
 						:disabled="f.readonly"
 					/>

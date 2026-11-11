@@ -34,6 +34,9 @@ public class HrUiFieldDefOutput
     public bool Locked { get; set; }
     public int SortNo { get; set; }
     public bool Enabled { get; set; }
+
+    /// <summary>适用场景：list / form（入池后须至少勾一项才会进对应设计器）</summary>
+    public List<string> Scenes { get; set; } = [];
 }
 
 public class HrUiFieldDefUpdateInput
@@ -63,6 +66,9 @@ public class HrUiFieldDefUpdateInput
     public bool IsNullable { get; set; } = true;
     public string DbColumn { get; set; }
     public string TableName { get; set; }
+
+    /// <summary>适用场景；入池时必填至少一项</summary>
+    public List<string> Scenes { get; set; } = [];
 }
 
 public class HrUiFieldSyncInput

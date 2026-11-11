@@ -1,0 +1,62 @@
+---
+description: 新开发列表/分页页必须接入通用高级查询
+alwaysApply: true
+---
+
+# 新列表必须支持高级查询
+
+凡新开发的**业务列表/分页页**（含代码生成后手工改的页面），必须接入项目统一的**高级查询**（行式条件、并且/或者、括号组、方案保存/同角色分享）。禁止只做简单关键字、不做高级条件。
+
+参考实现：`Web/src/views/hrms/emp/index.vue`；控件：`Web/src/components/advQuery/`；方案 API：`hrAdvQueryScheme`（按 `moduleCode` 隔离）；后端消毒：`Admin.NET/**/Service/Hr/AdvQuery/HrAdvancedFilter.cs`；说明：`doc/分析文档/高级查询通用控件/`。
+
+## 前端（Vue）
+
+1. 使用 `useAdvQuery(moduleCode)` + `<AdvQueryDrawer>`（从 `/@/components/advQuery` 引入）。
+2. `moduleCode` 稳定唯一（如 `hrEmp`、`hrEmpLeave`），与方案表、权限无关重复即可。
+3. 业务页组装并传入 `fields: AdvQueryField[]`（fieldKey camelCase、label、valueType；枚举给 options；跨表/join 须在本页声明）。
+4. 工具栏提供「高级查询」入口；`@search` 后把 `filter` 并入分页请求；重置须清掉高级条件（`adv.reset()`）。
+5. 文案用 `message.hrms.advQuery.*`（已有多语包）；方案名用户自填，不做业务译文表。
+6. 方案权限复用 `hrAdvQueryScheme/list|save|delete|detail`（挂本模块或人员资料下按钮即可，勿新占菜单 Id）。
+
+```ts
+const {
+  moduleCode, drawerRef, fields, filter, activeCount,
+  open, reset, applySearch, setActiveCount, setFields,
+} = useAdvQuery('hrXxx');
+```
+
+```vue
+<el-button @click="open">{{ t('message.hrms.advQuery.title') }}</el-button>
+<AdvQueryDrawer
+  ref="drawerRef"
+  :module-code="moduleCode"
+  :fields="fields"
+  @search="(f) => { applySearch(f); handleQuery(true); }"
+  @update:active-count="setActiveCount"
+/>
+```
+
+分页参数：`filter: filter.value`（与后端 `BasePageInput.Filter` 对齐）。
+
+## 后端（Admin.NET）
+
+1. 分页入参继承 `BasePageInput`（已含 `Filter`），禁止另造条件树字段名。
+2. 为该模块建立 **FieldRegistry**（仅白名单 fieldKey → 属性或跨表处理器）；`Page` 查询在关键字/管辖等固定条件之后调用白名单 Apply（人员资料：`HrAdvancedFilter.ApplyEmp`）。
+3. 存编码、界面显示名称的字段：条件须支持按**名称或编码**匹配（参考 emp 的部门/岗位/代码类），避免「包含中文名」查空。
+4. 未登记或失效字段须明确报错，禁止静默忽略导致结果不符预期。
+5. 方案存取统一走 `HrAdvQuerySchemeService`，只换 `moduleCode`，勿再复制一套方案表。
+
+## 验收
+
+- [ ] 列表有高级查询入口；可加多行并且/或者与括号组并查出正确结果
+- [ ] 可保存/加载方案（个人 + 同角色分享）；字段下线后打开方案能标失效并拦截查询
+- [ ] 请求带 `filter`；后端 Registry + Apply 生效
+- [ ] 重置清除高级条件；`moduleCode` 与其它模块不串方案
+
+## 例外（须在方案/任务中显式写明）
+
+- 纯表单/详情/向导、无表格配置页
+- 一次性运维脚本页、不面向业务用户的技术列表
+- 仅系统日志且无业务筛选价值的页
+
+未声明例外则按本规则执行。

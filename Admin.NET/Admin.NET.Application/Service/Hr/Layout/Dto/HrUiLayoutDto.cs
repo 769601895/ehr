@@ -10,6 +10,15 @@ public class HrUiLayoutQueryInput
     public string Scene { get; set; }
 }
 
+/// <summary>配置中心模块下拉</summary>
+public class HrUiModuleOutput
+{
+    public string Code { get; set; }
+    public string Name { get; set; }
+    public string MainTable { get; set; }
+    public string[] Scenes { get; set; } = [];
+}
+
 public class HrUiLayoutFieldOutput
 {
     public long Id { get; set; }

@@ -24,10 +24,10 @@
 						:disabled="readonly || f.readonly"
 					/>
 					<el-date-picker
-						v-else-if="f.controlType === 'date'"
+						v-else-if="f.controlType === 'date' || f.controlType === 'datetime'"
 						v-model="model[f.fieldKey]"
-						type="date"
-						value-format="YYYY-MM-DD"
+						:type="f.controlType === 'datetime' ? 'datetime' : 'date'"
+						:value-format="f.controlType === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD'"
 						class="w100"
 						:disabled="readonly || f.readonly"
 					/>

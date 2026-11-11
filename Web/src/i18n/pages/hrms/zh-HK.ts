@@ -1,4 +1,4 @@
-export default {
+﻿export default {
 	hrms: {
 		"common": {
 			"person": "人員",
@@ -8,7 +8,7 @@ export default {
 			"empStateLeave": "離職",
 			"empStateAll": "全部",
 			"empState": "人員狀態",
-			"keywordEmp": "工號/姓名/身份證/電話",
+			"keywordEmp": "工號/姓名",
 			"empId": "工號",
 			"empName": "姓名",
 			"dept": "部門",

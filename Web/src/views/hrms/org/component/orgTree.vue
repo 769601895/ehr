@@ -86,6 +86,8 @@ const filterText = ref('');
 const treeRef = ref<InstanceType<typeof ElTree>>();
 const emits = defineEmits<{
 	(e: 'node-click', node: any): void;
+	/** 用户主动点选（含根节点命令），不含加载后的默认选中 */
+	(e: 'user-select', node: any): void;
 	/** 树数据加载完成（供右侧表格复用，避免再打一次 GetList） */
 	(e: 'loaded', tree: any[], meta: { includeDisabled: boolean; empState: number }): void;
 }>();
@@ -144,6 +146,7 @@ const filterNode = (value: string, data: any) => {
 
 const nodeClick = (node: any) => {
 	emits('node-click', node);
+	emits('user-select', node);
 };
 
 const handleCommand = async (command: string | number | object) => {
@@ -155,7 +158,9 @@ const handleCommand = async (command: string | number | object) => {
 		await fetchTreeData();
 	} else if (command === 'rootNode') {
 		treeRef.value?.setCurrentKey(undefined as any);
-		emits('node-click', { ccCode: '', ccDesc: '', ccLevel: '' });
+		const empty = { ccCode: '', ccDesc: '', ccLevel: '' };
+		emits('node-click', empty);
+		emits('user-select', empty);
 	}
 };
 

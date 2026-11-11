@@ -59,6 +59,9 @@ public class HrEmpChgService : IDynamicApiController, ITransient
             .WhereIF(input.ChgDateBegin.HasValue, u => u.ChgDate >= input.ChgDateBegin!.Value.Date)
             .WhereIF(input.ChgDateEnd.HasValue, u => u.ChgDate <= input.ChgDateEnd!.Value.Date);
 
+        if (input.Filter != null)
+            query = HrAdvancedFilter.ApplyEmpChg(query, input.Filter);
+
         NormalizeSort(input);
         var page = await query
             .OrderBuilder(input, defaultSortField: "ChgDate", descSort: true)

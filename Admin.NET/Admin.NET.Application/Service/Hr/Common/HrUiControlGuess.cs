@@ -2,13 +2,17 @@ namespace Admin.NET.Application;
 
 public static class HrUiControlGuess
 {
-    public static readonly string[] ControlTypes = ["text", "number", "date", "select", "photo", "cascader", "computed"];
+    /// <summary>允许的控件类型。date=仅日期；datetime=日期+时间；textarea=多行文本。</summary>
+    public static readonly string[] ControlTypes =
+        ["text", "textarea", "number", "date", "datetime", "select", "photo", "cascader", "computed"];
     public static readonly string[] Origins = ["physical", "computed", "lookup"];
 
     public static string FromDataType(string dataType)
     {
         var t = (dataType ?? "").ToLowerInvariant();
-        if (t.Contains("date") || t.Contains("time")) return "date";
+        // 纯 date → date；datetime/datetime2/time/timestamp 等 → datetime
+        if (t == "date") return "date";
+        if (t.Contains("date") || t.Contains("time")) return "datetime";
         if (t.Contains("int") || t.Contains("decimal") || t.Contains("numeric") || t.Contains("float") || t.Contains("money") || t.Contains("real"))
             return "number";
         return "text";

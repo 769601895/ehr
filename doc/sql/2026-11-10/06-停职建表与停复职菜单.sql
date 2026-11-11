@@ -36,6 +36,7 @@ BEGIN
         UpdateUserId     bigint         NULL,
         UpdateUserName   nvarchar(64)   NULL,
         IsDelete         bit            NOT NULL CONSTRAINT DF_hr_emp_suspend_del DEFAULT (0),
+        DeleteTime       datetime       NULL,
         CONSTRAINT PK_hr_emp_suspend PRIMARY KEY (Id)
     );
     CREATE UNIQUE INDEX UX_hr_emp_suspend_no ON dbo.hr_emp_suspend (suspend_no) WHERE IsDelete = 0;

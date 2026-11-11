@@ -1,7 +1,7 @@
 <template>
 	<div class="layout-editor" v-loading="state.loading">
 		<div class="toolbar">
-			<div class="toolbar-title">{{ title }}</div>
+			<div class="toolbar-title">{{ displayTitle }}</div>
 			<div class="toolbar-actions">
 				<el-button type="primary" icon="ele-Check" :loading="state.saving" v-auth="'hrUiLayout/saveDefault'" @click="handleSave">保存</el-button>
 				<el-button icon="ele-RefreshLeft" @click="handleReloadDefault">加载默认</el-button>
@@ -24,8 +24,8 @@
 							</template>
 						</el-table-column>
 						<el-table-column type="index" label="序号" width="50" />
-						<el-table-column label="表名" width="110" prop="tableName">
-							<template #default>h_emp_mstr</template>
+						<el-table-column label="表名" width="120" show-overflow-tooltip>
+							<template #default="{ row }">{{ row.tableName || mainTable || '—' }}</template>
 						</el-table-column>
 						<el-table-column label="显示名" min-width="140">
 							<template #default="{ row }">
@@ -50,11 +50,10 @@
 								<el-input-number v-model="row.spanSlots" :min="1" :max="6" size="small" controls-position="right" class="w100" />
 							</template>
 						</el-table-column>
-						<el-table-column v-if="scene === 'form'" label="分组" width="100">
+						<el-table-column v-if="scene === 'form'" label="分组" width="120">
 							<template #default="{ row }">
-								<el-select v-model="row.groupCode" size="small" class="w100">
-									<el-option label="基本信息" value="basic" />
-									<el-option label="任职信息" value="job" />
+								<el-select v-model="row.groupCode" size="small" class="w100" filterable allow-create default-first-option>
+									<el-option v-for="g in groupOptions" :key="g.value" :label="g.label" :value="g.value" />
 								</el-select>
 							</template>
 						</el-table-column>
@@ -137,10 +136,20 @@ import 'splitpanes/dist/splitpanes.css';
 import { getHrUiFieldPool, getHrUiLayoutDefault, getHrUiLayoutEffective, saveHrUiLayoutDefault, type HrUiLayoutScene } from '/@/api/hrms/hrUiLayout';
 import { hrUiCulture } from '/@/views/hrms/composables/hrUiCulture';
 
-const props = defineProps<{
-	scene: HrUiLayoutScene;
-	title: string;
-}>();
+const props = withDefaults(
+	defineProps<{
+		moduleCode: string;
+		scene: HrUiLayoutScene;
+		title?: string;
+		moduleName?: string;
+		mainTable?: string;
+	}>(),
+	{
+		title: '',
+		moduleName: '',
+		mainTable: '',
+	}
+);
 
 const { locale } = useI18n();
 const tableRef = ref();
@@ -154,6 +163,24 @@ const state = reactive({
 	fields: [] as any[],
 });
 
+const displayTitle = computed(
+	() => props.title || `${props.moduleName || props.moduleCode}${props.scene === 'list' ? '列表定义' : '表单定义'}`
+);
+
+const groupOptions = computed(() => {
+	const base = [
+		{ value: 'basic', label: '基本信息' },
+		{ value: 'job', label: '任职信息' },
+	];
+	const extra = new Set(
+		state.fields
+			.map((f) => f.groupCode)
+			.filter((c) => c && c !== 'basic' && c !== 'job')
+	);
+	for (const c of extra) base.push({ value: c, label: c });
+	return base;
+});
+
 const sourceText = computed(() => {
 	if (state.source === 'system') return '系统默认';
 	if (state.source === 'user') return '个人方案';
@@ -161,7 +188,7 @@ const sourceText = computed(() => {
 	return state.source || '-';
 });
 
-/** 报表显示区快照。改左侧字段不会改它，只有「生成」或重新加载后才更新。 */
+/** 预览与左侧字段区同步（点「生成」可强制刷新快照，便于对照）。 */
 const previewFields = ref<any[]>([]);
 
 const cloneFields = (list: any[]) => JSON.parse(JSON.stringify(list ?? []));
@@ -169,6 +196,12 @@ const cloneFields = (list: any[]) => JSON.parse(JSON.stringify(list ?? []));
 const generatePreview = () => {
 	previewFields.value = cloneFields(state.fields);
 };
+
+watch(
+	() => state.fields,
+	() => generatePreview(),
+	{ deep: true }
+);
 
 const visibleFields = computed(() => previewFields.value.filter((f) => f.visible !== false));
 
@@ -198,6 +231,7 @@ const mapFields = (fields: any[]) => {
 			return {
 				fieldKey: f.fieldKey,
 				dbColumn: f.dbColumn ?? meta?.dbColumn,
+				tableName: meta?.tableName || props.mainTable || '',
 				label: f.label || meta?.label || f.fieldKey,
 				sortNo: f.sortNo ?? i + 1,
 				visible: f.visible !== false,
@@ -243,7 +277,7 @@ const remountTable = async () => {
 };
 
 const loadPool = async () => {
-	const res = await getHrUiFieldPool('hrEmp', props.scene);
+	const res = await getHrUiFieldPool(props.moduleCode, props.scene);
 	state.pool = res.data.result ?? [];
 };
 
@@ -251,7 +285,7 @@ const loadEffective = async () => {
 	state.loading = true;
 	try {
 		await loadPool();
-		const res = await getHrUiLayoutEffective('hrEmp', props.scene);
+		const res = await getHrUiLayoutEffective(props.moduleCode, props.scene);
 		const data = res.data.result;
 		state.source = data?.source ?? '';
 		state.fields = mapFields(data?.fields ?? []);
@@ -267,7 +301,8 @@ const loadEffective = async () => {
 const handleReloadDefault = async () => {
 	state.loading = true;
 	try {
-		const res = await getHrUiLayoutDefault('hrEmp', props.scene);
+		await loadPool();
+		const res = await getHrUiLayoutDefault(props.moduleCode, props.scene);
 		const data = res.data.result;
 		state.source = data?.source ?? 'system';
 		state.fields = mapFields(data?.fields ?? []);
@@ -283,6 +318,7 @@ const onFieldKeyChange = (row: any, key: string) => {
 	const meta = state.pool.find((p) => p.fieldKey === key);
 	if (!meta) return;
 	row.dbColumn = meta.dbColumn;
+	row.tableName = meta.tableName || props.mainTable || '';
 	row.label = meta.label;
 	row.controlType = meta.codeField ? 'select' : meta.controlType;
 	row.groupCode = meta.groupCode || row.groupCode;
@@ -306,7 +342,11 @@ const addRow = () => {
 	const used = new Set(state.fields.map((f) => f.fieldKey));
 	const next = state.pool.find((p) => !used.has(p.fieldKey));
 	if (!next) {
-		ElMessage.warning('字段池已全部添加');
+		ElMessage.warning(
+			state.pool.length
+				? `当前场景（${props.scene}）可用字段已全部加入布局。若仍缺字段，请到「字段元数据」勾选适用场景（仅「入池」不够）`
+				: '当前场景字段池为空，请先到「字段元数据」为该字段勾选适用场景（list/form）'
+		);
 		return;
 	}
 	state.fields.push({
@@ -376,10 +416,11 @@ const handleSave = async () => {
 	}
 	state.saving = true;
 	try {
+		const modName = props.moduleName || props.moduleCode;
 		await saveHrUiLayoutDefault({
-			moduleCode: 'hrEmp',
+			moduleCode: props.moduleCode,
 			scene: props.scene,
-			name: props.scene === 'list' ? '人员资料默认列表' : '人员资料默认表单',
+			name: `${modName}默认${props.scene === 'list' ? '列表' : '表单'}`,
 			fields: state.fields.map((f, i) => ({
 				fieldKey: f.fieldKey,
 				dbColumn: f.dbColumn,
@@ -403,6 +444,10 @@ const handleSave = async () => {
 };
 
 watch(locale, () => loadEffective());
+watch(
+	() => [props.moduleCode, props.scene],
+	() => loadEffective()
+);
 onMounted(loadEffective);
 onUnmounted(destroyRowDrop);
 </script>

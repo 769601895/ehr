@@ -1,73 +1,95 @@
 <template>
 	<div class="hr-emp-container">
-		<splitpanes class="default-theme">
-			<pane size="22" style="display: flex">
-				<OrgTree ref="orgTreeRef" @node-click="handleNodeChange" />
-			</pane>
-			<pane size="78" class="hr-emp-right-pane">
-				<div class="hr-emp-right">
-					<el-card shadow="hover" :body-style="{ padding: '8px 10px', display: 'flex', width: '100%', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }">
-						<el-input v-model="state.queryParams.keyword" :placeholder="t('message.hrms.common.keywordEmp')" clearable style="width: 220px" @keyup.enter="handleQuery(true)" />
-						<el-input v-model="state.queryParams.empId" :placeholder="t('message.hrms.common.empId')" clearable style="width: 120px" @keyup.enter="handleQuery(true)" />
-						<el-input v-model="state.queryParams.empName" :placeholder="t('message.hrms.common.empName')" clearable style="width: 120px" @keyup.enter="handleQuery(true)" />
-						<el-select v-model="state.queryParams.empState" clearable :placeholder="t('message.hrms.common.empState')" style="width: 110px" @change="handleQuery(true)">
-							<el-option :label="t('message.hrms.common.empStateActive')" :value="1" />
-							<el-option :label="t('message.hrms.common.empStateSuspend')" :value="2" />
-							<el-option :label="t('message.hrms.common.empStateLeave')" :value="3" />
-						</el-select>
-						<el-button-group style="margin-left: 4px">
-							<el-button type="primary" icon="ele-Search" :loading="options.loading" @click="handleQuery(true)">{{ t('message.list.query') }}</el-button>
-							<el-button icon="ele-Refresh" :loading="options.loading" @click="resetQuery">{{ t('message.list.reset') }}</el-button>
-						</el-button-group>
-						<el-button type="primary" icon="ele-Plus" style="margin-left: 8px" v-auth="'hrEmp/add'" @click="handleAdd">{{ t('message.list.add') }}</el-button>
-					</el-card>
+		<div class="hr-emp-main">
+			<el-card shadow="hover" :body-style="{ padding: '8px 10px', display: 'flex', width: '100%', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }">
+				<el-button icon="ele-OfficeBuilding" @click="state.orgDrawer = true">{{ t('message.hrms.emp.openOrg') }}</el-button>
+				<el-tag v-if="state.parentCcDesc" type="info" closable class="dept-tag" @close="clearDeptFilter">
+					{{ state.parentCcDesc }}
+				</el-tag>
+				<el-button type="primary" icon="ele-Plus" v-auth="'hrEmp/add'" @click="handleAdd">{{ t('message.list.add') }}</el-button>
+				<el-input v-model="state.queryParams.keyword" :placeholder="t('message.hrms.common.keywordEmp')" clearable style="width: 280px" @keyup.enter="handleQuery(true)" />
+				<el-button-group>
+					<el-button type="primary" icon="ele-Search" :loading="options.loading" @click="handleQuery(true)">{{ t('message.list.query') }}</el-button>
+					<el-button icon="ele-Refresh" :loading="options.loading" @click="resetQuery">{{ t('message.list.reset') }}</el-button>
+				</el-button-group>
+				<el-button icon="ele-Filter" type="primary" plain v-auth="'hrEmp/page'" @click="openAdvQuery">
+					{{ t('message.hrms.advQuery.title') }}
+					<el-badge v-if="advActiveCount" :value="advActiveCount" class="adv-badge" />
+				</el-button>
+			</el-card>
 
-					<el-card class="full-table" shadow="hover" style="margin-top: 5px; flex: 1">
-						<vxe-grid ref="xGrid" class="xGrid-style" v-bind="options" v-on="gridEvents">
-							<template #empty>
-								<el-empty :image-size="160" />
-							</template>
-							<template #row_empState="{ row }">
-								<el-tag v-if="row.empState === 1" type="success">{{ t('message.hrms.common.empStateActive') }}</el-tag>
-								<el-tag v-else-if="row.empState === 2" type="warning">{{ t('message.hrms.common.empStateSuspend') }}</el-tag>
-								<el-tag v-else-if="row.empState === 3" type="info">{{ t('message.hrms.common.empStateLeave') }}</el-tag>
-								<span v-else>{{ row.empState ?? '-' }}</span>
-							</template>
-							<template #row_buttons="{ row }">
-								<el-button icon="ele-Edit" text type="primary" v-auth="'hrEmp/update'" @click="handleEdit(row)">{{ t('message.list.edit') }}</el-button>
-								<el-button icon="ele-Delete" text type="danger" v-auth="'hrEmp/delete'" :disabled="row.empState === 3" @click="handleLeave(row)">{{ t('message.hrms.emp.leaveAction') }}</el-button>
-							</template>
-						</vxe-grid>
-					</el-card>
-				</div>
-			</pane>
-		</splitpanes>
+			<el-card class="full-table" shadow="hover" style="margin-top: 5px; flex: 1">
+				<vxe-grid ref="xGrid" class="xGrid-style" v-bind="options" v-on="gridEvents">
+					<template #empty>
+						<el-empty :image-size="160" />
+					</template>
+					<template #row_empState="{ row }">
+						<el-tag v-if="row.empState === 1" type="success">{{ t('message.hrms.common.empStateActive') }}</el-tag>
+						<el-tag v-else-if="row.empState === 2" type="warning">{{ t('message.hrms.common.empStateSuspend') }}</el-tag>
+						<el-tag v-else-if="row.empState === 3" type="info">{{ t('message.hrms.common.empStateLeave') }}</el-tag>
+						<span v-else>{{ row.empState ?? '-' }}</span>
+					</template>
+				</vxe-grid>
+			</el-card>
+		</div>
+
+		<!-- 遮罩 + 左侧面板：树始终挂载以便预载管辖数据 -->
+		<div v-show="state.orgDrawer" class="org-panel-mask" @click="state.orgDrawer = false" />
+		<aside class="org-panel" :class="{ open: state.orgDrawer }" aria-hidden="false">
+			<div class="org-panel-head">
+				<span>{{ t('message.hrms.emp.orgDrawerTitle') }}</span>
+				<el-button text @click="state.orgDrawer = false">{{ t('message.hrms.advQuery.close') }}</el-button>
+			</div>
+			<div class="org-panel-body">
+				<OrgTree ref="orgTreeRef" @node-click="handleNodeChange" @user-select="onOrgUserSelect" @loaded="handleTreeLoaded" />
+			</div>
+		</aside>
 
 		<EditEmp ref="editEmpRef" :title="state.title" :tree-data="state.fullTree" @reload="handleQuery(false)" />
+		<AdvQueryDrawer
+			ref="advQueryRef"
+			:module-code="advModuleCode"
+			:fields="advFields"
+			@search="onAdvSearch"
+			@update:active-count="setAdvActiveCount"
+		/>
 	</div>
 </template>
 
 <script lang="ts" setup name="hrEmp">
 import { onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { ElMessage, ElMessageBox } from 'element-plus';
-import { Splitpanes, Pane } from 'splitpanes';
-import 'splitpanes/dist/splitpanes.css';
 import { VxeGridInstance, VxeGridListeners, VxeGridPropTypes } from 'vxe-table';
 import { useVxeTable } from '/@/hooks/useVxeTableOptionsHook';
 import { Local } from '/@/utils/storage';
+import { auth } from '/@/utils/authFunction';
 
 import OrgTree from '/@/views/hrms/org/component/orgTree.vue';
 import EditEmp from '/@/views/hrms/emp/component/editEmp.vue';
-import { deleteHrEmp, pageHrEmp } from '/@/api/hrms/hrEmp';
-import { getHrCodeList, getHrOrgList } from '/@/api/hrms/hrOrg';
+import { AdvQueryDrawer, useAdvQuery } from '/@/components/advQuery';
+import type { AdvQueryField, AdvValueType } from '/@/components/advQuery';
+import { pageHrEmp } from '/@/api/hrms/hrEmp';
+import { getHrCodeList } from '/@/api/hrms/hrOrg';
 import { getHrLookupOptions } from '/@/api/hrms/hrLookupDef';
-import { getHrUiLayoutEffective } from '/@/api/hrms/hrUiLayout';
+import { getHrUiFieldPool, getHrUiLayoutEffective } from '/@/api/hrms/hrUiLayout';
 
 const { t, locale } = useI18n();
 const orgTreeRef = ref<InstanceType<typeof OrgTree>>();
 const editEmpRef = ref<InstanceType<typeof EditEmp>>();
 const xGrid = ref<VxeGridInstance>();
+
+const {
+	moduleCode: advModuleCode,
+	drawerRef: advQueryRef,
+	fields: advFields,
+	filter: advFilter,
+	activeCount: advActiveCount,
+	open: openAdvQuery,
+	reset: resetAdvQuery,
+	applySearch,
+	setActiveCount: setAdvActiveCount,
+	setFields: setAdvFields,
+} = useAdvQuery('hrEmp');
 
 const localPageParamKey = 'localPageParam:hrEmp';
 
@@ -76,13 +98,14 @@ const codeTextMaps = reactive<Record<string, Record<string, string>>>({});
 
 const state = reactive({
 	title: '',
+	orgDrawer: false,
 	parentCcCode: '' as string,
+	parentCcDesc: '' as string,
 	fullTree: [] as any[],
+	/** 与组织树「人员」状态一致：1在职 2停职 3离职 -1全部 */
+	empState: 1 as number,
 	queryParams: {
 		keyword: '',
-		empId: '',
-		empName: '',
-		empState: 1 as number | undefined,
 	},
 	localPageParam: {
 		pageSize: 50 as number,
@@ -162,7 +185,6 @@ const defaultColumns = () => [
 	{ field: 'empType', title: t('message.hrms.common.empType'), minWidth: 100, sortable: true },
 	{ field: 'empSal', title: t('message.hrms.common.salType'), width: 90, sortable: true },
 	{ field: 'empState', title: t('message.hrms.common.status'), width: 80, align: 'center', sortable: true, slots: { default: 'row_empState' } },
-	{ field: 'buttons', title: t('message.list.operation'), fixed: 'right', width: 140, showOverflow: true, slots: { default: 'row_buttons' } },
 ];
 
 const buildColumnsFromLayout = (fields: any[]) => {
@@ -192,7 +214,6 @@ const buildColumnsFromLayout = (fields: any[]) => {
 		}
 		cols.push(col);
 	}
-	cols.push({ field: 'buttons', title: t('message.list.operation'), fixed: 'right', width: 140, showOverflow: true, slots: { default: 'row_buttons' } });
 	return cols;
 };
 
@@ -220,6 +241,77 @@ const options = useVxeTable<any>(
 	}
 );
 
+const mapDataType = (dataType?: string, controlType?: string): AdvValueType => {
+	const d = (dataType || '').toLowerCase();
+	const c = (controlType || '').toLowerCase();
+	if (c === 'select' || c === 'radio') return 'enum';
+	if (d.includes('date') || c === 'date' || c === 'datetime') return d.includes('time') || c === 'datetime' ? 'datetime' : 'date';
+	if (d.includes('int') || d.includes('decimal') || d.includes('float') || d.includes('money') || c === 'number') return 'number';
+	if (d.includes('bit') || c === 'switch' || c === 'checkbox') return 'boolean';
+	return 'string';
+};
+
+/** 从字段池/布局生成高级查询字段；跳过 computed/photo；部门名作跨表补丁 */
+const rebuildAdvFields = async (layoutFields: any[]) => {
+	let pool: any[] = [];
+	try {
+		const res = await getHrUiFieldPool('hrEmp', 'list');
+		pool = res.data?.result ?? res.data ?? [];
+	} catch {
+		pool = [];
+	}
+	const poolMap = new Map(pool.map((p: any) => [String(p.fieldKey), p]));
+	const source = layoutFields?.length
+		? layoutFields.filter((f: any) => f.visible !== false && !f.isStale)
+		: pool.filter((p: any) => p.isInPool !== false);
+
+	const adv: AdvQueryField[] = [];
+	const seen = new Set<string>();
+	for (const f of source) {
+		const key = String(f.fieldKey || '');
+		if (!key || seen.has(key)) continue;
+		const meta = poolMap.get(key) || f;
+		const origin = String(meta.origin || f.origin || 'physical');
+		const control = String(meta.controlType || f.controlType || 'text');
+		if (origin === 'computed' || control === 'photo' || control === 'computed') continue;
+		if (key === 'age' || key === 'empPic') continue;
+		seen.add(key);
+		const valueType = mapDataType(meta.dataType || f.dataType, control);
+		const mapKey = optionMapKey({
+			codeField: meta.codeField || f.codeField,
+			lookupSource: meta.lookupSource || f.lookupSource,
+		});
+		const options =
+			valueType === 'enum' && mapKey && codeTextMaps[mapKey]
+				? Object.entries(codeTextMaps[mapKey]).map(([value, label]) => ({ value, label }))
+				: undefined;
+		adv.push({
+			field: key,
+			label: String(f.label || meta.label || key),
+			valueType: options?.length ? 'enum' : valueType,
+			options,
+			origin,
+		});
+	}
+	if (!seen.has('ccDesc')) {
+		adv.push({ field: 'ccDesc', label: t('message.hrms.common.dept'), valueType: 'string', origin: 'join' });
+	}
+	if (!seen.has('empState')) {
+		adv.push({
+			field: 'empState',
+			label: t('message.hrms.common.empState'),
+			valueType: 'enum',
+			origin: 'physical',
+			options: [
+				{ value: 1, label: t('message.hrms.common.empStateActive') },
+				{ value: 2, label: t('message.hrms.common.empStateSuspend') },
+				{ value: 3, label: t('message.hrms.common.empStateLeave') },
+			],
+		});
+	}
+	setAdvFields(adv);
+};
+
 const applyListLayout = async () => {
 	try {
 		const res = await getHrUiLayoutEffective('hrEmp', 'list');
@@ -229,6 +321,7 @@ const applyListLayout = async () => {
 			const cols = buildColumnsFromLayout(fields);
 			options.columns = cols;
 			xGrid.value?.reloadColumn?.(cols);
+			await rebuildAdvFields(fields);
 			const sortField = state.localPageParam.defaultSort.field;
 			if (sortField && !fields.some((f: any) => f.visible !== false && f.fieldKey === sortField)) {
 				state.localPageParam.defaultSort = { field: 'empId', order: 'asc', descStr: 'desc' };
@@ -243,6 +336,7 @@ const applyListLayout = async () => {
 	const cols = defaultColumns();
 	options.columns = cols;
 	xGrid.value?.reloadColumn?.(cols);
+	await rebuildAdvFields([]);
 };
 
 const handleQueryApi = async (page: VxeGridPropTypes.ProxyAjaxQueryPageParams, sort: VxeGridPropTypes.ProxyAjaxQuerySortCheckedParams) => {
@@ -254,10 +348,10 @@ const handleQueryApi = async (page: VxeGridPropTypes.ProxyAjaxQueryPageParams, s
 		order: effectiveSort.order,
 		descStr: effectiveSort.descStr,
 		keyword: state.queryParams.keyword || undefined,
-		empId: state.queryParams.empId || undefined,
-		empName: state.queryParams.empName || undefined,
-		empState: state.queryParams.empState,
+		// 左树选「全部」时不传 empState，与组织人数统计一致
+		empState: state.empState === -1 ? undefined : state.empState,
 		ccCode: state.parentCcCode || undefined,
+		filter: advFilter.value || undefined,
 	});
 };
 
@@ -270,20 +364,40 @@ const handleQuery = async (resetPage = false) => {
 
 const resetQuery = () => {
 	state.queryParams.keyword = '';
-	state.queryParams.empId = '';
-	state.queryParams.empName = '';
-	state.queryParams.empState = 1;
+	state.parentCcCode = '';
+	state.parentCcDesc = '';
+	resetAdvQuery();
 	handleQuery(true);
+};
+
+const clearDeptFilter = () => {
+	state.parentCcCode = '';
+	state.parentCcDesc = '';
+	handleQuery(true);
+};
+
+const onAdvSearch = (filter: Parameters<typeof applySearch>[0]) => {
+	applySearch(filter);
+	handleQuery(true);
+};
+
+const handleTreeLoaded = (tree: any[], meta: { includeDisabled: boolean; empState: number }) => {
+	state.fullTree = tree ?? [];
+	const next = meta?.empState ?? 1;
+	const changed = state.empState !== next;
+	state.empState = next;
+	if (changed) handleQuery(true);
 };
 
 const handleNodeChange = (node: any) => {
 	state.parentCcCode = node?.ccCode || '';
+	state.parentCcDesc = node?.ccDesc || '';
 	handleQuery(true);
 };
 
-const loadTree = async () => {
-	const res = await getHrOrgList({ includeDisabled: false, empState: 1 });
-	state.fullTree = res.data.result ?? [];
+/** 用户点选部门后收起面板，列表占满 */
+const onOrgUserSelect = () => {
+	if (state.orgDrawer) state.orgDrawer = false;
 };
 
 const handleAdd = () => {
@@ -296,16 +410,6 @@ const handleEdit = async (row: any) => {
 	editEmpRef.value?.openDialog(row, true);
 };
 
-const handleLeave = (row: any) => {
-	ElMessageBox.confirm(t('message.hrms.emp.confirmLeave', { name: row.empName || row.empId }), t('message.list.hint'), { type: 'warning' })
-		.then(async () => {
-			await deleteHrEmp({ empId: row.empId });
-			ElMessage.success(t('message.hrms.common.leaveDone'));
-			handleQuery(false);
-		})
-		.catch(() => {});
-};
-
 const gridEvents: VxeGridListeners = {
 	async sortChange({ field, order }) {
 		if (!field || !order) return;
@@ -316,6 +420,9 @@ const gridEvents: VxeGridListeners = {
 		state.localPageParam.pageSize = pageSize;
 		Local.set(localPageParamKey, state.localPageParam);
 	},
+	async cellDblclick({ row }) {
+		if (auth('hrEmp/update')) await handleEdit(row);
+	},
 };
 
 watch(locale, async () => {
@@ -325,25 +432,29 @@ watch(locale, async () => {
 
 onMounted(async () => {
 	state.localPageParam = Local.get(localPageParamKey) || state.localPageParam;
-	await Promise.all([loadTree(), applyListLayout()]);
+	await applyListLayout();
+	// 左树 loaded 会回填 empState/fullTree；此处兜底查询，避免树早于表格就绪时漏查
 	await handleQuery(true);
 });
 </script>
 
 <style scoped>
 .hr-emp-container {
+	position: relative;
 	height: 100%;
+	overflow: hidden;
 }
-.hr-emp-right-pane {
-	display: flex;
-}
-.hr-emp-right {
+.hr-emp-main {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
 	height: 100%;
-	padding: 0 0 0 5px;
 	overflow: hidden;
+}
+.dept-tag {
+	max-width: 220px;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .full-table {
 	display: flex;
@@ -355,5 +466,51 @@ onMounted(async () => {
 	min-height: 0;
 	display: flex;
 	flex-direction: column;
+}
+.adv-badge {
+	margin-left: 6px;
+}
+.org-panel-mask {
+	position: absolute;
+	inset: 0;
+	z-index: 20;
+	background: rgba(0, 0, 0, 0.35);
+}
+.org-panel {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 21;
+	display: flex;
+	flex-direction: column;
+	width: min(360px, 86vw);
+	height: 100%;
+	background: var(--el-bg-color);
+	box-shadow: 2px 0 12px rgba(0, 0, 0, 0.12);
+	transform: translateX(-105%);
+	transition: transform 0.2s ease;
+	pointer-events: none;
+}
+.org-panel.open {
+	transform: translateX(0);
+	pointer-events: auto;
+}
+.org-panel-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 12px;
+	border-bottom: 1px solid var(--el-border-color-lighter);
+	font-weight: 600;
+}
+.org-panel-body {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	padding: 8px;
+	overflow: hidden;
+}
+.org-panel-body :deep(.box-card) {
+	width: 100%;
 }
 </style>

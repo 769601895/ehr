@@ -1,6 +1,7 @@
 import request from '/@/utils/request';
 
 enum Api {
+	Modules = '/api/hrUiLayout/modules',
 	FieldPool = '/api/hrUiLayout/fieldPool',
 	Effective = '/api/hrUiLayout/effective',
 	Default = '/api/hrUiLayout/default',
@@ -10,6 +11,15 @@ enum Api {
 }
 
 export type HrUiLayoutScene = 'list' | 'form';
+
+export type HrUiModuleItem = {
+	code: string;
+	name: string;
+	mainTable: string;
+	scenes: string[];
+};
+
+export const listHrUiModules = () => request({ url: Api.Modules, method: 'get' });
 
 export const getHrUiFieldPool = (moduleCode = 'hrEmp', scene?: HrUiLayoutScene) =>
 	request({

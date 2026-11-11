@@ -2,6 +2,21 @@
 	<div class="hr-field-def">
 		<el-card shadow="hover" :body-style="{ padding: '5px 5px 0 5px', display: 'flex', width: '100%', alignItems: 'start' }">
 			<el-form :model="state.queryParams" :inline="true" label-width="auto" style="flex: 1">
+				<el-form-item :label="t('message.hrms.fieldDef.module')">
+					<el-select
+						v-model="state.queryParams.moduleCode"
+						filterable
+						style="width: 220px"
+						@change="onModuleChange"
+					>
+						<el-option
+							v-for="m in state.modules"
+							:key="m.code"
+							:label="`${m.name} (${m.mainTable})`"
+							:value="m.code"
+						/>
+					</el-select>
+				</el-form-item>
 				<el-form-item :label="t('message.hrms.fieldDef.keyword')">
 					<el-input v-model="state.queryParams.keyword" :placeholder="t('message.hrms.fieldDef.keywordPh')" clearable @keyup.enter="handleQuery(true)" />
 				</el-form-item>
@@ -29,6 +44,9 @@
 					<el-button type="primary" icon="ele-Refresh" v-auth="'hrUiFieldDef/syncFromDb'" :loading="state.syncing" @click="handleSync">{{ t('message.hrms.fieldDef.syncFromDb') }}</el-button>
 				</template>
 				<template #empty><el-empty :image-size="160" /></template>
+				<template #row_scenes="{ row }">
+					<span>{{ (row.scenes || []).join(', ') || '—' }}</span>
+				</template>
 				<template #row_codeField="{ row }">
 					<span>{{ row.codeField || '—' }}</span>
 					<el-button
@@ -109,6 +127,12 @@
 				<el-form-item :label="t('message.hrms.fieldDef.span')"><el-input-number v-model="state.edit.defaultSpanSlots" :min="1" :max="6" /></el-form-item>
 				<el-form-item :label="t('message.hrms.fieldDef.group')"><el-input v-model="state.edit.groupCode" /></el-form-item>
 				<el-form-item :label="t('message.hrms.fieldDef.sortNo')"><el-input-number v-model="state.edit.sortNo" /></el-form-item>
+				<el-form-item :label="t('message.hrms.fieldDef.scenes')">
+					<el-checkbox-group v-model="state.edit.scenes">
+						<el-checkbox v-for="s in moduleScenes" :key="s" :value="s">{{ sceneLabel(s) }}</el-checkbox>
+					</el-checkbox-group>
+					<div class="hint">{{ t('message.hrms.fieldDef.scenesHint') }}</div>
+				</el-form-item>
 				<el-form-item :label="t('message.hrms.fieldDef.switches')">
 					<el-checkbox v-model="state.edit.isInPool">{{ t('message.hrms.fieldDef.inPool') }}</el-checkbox>
 					<el-checkbox v-model="state.edit.sortable">{{ t('message.hrms.fieldDef.sortable') }}</el-checkbox>
@@ -148,18 +172,20 @@ import { Local } from '/@/utils/storage';
 import { useRouter } from 'vue-router';
 import { langListHrUiFieldDef, pageHrUiFieldDef, saveLangHrUiFieldDef, syncHrUiFieldDef, updateHrUiFieldDef } from '/@/api/hrms/hrUiFieldDef';
 import { listEnabledHrLookupDef } from '/@/api/hrms/hrLookupDef';
+import { listHrUiModules, type HrUiModuleItem } from '/@/api/hrms/hrUiLayout';
 import { hrUiCultures } from '/@/views/hrms/composables/hrUiCulture';
 import CodeSettingDrawer from '/@/views/hrms/reportDef/component/codeSettingDrawer.vue';
 
 const { t, locale } = useI18n();
 const router = useRouter();
-const controls = ['text', 'number', 'date', 'select', 'photo', 'cascader', 'computed'];
+const controls = ['text', 'textarea', 'number', 'date', 'datetime', 'select', 'photo', 'cascader', 'computed'];
 const xGrid = ref<VxeGridInstance>();
 const codeDrawerRef = ref<InstanceType<typeof CodeSettingDrawer>>();
 const localPageParamKey = 'localPageParam:hrUiFieldDef';
 const state = reactive({
 	queryParams: { moduleCode: 'hrEmp', keyword: '', enabled: undefined as boolean | undefined, isInPool: undefined as boolean | undefined },
 	localPageParam: { pageSize: 50 as number, defaultSort: { field: 'sortNo', order: 'asc', descStr: 'desc' } },
+	modules: [] as HrUiModuleItem[],
 	syncing: false,
 	saving: false,
 	editVisible: false,
@@ -170,11 +196,20 @@ const state = reactive({
 	lookupSources: [] as { code: string; name: string; maintainPath?: string }[],
 });
 
+const currentModule = computed(() => state.modules.find((m) => m.code === state.queryParams.moduleCode));
+const moduleScenes = computed(() => currentModule.value?.scenes ?? ['list', 'form']);
+
 const currentLookupMaintainPath = computed(() => {
 	const code = String(state.edit.lookupSource || '').trim();
 	if (!code) return '';
 	return state.lookupSources.find((s) => s.code === code)?.maintainPath || '';
 });
+
+const sceneLabel = (scene: string) => {
+	if (scene === 'list') return t('message.hrms.fieldDef.sceneList');
+	if (scene === 'form') return t('message.hrms.fieldDef.sceneForm');
+	return scene;
+};
 
 const buildColumns = () => [
 	{ field: 'seq', type: 'seq', title: t('message.list.seq'), width: 60 },
@@ -185,6 +220,7 @@ const buildColumns = () => [
 	{ field: 'tableName', title: t('message.hrms.fieldDef.tableName'), minWidth: 140, sortable: true },
 	{ field: 'dbColumn', title: t('message.hrms.fieldDef.dbColumn'), minWidth: 140, sortable: true },
 	{ field: 'controlType', title: t('message.hrms.fieldDef.control'), width: 100, sortable: true },
+	{ field: 'scenes', title: t('message.hrms.fieldDef.scenes'), minWidth: 110, slots: { default: 'row_scenes' } },
 	{ field: 'codeField', title: t('message.hrms.fieldDef.codeField'), minWidth: 120, slots: { default: 'row_codeField' } },
 	{ field: 'lookupSource', title: t('message.hrms.fieldDef.lookupSource'), minWidth: 120 },
 	{ field: 'enabled', title: t('message.hrms.fieldDef.enabled'), width: 80, sortable: true },
@@ -229,10 +265,28 @@ const resetQuery = () => {
 	handleQuery(true);
 };
 
+const onModuleChange = () => {
+	state.queryParams.keyword = '';
+	handleQuery(true);
+};
+
+const loadModules = async () => {
+	const res = await listHrUiModules();
+	state.modules = res.data?.result ?? [];
+	if (!state.modules.some((m) => m.code === state.queryParams.moduleCode) && state.modules.length) {
+		state.queryParams.moduleCode = state.modules[0].code;
+	}
+};
+
 const handleSync = async () => {
+	const mod = state.queryParams.moduleCode;
+	if (!mod) {
+		ElMessage.warning(t('message.hrms.fieldDef.moduleRequired'));
+		return;
+	}
 	state.syncing = true;
 	try {
-		const res = await syncHrUiFieldDef('hrEmp');
+		const res = await syncHrUiFieldDef(mod);
 		const r = res.data.result;
 		ElMessage.success(
 			t('message.hrms.fieldDef.syncOk', {
@@ -243,6 +297,8 @@ const handleSync = async () => {
 			})
 		);
 		if (r?.warnings?.length) ElMessage.warning(r.warnings.join('；'));
+		const table = currentModule.value?.mainTable;
+		if (table) ElMessage.info(t('message.hrms.fieldDef.syncTableHint', { table }));
 		handleQuery(true);
 	} finally {
 		state.syncing = false;
@@ -285,12 +341,22 @@ const openLookupMaintain = () => {
 
 const openEdit = async (row: any) => {
 	await loadLookupSources();
-	state.edit = { ...row, defaultSpanSlots: row.defaultSpanSlots || 1, lookupSource: row.lookupSource || '' };
+	state.edit = {
+		...row,
+		defaultSpanSlots: row.defaultSpanSlots || 1,
+		lookupSource: row.lookupSource || '',
+		scenes: [...(row.scenes || [])],
+	};
 	state.editVisible = true;
 };
 const saveEdit = async () => {
 	if (!state.edit.label?.trim()) {
 		ElMessage.warning(t('message.hrms.fieldDef.labelRequired'));
+		return;
+	}
+	const scenes = Array.isArray(state.edit.scenes) ? state.edit.scenes.filter(Boolean) : [];
+	if (state.edit.isInPool && scenes.length === 0) {
+		ElMessage.warning(t('message.hrms.fieldDef.scenesRequired'));
 		return;
 	}
 	const code = String(state.edit.codeField || '').trim();
@@ -303,6 +369,7 @@ const saveEdit = async () => {
 	if (code || lookup) state.edit.controlType = 'select';
 	state.edit.codeField = code || null;
 	state.edit.lookupSource = lookup || null;
+	state.edit.scenes = scenes;
 	state.saving = true;
 	try {
 		await updateHrUiFieldDef(state.edit);
@@ -316,7 +383,7 @@ const saveEdit = async () => {
 
 const openLang = async (row: any) => {
 	state.langFieldKey = row.fieldKey;
-	const res = await langListHrUiFieldDef('hrEmp', row.fieldKey);
+	const res = await langListHrUiFieldDef(state.queryParams.moduleCode, row.fieldKey);
 	const map = new Map((res.data.result ?? []).map((x: any) => [x.culture, x.label]));
 	state.langs = hrUiCultures.map((c) => ({ culture: c.value, label: map.get(c.value) || '' }));
 	state.langVisible = true;
@@ -324,7 +391,11 @@ const openLang = async (row: any) => {
 const saveLang = async () => {
 	state.saving = true;
 	try {
-		await saveLangHrUiFieldDef({ moduleCode: 'hrEmp', fieldKey: state.langFieldKey, labels: state.langs });
+		await saveLangHrUiFieldDef({
+			moduleCode: state.queryParams.moduleCode,
+			fieldKey: state.langFieldKey,
+			labels: state.langs,
+		});
 		ElMessage.success(t('message.hrms.fieldDef.langSaved'));
 		state.langVisible = false;
 	} finally {
@@ -351,8 +422,9 @@ watch(locale, () => {
 	xGrid.value?.reloadColumn?.(cols);
 });
 
-onMounted(() => {
+onMounted(async () => {
 	state.localPageParam = Local.get(localPageParamKey) || state.localPageParam;
+	await loadModules();
 });
 </script>
 

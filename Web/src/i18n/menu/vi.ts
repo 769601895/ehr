@@ -91,6 +91,7 @@ export default {
 		停复职管理: 'Đình chỉ & Phục chức',
 		员工停职处理: 'Đình chỉ công tác',
 		人事资料定义: 'Định nghĩa dữ liệu NS',
+		业务界面配置: 'Cấu hình giao diện nghiệp vụ',
 		人事资料列表定义: 'Định nghĩa danh sách NV',
 		人事资料表单定义: 'Định nghĩa biểu mẫu NV',
 		字段池: 'Kho trường',

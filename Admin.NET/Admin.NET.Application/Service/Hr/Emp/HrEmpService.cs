@@ -227,9 +227,7 @@ public class HrEmpService : IDynamicApiController, ITransient
         {
             var kw = input.Keyword.Trim();
             q = q.Where(u => u.EmpId.Contains(kw)
-                || (u.EmpName != null && u.EmpName.Contains(kw))
-                || (u.EmpCard != null && u.EmpCard.Contains(kw))
-                || (u.EmpAddrter != null && u.EmpAddrter.Contains(kw)));
+                || (u.EmpName != null && u.EmpName.Contains(kw)));
         }
 
         if (!string.IsNullOrWhiteSpace(input.CcCode))
@@ -245,6 +243,10 @@ public class HrEmpService : IDynamicApiController, ITransient
                 .ToListAsync();
             q = q.Where(u => u.CcCode != null && codes.Contains(u.CcCode));
         }
+
+        // 高级查询（白名单）；与左树部门/状态条件并且
+        if (input.Filter != null)
+            q = HrAdvancedFilter.ApplyEmp(q, input.Filter);
 
         return q;
     }

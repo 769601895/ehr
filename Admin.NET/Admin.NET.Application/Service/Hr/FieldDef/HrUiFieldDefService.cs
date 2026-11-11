@@ -111,6 +111,7 @@ public class HrUiFieldDefService : IDynamicApiController, ITransient
             .OrderBuilder(input, defaultSortField: nameof(HrUiFieldDef.SortNo), descSort: false)
             .Select<HrUiFieldDefOutput>()
             .ToPagedListAsync(input.Page, input.PageSize);
+        await AttachScenesAsync(module.Code, page.Items);
         return page;
     }
 
@@ -119,14 +120,18 @@ public class HrUiFieldDefService : IDynamicApiController, ITransient
     public async Task<HrUiFieldDefOutput> Detail([FromQuery] long id)
     {
         var row = await _defRep.GetFirstAsync(u => u.Id == id) ?? throw Oops.Oh("HR_UI_FIELD_NOT_FOUND");
-        return row.Adapt<HrUiFieldDefOutput>();
+        var output = row.Adapt<HrUiFieldDefOutput>();
+        await AttachScenesAsync(row.ModuleCode, [output]);
+        return output;
     }
 
+    [UnitOfWork]
     [ApiDescriptionSettings(Name = "Update"), HttpPost]
     [DisplayName("更新字段元数据")]
     public async Task Update(HrUiFieldDefUpdateInput input)
     {
         var row = await _defRep.GetFirstAsync(u => u.Id == input.Id) ?? throw Oops.Oh("HR_UI_FIELD_NOT_FOUND");
+        var module = HrUiModuleCatalog.Require(row.ModuleCode);
         var label = input.Label?.Trim();
         if (string.IsNullOrWhiteSpace(label) || label.Length > 256)
             throw Oops.Oh("显示名不能为空且不超过256");
@@ -140,6 +145,10 @@ public class HrUiFieldDefService : IDynamicApiController, ITransient
             throw Oops.Oh("字段占位格数须在 1～6");
         if (input.Locked && !input.IsInPool)
             throw Oops.Oh("HR_UI_FIELD_NOT_IN_POOL");
+
+        var scenes = NormalizeScenes(module, input.Scenes);
+        if (input.IsInPool && scenes.Count == 0)
+            throw Oops.Oh("入池字段须至少勾选一个适用场景（list/form）");
 
         var codeField = string.IsNullOrWhiteSpace(input.CodeField) ? null : input.CodeField.Trim();
         var lookupSource = string.IsNullOrWhiteSpace(input.LookupSource) ? null : input.LookupSource.Trim();
@@ -171,6 +180,7 @@ public class HrUiFieldDefService : IDynamicApiController, ITransient
             row.TableName = input.TableName.Trim();
 
         await _defRep.AsUpdateable(row).IgnoreColumns(u => new { u.CreateTime, u.CreateUserId, u.CreateUserName, u.FieldKey, u.ModuleCode }).ExecuteCommandAsync();
+        await ReplaceScenesAsync(row.ModuleCode, row.FieldKey, scenes);
 
         // 布局行控件与池一致：有代码类时落成 select，避免生效布局仍读到历史 text
         var layoutIds = await _layoutRep.AsQueryable()
@@ -326,5 +336,56 @@ public class HrUiFieldDefService : IDynamicApiController, ITransient
             .ToList();
         if (rows.Count > 0)
             await _langRep.InsertRangeAsync(rows);
+    }
+
+    private async Task AttachScenesAsync(string moduleCode, IEnumerable<HrUiFieldDefOutput> items)
+    {
+        var list = items?.ToList() ?? [];
+        if (list.Count == 0) return;
+        var keys = list.Select(u => u.FieldKey).Where(u => !string.IsNullOrWhiteSpace(u)).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        if (keys.Count == 0) return;
+
+        var scenes = await _sceneRep.AsQueryable()
+            .Where(u => u.ModuleCode == moduleCode && keys.Contains(u.FieldKey))
+            .ToListAsync();
+        var map = scenes
+            .GroupBy(u => u.FieldKey, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                g => g.Key,
+                g => g.Select(x => x.Scene).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(x => x).ToList(),
+                StringComparer.OrdinalIgnoreCase);
+
+        foreach (var item in list)
+            item.Scenes = map.TryGetValue(item.FieldKey, out var sc) ? sc : [];
+    }
+
+    private static List<string> NormalizeScenes(HrUiModuleCatalog.Module module, IEnumerable<string> input)
+    {
+        var allowed = new HashSet<string>(module.Scenes, StringComparer.OrdinalIgnoreCase);
+        return (input ?? [])
+            .Select(u => u?.Trim())
+            .Where(u => !string.IsNullOrWhiteSpace(u))
+            .Select(u =>
+            {
+                HrUiModuleCatalog.EnsureScene(u);
+                if (!allowed.Contains(u))
+                    throw Oops.Oh($"场景 {u} 不在模块 {module.Code} 支持列表中");
+                return allowed.First(a => a.Equals(u, StringComparison.OrdinalIgnoreCase));
+            })
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(u => u)
+            .ToList();
+    }
+
+    private async Task ReplaceScenesAsync(string moduleCode, string fieldKey, List<string> scenes)
+    {
+        await _sceneRep.DeleteAsync(u => u.ModuleCode == moduleCode && u.FieldKey == fieldKey);
+        if (scenes.Count == 0) return;
+        await _sceneRep.InsertRangeAsync(scenes.Select(s => new HrUiFieldScene
+        {
+            ModuleCode = moduleCode,
+            FieldKey = fieldKey,
+            Scene = s
+        }).ToList());
     }
 }

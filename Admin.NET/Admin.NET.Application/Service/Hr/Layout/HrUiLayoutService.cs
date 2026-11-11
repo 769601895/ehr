@@ -31,6 +31,22 @@ public class HrUiLayoutService : IDynamicApiController, ITransient
         _fieldDefService = fieldDefService;
     }
 
+    /// <summary>已登记模块列表（配置中心）</summary>
+    [ApiDescriptionSettings(Name = "Modules"), HttpGet]
+    [DisplayName("UI模块列表")]
+    public List<HrUiModuleOutput> Modules()
+    {
+        return HrUiModuleCatalog.List()
+            .Select(m => new HrUiModuleOutput
+            {
+                Code = m.Code,
+                Name = m.Name,
+                MainTable = m.MainTable,
+                Scenes = m.Scenes,
+            })
+            .ToList();
+    }
+
     /// <summary>字段池</summary>
     [ApiDescriptionSettings(Name = "FieldPool"), HttpGet]
     [DisplayName("人事布局字段池")]
@@ -94,7 +110,7 @@ public class HrUiLayoutService : IDynamicApiController, ITransient
                 ModuleCode = module.Code,
                 Scene = input.Scene,
                 Name = string.IsNullOrWhiteSpace(input.Name)
-                    ? (input.Scene == "list" ? "人员资料默认列表" : "人员资料默认表单")
+                    ? $"{module.Name}默认{(input.Scene == "list" ? "列表" : "表单")}"
                     : input.Name.Trim(),
                 IsDefault = true,
                 OwnerUserId = null,

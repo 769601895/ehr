@@ -101,6 +101,7 @@ export default {
 		停复职管理: 'Suspension & Reinstatement',
 		员工停职处理: 'Suspension',
 		人事资料定义: 'HR Data Definition',
+		业务界面配置: 'UI Layout Config',
 		人事资料列表定义: 'Employee List Layout',
 		人事资料表单定义: 'Employee Form Layout',
 		字段池: 'Field Pool',

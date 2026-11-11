@@ -75,7 +75,7 @@ public class HrUiFieldPoolLogicTests
 
         Assert.Single(plan.Inserts);
         Assert.Equal("newCol", plan.Inserts[0].FieldKey);
-        Assert.Equal("date", plan.Inserts[0].ControlType);
+        Assert.Equal("datetime", plan.Inserts[0].ControlType);
         Assert.DoesNotContain(plan.DisableIds, id => id == 2 || id == 3);
         Assert.Contains(4L, plan.DisableIds);
         Assert.Contains(5L, plan.ReenableIds);

@@ -24,6 +24,8 @@ export const pageHrEmp = (data?: {
 	empState?: number;
 	empId?: string;
 	empName?: string;
+	/** 高级查询条件树（BaseFilter.Filter） */
+	filter?: Record<string, any> | null;
 }) =>
 	request({
 		url: Api.Page,

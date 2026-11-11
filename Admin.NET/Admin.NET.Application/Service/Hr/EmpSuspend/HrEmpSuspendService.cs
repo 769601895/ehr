@@ -233,18 +233,24 @@ public class HrEmpSuspendService : IDynamicApiController, ITransient
     public async Task Void(HrEmpSuspendVoidInput input)
     {
         var bill = await _suspendRep.GetFirstAsync(u => u.Id == input.Id) ?? throw Oops.Oh("停职单不存在");
-        if (bill.Status != HrEmpLeaveConst.StatusEffective) throw Oops.Oh("仅已生效可撤销");
-        if (await _restoreRep.IsAnyAsync(u =>
-                u.EmpId == bill.EmpId && u.Kind == HrEmpLeaveConst.KindReinstate
-                && HrEmpLeaveConst.OpenStatuses.Contains(u.Status)))
-            throw Oops.Oh("该员工有在途复职单，不能撤销停职");
+        // 待生效：未改人员状态，直接作废；已生效：恢复在职后再作废
+        if (bill.Status != HrEmpLeaveConst.StatusApproved && bill.Status != HrEmpLeaveConst.StatusEffective)
+            throw Oops.Oh("仅待生效或已生效可撤销");
 
-        var emp = await _empRep.GetFirstAsync(u => u.EmpId == bill.EmpId)
-            ?? throw Oops.Oh("员工不存在");
-        emp.EmpState = bill.EmpStateBefore is > 0
-            ? bill.EmpStateBefore
-            : HrEmpLeaveConst.EmpStateActive;
-        await _empRep.AsUpdateable(emp).UpdateColumns(u => new { u.EmpState }).ExecuteCommandAsync();
+        if (bill.Status == HrEmpLeaveConst.StatusEffective)
+        {
+            if (await _restoreRep.IsAnyAsync(u =>
+                    u.EmpId == bill.EmpId && u.Kind == HrEmpLeaveConst.KindReinstate
+                    && HrEmpLeaveConst.OpenStatuses.Contains(u.Status)))
+                throw Oops.Oh("该员工有在途复职单，不能撤销停职");
+
+            var emp = await _empRep.GetFirstAsync(u => u.EmpId == bill.EmpId)
+                ?? throw Oops.Oh("员工不存在");
+            emp.EmpState = bill.EmpStateBefore is > 0
+                ? bill.EmpStateBefore
+                : HrEmpLeaveConst.EmpStateActive;
+            await _empRep.AsUpdateable(emp).UpdateColumns(u => new { u.EmpState }).ExecuteCommandAsync();
+        }
 
         bill.Status = HrEmpLeaveConst.StatusVoided;
         bill.VoidTime = DateTime.Now;

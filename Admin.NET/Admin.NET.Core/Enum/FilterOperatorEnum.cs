@@ -64,5 +64,11 @@ public enum FilterOperatorEnum
     /// 包含
     /// </summary>
     [Description("包含")]
-    Contains
+    Contains,
+
+    /// <summary>
+    /// 不包含
+    /// </summary>
+    [Description("不包含")]
+    NotContains
 }

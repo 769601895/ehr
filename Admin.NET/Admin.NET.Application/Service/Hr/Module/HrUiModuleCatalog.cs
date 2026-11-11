@@ -1,15 +1,18 @@
 namespace Admin.NET.Application;
 
 /// <summary>
-/// 模块注册。一期只在内存登记 hrEmp，未知模块的读写都拒绝。
+/// 模块注册。未知模块的读写都拒绝。
 /// </summary>
 public static class HrUiModuleCatalog
 {
     public sealed record Module(string Code, string Name, string MainTable, string[] Scenes);
 
     public static readonly Module HrEmp = new(HrUiModuleCodes.HrEmp, "人事资料", "h_emp_mstr", ["list", "form"]);
+    public static readonly Module HrEmpChg = new(HrUiModuleCodes.HrEmpChg, "异动管理", "hr_emp_chg", ["list", "form"]);
 
-    private static readonly Module[] All = [HrEmp];
+    private static readonly Module[] All = [HrEmp, HrEmpChg];
+
+    public static IReadOnlyList<Module> List() => All;
 
     public static Module Require(string moduleCode)
     {

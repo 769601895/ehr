@@ -1,4 +1,4 @@
-export default {
+﻿export default {
 	hrms: {
 		"common": {
 			"person": "Personnel",
@@ -8,7 +8,7 @@ export default {
 			"empStateLeave": "Resigned",
 			"empStateAll": "All",
 			"empState": "Status",
-			"keywordEmp": "Emp No / Name / ID / Phone",
+			"keywordEmp": "Emp No / Name",
 			"empId": "Emp No",
 			"empName": "Name",
 			"dept": "Department",

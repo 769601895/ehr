@@ -67,7 +67,15 @@
 				<el-button v-if="canEdit" type="success" :loading="state.saving" v-auth="'hrEmpSuspend/submit'" @click="save(true)">保存并提交</el-button>
 				<el-button v-if="state.form.status === 'InReview'" type="success" :loading="state.saving" v-auth="'hrEmpSuspend/approve'" @click="doApprove">通过</el-button>
 				<el-button v-if="state.form.status === 'InReview'" type="danger" :loading="state.saving" v-auth="'hrEmpSuspend/reject'" @click="doReject">驳回</el-button>
-				<el-button v-if="state.form.status === 'Effective'" type="warning" :loading="state.saving" v-auth="'hrEmpSuspend/void'" @click="doVoid">撤销</el-button>
+				<el-button
+					v-if="state.form.status === 'Approved' || state.form.status === 'Effective'"
+					type="warning"
+					:loading="state.saving"
+					v-auth="'hrEmpSuspend/void'"
+					@click="doVoid"
+				>
+					撤销
+				</el-button>
 			</div>
 		</template>
 	</el-dialog>
@@ -221,7 +229,11 @@ const doReject = async () => {
 
 const doVoid = async () => {
 	if (!state.id) return;
-	const { value } = await ElMessageBox.prompt('请输入撤销原因', '撤销停职', { confirmButtonText: '确定', cancelButtonText: '取消' }).catch(() => ({ value: null }));
+	const tip = state.form.status === 'Approved' ? '待生效尚未改人员状态，作废后单据进入「作废失效」' : '已生效撤销将恢复人员在职状态';
+	const { value } = await ElMessageBox.prompt(`${tip}\n请输入撤销原因`, '撤销停职', {
+		confirmButtonText: '确定',
+		cancelButtonText: '取消',
+	}).catch(() => ({ value: null }));
 	if (value == null) return;
 	state.saving = true;
 	try {
