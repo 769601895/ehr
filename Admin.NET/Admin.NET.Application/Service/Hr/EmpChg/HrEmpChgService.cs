@@ -553,7 +553,7 @@ public class HrEmpChgService : IDynamicApiController, ITransient
 
     private async Task FillStatusAndType(List<HrEmpChgOutput> list)
     {
-        var typeItems = await _codeSvc.GetCodeList(HrEmpChgConst.CodeFieldType);
+        var typeItems = await _codeSvc.GetCodeList(HrEmpChgConst.CodeFieldType, includeDeleted: true);
         var typeMap = typeItems
             .GroupBy(u => u.Value, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(g => g.Key, g => g.First().Label, StringComparer.OrdinalIgnoreCase);

@@ -60,8 +60,8 @@ public class HrUiLayoutService : IDynamicApiController, ITransient
     [DisplayName("获取生效布局")]
     public async Task<HrUiLayoutOutput> GetEffective([FromQuery] string moduleCode = ModuleHrEmp, [FromQuery] string scene = "list")
     {
-        HrUiModuleCatalog.Require(moduleCode);
-        HrUiModuleCatalog.EnsureScene(scene);
+        var module = HrUiModuleCatalog.Require(moduleCode);
+        HrUiModuleCatalog.EnsureScene(module, scene);
         var userId = _userManager.UserId;
 
         var mine = await _layoutRep.GetFirstAsync(u =>
@@ -82,8 +82,8 @@ public class HrUiLayoutService : IDynamicApiController, ITransient
     [DisplayName("获取默认布局")]
     public async Task<HrUiLayoutOutput> GetDefault([FromQuery] string moduleCode = ModuleHrEmp, [FromQuery] string scene = "list")
     {
-        HrUiModuleCatalog.Require(moduleCode);
-        HrUiModuleCatalog.EnsureScene(scene);
+        var module = HrUiModuleCatalog.Require(moduleCode);
+        HrUiModuleCatalog.EnsureScene(module, scene);
         var sys = await _layoutRep.GetFirstAsync(u =>
             u.ModuleCode == moduleCode && u.Scene == scene && u.IsDefault && u.OwnerUserId == null);
         return sys == null ? await Builtin(moduleCode, scene) : await ToOutput(sys, "system");
@@ -96,7 +96,7 @@ public class HrUiLayoutService : IDynamicApiController, ITransient
     public async Task SaveDefault(HrUiLayoutSaveInput input)
     {
         var module = HrUiModuleCatalog.Require(input.ModuleCode);
-        HrUiModuleCatalog.EnsureScene(input.Scene);
+        HrUiModuleCatalog.EnsureScene(module, input.Scene);
         var fields = await NormalizeAndValidate(module.Code, input.Scene, input.Fields);
 
         var layout = await _layoutRep.GetFirstAsync(u =>
@@ -136,7 +136,7 @@ public class HrUiLayoutService : IDynamicApiController, ITransient
     public async Task SaveMy(HrUiLayoutSaveInput input)
     {
         var module = HrUiModuleCatalog.Require(input.ModuleCode);
-        HrUiModuleCatalog.EnsureScene(input.Scene);
+        HrUiModuleCatalog.EnsureScene(module, input.Scene);
         var fields = await NormalizeAndValidate(module.Code, input.Scene, input.Fields);
         var userId = _userManager.UserId;
 
@@ -175,7 +175,7 @@ public class HrUiLayoutService : IDynamicApiController, ITransient
     public async Task ResetMy(HrUiLayoutQueryInput input)
     {
         var module = HrUiModuleCatalog.Require(input.ModuleCode);
-        HrUiModuleCatalog.EnsureScene(input.Scene);
+        HrUiModuleCatalog.EnsureScene(module, input.Scene);
         var userId = _userManager.UserId;
         var layout = await _layoutRep.GetFirstAsync(u =>
             u.ModuleCode == module.Code && u.Scene == input.Scene && u.OwnerUserId == userId);

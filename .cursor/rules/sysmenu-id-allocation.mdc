@@ -1,0 +1,31 @@
+---
+description: SysMenu 手工 Id 分配防冲突（避免新模块覆盖旧模块）
+alwaysApply: true
+---
+
+# SysMenu Id 分配防冲突
+
+## 现象
+
+新增模块菜单后，**别的模块菜单/按钮突然没了或变成新名字**：多半是脚本复用了已占用的 `SysMenu.Id`，且 `IF EXISTS … UPDATE` / `MERGE … WHEN MATCHED UPDATE` 把旧行改写成了新模块。
+
+历史案例：省市 vs 生效策略、员工导入 vs 市译文、人事月报 vs 业务界面配置、高级查询 vs 字段元数据按钮。
+
+## 强制规则
+
+1. **登记表**：`doc/sql/菜单Id登记表.md` 为权威占用清单；新脚本用 Id **前必须先登记**。  
+2. **查库**：执行/提交前查  
+   `SELECT Id, Name, Title, Permission FROM SysMenu WHERE Id IN (...)`  
+   若已有行且 `Name`/`Permission` 不属于本模块 → **换新 Id 段，禁止 UPDATE 覆盖**。  
+3. **禁止**对陌生 Id 做无条件 UPDATE / MERGE UPDATE。允许的幂等形态：  
+   - `IF NOT EXISTS … INSERT`  
+   - `UPDATE … WHERE Id=@id AND Name=@expectedName`（仅纠正本模块）  
+   - 发现占用：`RAISERROR` 退出  
+4. **号段**：一模块预留连续段（页 + 按钮 + 隐藏子页）；下一模块从登记表「预留建议」起号（当前建议 ≥ `1300000000550`）。  
+5. 修冲突后：写当日修复 SQL + **更新登记表**。
+
+## 验收
+
+- [ ] 新菜单 SQL 中每个新 Id 已写入登记表  
+- [ ] 库内无同 Id 异模块  
+- [ ] 旧模块 Path/Title/Permission 未被改写  

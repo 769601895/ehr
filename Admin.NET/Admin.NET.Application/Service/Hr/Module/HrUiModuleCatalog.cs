@@ -7,7 +7,7 @@ public static class HrUiModuleCatalog
 {
     public sealed record Module(string Code, string Name, string MainTable, string[] Scenes);
 
-    public static readonly Module HrEmp = new(HrUiModuleCodes.HrEmp, "人事资料", "h_emp_mstr", ["list", "form"]);
+    public static readonly Module HrEmp = new(HrUiModuleCodes.HrEmp, "人事资料", "h_emp_mstr", ["list", "form", "monthSnap"]);
     public static readonly Module HrEmpChg = new(HrUiModuleCodes.HrEmpChg, "异动管理", "hr_emp_chg", ["list", "form"]);
 
     private static readonly Module[] All = [HrEmp, HrEmpChg];
@@ -25,9 +25,24 @@ public static class HrUiModuleCatalog
         return found ?? throw Oops.Oh("HR_UI_MODULE_UNKNOWN");
     }
 
+    /// <summary>按模块已登记 Scenes 校验场景。</summary>
+    public static void EnsureScene(Module module, string scene)
+    {
+        if (module == null) throw Oops.Oh("HR_UI_MODULE_UNKNOWN");
+        if (string.IsNullOrWhiteSpace(scene))
+            throw Oops.Oh("HR_UI_SCENE_UNSUPPORTED");
+        var s = scene.Trim();
+        if (!module.Scenes.Any(x => x.Equals(s, StringComparison.OrdinalIgnoreCase)))
+            throw Oops.Oh("HR_UI_SCENE_UNSUPPORTED");
+    }
+
+    /// <summary>无模块上下文时：场景须落在任一已登记模块的 Scenes 并集中。</summary>
     public static void EnsureScene(string scene)
     {
-        if (scene is not ("list" or "form"))
+        if (string.IsNullOrWhiteSpace(scene))
+            throw Oops.Oh("HR_UI_SCENE_UNSUPPORTED");
+        var s = scene.Trim();
+        if (!All.SelectMany(m => m.Scenes).Any(x => x.Equals(s, StringComparison.OrdinalIgnoreCase)))
             throw Oops.Oh("HR_UI_SCENE_UNSUPPORTED");
     }
 

@@ -81,7 +81,9 @@ export function formatTwoStageRoutes(arr: any) {
 				v.meta['isDynamic'] = true;
 				v.meta['isDynamicPath'] = v.path;
 			}
-			newArr[0].children.push({ ...v });
+			// 子路由已在扁平化时提为同级；勿再带着 children，否则页面组件（无 router-view）会变成嵌套父级，子页签空白
+			const { children: _nested, ...routeItem } = v;
+			newArr[0].children.push(routeItem);
 			// 存 name 值，keep-alive 中 include 使用，实现路由的缓存
 			// 路径：/@/layout/routerView/parent.vue
 			if (newArr[0].meta.isKeepAlive && v.meta.isKeepAlive) {

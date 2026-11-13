@@ -374,7 +374,14 @@ const onMousedownMenu = (v: RouteItem, e: MouseEvent) => {
 // 当前的 tagsView 项点击时
 const onTagsClick = (v: RouteItem, k: number) => {
 	state.tagsRefsIndex = k;
-	router.push(v);
+	// 带 query 的隐藏明细页必须显式带上参数，直接 push 整项易丢 id 导致空白
+	if (v.meta?.isDynamic) {
+		router.push({ name: v.name, params: v.params || {} });
+	} else if (v.query && Object.keys(v.query).length > 0) {
+		router.push({ name: v.name, query: v.query });
+	} else {
+		router.push({ path: v.path });
+	}
 	// 分栏布局时，收起/展开菜单
 	if (getThemeConfig.value.layout === 'columns') {
 		const item: RouteItem = routesList.value.find((r: RouteItem) => r.path.indexOf(`/${v.path.split('/')[1]}`) > -1);

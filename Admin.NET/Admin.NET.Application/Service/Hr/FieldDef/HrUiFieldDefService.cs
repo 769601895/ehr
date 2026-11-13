@@ -40,7 +40,7 @@ public class HrUiFieldDefService : IDynamicApiController, ITransient
     {
         var module = HrUiModuleCatalog.Require(moduleCode);
         if (!string.IsNullOrWhiteSpace(scene))
-            HrUiModuleCatalog.EnsureScene(scene);
+            HrUiModuleCatalog.EnsureScene(module, scene);
 
         var sceneRows = await _sceneRep.AsQueryable()
             .Where(u => u.ModuleCode == module.Code)
@@ -367,9 +367,7 @@ public class HrUiFieldDefService : IDynamicApiController, ITransient
             .Where(u => !string.IsNullOrWhiteSpace(u))
             .Select(u =>
             {
-                HrUiModuleCatalog.EnsureScene(u);
-                if (!allowed.Contains(u))
-                    throw Oops.Oh($"场景 {u} 不在模块 {module.Code} 支持列表中");
+                HrUiModuleCatalog.EnsureScene(module, u!);
                 return allowed.First(a => a.Equals(u, StringComparison.OrdinalIgnoreCase));
             })
             .Distinct(StringComparer.OrdinalIgnoreCase)

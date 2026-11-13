@@ -334,9 +334,9 @@ public class HrEmpLeaveService : IDynamicApiController, ITransient
     {
         var list = items.ToList();
         if (list.Count == 0) return;
-        var typeMap = (await _codeSvc.GetCodeList(HrEmpLeaveConst.CodeLeaveType)).ToDictionary(u => u.Value, u => u.Label, StringComparer.OrdinalIgnoreCase);
-        var reasonMap = (await _codeSvc.GetCodeList(HrEmpLeaveConst.CodeLeaveReason)).ToDictionary(u => u.Value, u => u.Label, StringComparer.OrdinalIgnoreCase);
-        var settleMap = (await _codeSvc.GetCodeList(HrEmpLeaveConst.CodeSalarySettle)).ToDictionary(u => u.Value, u => u.Label, StringComparer.OrdinalIgnoreCase);
+        var typeMap = (await _codeSvc.GetCodeList(HrEmpLeaveConst.CodeLeaveType, includeDeleted: true)).ToDictionary(u => u.Value, u => u.Label, StringComparer.OrdinalIgnoreCase);
+        var reasonMap = (await _codeSvc.GetCodeList(HrEmpLeaveConst.CodeLeaveReason, includeDeleted: true)).ToDictionary(u => u.Value, u => u.Label, StringComparer.OrdinalIgnoreCase);
+        var settleMap = (await _codeSvc.GetCodeList(HrEmpLeaveConst.CodeSalarySettle, includeDeleted: true)).ToDictionary(u => u.Value, u => u.Label, StringComparer.OrdinalIgnoreCase);
         var codes = list.Select(u => u.CcCodeSnap).Where(u => !string.IsNullOrWhiteSpace(u)).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
         var deptMap = codes.Count == 0
             ? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)

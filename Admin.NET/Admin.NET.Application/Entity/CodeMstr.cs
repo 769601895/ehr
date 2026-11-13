@@ -19,4 +19,16 @@ public class CodeMstr
 
     [SugarColumn(ColumnName = "code_sort", Length = 50, IsNullable = true)]
     public string? CodeSort { get; set; }
+
+    [SugarColumn(ColumnName = "is_delete")]
+    public bool IsDelete { get; set; }
+
+    [SugarColumn(ColumnName = "delete_time", IsNullable = true)]
+    public DateTime? DeleteTime { get; set; }
+
+    [SugarColumn(ColumnName = "delete_user_id", IsNullable = true)]
+    public long? DeleteUserId { get; set; }
+
+    [SugarColumn(ColumnName = "delete_user_name", Length = 64, IsNullable = true)]
+    public string? DeleteUserName { get; set; }
 }
